@@ -1,0 +1,7 @@
+FROM node:14
+
+RUN mkdir -p /home/node/app
+
+WORKDIR /home/node/app/client
+
+CMD yarn && yarn start

@@ -1,0 +1,149 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Status {
+  DOWNLOADED
+  MISSING
+  UNRELEASED
+}
+
+enum WatchStatus {
+  COMPLETED
+  WATCHING
+  ONHOLD
+  PENDING
+  DROPPED
+}
+
+enum Season {
+  WINTER
+  FALL
+  SUMMER
+  SPRING
+}
+
+enum Source {
+  BLURAY
+  DVD
+  CD
+  WEB
+  TV
+}
+
+enum Type {
+  MOVIE
+  SERIES
+  MUSICVIDEO
+  OVA
+  SPECIAL
+}
+
+enum Role {
+  READONLY
+  WRITE
+  ADMIN
+}
+
+model User {
+  id               String         @id @default(cuid())
+  username         String         @unique
+  name             String
+  password         String
+  passwordAttempts Int
+  role             Role
+  progress         UserProgress[]
+}
+
+model Episode {
+  id               String                 @id @default(cuid())
+  title            String
+  alternativeTitle AlternativeTitleName[]
+  series           Series                 @relation(fields: seriesId, references: id)
+  seriesId         String
+  episodeNumber    Int
+  files            File[]
+  remarks          String?
+}
+
+model Series {
+  id                 String                 @id @default(cuid())
+  name               String
+  alternativeName    AlternativeTitleName[]
+  episodes           Episode[]
+  episodeCount       Int
+  status             Status
+  type               Type
+  releaseSeason      String?
+  releaseYear        DateTime?
+  remarks            String?
+  prequel            Series[]               @relation("prequel-sequel")
+  sequel             Series[]               @relation("prequel-sequel")
+  sideStory          Series[]               @relation("main-side")
+  mainStory          Series[]               @relation("main-side")
+  related            Series[]               @relation("alternative")
+  relatedAlternative Series[]               @relation("alternative")
+  references         Reference[]
+  progress           UserProgress[]
+}
+
+model AlternativeTitleName {
+  id        String   @id @default(cuid())
+  titleName String
+  episode   Episode? @relation(fields: [episodeId], references: [id])
+  episodeId String?
+  series    Series?  @relation(fields: [seriesId], references: [id])
+  seriesId  String?
+}
+
+model File {
+  id         String   @id @default(cuid())
+  path       String
+  checksum   String
+  fileSize   Int
+  duration   String
+  resolution String
+  source     Source
+  codec      String
+  remarks    String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  episode    Episode  @relation(fields: [episodeId], references: [id])
+  episodeId  String
+}
+
+model UserProgress {
+  id        String      @id @default(cuid())
+  series    Series      @relation(fields: [seriesId], references: [id])
+  seriesId  String
+  user      User        @relation(fields: [userId], references: [id])
+  userId    String
+  status    WatchStatus
+  completed Int?
+  overall   Int?
+  execution Int?
+  story     Int?
+  sound     Int?
+  art       Int?
+  character Int?
+  appeal    Int?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  @@unique([seriesId, userId])
+}
+
+model Reference {
+  id       String @id @default(cuid())
+  link     String
+  source   String
+  series   Series @relation(fields: [seriesId], references: [id])
+  seriesId String
+}

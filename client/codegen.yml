@@ -1,0 +1,38 @@
+overwrite: true
+
+schema: "http://server:4000/graphql"
+
+documents: "./src/gql/*.gql"
+
+generates:
+  ./src/gql/queries.tsx:
+    config:
+      # As we are using Babel to transpile Typescript, namespaces are not enabled
+      reactApolloVersion: 3
+      noNamespaces: true
+      # Adds readonly to types
+      immutableTypes: true
+      withHooks: true
+      apolloReactCommonImportFrom: "@apollo/react-common"
+      apolloReactComponentsImportFrom: "@apollo/react-components"
+      apolloReactHocImportFrom: "@apollo/react-hoc"
+      apolloReactHooksImportFrom: "@apollo/react-hooks"
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+  ./src/gql/documents.ts:
+    config:
+      # As we are using Babel to transpile Typescript, namespaces are not enabled
+      reactApolloVersion: 3
+      noNamespaces: true
+      # Adds readonly to types
+      immutableTypes: true
+      withHooks: true
+      apolloReactCommonImportFrom: "@apollo/react-common"
+      apolloReactComponentsImportFrom: "@apollo/react-components"
+      apolloReactHocImportFrom: "@apollo/react-hoc"
+      apolloReactHooksImportFrom: "@apollo/react-hooks"
+    plugins:
+      - typescript
+      - typescript-document-nodes

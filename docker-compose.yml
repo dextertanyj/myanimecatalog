@@ -1,0 +1,54 @@
+# Use root/example as user/password credentials
+version: "3.1"
+
+volumes:
+  datavolume:
+
+services:
+  client:
+    build:
+      context: .
+      dockerfile: client/Dockerfile.dev
+    volumes:
+      - ~/.cache/yarn:/home/node/.cache/yarn
+      - ./client:/home/node/app/client
+    ports:
+      - 3000:3000
+    depends_on:
+      - server
+    restart: on-failure
+
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile.dev
+    volumes:
+      - ~/.cache/yarn:/home/node/.cache/yarn
+      - ./server:/home/node/app/server
+    ports:
+      - 4000:4000
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=mysql://root:AnimeDB!@db:3306/anime
+      - APP_SECRET=development
+    depends_on:
+      - db
+    restart: on-failure
+    stdin_open: true
+
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: AnimeDB!
+    ports:
+      - 3306:3306
+    volumes:
+      - datavolume:/var/lib/mysql
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080

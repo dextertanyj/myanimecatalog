@@ -1,0 +1,23 @@
+query User($where: UserWhereUniqueInput!) {
+  user(where: $where) {
+    id
+    username
+    name
+  }
+}
+
+query Users {
+  users {
+    id
+  }
+}
+
+query UserCount {
+  userCount
+}
+
+mutation CreateUser($data: UserCreateUpdateInput!) {
+  createUser(data: $data) {
+    id
+  }
+}

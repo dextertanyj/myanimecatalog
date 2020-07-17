@@ -1,0 +1,381 @@
+scalar DateTime
+
+enum Status {
+  DOWNLOADED
+  MISSING
+  UNRELEASED
+}
+
+enum WatchStatus {
+  COMPLETED
+  WATCHING
+  ONHOLD
+  PENDING
+  DROPPED
+}
+
+enum Season {
+  WINTER
+  FALL
+  SUMMER
+  SPRING
+}
+
+enum Source {
+  BLURAY
+  DVD
+  CD
+  WEB
+  TV
+}
+
+enum Type {
+  MOVIE
+  SERIES
+  MUSICVIDEO
+  OVA
+  SPECIAL
+}
+
+enum Role {
+  READONLY
+  WRITE
+  ADMIN
+}
+
+input UserWhereUniqueInput {
+  id: String
+  username: String
+}
+
+input UserCreateUpdateInput {
+  id: String
+  username: String
+  name: String
+  password: String
+  passwordAttempts: Int
+  role: Role
+}
+
+input UserRelationInput {
+  create: UserCreateUpdateInput
+  connect: UserWhereUniqueInput
+  disconnect: UserWhereUniqueInput
+}
+
+input SeriesWhereUniqueInput {
+  id: String!
+}
+
+input SeriesCreateUpdateInput {
+  id: String
+  name: String
+  alternativeName: AlternativeTitleNameRelationInput
+  episodes: EpisodeManyRelationInput
+  status: Status
+  releaseSeason: String
+  releaseYear: DateTime
+  remarks: String
+  prequel: SeriesManyRelationInput
+  sequel: SeriesManyRelationInput
+  sideStory: SeriesManyRelationInput
+  mainStory: SeriesManyRelationInput
+  related: SeriesManyRelationInput
+  relatedAlternative: SeriesManyRelationInput
+  progress: UserProgressRelationInput
+  reference: ReferenceRelationInput
+}
+
+input SeriesManyRelationInput {
+  create: [SeriesCreateUpdateInput]
+  connect: [SeriesWhereUniqueInput]
+  disconnect: [SeriesWhereUniqueInput]
+}
+
+input SeriesRelationInput {
+  create: SeriesCreateUpdateInput
+  connect: SeriesWhereUniqueInput
+  disconnect: SeriesWhereUniqueInput
+}
+
+input EpisodeWhereUniqueInput {
+  id: String!
+}
+
+input EpisodeCreateUpdateInput {
+  id: String
+  title: String
+  alternativeTitle: AlternativeTitleNameRelationInput
+  series: SeriesRelationInput
+  episodeNumber: Int
+  files: FileRelationInput
+  remarks: String
+}
+
+input EpisodeManyRelationInput {
+  create: [EpisodeCreateUpdateInput]
+  connect: [EpisodeWhereUniqueInput]
+  disconnect: [EpisodeWhereUniqueInput]
+  delete: [EpisodeWhereUniqueInput]
+}
+
+input EpisodeRelationInput {
+  create: EpisodeCreateUpdateInput
+  connect: EpisodeWhereUniqueInput
+  disconnect: EpisodeWhereUniqueInput
+}
+
+input FileWhereUniqueInput {
+  id: String!
+}
+
+input FileCreateUpdateInput {
+  id: String
+  path: String
+  checksum: String
+  fileSize: Int
+  duration: String
+  resolution: String
+  source: Source
+  codec: String
+  remarks: String
+  episode: EpisodeRelationInput
+}
+
+input FileRelationInput {
+  create: [FileCreateUpdateInput]
+  connect: [FileWhereUniqueInput]
+  delete: [FileWhereUniqueInput]
+}
+
+input AlternativeTitleNameWhereUniqueInput {
+  id: String!
+}
+
+input AlternativeTitleNameCreateUpdateInput {
+  id: String
+  titleName: String
+  episode: EpisodeRelationInput
+  series: SeriesRelationInput
+}
+
+input AlternativeTitleNameRelationInput {
+  connect: [AlternativeTitleNameWhereUniqueInput]
+  create: [AlternativeTitleNameCreateUpdateInput]
+  disconnect: [AlternativeTitleNameWhereUniqueInput]
+  update: [AlternativeTitleNameUpdateWhereUniqueInput]
+}
+
+input AlternativeTitleNameUpdateWhereUniqueInput {
+  where: AlternativeTitleNameWhereUniqueInput
+  data: AlternativeTitleNameCreateUpdateInput
+}
+
+input UserProgressWhereUniqueInput {
+  id: String
+  seriesId_userId: SeriesUserCompoundInput
+}
+
+input SeriesUserCompoundInput {
+  seriesId: String!
+  userId: String!
+}
+
+input UserProgressCreateUpdateInput {
+  id: String
+  series: SeriesRelationInput
+  user: UserRelationInput
+  status: WatchStatus
+  completed: Int
+  overall: Int
+  execution: Int
+  story: Int
+  sound: Int
+  art: Int
+  character: Int
+  appeal: Int
+}
+
+input UserProgressRelationInput {
+  create: [UserProgressCreateUpdateInput]
+  connect: [UserProgressWhereUniqueInput]
+  delete: [UserProgressWhereUniqueInput]
+  update: [UserProgressUpdateWhereUniqueInput]
+}
+
+input UserProgressUpdateWhereUniqueInput {
+  where: UserProgressWhereUniqueInput
+  data: UserProgressCreateUpdateInput
+}
+
+input ReferenceWhereUniqueInput {
+  id: String!
+}
+
+input ReferenceCreateUpdateInput {
+  id: String
+  link: String
+  source: String
+  series: SeriesRelationInput
+}
+
+input ReferenceRelationInput {
+  create: [ReferenceCreateUpdateInput]
+  connect: [ReferenceWhereUniqueInput]
+  update: [ReferenceUpdateWhereUniqueInput]
+  delete: [ReferenceWhereUniqueInput]
+}
+
+input ReferenceUpdateWhereUniqueInput {
+  where: ReferenceWhereUniqueInput
+  data: ReferenceCreateUpdateInput
+}
+
+type Query {
+  loggedIn: User
+  user(where: UserWhereUniqueInput!): User
+  users: [User]
+  userCount: Int
+
+  series(where: SeriesWhereUniqueInput!): Series
+  allSeries: [Series]
+
+  episode(where: EpisodeWhereUniqueInput!): Episode
+  episodes: [Episode]
+  episodesInSeries(where: SeriesWhereUniqueInput!): [Episode]
+
+  file(where: FileWhereUniqueInput): File
+  files: [File]
+
+  userProgress(where: UserProgressWhereUniqueInput!): [UserProgress]
+  userProgresses: [UserProgress]
+  allUserProgresses: [UserProgress]
+
+  reference(where: ReferenceCreateUpdateInput): Reference
+  references: [Reference]
+}
+
+type Mutation {
+  login(data: UserCreateUpdateInput!): AuthPayload!
+
+  createUser(data: UserCreateUpdateInput!): User!
+  updateUser(data: UserCreateUpdateInput!): User!
+  adminUpdateUser(
+    where: UserWhereUniqueInput!
+    data: UserCreateUpdateInput!
+  ): User!
+  deleteUser(where: UserWhereUniqueInput!): User!
+
+  createSeries(data: SeriesCreateUpdateInput!): Series!
+  updateSeries(
+    where: SeriesWhereUniqueInput!
+    data: SeriesCreateUpdateInput!
+  ): Series!
+  deleteSeries(where: SeriesWhereUniqueInput!): Series!
+
+  createEpisode(data: EpisodeCreateUpdateInput!): Episode!
+  updateEpisode(
+    where: EpisodeWhereUniqueInput!
+    data: EpisodeCreateUpdateInput!
+  ): Episode!
+  deleteEpisode(where: EpisodeWhereUniqueInput!): Episode!
+
+  createFile(data: FileCreateUpdateInput!): File!
+  updateFile(where: FileWhereUniqueInput!, data: FileCreateUpdateInput!): File!
+  deleteFile(where: FileWhereUniqueInput!): File!
+
+  createUserProgress(data: UserProgressCreateUpdateInput!): UserProgress!
+  updateUserProgress(
+    where: UserProgressWhereUniqueInput!
+    data: UserProgressCreateUpdateInput!
+  ): UserProgress!
+  deleteUserProgress(where: UserProgressWhereUniqueInput!): UserProgress!
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+type User {
+  id: String!
+  username: String!
+  name: String!
+  password: String!
+  passwordAttempts: Int!
+  role: Role!
+  progress: [UserProgress]
+}
+
+type Series {
+  id: String
+  name: String
+  alternativeName: [AlternativeTitleName]
+  episodes: [Episode]
+  status: Status
+  releaseSeason: String
+  releaseYear: DateTime
+  remarks: String
+  prequel: [Series]
+  sequel: [Series]
+  sideStory: [Series]
+  mainStory: [Series]
+  related: [Series]
+  relatedAlternative: [Series]
+  progress: UserProgress
+  progresses: [UserProgress]
+  references: [Reference]
+}
+
+type Episode {
+  id: String!
+  title: String!
+  alternativeTitle: [AlternativeTitleName]
+  series: Series!
+  episodeNumber: Int!
+  files: [File]
+  remarks: String
+}
+
+type AlternativeTitleName {
+  id: String!
+  titleName: String!
+}
+
+type File {
+  id: String!
+  path: String!
+  checksum: String!
+  fileSize: Int!
+  duration: String!
+  resolution: String!
+  source: Source!
+  codec: String!
+  remarks: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  episode: Episode!
+}
+
+type UserProgress {
+  id: String!
+  series: Series!
+  user: User!
+  status: WatchStatus!
+  completed: Int
+  overall: Int
+  execution: Int
+  story: Int
+  sound: Int
+  art: Int
+  character: Int
+  appeal: Int
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Reference {
+  id: String!
+  link: String!
+  source: String!
+}

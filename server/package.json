@@ -1,0 +1,38 @@
+{
+  "name": "anime-server",
+  "version": "0.1.0",
+  "main": "src/index.ts",
+  "author": "Dexter Tan",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "nodemon",
+    "manualStart": "nodemon -r dotenv/config ./src/index.ts",
+    "generate:migration": "prisma migrate save --create-db --experimental",
+    "migrate": "prisma migrate up --create-db --experimental"
+  },
+  "dependencies": {
+    "@prisma/client": "^2.2.1",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/jsonwebtoken": "^8.5.0",
+    "@types/node": "^14.0.22",
+    "@types/sha.js": "^2.4.0",
+    "apollo-server": "^2.15.1",
+    "apollo-server-core": "^2.15.1",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^8.2.0",
+    "graphql": "^15.3.0",
+    "graphql-tools": "^6.0.12",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.27.0",
+    "moment-timezone": "^0.5.31",
+    "path": "^0.12.7",
+    "sha.js": "^2.4.11",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.6"
+  },
+  "devDependencies": {
+    "@prisma/cli": "^2.2.1",
+    "nodemon": "^2.0.4"
+  }
+}

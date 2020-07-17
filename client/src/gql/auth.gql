@@ -1,0 +1,17 @@
+query LoggedIn {
+  loggedIn {
+    id
+    username
+    role
+  }
+}
+
+mutation Login($data: UserCreateUpdateInput!) {
+  login(data: $data) {
+    token
+    user {
+      id
+      username
+    }
+  }
+}
