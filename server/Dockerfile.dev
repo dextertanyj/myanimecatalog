@@ -4,4 +4,4 @@ RUN mkdir -p /home/node/app
 
 WORKDIR /home/node/app/server
 
-CMD yarn && yarn start
+CMD yarn && yarn migrate && yarn start
