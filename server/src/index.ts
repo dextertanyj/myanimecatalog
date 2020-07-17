@@ -3,8 +3,10 @@ import { loadSchemaSync } from "@graphql-tools/load";
 import { addResolversToSchema } from "@graphql-tools/schema";
 import { PrismaClient } from "@prisma/client";
 import { ApolloServer } from "apollo-server";
+import { applyMiddleware } from "graphql-middleware";
 import path from "path";
 import resolvers from "./resolvers";
+import { permissions } from "./shield";
 import { getContextUserId } from "./utils";
 
 const prisma = new PrismaClient();
@@ -19,8 +21,10 @@ const schemaWithResolvers = addResolversToSchema({
   resolvers,
 });
 
+const schemaWithMiddleware = applyMiddleware(schemaWithResolvers, permissions);
+
 export const server = new ApolloServer({
-  schema: schemaWithResolvers,
+  schema: schemaWithMiddleware,
   context: ({ req }) => ({
     ...req,
     prisma,
