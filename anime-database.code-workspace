@@ -20,9 +20,8 @@
       "ms-azuretools.vscode-docker",
       "eamodio.gitlens",
       "prisma.vscode-graphql",
-      "esbenp.prettier-vscode",
       "prisma.prisma",
-      "ms-vscode.vscode-typescript-tslint-plugin",
+      "dbaeumer.vscode-eslint",
       "visualstudioexptteam.vscodeintellicode"
     ]
   }

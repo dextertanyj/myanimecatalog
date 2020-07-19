@@ -73,6 +73,10 @@
     "@graphql-codegen/typescript-document-nodes": "^1.17.0",
     "@graphql-codegen/typescript-operations": "1.17.0",
     "@graphql-codegen/typescript-react-apollo": "1.17.0",
-    "concurrently": "^5.2.0"
+    "@typescript-eslint/eslint-plugin": "^3.6.1",
+    "@typescript-eslint/parser": "^3.6.1",
+    "concurrently": "^5.2.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-react": "^7.20.3"
   }
 }
