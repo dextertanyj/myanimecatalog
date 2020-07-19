@@ -3,7 +3,23 @@
     "sourceMap": true,
     "outDir": "dist",
     "strict": true,
-    "lib": ["esnext"],
-    "esModuleInterop": true
-  }
+    "lib": [
+      "es6",
+      "es2017",
+      "esnext"
+    ],
+    "target": "ES2018",
+    "noUnusedParameters": true,
+    "removeComments": false,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "moduleResolution": "node",
+    "preserveConstEnums": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true
+  },
+  "exclude": [
+    "node_modules"
+  ],
 }

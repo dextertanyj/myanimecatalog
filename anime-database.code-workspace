@@ -14,5 +14,15 @@
       "**/.DS_Store": true,
       "**/node_modules": true
     }
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-azuretools.vscode-docker",
+      "eamodio.gitlens",
+      "prisma.vscode-graphql",
+      "prisma.prisma",
+      "dbaeumer.vscode-eslint",
+      "visualstudioexptteam.vscodeintellicode"
+    ]
   }
 }
