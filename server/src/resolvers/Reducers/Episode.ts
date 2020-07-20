@@ -2,8 +2,8 @@ import { Episode as EpisodeType } from "@prisma/client";
 import { Context } from "../../utils";
 
 export const Episode = {
-  async alternativeTitle(parent: EpisodeType, _args: any, ctx: Context) {
-    return ctx.prisma.alternativeTitleName.findMany({
+  async alternativeTitles(parent: EpisodeType, _args: any, ctx: Context) {
+    return ctx.prisma.alternativeTitle.findMany({
       where: {
         episodeId: parent.id,
       },

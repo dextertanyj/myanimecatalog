@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -64,36 +64,36 @@ model User {
 }
 
 model Episode {
-  id                String             @id @default(cuid())
-  title             String
-  alternativeTitles AlternativeTitle[]
-  series            Series             @relation(fields: seriesId, references: id)
-  seriesId          String
-  episodeNumber     Int
-  files             File[]
-  remarks           String?
+  id               String                 @id @default(cuid())
+  title            String
+  alternativeTitle AlternativeTitle[]
+  series           Series                 @relation(fields: seriesId, references: id)
+  seriesId         String
+  episodeNumber    Int
+  files            File[]
+  remarks          String?
 }
 
 model Series {
-  id                  String             @id @default(cuid())
-  title               String
-  alternativeTitles   AlternativeTitle[]
-  seasonNumber        Int?
-  episodes            Episode[]
-  episodeCount        Int
-  status              Status
-  type                Type
-  releaseSeason       String?
-  releaseYear         DateTime?
-  remarks             String?
-  prequels            Series[]           @relation("prequel-sequel")
-  sequels             Series[]           @relation("prequel-sequel")
-  sideStories         Series[]           @relation("main-side")
-  mainStories         Series[]           @relation("main-side")
-  relatedSeries       Series[]           @relation("alternative")
-  relatedAlternatives Series[]           @relation("alternative")
-  references          Reference[]
-  progress            UserProgress[]
+  id                 String                 @id @default(cuid())
+  title              String
+  alternativeTitle   AlternativeTitle[]
+  seasonNumber       Int?
+  episodes           Episode[]
+  episodeCount       Int
+  status             Status
+  type               Type
+  releaseSeason      String?
+  releaseYear        DateTime?
+  remarks            String?
+  prequel            Series[]               @relation("prequel-sequel")
+  sequel             Series[]               @relation("prequel-sequel")
+  sideStory          Series[]               @relation("main-side")
+  mainStory          Series[]               @relation("main-side")
+  related            Series[]               @relation("alternative")
+  relatedAlternative Series[]               @relation("alternative")
+  references         Reference[]
+  progress           UserProgress[]
 }
 
 model AlternativeTitle {
@@ -136,7 +136,6 @@ model UserProgress {
   art       Int?
   character Int?
   appeal    Int?
-  remarks   String?
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
   @@unique([seriesId, userId])

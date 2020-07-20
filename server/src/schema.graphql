@@ -58,9 +58,32 @@ input UserCreateUpdateInput {
 }
 
 input UserRelationInput {
-  create: UserCreateUpdateInput
   connect: UserWhereUniqueInput
   disconnect: UserWhereUniqueInput
+}
+
+input EpisodeWhereUniqueInput {
+  id: String!
+}
+
+input EpisodeCreateUpdateInput {
+  id: String
+  title: String
+  alternativeTitles: AlternativeTitleRelationInput
+  series: SeriesRelationInput
+  episodeNumber: Int
+  files: FileRelationInput
+  remarks: String
+}
+
+input EpisodeManyRelationInput {
+  create: [EpisodeCreateUpdateInput]
+  delete: [EpisodeWhereUniqueInput]
+}
+
+input EpisodeRelationInput {
+  create: EpisodeCreateUpdateInput
+  connect: EpisodeWhereUniqueInput
 }
 
 input SeriesWhereUniqueInput {
@@ -69,25 +92,27 @@ input SeriesWhereUniqueInput {
 
 input SeriesCreateUpdateInput {
   id: String
-  name: String
-  alternativeName: AlternativeTitleNameRelationInput
+  title: String
+  alternativeTitles: AlternativeTitleRelationInput
+  seasonNumber: Int
   episodes: EpisodeManyRelationInput
+  episodeCount: Int
   status: Status
+  type: Type
   releaseSeason: String
   releaseYear: DateTime
   remarks: String
-  prequel: SeriesManyRelationInput
-  sequel: SeriesManyRelationInput
-  sideStory: SeriesManyRelationInput
-  mainStory: SeriesManyRelationInput
-  related: SeriesManyRelationInput
-  relatedAlternative: SeriesManyRelationInput
+  prequels: SeriesManyRelationInput
+  sequels: SeriesManyRelationInput
+  sideStories: SeriesManyRelationInput
+  mainStories: SeriesManyRelationInput
+  relatedSeries: SeriesManyRelationInput
+  relatedAlternatives: SeriesManyRelationInput
+  references: ReferenceRelationInput
   progress: UserProgressRelationInput
-  reference: ReferenceRelationInput
 }
 
 input SeriesManyRelationInput {
-  create: [SeriesCreateUpdateInput]
   connect: [SeriesWhereUniqueInput]
   disconnect: [SeriesWhereUniqueInput]
 }
@@ -98,31 +123,26 @@ input SeriesRelationInput {
   disconnect: SeriesWhereUniqueInput
 }
 
-input EpisodeWhereUniqueInput {
+input AlternativeTitleWhereUniqueInput {
   id: String!
 }
 
-input EpisodeCreateUpdateInput {
+input AlternativeTitleCreateUpdateInput {
   id: String
   title: String
-  alternativeTitle: AlternativeTitleNameRelationInput
+  episode: EpisodeRelationInput
   series: SeriesRelationInput
-  episodeNumber: Int
-  files: FileRelationInput
-  remarks: String
 }
 
-input EpisodeManyRelationInput {
-  create: [EpisodeCreateUpdateInput]
-  connect: [EpisodeWhereUniqueInput]
-  disconnect: [EpisodeWhereUniqueInput]
-  delete: [EpisodeWhereUniqueInput]
+input AlternativeTitleRelationInput {
+  create: [AlternativeTitleCreateUpdateInput]
+  delete: [AlternativeTitleWhereUniqueInput]
+  update: [AlternativeTitleUpdateWhereUniqueInput]
 }
 
-input EpisodeRelationInput {
-  create: EpisodeCreateUpdateInput
-  connect: EpisodeWhereUniqueInput
-  disconnect: EpisodeWhereUniqueInput
+input AlternativeTitleUpdateWhereUniqueInput {
+  where: AlternativeTitleWhereUniqueInput
+  data: AlternativeTitleCreateUpdateInput
 }
 
 input FileWhereUniqueInput {
@@ -144,31 +164,7 @@ input FileCreateUpdateInput {
 
 input FileRelationInput {
   create: [FileCreateUpdateInput]
-  connect: [FileWhereUniqueInput]
   delete: [FileWhereUniqueInput]
-}
-
-input AlternativeTitleNameWhereUniqueInput {
-  id: String!
-}
-
-input AlternativeTitleNameCreateUpdateInput {
-  id: String
-  titleName: String
-  episode: EpisodeRelationInput
-  series: SeriesRelationInput
-}
-
-input AlternativeTitleNameRelationInput {
-  connect: [AlternativeTitleNameWhereUniqueInput]
-  create: [AlternativeTitleNameCreateUpdateInput]
-  disconnect: [AlternativeTitleNameWhereUniqueInput]
-  update: [AlternativeTitleNameUpdateWhereUniqueInput]
-}
-
-input AlternativeTitleNameUpdateWhereUniqueInput {
-  where: AlternativeTitleNameWhereUniqueInput
-  data: AlternativeTitleNameCreateUpdateInput
 }
 
 input UserProgressWhereUniqueInput {
@@ -194,11 +190,11 @@ input UserProgressCreateUpdateInput {
   art: Int
   character: Int
   appeal: Int
+  remarks: String
 }
 
 input UserProgressRelationInput {
   create: [UserProgressCreateUpdateInput]
-  connect: [UserProgressWhereUniqueInput]
   delete: [UserProgressWhereUniqueInput]
   update: [UserProgressUpdateWhereUniqueInput]
 }
@@ -221,7 +217,6 @@ input ReferenceCreateUpdateInput {
 
 input ReferenceRelationInput {
   create: [ReferenceCreateUpdateInput]
-  connect: [ReferenceWhereUniqueInput]
   update: [ReferenceUpdateWhereUniqueInput]
   delete: [ReferenceWhereUniqueInput]
 }
@@ -293,75 +288,78 @@ type Mutation {
 }
 
 type AuthPayload {
-  token: String!
-  user: User!
+  token: String
+  user: User
 }
 
 type User {
-  id: String!
-  username: String!
-  name: String!
-  password: String!
-  passwordAttempts: Int!
-  role: Role!
+  id: String
+  username: String
+  name: String
+  password: String
+  passwordAttempts: Int
+  role: Role
   progress: [UserProgress]
 }
 
-type Series {
-  id: String
-  name: String
-  alternativeName: [AlternativeTitleName]
-  episodes: [Episode]
-  status: Status
-  releaseSeason: String
-  releaseYear: DateTime
-  remarks: String
-  prequel: [Series]
-  sequel: [Series]
-  sideStory: [Series]
-  mainStory: [Series]
-  related: [Series]
-  relatedAlternative: [Series]
-  progress: UserProgress
-  progresses: [UserProgress]
-  references: [Reference]
-}
-
 type Episode {
-  id: String!
-  title: String!
-  alternativeTitle: [AlternativeTitleName]
-  series: Series!
-  episodeNumber: Int!
+  id: String
+  title: String
+  alternativeTitles: [AlternativeTitle]
+  series: Series
+  episodeNumber: Int
   files: [File]
   remarks: String
 }
 
-type AlternativeTitleName {
+type Series {
+  id: String
+  title: String
+  alternativeTitles: [AlternativeTitle]
+  seasonNumber: Int
+  episodes: [Episode]
+  episodeCount: Int
+  status: Status
+  type: Type
+  releaseSeason: String
+  releaseYear: DateTime
+  remarks: String
+  prequels: [Series]
+  sequels: [Series]
+  sideStories: [Series]
+  mainStories: [Series]
+  relatedSeries: [Series]
+  relatedAlternatives: [Series]
+  references: [Reference]
+  progress: UserProgress
+  allProgress: [UserProgress]
+}
+
+type AlternativeTitle {
   id: String!
-  titleName: String!
+  title: String!
 }
 
 type File {
-  id: String!
-  path: String!
-  checksum: String!
-  fileSize: Int!
-  duration: String!
-  resolution: String!
-  source: Source!
-  codec: String!
+  id: String
+  path: String
+  checksum: String
+  fileSize: Int
+  duration: String
+  resolution: String
+  source: Source
+  codec: String
   remarks: String
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  episode: Episode!
+  createdAt: DateTime
+  updatedAt: DateTime
+  episode: Episode
 }
 
 type UserProgress {
-  id: String!
-  series: Series!
-  user: User!
-  status: WatchStatus!
+  id: String
+  series: Series
+  user: User
+  status: WatchStatus
   completed: Int
   overall: Int
   execution: Int
@@ -370,12 +368,13 @@ type UserProgress {
   art: Int
   character: Int
   appeal: Int
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  remarks: String
+  createdAt: DateTime
+  updatedAt: DateTime
 }
 
 type Reference {
-  id: String!
-  link: String!
-  source: String!
+  id: String
+  link: String
+  source: String
 }

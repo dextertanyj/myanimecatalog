@@ -1,0 +1,258 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "CreateField",
+      "model": "Episode",
+      "field": "alternativeTitles",
+      "type": "AlternativeTitle",
+      "arity": "List"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "Episode",
+      "field": "alternativeTitle"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Series",
+      "field": "alternativeTitles",
+      "type": "AlternativeTitle",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Series",
+      "field": "prequels",
+      "type": "Series",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Series",
+          "field": "prequels"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Series",
+          "field": "prequels"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"prequel-sequel\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "Series",
+      "field": "sequels",
+      "type": "Series",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Series",
+          "field": "sequels"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Series",
+          "field": "sequels"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"prequel-sequel\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "Series",
+      "field": "sideStories",
+      "type": "Series",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Series",
+          "field": "sideStories"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Series",
+          "field": "sideStories"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"main-side\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "Series",
+      "field": "mainStories",
+      "type": "Series",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Series",
+          "field": "mainStories"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Series",
+          "field": "mainStories"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"main-side\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "Series",
+      "field": "relatedSeries",
+      "type": "Series",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Series",
+          "field": "relatedSeries"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Series",
+          "field": "relatedSeries"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"alternative\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "Series",
+      "field": "relatedAlternatives",
+      "type": "Series",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Series",
+          "field": "relatedAlternatives"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Series",
+          "field": "relatedAlternatives"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"alternative\""
+    },
+    {
+      "tag": "DeleteField",
+      "model": "Series",
+      "field": "prequel"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "Series",
+      "field": "sequel"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "Series",
+      "field": "sideStory"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "Series",
+      "field": "mainStory"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "Series",
+      "field": "related"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "Series",
+      "field": "relatedAlternative"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "Series",
+      "field": "alternativeTitle"
+    },
+    {
+      "tag": "CreateField",
+      "model": "UserProgress",
+      "field": "remarks",
+      "type": "String",
+      "arity": "Optional"
+    }
+  ]
+}

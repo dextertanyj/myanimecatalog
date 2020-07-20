@@ -7,7 +7,7 @@ import {
   Snackbar,
   TextField,
   Theme,
-  Typography,
+  Typography
 } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { ApolloError } from "apollo-client";
@@ -66,7 +66,7 @@ export const LoginPage = () => {
   };
 
   useEffect(() => {
-    if (data?.login.user) {
+    if (data?.login.user && data?.login.token) {
       try {
         setLoginToken(data?.login.token);
         history.push("/");

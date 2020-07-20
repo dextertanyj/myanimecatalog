@@ -1,3 +1,5 @@
 # Prisma Migrate lockfile v1
 
 20200717030413-initial-migration
+20200720011333-add-season-number
+20200720085759-standardise-plural-names

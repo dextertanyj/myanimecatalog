@@ -7,7 +7,7 @@ import {
   Snackbar,
   TextField,
   Theme,
-  Typography,
+  Typography
 } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { ApolloError } from "apollo-client";
@@ -19,7 +19,7 @@ import * as Yup from "yup";
 import {
   Role,
   useCreateUserMutation,
-  useUserCountQuery,
+  useUserCountQuery
 } from "../../gql/queries";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -146,8 +146,7 @@ export const SetupPage = () => {
                     required
                     fullWidth
                     id="name"
-                    label="
-                    name"
+                    label="Name"
                     name="name"
                     error={touched.name && !!errors.name}
                     helperText={touched.name && errors.name}
