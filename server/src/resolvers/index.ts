@@ -1,6 +1,6 @@
-import { Mutation } from "./Mutation";
-import { Query } from "./Query";
-import Reducers from "./Reducers";
+import { Mutation } from './Mutation';
+import { Query } from './Query';
+import Reducers from './Reducers';
 
 export default {
   Query,
