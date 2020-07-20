@@ -525,6 +525,58 @@ export const Login = gql`
   }
 }
     `;
+export const Series = gql`
+    query Series($where: SeriesWhereUniqueInput!) {
+  series(where: $where) {
+    id
+    title
+    alternativeTitles {
+      id
+      title
+    }
+    episodeCount
+    seasonNumber
+    releaseSeason
+    releaseYear
+    remarks
+    prequels {
+      id
+      title
+    }
+    sequels {
+      id
+      title
+    }
+    mainStories {
+      id
+      title
+    }
+    sideStories {
+      id
+      title
+    }
+  }
+}
+    `;
+export const AllSeries = gql`
+    query AllSeries {
+  allSeries {
+    id
+    title
+    seasonNumber
+    episodeCount
+    type
+    status
+  }
+}
+    `;
+export const CreateSeries = gql`
+    mutation CreateSeries($data: SeriesCreateUpdateInput!) {
+  createSeries(data: $data) {
+    id
+  }
+}
+    `;
 export const User = gql`
     query User($where: UserWhereUniqueInput!) {
   user(where: $where) {

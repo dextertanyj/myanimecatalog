@@ -538,6 +538,59 @@ export type LoginMutation = (
   ) }
 );
 
+export type SeriesQueryVariables = Exact<{
+  where: SeriesWhereUniqueInput;
+}>;
+
+
+export type SeriesQuery = (
+  { readonly __typename?: 'Query' }
+  & { readonly series?: Maybe<(
+    { readonly __typename?: 'Series' }
+    & Pick<Series, 'id' | 'title' | 'episodeCount' | 'seasonNumber' | 'releaseSeason' | 'releaseYear' | 'remarks'>
+    & { readonly alternativeTitles?: Maybe<ReadonlyArray<Maybe<(
+      { readonly __typename?: 'AlternativeTitle' }
+      & Pick<AlternativeTitle, 'id' | 'title'>
+    )>>>, readonly prequels?: Maybe<ReadonlyArray<Maybe<(
+      { readonly __typename?: 'Series' }
+      & Pick<Series, 'id' | 'title'>
+    )>>>, readonly sequels?: Maybe<ReadonlyArray<Maybe<(
+      { readonly __typename?: 'Series' }
+      & Pick<Series, 'id' | 'title'>
+    )>>>, readonly mainStories?: Maybe<ReadonlyArray<Maybe<(
+      { readonly __typename?: 'Series' }
+      & Pick<Series, 'id' | 'title'>
+    )>>>, readonly sideStories?: Maybe<ReadonlyArray<Maybe<(
+      { readonly __typename?: 'Series' }
+      & Pick<Series, 'id' | 'title'>
+    )>>> }
+  )> }
+);
+
+export type AllSeriesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllSeriesQuery = (
+  { readonly __typename?: 'Query' }
+  & { readonly allSeries?: Maybe<ReadonlyArray<Maybe<(
+    { readonly __typename?: 'Series' }
+    & Pick<Series, 'id' | 'title' | 'seasonNumber' | 'episodeCount' | 'type' | 'status'>
+  )>>> }
+);
+
+export type CreateSeriesMutationVariables = Exact<{
+  data: SeriesCreateUpdateInput;
+}>;
+
+
+export type CreateSeriesMutation = (
+  { readonly __typename?: 'Mutation' }
+  & { readonly createSeries: (
+    { readonly __typename?: 'Series' }
+    & Pick<Series, 'id'>
+  ) }
+);
+
 export type UserQueryVariables = Exact<{
   where: UserWhereUniqueInput;
 }>;
@@ -692,6 +745,191 @@ export function useLoginMutation(baseOptions?: ApolloReactHooks.MutationHookOpti
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = ApolloReactCommon.MutationResult<LoginMutation>;
 export type LoginMutationOptions = ApolloReactCommon.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const SeriesDocument = gql`
+    query Series($where: SeriesWhereUniqueInput!) {
+  series(where: $where) {
+    id
+    title
+    alternativeTitles {
+      id
+      title
+    }
+    episodeCount
+    seasonNumber
+    releaseSeason
+    releaseYear
+    remarks
+    prequels {
+      id
+      title
+    }
+    sequels {
+      id
+      title
+    }
+    mainStories {
+      id
+      title
+    }
+    sideStories {
+      id
+      title
+    }
+  }
+}
+    `;
+export type SeriesComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<SeriesQuery, SeriesQueryVariables>, 'query'> & ({ variables: SeriesQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const SeriesComponent = (props: SeriesComponentProps) => (
+      <ApolloReactComponents.Query<SeriesQuery, SeriesQueryVariables> query={SeriesDocument} {...props} />
+    );
+    
+export type SeriesProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<SeriesQuery, SeriesQueryVariables>
+    } & TChildProps;
+export function withSeries<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  SeriesQuery,
+  SeriesQueryVariables,
+  SeriesProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, SeriesQuery, SeriesQueryVariables, SeriesProps<TChildProps, TDataName>>(SeriesDocument, {
+      alias: 'series',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useSeriesQuery__
+ *
+ * To run a query within a React component, call `useSeriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSeriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSeriesQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useSeriesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SeriesQuery, SeriesQueryVariables>) {
+        return ApolloReactHooks.useQuery<SeriesQuery, SeriesQueryVariables>(SeriesDocument, baseOptions);
+      }
+export function useSeriesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SeriesQuery, SeriesQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<SeriesQuery, SeriesQueryVariables>(SeriesDocument, baseOptions);
+        }
+export type SeriesQueryHookResult = ReturnType<typeof useSeriesQuery>;
+export type SeriesLazyQueryHookResult = ReturnType<typeof useSeriesLazyQuery>;
+export type SeriesQueryResult = ApolloReactCommon.QueryResult<SeriesQuery, SeriesQueryVariables>;
+export const AllSeriesDocument = gql`
+    query AllSeries {
+  allSeries {
+    id
+    title
+    seasonNumber
+    episodeCount
+    type
+    status
+  }
+}
+    `;
+export type AllSeriesComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<AllSeriesQuery, AllSeriesQueryVariables>, 'query'>;
+
+    export const AllSeriesComponent = (props: AllSeriesComponentProps) => (
+      <ApolloReactComponents.Query<AllSeriesQuery, AllSeriesQueryVariables> query={AllSeriesDocument} {...props} />
+    );
+    
+export type AllSeriesProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<AllSeriesQuery, AllSeriesQueryVariables>
+    } & TChildProps;
+export function withAllSeries<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  AllSeriesQuery,
+  AllSeriesQueryVariables,
+  AllSeriesProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, AllSeriesQuery, AllSeriesQueryVariables, AllSeriesProps<TChildProps, TDataName>>(AllSeriesDocument, {
+      alias: 'allSeries',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useAllSeriesQuery__
+ *
+ * To run a query within a React component, call `useAllSeriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllSeriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllSeriesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAllSeriesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<AllSeriesQuery, AllSeriesQueryVariables>) {
+        return ApolloReactHooks.useQuery<AllSeriesQuery, AllSeriesQueryVariables>(AllSeriesDocument, baseOptions);
+      }
+export function useAllSeriesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<AllSeriesQuery, AllSeriesQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<AllSeriesQuery, AllSeriesQueryVariables>(AllSeriesDocument, baseOptions);
+        }
+export type AllSeriesQueryHookResult = ReturnType<typeof useAllSeriesQuery>;
+export type AllSeriesLazyQueryHookResult = ReturnType<typeof useAllSeriesLazyQuery>;
+export type AllSeriesQueryResult = ApolloReactCommon.QueryResult<AllSeriesQuery, AllSeriesQueryVariables>;
+export const CreateSeriesDocument = gql`
+    mutation CreateSeries($data: SeriesCreateUpdateInput!) {
+  createSeries(data: $data) {
+    id
+  }
+}
+    `;
+export type CreateSeriesMutationFn = ApolloReactCommon.MutationFunction<CreateSeriesMutation, CreateSeriesMutationVariables>;
+export type CreateSeriesComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<CreateSeriesMutation, CreateSeriesMutationVariables>, 'mutation'>;
+
+    export const CreateSeriesComponent = (props: CreateSeriesComponentProps) => (
+      <ApolloReactComponents.Mutation<CreateSeriesMutation, CreateSeriesMutationVariables> mutation={CreateSeriesDocument} {...props} />
+    );
+    
+export type CreateSeriesProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: ApolloReactCommon.MutationFunction<CreateSeriesMutation, CreateSeriesMutationVariables>
+    } & TChildProps;
+export function withCreateSeries<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  CreateSeriesMutation,
+  CreateSeriesMutationVariables,
+  CreateSeriesProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, CreateSeriesMutation, CreateSeriesMutationVariables, CreateSeriesProps<TChildProps, TDataName>>(CreateSeriesDocument, {
+      alias: 'createSeries',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useCreateSeriesMutation__
+ *
+ * To run a mutation, you first call `useCreateSeriesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSeriesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSeriesMutation, { data, loading, error }] = useCreateSeriesMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateSeriesMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateSeriesMutation, CreateSeriesMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateSeriesMutation, CreateSeriesMutationVariables>(CreateSeriesDocument, baseOptions);
+      }
+export type CreateSeriesMutationHookResult = ReturnType<typeof useCreateSeriesMutation>;
+export type CreateSeriesMutationResult = ApolloReactCommon.MutationResult<CreateSeriesMutation>;
+export type CreateSeriesMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateSeriesMutation, CreateSeriesMutationVariables>;
 export const UserDocument = gql`
     query User($where: UserWhereUniqueInput!) {
   user(where: $where) {

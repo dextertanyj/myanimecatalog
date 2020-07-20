@@ -27,7 +27,7 @@ export const User = {
     return user;
   },
 
-  async userCount(_parent: any, _args: any, ctx: Context): Promise<Number> {
+  async userCount(_parent: any, _args: any, ctx: Context): Promise<number> {
     const count = await ctx.prisma.user.count();
     return count;
   },
