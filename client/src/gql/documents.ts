@@ -337,7 +337,7 @@ export type Series = {
   readonly episodeCount?: Maybe<Scalars['Int']>;
   readonly status?: Maybe<Status>;
   readonly type?: Maybe<Type>;
-  readonly releaseSeason?: Maybe<Scalars['String']>;
+  readonly releaseSeason?: Maybe<Season>;
   readonly releaseYear?: Maybe<Scalars['DateTime']>;
   readonly remarks?: Maybe<Scalars['String']>;
   readonly prequels?: Maybe<ReadonlyArray<Maybe<Series>>>;
@@ -360,7 +360,7 @@ export type SeriesCreateUpdateInput = {
   readonly episodeCount?: Maybe<Scalars['Int']>;
   readonly status?: Maybe<Status>;
   readonly type?: Maybe<Type>;
-  readonly releaseSeason?: Maybe<Scalars['String']>;
+  readonly releaseSeason?: Maybe<Season>;
   readonly releaseYear?: Maybe<Scalars['DateTime']>;
   readonly remarks?: Maybe<Scalars['String']>;
   readonly prequels?: Maybe<SeriesManyRelationInput>;
@@ -567,12 +567,21 @@ export const AllSeries = gql`
     episodeCount
     type
     status
+    releaseSeason
+    releaseYear
   }
 }
     `;
 export const CreateSeries = gql`
     mutation CreateSeries($data: SeriesCreateUpdateInput!) {
   createSeries(data: $data) {
+    id
+  }
+}
+    `;
+export const DeleteSeries = gql`
+    mutation DeleteSeries($where: SeriesWhereUniqueInput!) {
+  deleteSeries(where: $where) {
     id
   }
 }

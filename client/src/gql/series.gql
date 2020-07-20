@@ -1,48 +1,56 @@
 query Series($where: SeriesWhereUniqueInput!) {
-    series(where: $where) {
-        id
-        title
-        alternativeTitles {
-            id
-            title
-        }
-        episodeCount
-        seasonNumber
-        releaseSeason
-        releaseYear
-        remarks
-        prequels {
-            id
-            title
-        }
-        sequels {
-            id
-            title
-        }
-        mainStories {
-            id
-            title
-        }
-        sideStories {
-            id
-            title
-        }
+  series(where: $where) {
+    id
+    title
+    alternativeTitles {
+      id
+      title
     }
+    episodeCount
+    seasonNumber
+    releaseSeason
+    releaseYear
+    remarks
+    prequels {
+      id
+      title
+    }
+    sequels {
+      id
+      title
+    }
+    mainStories {
+      id
+      title
+    }
+    sideStories {
+      id
+      title
+    }
+  }
 }
 
 query AllSeries {
-    allSeries {
-        id
-        title
-        seasonNumber
-        episodeCount
-        type
-        status
-    }
+  allSeries {
+    id
+    title
+    seasonNumber
+    episodeCount
+    type
+    status
+    releaseSeason
+    releaseYear
+  }
 }
 
 mutation CreateSeries($data: SeriesCreateUpdateInput!) {
-    createSeries(data: $data) {
-        id
-    }
+  createSeries(data: $data) {
+    id
+  }
+}
+
+mutation DeleteSeries($where: SeriesWhereUniqueInput!) {
+  deleteSeries(where: $where) {
+    id
+  }
 }

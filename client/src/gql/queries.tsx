@@ -343,7 +343,7 @@ export type Series = {
   readonly episodeCount?: Maybe<Scalars['Int']>;
   readonly status?: Maybe<Status>;
   readonly type?: Maybe<Type>;
-  readonly releaseSeason?: Maybe<Scalars['String']>;
+  readonly releaseSeason?: Maybe<Season>;
   readonly releaseYear?: Maybe<Scalars['DateTime']>;
   readonly remarks?: Maybe<Scalars['String']>;
   readonly prequels?: Maybe<ReadonlyArray<Maybe<Series>>>;
@@ -366,7 +366,7 @@ export type SeriesCreateUpdateInput = {
   readonly episodeCount?: Maybe<Scalars['Int']>;
   readonly status?: Maybe<Status>;
   readonly type?: Maybe<Type>;
-  readonly releaseSeason?: Maybe<Scalars['String']>;
+  readonly releaseSeason?: Maybe<Season>;
   readonly releaseYear?: Maybe<Scalars['DateTime']>;
   readonly remarks?: Maybe<Scalars['String']>;
   readonly prequels?: Maybe<SeriesManyRelationInput>;
@@ -574,7 +574,7 @@ export type AllSeriesQuery = (
   { readonly __typename?: 'Query' }
   & { readonly allSeries?: Maybe<ReadonlyArray<Maybe<(
     { readonly __typename?: 'Series' }
-    & Pick<Series, 'id' | 'title' | 'seasonNumber' | 'episodeCount' | 'type' | 'status'>
+    & Pick<Series, 'id' | 'title' | 'seasonNumber' | 'episodeCount' | 'type' | 'status' | 'releaseSeason' | 'releaseYear'>
   )>>> }
 );
 
@@ -586,6 +586,19 @@ export type CreateSeriesMutationVariables = Exact<{
 export type CreateSeriesMutation = (
   { readonly __typename?: 'Mutation' }
   & { readonly createSeries: (
+    { readonly __typename?: 'Series' }
+    & Pick<Series, 'id'>
+  ) }
+);
+
+export type DeleteSeriesMutationVariables = Exact<{
+  where: SeriesWhereUniqueInput;
+}>;
+
+
+export type DeleteSeriesMutation = (
+  { readonly __typename?: 'Mutation' }
+  & { readonly deleteSeries: (
     { readonly __typename?: 'Series' }
     & Pick<Series, 'id'>
   ) }
@@ -832,6 +845,8 @@ export const AllSeriesDocument = gql`
     episodeCount
     type
     status
+    releaseSeason
+    releaseYear
   }
 }
     `;
@@ -930,6 +945,57 @@ export function useCreateSeriesMutation(baseOptions?: ApolloReactHooks.MutationH
 export type CreateSeriesMutationHookResult = ReturnType<typeof useCreateSeriesMutation>;
 export type CreateSeriesMutationResult = ApolloReactCommon.MutationResult<CreateSeriesMutation>;
 export type CreateSeriesMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateSeriesMutation, CreateSeriesMutationVariables>;
+export const DeleteSeriesDocument = gql`
+    mutation DeleteSeries($where: SeriesWhereUniqueInput!) {
+  deleteSeries(where: $where) {
+    id
+  }
+}
+    `;
+export type DeleteSeriesMutationFn = ApolloReactCommon.MutationFunction<DeleteSeriesMutation, DeleteSeriesMutationVariables>;
+export type DeleteSeriesComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<DeleteSeriesMutation, DeleteSeriesMutationVariables>, 'mutation'>;
+
+    export const DeleteSeriesComponent = (props: DeleteSeriesComponentProps) => (
+      <ApolloReactComponents.Mutation<DeleteSeriesMutation, DeleteSeriesMutationVariables> mutation={DeleteSeriesDocument} {...props} />
+    );
+    
+export type DeleteSeriesProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: ApolloReactCommon.MutationFunction<DeleteSeriesMutation, DeleteSeriesMutationVariables>
+    } & TChildProps;
+export function withDeleteSeries<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  DeleteSeriesMutation,
+  DeleteSeriesMutationVariables,
+  DeleteSeriesProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, DeleteSeriesMutation, DeleteSeriesMutationVariables, DeleteSeriesProps<TChildProps, TDataName>>(DeleteSeriesDocument, {
+      alias: 'deleteSeries',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useDeleteSeriesMutation__
+ *
+ * To run a mutation, you first call `useDeleteSeriesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteSeriesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteSeriesMutation, { data, loading, error }] = useDeleteSeriesMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useDeleteSeriesMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteSeriesMutation, DeleteSeriesMutationVariables>) {
+        return ApolloReactHooks.useMutation<DeleteSeriesMutation, DeleteSeriesMutationVariables>(DeleteSeriesDocument, baseOptions);
+      }
+export type DeleteSeriesMutationHookResult = ReturnType<typeof useDeleteSeriesMutation>;
+export type DeleteSeriesMutationResult = ApolloReactCommon.MutationResult<DeleteSeriesMutation>;
+export type DeleteSeriesMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteSeriesMutation, DeleteSeriesMutationVariables>;
 export const UserDocument = gql`
     query User($where: UserWhereUniqueInput!) {
   user(where: $where) {

@@ -99,7 +99,7 @@ input SeriesCreateUpdateInput {
   episodeCount: Int
   status: Status
   type: Type
-  releaseSeason: String
+  releaseSeason: Season
   releaseYear: DateTime
   remarks: String
   prequels: SeriesManyRelationInput
@@ -321,7 +321,7 @@ type Series {
   episodeCount: Int
   status: Status
   type: Type
-  releaseSeason: String
+  releaseSeason: Season
   releaseYear: DateTime
   remarks: String
   prequels: [Series]
