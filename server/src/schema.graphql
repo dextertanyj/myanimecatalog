@@ -74,6 +74,7 @@ input SeriesCreateUpdateInput {
   episodeCount: Int
   episodes: EpisodeManyRelationInput
   status: Status
+  type: Type
   releaseSeason: String
   releaseYear: DateTime
   remarks: String
@@ -84,7 +85,7 @@ input SeriesCreateUpdateInput {
   related: SeriesManyRelationInput
   relatedAlternative: SeriesManyRelationInput
   progress: UserProgressRelationInput
-  reference: ReferenceRelationInput
+  references: ReferenceRelationInput
 }
 
 input SeriesManyRelationInput {
@@ -150,7 +151,7 @@ input AlternativeTitleWhereUniqueInput {
 
 input AlternativeTitleCreateUpdateInput {
   id: String
-  titleName: String
+  title: String
   episode: EpisodeRelationInput
   series: SeriesRelationInput
 }
@@ -309,6 +310,7 @@ type Series {
   episodeCount: Int
   episodes: [Episode]
   status: Status
+  type: Type
   releaseSeason: String
   releaseYear: DateTime
   remarks: String
@@ -335,7 +337,7 @@ type Episode {
 
 type AlternativeTitle {
   id: String!
-  titleName: String!
+  title: String!
 }
 
 type File {
