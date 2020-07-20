@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -136,7 +136,6 @@ model UserProgress {
   art       Int?
   character Int?
   appeal    Int?
-  remarks   String?
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
   @@unique([seriesId, userId])

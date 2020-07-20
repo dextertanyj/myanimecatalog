@@ -58,7 +58,6 @@ input UserCreateUpdateInput {
 }
 
 input UserRelationInput {
-  create: UserCreateUpdateInput
   connect: UserWhereUniqueInput
   disconnect: UserWhereUniqueInput
 }
@@ -69,8 +68,10 @@ input SeriesWhereUniqueInput {
 
 input SeriesCreateUpdateInput {
   id: String
-  name: String
-  alternativeName: AlternativeTitleNameRelationInput
+  title: String
+  alternativeTitle: AlternativeTitleRelationInput
+  seasonNumber: Int
+  episodeCount: Int
   episodes: EpisodeManyRelationInput
   status: Status
   releaseSeason: String
@@ -87,7 +88,6 @@ input SeriesCreateUpdateInput {
 }
 
 input SeriesManyRelationInput {
-  create: [SeriesCreateUpdateInput]
   connect: [SeriesWhereUniqueInput]
   disconnect: [SeriesWhereUniqueInput]
 }
@@ -105,7 +105,7 @@ input EpisodeWhereUniqueInput {
 input EpisodeCreateUpdateInput {
   id: String
   title: String
-  alternativeTitle: AlternativeTitleNameRelationInput
+  alternativeTitle: AlternativeTitleRelationInput
   series: SeriesRelationInput
   episodeNumber: Int
   files: FileRelationInput
@@ -114,15 +114,12 @@ input EpisodeCreateUpdateInput {
 
 input EpisodeManyRelationInput {
   create: [EpisodeCreateUpdateInput]
-  connect: [EpisodeWhereUniqueInput]
-  disconnect: [EpisodeWhereUniqueInput]
   delete: [EpisodeWhereUniqueInput]
 }
 
 input EpisodeRelationInput {
   create: EpisodeCreateUpdateInput
   connect: EpisodeWhereUniqueInput
-  disconnect: EpisodeWhereUniqueInput
 }
 
 input FileWhereUniqueInput {
@@ -144,31 +141,29 @@ input FileCreateUpdateInput {
 
 input FileRelationInput {
   create: [FileCreateUpdateInput]
-  connect: [FileWhereUniqueInput]
   delete: [FileWhereUniqueInput]
 }
 
-input AlternativeTitleNameWhereUniqueInput {
+input AlternativeTitleWhereUniqueInput {
   id: String!
 }
 
-input AlternativeTitleNameCreateUpdateInput {
+input AlternativeTitleCreateUpdateInput {
   id: String
   titleName: String
   episode: EpisodeRelationInput
   series: SeriesRelationInput
 }
 
-input AlternativeTitleNameRelationInput {
-  connect: [AlternativeTitleNameWhereUniqueInput]
-  create: [AlternativeTitleNameCreateUpdateInput]
-  disconnect: [AlternativeTitleNameWhereUniqueInput]
-  update: [AlternativeTitleNameUpdateWhereUniqueInput]
+input AlternativeTitleRelationInput {
+  create: [AlternativeTitleCreateUpdateInput]
+  delete: [AlternativeTitleWhereUniqueInput]
+  update: [AlternativeTitleUpdateWhereUniqueInput]
 }
 
-input AlternativeTitleNameUpdateWhereUniqueInput {
-  where: AlternativeTitleNameWhereUniqueInput
-  data: AlternativeTitleNameCreateUpdateInput
+input AlternativeTitleUpdateWhereUniqueInput {
+  where: AlternativeTitleWhereUniqueInput
+  data: AlternativeTitleCreateUpdateInput
 }
 
 input UserProgressWhereUniqueInput {
@@ -194,11 +189,11 @@ input UserProgressCreateUpdateInput {
   art: Int
   character: Int
   appeal: Int
+  remarks: String
 }
 
 input UserProgressRelationInput {
   create: [UserProgressCreateUpdateInput]
-  connect: [UserProgressWhereUniqueInput]
   delete: [UserProgressWhereUniqueInput]
   update: [UserProgressUpdateWhereUniqueInput]
 }
@@ -221,7 +216,6 @@ input ReferenceCreateUpdateInput {
 
 input ReferenceRelationInput {
   create: [ReferenceCreateUpdateInput]
-  connect: [ReferenceWhereUniqueInput]
   update: [ReferenceUpdateWhereUniqueInput]
   delete: [ReferenceWhereUniqueInput]
 }
@@ -309,8 +303,10 @@ type User {
 
 type Series {
   id: String
-  name: String
-  alternativeName: [AlternativeTitleName]
+  title: String
+  alternativeTitle: [AlternativeTitle]
+  seasonNumber: Int
+  episodeCount: Int
   episodes: [Episode]
   status: Status
   releaseSeason: String
@@ -330,14 +326,14 @@ type Series {
 type Episode {
   id: String!
   title: String!
-  alternativeTitle: [AlternativeTitleName]
+  alternativeTitle: [AlternativeTitle]
   series: Series!
   episodeNumber: Int!
   files: [File]
   remarks: String
 }
 
-type AlternativeTitleName {
+type AlternativeTitle {
   id: String!
   titleName: String!
 }
@@ -370,6 +366,7 @@ type UserProgress {
   art: Int
   character: Int
   appeal: Int
+  remarks: String
   createdAt: DateTime!
   updatedAt: DateTime!
 }
