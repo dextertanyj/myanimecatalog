@@ -2,6 +2,14 @@ import { Series as SeriesType } from "@prisma/client";
 import { Context } from "../../utils";
 
 export const Series = {
+  async alternativeTitle(parent: SeriesType, _args: any, ctx: Context) {
+    return ctx.prisma.alternativeTitle.findMany({
+      where: {
+        seriesId: parent.id
+      }
+    });
+  },
+
   async episodes(parent: SeriesType, _args: any, ctx: Context) {
     return ctx.prisma.episode.findMany({
       where: {

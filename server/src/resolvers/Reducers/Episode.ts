@@ -3,7 +3,7 @@ import { Context } from "../../utils";
 
 export const Episode = {
   async alternativeTitle(parent: EpisodeType, _args: any, ctx: Context) {
-    return ctx.prisma.alternativeTitleName.findMany({
+    return ctx.prisma.alternativeTitle.findMany({
       where: {
         episodeId: parent.id,
       },
