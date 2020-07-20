@@ -332,7 +332,7 @@ type Series {
   relatedAlternatives: [Series]
   references: [Reference]
   progress: UserProgress
-  progresses: [UserProgress]
+  allProgress: [UserProgress]
 }
 
 type AlternativeTitle {
