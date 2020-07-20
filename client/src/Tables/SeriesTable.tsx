@@ -41,10 +41,10 @@ export const SeriesTable = () => {
   const gridOptions = {
     enableCellTextSelection: true
   }
-  
+
   const classes = useStyles();
 
-  const {data: rowData, refetch} = useAllSeriesQuery();
+  const { data: rowData, refetch } = useAllSeriesQuery();
 
   useEffect(() => {
     console.log(rowData);
@@ -59,23 +59,23 @@ export const SeriesTable = () => {
               All Series
             </Typography>
           </Grid>
-          <Grid item xs/>
+          <Grid item xs />
           <Grid item alignContent="space-around" alignItems="center" className={classes.headerButton}>
-            <Button startIcon={<AddIcon />} variant="contained" color="primary" onClick={() => {setFormAction(Action_Type.CREATE); setShowForm(true);}}>Add New</Button>
+            <Button startIcon={<AddIcon />} variant="contained" color="primary" onClick={() => { setFormAction(Action_Type.CREATE); setShowForm(true); }}>Add New</Button>
           </Grid>
           <Grid item xs={12} className={classes.tableHeader}>
-            <div className="ag-grid-material" style={{ height: "500px" }}>
-              <AgGridReact 
+            <div className="ag-theme-material" style={{ height: "500px" }}>
+              <AgGridReact
                 animateRows
                 gridOptions={gridOptions}
-                columnDefs={columnDefs} 
+                columnDefs={columnDefs}
                 rowData={rowData?.allSeries as any[] || []}
               ></AgGridReact>
             </div>
           </Grid>
         </Grid>
       </Paper>
-      <SeriesForm open={showForm} action={formAction} onSubmit={() => {refetch(); setFormAction(Action_Type.CREATE)}} onClose={() => setShowForm(false)}/>
+      <SeriesForm open={showForm} action={formAction} onSubmit={() => { refetch(); setFormAction(Action_Type.CREATE) }} onClose={() => setShowForm(false)} />
     </div>
   );
 };
