@@ -310,6 +310,8 @@ type Episode {
   episodeNumber: Int
   files: [File]
   remarks: String
+  createdAt: DateTime
+  updatedAt: DateTime
 }
 
 type Series {
@@ -333,6 +335,8 @@ type Series {
   references: [Reference]
   progress: UserProgress
   allProgress: [UserProgress]
+  createdAt: DateTime
+  updatedAt: DateTime
 }
 
 type AlternativeTitle {
