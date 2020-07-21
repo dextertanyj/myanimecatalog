@@ -55,6 +55,8 @@ export type Episode = {
   readonly episodeNumber?: Maybe<Scalars['Int']>;
   readonly files?: Maybe<ReadonlyArray<Maybe<File>>>;
   readonly remarks?: Maybe<Scalars['String']>;
+  readonly createdAt?: Maybe<Scalars['DateTime']>;
+  readonly updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type EpisodeCreateUpdateInput = {
@@ -65,6 +67,8 @@ export type EpisodeCreateUpdateInput = {
   readonly episodeNumber?: Maybe<Scalars['Int']>;
   readonly files?: Maybe<FileRelationInput>;
   readonly remarks?: Maybe<Scalars['String']>;
+  readonly createdAt?: Maybe<Scalars['DateTime']>;
+  readonly updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type EpisodeManyRelationInput = {
@@ -108,6 +112,8 @@ export type FileCreateUpdateInput = {
   readonly codec?: Maybe<Scalars['String']>;
   readonly remarks?: Maybe<Scalars['String']>;
   readonly episode?: Maybe<EpisodeRelationInput>;
+  readonly createdAt?: Maybe<Scalars['DateTime']>;
+  readonly updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type FileRelationInput = {
@@ -349,6 +355,8 @@ export type Series = {
   readonly references?: Maybe<ReadonlyArray<Maybe<Reference>>>;
   readonly progress?: Maybe<UserProgress>;
   readonly allProgress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
+  readonly createdAt?: Maybe<Scalars['DateTime']>;
+  readonly updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type SeriesCreateUpdateInput = {
@@ -371,6 +379,8 @@ export type SeriesCreateUpdateInput = {
   readonly relatedAlternatives?: Maybe<SeriesManyRelationInput>;
   readonly references?: Maybe<ReferenceRelationInput>;
   readonly progress?: Maybe<UserProgressRelationInput>;
+  readonly createdAt?: Maybe<Scalars['DateTime']>;
+  readonly updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type SeriesManyRelationInput = {
@@ -468,6 +478,8 @@ export type UserProgressCreateUpdateInput = {
   readonly character?: Maybe<Scalars['Int']>;
   readonly appeal?: Maybe<Scalars['Int']>;
   readonly remarks?: Maybe<Scalars['String']>;
+  readonly createdAt?: Maybe<Scalars['DateTime']>;
+  readonly updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type UserProgressRelationInput = {
@@ -534,6 +546,18 @@ export const Series = gql`
       id
       title
     }
+    references {
+      id
+      link
+      source
+    }
+    status
+    type
+    episodes {
+      id
+      title
+      episodeNumber
+    }
     episodeCount
     seasonNumber
     releaseSeason
@@ -555,6 +579,16 @@ export const Series = gql`
       id
       title
     }
+    relatedSeries {
+      id
+      title
+    }
+    relatedAlternatives {
+      id
+      title
+    }
+    createdAt
+    updatedAt
   }
 }
     `;
@@ -575,6 +609,13 @@ export const AllSeries = gql`
 export const CreateSeries = gql`
     mutation CreateSeries($data: SeriesCreateUpdateInput!) {
   createSeries(data: $data) {
+    id
+  }
+}
+    `;
+export const UpdateSeries = gql`
+    mutation UpdateSeries($where: SeriesWhereUniqueInput!, $data: SeriesCreateUpdateInput!) {
+  updateSeries(where: $where, data: $data) {
     id
   }
 }

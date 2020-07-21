@@ -6,6 +6,18 @@ query Series($where: SeriesWhereUniqueInput!) {
       id
       title
     }
+    references {
+      id
+      link
+      source
+    }
+    status
+    type
+    episodes {
+      id
+      title
+      episodeNumber
+    }
     episodeCount
     seasonNumber
     releaseSeason
@@ -27,6 +39,16 @@ query Series($where: SeriesWhereUniqueInput!) {
       id
       title
     }
+    relatedSeries {
+      id
+      title
+    }
+    relatedAlternatives {
+      id
+      title
+    }
+    createdAt
+    updatedAt
   }
 }
 
@@ -45,6 +67,15 @@ query AllSeries {
 
 mutation CreateSeries($data: SeriesCreateUpdateInput!) {
   createSeries(data: $data) {
+    id
+  }
+}
+
+mutation UpdateSeries(
+  $where: SeriesWhereUniqueInput!
+  $data: SeriesCreateUpdateInput!
+) {
+  updateSeries(where: $where, data: $data) {
     id
   }
 }

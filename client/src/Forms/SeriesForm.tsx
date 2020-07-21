@@ -12,14 +12,23 @@ import {
   Theme,
 } from '@material-ui/core';
 import RemoveIcon from '@material-ui/icons/Remove';
+import Skeleton from '@material-ui/lab/Skeleton';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import { FieldArray, Formik, FormikProps, FormikValues } from 'formik';
 import { Moment } from 'moment';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import * as Yup from 'yup';
-import { Type } from '../gql/documents';
-import { Season, Status, useCreateSeriesMutation } from '../gql/queries';
+import { SeriesAutocomplete } from '../Components/SeriesAutocomplete';
+import { Series, Type } from '../gql/documents';
+import {
+  Season,
+  Status,
+  useAllSeriesQuery,
+  useCreateSeriesMutation,
+  useSeriesLazyQuery,
+  useUpdateSeriesMutation,
+} from '../gql/queries';
 import { Action_Type } from '../utils/constants';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -70,6 +79,11 @@ type AlternativeTitle = {
   title: string | undefined;
 };
 
+type SeriesRelation = {
+  id: string;
+  title: string;
+};
+
 type FormValues = {
   title: string;
   seasonNumber: number;
@@ -81,15 +95,172 @@ type FormValues = {
   remarks: string;
   alternativeTitles: AlternativeTitle[];
   references: Reference[];
-  prequel: string[];
-  sequel: string[];
-  sideStory: string[];
-  mainStory: string[];
-  related: string[];
+  prequels: SeriesRelation[];
+  sequels: SeriesRelation[];
+  sideStories: SeriesRelation[];
+  mainStories: SeriesRelation[];
+  related: SeriesRelation[];
 };
 
+function arrayOrUndefined<T>(array: T[] | null | undefined): T[] | undefined {
+  if (Array.isArray(array) && array.length > 0) {
+    return array;
+  } else {
+    return undefined;
+  }
+}
+
+function updateSeriesRelations(
+  originalArray: SeriesRelation[] | undefined | null,
+  newArray: SeriesRelation[]
+): {
+  connect: { id: string }[] | undefined;
+  disconnect: { id: string }[] | undefined;
+} {
+  if (newArray.length === 0) {
+    return {
+      connect: undefined,
+      disconnect: arrayOrUndefined(
+        originalArray?.map((series) => {
+          return { id: series.id };
+        })
+      ),
+    };
+  } else if (!originalArray || originalArray.length === 0) {
+    return {
+      connect: arrayOrUndefined(
+        newArray?.map((series) => {
+          return { id: series.id };
+        })
+      ),
+      disconnect: undefined,
+    };
+  } else {
+    const connect = newArray
+      .filter(
+        (newSeries) =>
+          !originalArray.find((series) => newSeries.id === series.id)
+      )
+      .map((series) => {
+        return { id: series.id };
+      });
+    const disconnect = originalArray
+      .filter(
+        (series) => !newArray.find((newSeries) => newSeries.id === series.id)
+      )
+      .map((series) => {
+        return { id: series.id };
+      });
+    return {
+      connect: arrayOrUndefined(connect),
+      disconnect: arrayOrUndefined(disconnect),
+    };
+  }
+}
+
+function updateRelatedSeries(
+  originalRelated: SeriesRelation[],
+  originalAlternatives: SeriesRelation[],
+  newRelated: SeriesRelation[]
+): {
+  relatedSeries: {
+    connect: { id: string }[] | undefined;
+    disconnect: { id: string }[] | undefined;
+  };
+  relatedAlternatives: {
+    connect: { id: string }[] | undefined;
+    disconnect: { id: string }[] | undefined;
+  };
+} {
+  if (newRelated.length === 0) {
+    return {
+      relatedAlternatives: {
+        connect: undefined,
+        disconnect: arrayOrUndefined(
+          originalAlternatives.map((series) => {
+            return { id: series.id };
+          })
+        ),
+      },
+      relatedSeries: {
+        connect: undefined,
+        disconnect: arrayOrUndefined(
+          originalRelated.map((series) => {
+            return { id: series.id };
+          })
+        ),
+      },
+    };
+  } else {
+    const connect = newRelated
+      .filter(
+        (series) =>
+          !originalRelated.find((original) => original.id === series.id) &&
+          !originalAlternatives.find((original) => original.id === series.id)
+      )
+      .map((series) => {
+        return { id: series.id };
+      });
+    const disconnectSeries = originalRelated
+      .filter((series) => !newRelated.find((value) => value.id === series.id))
+      .map((series) => {
+        return { id: series.id };
+      });
+    const disconnectAlternatives = originalAlternatives
+      .filter((series) => !newRelated.find((value) => value.id === series.id))
+      .map((series) => {
+        return { id: series.id };
+      });
+    return {
+      relatedAlternatives: {
+        connect: undefined,
+        disconnect: arrayOrUndefined(disconnectAlternatives),
+      },
+      relatedSeries: {
+        connect: arrayOrUndefined(connect),
+        disconnect: arrayOrUndefined(disconnectSeries),
+      },
+    };
+  }
+}
+
 export const SeriesForm = (props: Props): ReactElement => {
+  const { action: actionType } = props;
   const classes = useStyles();
+
+  const { data: seriesList, loading: loadingOptions } = useAllSeriesQuery();
+  const [autoCompleteOptions, setAutoCompleteOptions] = useState<Series[]>([]);
+
+  const [
+    loadSeries,
+    { data: seriesData, loading: loadingSeries },
+  ] = useSeriesLazyQuery();
+
+  useEffect(() => {
+    if (!!seriesList?.allSeries) {
+      if (props.seriesId) {
+        setAutoCompleteOptions(
+          (seriesList.allSeries.filter(
+            (series) => series?.id !== props.seriesId
+          ) as Series[]) || []
+        );
+      } else {
+        setAutoCompleteOptions(seriesList.allSeries as Series[]);
+      }
+    }
+  }, [seriesList?.allSeries, props.seriesId]);
+
+  useEffect(() => {
+    if (props.open && props.seriesId) {
+      loadSeries({
+        variables: {
+          where: {
+            id: props.seriesId,
+          },
+        },
+      });
+    }
+  }, [props.seriesId, props.open]);
 
   const [createSeriesMutation] = useCreateSeriesMutation({
     onCompleted: () => {
@@ -98,45 +269,229 @@ export const SeriesForm = (props: Props): ReactElement => {
     },
   });
 
-  const onSubmit = (values: FormikValues) => {
-    const {
+  const [updateSeriesMutation] = useUpdateSeriesMutation({
+    onCompleted: () => {
+      props.onSubmit();
+      props.onClose();
+    },
+  });
+
+  const onSubmitCreate = (values: FormikValues) => {
+    let {
       alternativeTitles,
       references,
       seasonNumber,
       episodeCount,
-      prequel,
-      sequel,
-      mainStory,
-      sideStory,
+      prequels,
+      sequels,
+      mainStories,
+      sideStories,
       related,
       ...rest
     } = values;
-    let alternativeTitlesFormatted = undefined;
-    let referencesFormatted = undefined;
-    if (alternativeTitles.length > 0) {
-      alternativeTitlesFormatted = {
-        create: alternativeTitles
-          .filter((altTitle: AlternativeTitle) => !altTitle.id)
-          .map((altTitle: AlternativeTitle) => {
-            return { title: altTitle.title };
-          }),
-      };
-    }
-    if (references.length > 0) {
-      referencesFormatted = {
-        create: references
-          .filter((reference: Reference) => !reference.id)
-          .map((reference: Reference) => {
-            return { link: reference.link, source: reference.source };
-          }),
-      };
-    }
+    alternativeTitles =
+      alternativeTitles.length > 0
+        ? {
+            create: alternativeTitles
+              .filter((altTitle: AlternativeTitle) => !altTitle.id)
+              .map((altTitle: AlternativeTitle) => {
+                return { title: altTitle.title };
+              }),
+          }
+        : undefined;
+    references =
+      references.length > 0
+        ? {
+            create: references
+              .filter((reference: Reference) => !reference.id)
+              .map((reference: Reference) => {
+                return { link: reference.link, source: reference.source };
+              }),
+          }
+        : undefined;
+    prequels =
+      prequels.length > 0
+        ? {
+            connect: prequels.map((series: Partial<Series>) => {
+              return { id: series.id };
+            }),
+          }
+        : undefined;
+    sequels =
+      sequels.length > 0
+        ? {
+            connect: sequels.map((series: Partial<Series>) => {
+              return { id: series.id };
+            }),
+          }
+        : undefined;
+    mainStories =
+      mainStories.length > 0
+        ? {
+            connect: mainStories.map((series: Partial<Series>) => {
+              return { id: series.id };
+            }),
+          }
+        : undefined;
+    sideStories =
+      sideStories.length > 0
+        ? {
+            connect: sideStories.map((series: Partial<Series>) => {
+              return { id: series.id };
+            }),
+          }
+        : undefined;
+    related =
+      related.length > 0
+        ? {
+            connect: related.map((series: Partial<Series>) => {
+              return { id: series.id };
+            }),
+          }
+        : undefined;
 
     createSeriesMutation({
       variables: {
         data: {
-          alternativeTitles: alternativeTitlesFormatted,
-          references: referencesFormatted,
+          alternativeTitles,
+          references,
+          prequels,
+          sequels,
+          mainStories,
+          sideStories,
+          relatedSeries: related,
+          episodeCount: episodeCount === '' ? undefined : episodeCount,
+          seasonNumber: seasonNumber === '' ? undefined : seasonNumber,
+          ...rest,
+        },
+      },
+    });
+  };
+
+  const onSubmitUpdate = (values: FormikValues) => {
+    let {
+      alternativeTitles,
+      references,
+      seasonNumber,
+      episodeCount,
+      prequels,
+      sequels,
+      mainStories,
+      sideStories,
+      related,
+      ...rest
+    } = values;
+    alternativeTitles = {
+      create: arrayOrUndefined(
+        alternativeTitles
+          .filter((altTitle: AlternativeTitle) => !altTitle.id)
+          .map((altTitle: AlternativeTitle) => {
+            return { title: altTitle.title };
+          })
+      ),
+      update: arrayOrUndefined(
+        alternativeTitles
+          .filter((altTitle: AlternativeTitle) => !!altTitle.id)
+          .map((altTitle: AlternativeTitle) => {
+            return {
+              where: { id: altTitle.id },
+              data: { title: altTitle.title },
+            };
+          })
+      ),
+      delete: seriesData?.series?.alternativeTitles
+        ? arrayOrUndefined(
+            seriesData.series.alternativeTitles
+              .filter(
+                (altTitle) =>
+                  !alternativeTitles.find(
+                    (newTitle: AlternativeTitle) =>
+                      newTitle?.id === altTitle?.id
+                  )
+              )
+              .filter(Boolean)
+              //@ts-ignore
+              .map((altTitle: AlternativeTitle) => {
+                return {
+                  id: altTitle.id,
+                };
+              })
+          )
+        : undefined,
+    };
+    references = {
+      create: arrayOrUndefined(
+        references
+          .filter((reference: Reference) => !reference.id)
+          .map((reference: Reference) => {
+            return { link: reference.link, source: reference.source };
+          })
+      ),
+      update: arrayOrUndefined(
+        references
+          .filter((reference: Reference) => !!reference.id)
+          .map((reference: Reference) => {
+            return {
+              where: { id: reference.id },
+              data: { link: reference.link, source: reference.source },
+            };
+          })
+      ),
+      delete: seriesData?.series?.references
+        ? arrayOrUndefined(
+            seriesData.series.references
+              .filter(
+                (reference) =>
+                  !references.find(
+                    (newReference: Reference) =>
+                      newReference?.id === reference?.id
+                  )
+              )
+              .filter(Boolean)
+              //@ts-ignore
+              .map((reference: Reference) => {
+                return {
+                  id: reference.id,
+                };
+              })
+          )
+        : undefined,
+    };
+    prequels = updateSeriesRelations(
+      seriesData?.series?.prequels as SeriesRelation[],
+      prequels
+    );
+    sequels = updateSeriesRelations(
+      seriesData?.series?.sequels as SeriesRelation[],
+      sequels
+    );
+    mainStories = updateSeriesRelations(
+      seriesData?.series?.mainStories as SeriesRelation[],
+      mainStories
+    );
+    sideStories = updateSeriesRelations(
+      seriesData?.series?.sideStories as SeriesRelation[],
+      sideStories
+    );
+    const { relatedSeries, relatedAlternatives } = updateRelatedSeries(
+      (seriesData?.series?.relatedSeries as SeriesRelation[]) || [],
+      (seriesData?.series?.relatedAlternatives as SeriesRelation[]) || [],
+      related
+    );
+    console.log(relatedSeries);
+    console.log(relatedAlternatives);
+    updateSeriesMutation({
+      variables: {
+        where: { id: props.seriesId || '' },
+        data: {
+          alternativeTitles,
+          references,
+          prequels,
+          sequels,
+          mainStories,
+          sideStories,
+          relatedSeries,
+          relatedAlternatives,
           episodeCount: episodeCount === '' ? undefined : episodeCount,
           seasonNumber: seasonNumber === '' ? undefined : seasonNumber,
           ...rest,
@@ -146,16 +501,44 @@ export const SeriesForm = (props: Props): ReactElement => {
   };
 
   const initialFormValues: Partial<FormValues> = {
-    title: undefined,
-    seasonNumber: undefined,
-    episodeCount: undefined,
-    status: undefined,
-    type: undefined,
-    releaseSeason: undefined,
-    releaseYear: undefined,
-    remarks: undefined,
-    alternativeTitles: [],
-    references: [],
+    title: seriesData?.series?.title || undefined,
+    seasonNumber: seriesData?.series?.seasonNumber || undefined,
+    episodeCount: seriesData?.series?.episodeCount || undefined,
+    status: seriesData?.series?.status || undefined,
+    type: seriesData?.series?.type || undefined,
+    releaseSeason: seriesData?.series?.releaseSeason || undefined,
+    releaseYear: seriesData?.series?.releaseYear || undefined,
+    remarks: seriesData?.series?.remarks || undefined,
+    alternativeTitles:
+      (seriesData?.series?.alternativeTitles &&
+        (Array.from(
+          seriesData?.series?.alternativeTitles
+        ) as AlternativeTitle[])) ||
+      [],
+    references:
+      (seriesData?.series?.references &&
+        (Array.from(seriesData?.series?.references) as Reference[])) ||
+      [],
+    prequels:
+      (seriesData?.series?.prequels &&
+        (Array.from(seriesData?.series?.prequels) as SeriesRelation[])) ||
+      [],
+    sequels:
+      (seriesData?.series?.sequels &&
+        (Array.from(seriesData?.series?.sequels) as SeriesRelation[])) ||
+      [],
+    mainStories:
+      (seriesData?.series?.mainStories &&
+        (Array.from(seriesData?.series?.mainStories) as SeriesRelation[])) ||
+      [],
+    sideStories:
+      (seriesData?.series?.sideStories &&
+        (Array.from(seriesData?.series?.sideStories) as SeriesRelation[])) ||
+      [],
+    related: [
+      ...(seriesData?.series?.relatedSeries || []),
+      ...(seriesData?.series?.relatedAlternatives || []),
+    ] as SeriesRelation[],
   };
 
   return (
@@ -165,217 +548,335 @@ export const SeriesForm = (props: Props): ReactElement => {
       fullWidth={true}
       maxWidth={'lg'}
     >
-      <DialogTitle key="DialogTitle">Add A New Series</DialogTitle>
+      <DialogTitle key="DialogTitle">
+        {props.action === Action_Type.CREATE
+          ? `Add A New Series`
+          : `Editing ${seriesData?.series?.title}`}
+      </DialogTitle>
       <DialogContent>
-        <Formik
-          initialValues={initialFormValues}
-          onSubmit={onSubmit}
-          validationSchema={Yup.object({
-            title: Yup.string().required(`Please enter a title`),
-            releaseSeason: Yup.string().required(
-              `Please select the release season`
-            ),
-            releaseYear: Yup.date().required(`Please select the release year`),
-            seasonNumber: Yup.number().min(
-              0,
-              `Season number should be positive`
-            ),
-            episodeCount: Yup.number()
-              .required(`Please input the number of episodes`)
-              .min(0, `Number of episodes should be positive`),
-            status: Yup.string().required(`Please select a status`),
-            type: Yup.string().required(`Please select a type`),
-          })}
-        >
-          {(props: FormikProps<Partial<FormValues>>) => {
-            const {
-              values,
-              errors,
-              touched,
-              handleSubmit,
-              handleChange,
-              handleBlur,
-              setFieldValue,
-              handleReset,
-            } = props;
-            return (
-              <form className={classes.form} onSubmit={handleSubmit}>
-                <Grid container spacing={3}>
-                  <Grid item xs={12}>
-                    <TextField
-                      variant="outlined"
-                      margin="normal"
-                      fullWidth
-                      id="title"
-                      label="Title"
-                      name="title"
-                      value={values.title || ''}
-                      error={touched.title && !!errors.title}
-                      helperText={touched.title && errors.title}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      className={classes.formItem}
-                    />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <TextField
-                      variant="outlined"
-                      margin="normal"
-                      fullWidth
-                      name="seasonNumber"
-                      label="Season Number"
-                      id="seasonNumber"
-                      type="number"
-                      value={values.seasonNumber || null}
-                      error={touched.seasonNumber && !!errors.seasonNumber}
-                      helperText={touched.seasonNumber && errors.seasonNumber}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      className={classes.formItem}
-                    />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <TextField
-                      variant="outlined"
-                      margin="normal"
-                      fullWidth
-                      name="episodeCount"
-                      label="Number of Episodes"
-                      id="episodeCount"
-                      type="number"
-                      value={values.episodeCount || null}
-                      error={touched.episodeCount && !!errors.episodeCount}
-                      helperText={touched.episodeCount && errors.episodeCount}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      className={classes.formItem}
-                    />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <TextField
-                      select
-                      fullWidth
-                      variant="outlined"
-                      margin="normal"
-                      name="releaseSeason"
-                      label="Release Season"
-                      id="releaseSeason"
-                      value={values.releaseSeason || null}
-                      error={touched.releaseSeason && !!errors.releaseSeason}
-                      helperText={touched.releaseSeason && errors.releaseSeason}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      className={classes.formItem}
-                    >
-                      {Object.entries(Season).map((value: [string, Season]) => {
-                        return (
-                          <MenuItem key={value[1]} value={value[1]}>
-                            {value[0]}
-                          </MenuItem>
-                        );
-                      })}
-                    </TextField>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <KeyboardDatePicker
-                      fullWidth
-                      inputVariant="outlined"
-                      clearable
-                      views={['year']}
-                      label="Release Year"
-                      value={values?.releaseYear || null}
-                      error={touched.releaseYear && !!errors.releaseYear}
-                      helperText={touched.releaseYear && errors.releaseYear}
-                      onChange={(date: MaterialUiPickersDate) =>
-                        setFieldValue(
-                          'releaseYear',
-                          date?.startOf('year') as Moment
-                        )
-                      }
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField
-                      select
-                      fullWidth
-                      variant="outlined"
-                      margin="normal"
-                      name="type"
-                      label="Type"
-                      id="type"
-                      value={values.type || null}
-                      error={touched.type && !!errors.type}
-                      helperText={touched.type && errors.type}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      className={classes.formItem}
-                    >
-                      {Object.entries(Type).map((value: [string, Type]) => {
-                        return (
-                          <MenuItem key={value[1]} value={value[1]}>
-                            {value[0]}
-                          </MenuItem>
-                        );
-                      })}
-                    </TextField>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField
-                      select
-                      fullWidth
-                      variant="outlined"
-                      margin="normal"
-                      name="status"
-                      label="Status"
-                      id="status"
-                      value={values.status || null}
-                      error={touched.status && !!errors.status}
-                      helperText={touched.status && errors.status}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      className={classes.formItem}
-                    >
-                      {Object.entries(Status).map((value: [string, Status]) => {
-                        return (
-                          <MenuItem key={value[1]} value={value[1]}>
-                            {value[0]}
-                          </MenuItem>
-                        );
-                      })}
-                    </TextField>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <FieldArray
-                      name="alternativeTitles"
-                      render={(arrayHelpers) => (
-                        <Grid container spacing={3}>
-                          {values.alternativeTitles &&
-                            values.alternativeTitles.length > 0 && (
+        {loadingSeries && seriesData ? (
+          <Skeleton variant="rect" height={400} />
+        ) : (
+          <Formik
+            enableReinitialize={true}
+            initialValues={initialFormValues}
+            onSubmit={
+              props.action === Action_Type.CREATE
+                ? onSubmitCreate
+                : onSubmitUpdate
+            }
+            validationSchema={Yup.object({
+              title: Yup.string().required(`Please enter a title`),
+              releaseSeason: Yup.string().required(
+                `Please select the release season`
+              ),
+              releaseYear: Yup.date().required(
+                `Please select the release year`
+              ),
+              seasonNumber: Yup.number().min(
+                0,
+                `Season number should be positive`
+              ),
+              episodeCount: Yup.number()
+                .required(`Please input the number of episodes`)
+                .min(0, `Number of episodes should be positive`),
+              status: Yup.string().required(`Please select a status`),
+              type: Yup.string().required(`Please select a type`),
+            })}
+          >
+            {(props: FormikProps<Partial<FormValues>>) => {
+              const {
+                values,
+                errors,
+                touched,
+                handleSubmit,
+                handleChange,
+                handleBlur,
+                setFieldValue,
+                setTouched,
+                handleReset,
+              } = props;
+              return (
+                <form className={classes.form} onSubmit={handleSubmit}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                      <TextField
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                        id="title"
+                        label="Title"
+                        name="title"
+                        value={values.title || ''}
+                        error={touched.title && !!errors.title}
+                        helperText={touched.title && errors.title}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={classes.formItem}
+                      />
+                    </Grid>
+                    <Grid item xs={3}>
+                      <TextField
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                        name="seasonNumber"
+                        label="Season Number"
+                        id="seasonNumber"
+                        type="number"
+                        value={values.seasonNumber || null}
+                        error={touched.seasonNumber && !!errors.seasonNumber}
+                        helperText={touched.seasonNumber && errors.seasonNumber}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={classes.formItem}
+                      />
+                    </Grid>
+                    <Grid item xs={3}>
+                      <TextField
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                        name="episodeCount"
+                        label="Number of Episodes"
+                        id="episodeCount"
+                        type="number"
+                        value={values.episodeCount || null}
+                        error={touched.episodeCount && !!errors.episodeCount}
+                        helperText={touched.episodeCount && errors.episodeCount}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={classes.formItem}
+                      />
+                    </Grid>
+                    <Grid item xs={3}>
+                      <TextField
+                        select
+                        fullWidth
+                        variant="outlined"
+                        margin="normal"
+                        name="releaseSeason"
+                        label="Release Season"
+                        id="releaseSeason"
+                        value={values.releaseSeason || null}
+                        InputLabelProps={{ shrink: !!values.releaseSeason }}
+                        error={touched.releaseSeason && !!errors.releaseSeason}
+                        helperText={
+                          touched.releaseSeason && errors.releaseSeason
+                        }
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={classes.formItem}
+                      >
+                        {Object.entries(Season).map(
+                          (value: [string, Season]) => {
+                            return (
+                              <MenuItem key={value[1]} value={value[1]}>
+                                {value[0]}
+                              </MenuItem>
+                            );
+                          }
+                        )}
+                      </TextField>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <KeyboardDatePicker
+                        fullWidth
+                        inputVariant="outlined"
+                        clearable
+                        views={['year']}
+                        label="Release Year"
+                        value={values?.releaseYear || null}
+                        error={touched.releaseYear && !!errors.releaseYear}
+                        helperText={touched.releaseYear && errors.releaseYear}
+                        onChange={(date: MaterialUiPickersDate) =>
+                          setFieldValue(
+                            'releaseYear',
+                            date?.startOf('year') as Moment
+                          )
+                        }
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        select
+                        fullWidth
+                        variant="outlined"
+                        margin="normal"
+                        name="type"
+                        label="Type"
+                        id="type"
+                        value={values.type || null}
+                        InputLabelProps={{ shrink: !!values.type }}
+                        error={touched.type && !!errors.type}
+                        helperText={touched.type && errors.type}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={classes.formItem}
+                      >
+                        {Object.entries(Type).map((value: [string, Type]) => {
+                          return (
+                            <MenuItem key={value[1]} value={value[1]}>
+                              {value[0]}
+                            </MenuItem>
+                          );
+                        })}
+                      </TextField>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        select
+                        fullWidth
+                        variant="outlined"
+                        margin="normal"
+                        name="status"
+                        label="Status"
+                        id="status"
+                        value={values.status || null}
+                        InputLabelProps={{ shrink: !!values.status }}
+                        error={touched.status && !!errors.status}
+                        helperText={touched.status && errors.status}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={classes.formItem}
+                      >
+                        {Object.entries(Status).map(
+                          (value: [string, Status]) => {
+                            return (
+                              <MenuItem key={value[1]} value={value[1]}>
+                                {value[0]}
+                              </MenuItem>
+                            );
+                          }
+                        )}
+                      </TextField>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <FieldArray
+                        name="alternativeTitles"
+                        render={(arrayHelpers) => (
+                          <Grid container spacing={3}>
+                            {values.alternativeTitles &&
+                              values.alternativeTitles.length > 0 && (
+                                <Grid item xs={12}>
+                                  {values.alternativeTitles.map(
+                                    (
+                                      altTitle: {
+                                        id: string | undefined;
+                                        title: string | undefined;
+                                      },
+                                      index: number
+                                    ) => {
+                                      return (
+                                        <Grid container spacing={3}>
+                                          <Grid
+                                            item
+                                            xs={11}
+                                            key={`${index}-title`}
+                                          >
+                                            <TextField
+                                              variant="outlined"
+                                              margin="normal"
+                                              fullWidth
+                                              key={`alternativeTitles.${index}.title`}
+                                              name={`alternativeTitles.${index}.title`}
+                                              label="Alternative Title"
+                                              id={`alternativeTitles.${index}.title`}
+                                              value={altTitle.title || ''}
+                                              onChange={handleChange}
+                                              onBlur={handleBlur}
+                                              className={classes.formItem}
+                                            />
+                                          </Grid>
+                                          <Grid
+                                            item
+                                            xs={1}
+                                            className={classes.formArrayGrid}
+                                            alignContent="space-around"
+                                            alignItems="center"
+                                          >
+                                            <IconButton
+                                              size="small"
+                                              onClick={() =>
+                                                arrayHelpers.remove(index)
+                                              }
+                                            >
+                                              <RemoveIcon />
+                                            </IconButton>
+                                          </Grid>
+                                        </Grid>
+                                      );
+                                    }
+                                  )}
+                                </Grid>
+                              )}
+                            <Grid item xs={12}>
+                              <Button
+                                fullWidth
+                                variant="outlined"
+                                color="primary"
+                                onClick={() =>
+                                  arrayHelpers.push({
+                                    id: undefined,
+                                    title: undefined,
+                                  })
+                                }
+                              >
+                                Add an alternative title
+                              </Button>
+                            </Grid>
+                          </Grid>
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <FieldArray
+                        name="references"
+                        render={(arrayHelpers) => (
+                          <Grid container spacing={3}>
+                            {values.references && values.references.length > 0 && (
                               <Grid item xs={12}>
-                                {values.alternativeTitles.map(
+                                {values.references.map(
                                   (
-                                    altTitle: {
+                                    reference: {
                                       id: string | undefined;
-                                      title: string | undefined;
+                                      link: string | undefined;
+                                      source: string | undefined;
                                     },
                                     index: number
                                   ) => {
                                     return (
                                       <Grid container spacing={3}>
+                                        <Grid item xs={6} key={`${index}-link`}>
+                                          <TextField
+                                            variant="outlined"
+                                            margin="normal"
+                                            fullWidth
+                                            key={`references.${index}.link`}
+                                            name={`references.${index}.link`}
+                                            label="Link"
+                                            type="url"
+                                            id={`references.${index}.link`}
+                                            value={reference.link || null}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            className={classes.formItem}
+                                          />
+                                        </Grid>
                                         <Grid
                                           item
-                                          xs={11}
-                                          key={`${index}-title`}
+                                          xs={5}
+                                          key={`${index}-source`}
                                         >
                                           <TextField
                                             variant="outlined"
                                             margin="normal"
                                             fullWidth
-                                            key={`alternativeTitles.${index}.title`}
-                                            name={`alternativeTitles.${index}.title`}
-                                            label="Alternative Title"
-                                            id={`alternativeTitles.${index}.title`}
-                                            value={altTitle.title || ''}
+                                            key={`references.${index}.source`}
+                                            name={`references.${index}.source`}
+                                            label="Source"
+                                            id={`references.${index}.source`}
+                                            value={reference.source || null}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             className={classes.formItem}
@@ -403,143 +904,114 @@ export const SeriesForm = (props: Props): ReactElement => {
                                 )}
                               </Grid>
                             )}
-                          <Grid item xs={12}>
-                            <Button
-                              fullWidth
-                              variant="outlined"
-                              color="primary"
-                              onClick={() =>
-                                arrayHelpers.push({
-                                  id: undefined,
-                                  title: undefined,
-                                })
-                              }
-                            >
-                              Add an alternative title
-                            </Button>
-                          </Grid>
-                        </Grid>
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <FieldArray
-                      name="references"
-                      render={(arrayHelpers) => (
-                        <Grid container spacing={3}>
-                          {values.references && values.references.length > 0 && (
                             <Grid item xs={12}>
-                              {values.references.map(
-                                (
-                                  reference: {
-                                    id: string | undefined;
-                                    link: string | undefined;
-                                    source: string | undefined;
-                                  },
-                                  index: number
-                                ) => {
-                                  return (
-                                    <Grid container spacing={3}>
-                                      <Grid item xs={6} key={`${index}-link`}>
-                                        <TextField
-                                          variant="outlined"
-                                          margin="normal"
-                                          fullWidth
-                                          key={`references.${index}.link`}
-                                          name={`references.${index}.link`}
-                                          label="Link"
-                                          type="url"
-                                          id={`references.${index}.link`}
-                                          value={reference.link || null}
-                                          onChange={handleChange}
-                                          onBlur={handleBlur}
-                                          className={classes.formItem}
-                                        />
-                                      </Grid>
-                                      <Grid item xs={5} key={`${index}-source`}>
-                                        <TextField
-                                          variant="outlined"
-                                          margin="normal"
-                                          fullWidth
-                                          key={`references.${index}.source`}
-                                          name={`references.${index}.source`}
-                                          label="Source"
-                                          id={`references.${index}.source`}
-                                          value={reference.source || null}
-                                          onChange={handleChange}
-                                          onBlur={handleBlur}
-                                          className={classes.formItem}
-                                        />
-                                      </Grid>
-                                      <Grid
-                                        item
-                                        xs={1}
-                                        className={classes.formArrayGrid}
-                                        alignContent="space-around"
-                                        alignItems="center"
-                                      >
-                                        <IconButton
-                                          size="small"
-                                          onClick={() =>
-                                            arrayHelpers.remove(index)
-                                          }
-                                        >
-                                          <RemoveIcon />
-                                        </IconButton>
-                                      </Grid>
-                                    </Grid>
-                                  );
+                              <Button
+                                fullWidth
+                                variant="outlined"
+                                color="primary"
+                                onClick={() =>
+                                  arrayHelpers.push({
+                                    id: undefined,
+                                    title: undefined,
+                                  })
                                 }
-                              )}
+                              >
+                                Add a reference
+                              </Button>
                             </Grid>
-                          )}
-                          <Grid item xs={12}>
-                            <Button
-                              fullWidth
-                              variant="outlined"
-                              color="primary"
-                              onClick={() =>
-                                arrayHelpers.push({
-                                  id: undefined,
-                                  title: undefined,
-                                })
-                              }
-                            >
-                              Add a reference
-                            </Button>
                           </Grid>
-                        </Grid>
-                      )}
-                    />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        multiline
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                        id="remarks"
+                        label="Remarks"
+                        name="remarks"
+                        value={values.remarks || ''}
+                        error={touched.remarks && !!errors.remarks}
+                        helperText={touched.remarks && errors.remarks}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={classes.formItem}
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <SeriesAutocomplete
+                        fieldName={'prequels'}
+                        label={'Prequels'}
+                        errors={errors}
+                        values={values.prequels || []}
+                        setFieldValue={setFieldValue}
+                        setTouched={setTouched}
+                        loading={loadingOptions}
+                        options={autoCompleteOptions}
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <SeriesAutocomplete
+                        fieldName={'sequels'}
+                        label={'Sequels'}
+                        errors={errors}
+                        values={values.sequels || []}
+                        setFieldValue={setFieldValue}
+                        setTouched={setTouched}
+                        loading={loadingOptions}
+                        options={autoCompleteOptions}
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <SeriesAutocomplete
+                        fieldName={'mainStories'}
+                        label={'Main Story'}
+                        errors={errors}
+                        values={values.mainStories || []}
+                        setFieldValue={setFieldValue}
+                        setTouched={setTouched}
+                        loading={loadingOptions}
+                        options={autoCompleteOptions}
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <SeriesAutocomplete
+                        fieldName={'sideStories'}
+                        label={'Side Stories'}
+                        errors={errors}
+                        values={values.sideStories || []}
+                        setFieldValue={setFieldValue}
+                        setTouched={setTouched}
+                        loading={loadingOptions}
+                        options={autoCompleteOptions}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <SeriesAutocomplete
+                        fieldName={'related'}
+                        label={'Related'}
+                        errors={errors}
+                        values={values.related || []}
+                        setFieldValue={setFieldValue}
+                        setTouched={setTouched}
+                        loading={loadingOptions}
+                        options={autoCompleteOptions}
+                      />
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      multiline
-                      variant="outlined"
-                      margin="normal"
-                      fullWidth
-                      id="remarks"
-                      label="Remarks"
-                      name="remarks"
-                      value={values.remarks || ''}
-                      error={touched.remarks && !!errors.remarks}
-                      helperText={touched.remarks && errors.remarks}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      className={classes.formItem}
-                    />
-                  </Grid>
-                </Grid>
-                <DialogActions className={classes.dialogButtons}>
-                  <Button onClick={handleReset}>Reset</Button>
-                  <Button type="submit" color="primary">
-                    Create
-                  </Button>
-                </DialogActions>
-              </form>
-            );
-          }}
-        </Formik>
+                  <DialogActions className={classes.dialogButtons}>
+                    <Button onClick={handleReset}>Reset</Button>
+                    <Button type="submit" color="primary">
+                      {actionType === Action_Type.CREATE ? 'Create' : 'Update'}
+                    </Button>
+                  </DialogActions>
+                </form>
+              );
+            }}
+          </Formik>
+        )}
       </DialogContent>
     </Dialog>
   );

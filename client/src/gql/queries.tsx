@@ -61,6 +61,8 @@ export type Episode = {
   readonly episodeNumber?: Maybe<Scalars['Int']>;
   readonly files?: Maybe<ReadonlyArray<Maybe<File>>>;
   readonly remarks?: Maybe<Scalars['String']>;
+  readonly createdAt?: Maybe<Scalars['DateTime']>;
+  readonly updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type EpisodeCreateUpdateInput = {
@@ -71,6 +73,8 @@ export type EpisodeCreateUpdateInput = {
   readonly episodeNumber?: Maybe<Scalars['Int']>;
   readonly files?: Maybe<FileRelationInput>;
   readonly remarks?: Maybe<Scalars['String']>;
+  readonly createdAt?: Maybe<Scalars['DateTime']>;
+  readonly updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type EpisodeManyRelationInput = {
@@ -114,6 +118,8 @@ export type FileCreateUpdateInput = {
   readonly codec?: Maybe<Scalars['String']>;
   readonly remarks?: Maybe<Scalars['String']>;
   readonly episode?: Maybe<EpisodeRelationInput>;
+  readonly createdAt?: Maybe<Scalars['DateTime']>;
+  readonly updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type FileRelationInput = {
@@ -355,6 +361,8 @@ export type Series = {
   readonly references?: Maybe<ReadonlyArray<Maybe<Reference>>>;
   readonly progress?: Maybe<UserProgress>;
   readonly allProgress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
+  readonly createdAt?: Maybe<Scalars['DateTime']>;
+  readonly updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type SeriesCreateUpdateInput = {
@@ -377,6 +385,8 @@ export type SeriesCreateUpdateInput = {
   readonly relatedAlternatives?: Maybe<SeriesManyRelationInput>;
   readonly references?: Maybe<ReferenceRelationInput>;
   readonly progress?: Maybe<UserProgressRelationInput>;
+  readonly createdAt?: Maybe<Scalars['DateTime']>;
+  readonly updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type SeriesManyRelationInput = {
@@ -474,6 +484,8 @@ export type UserProgressCreateUpdateInput = {
   readonly character?: Maybe<Scalars['Int']>;
   readonly appeal?: Maybe<Scalars['Int']>;
   readonly remarks?: Maybe<Scalars['String']>;
+  readonly createdAt?: Maybe<Scalars['DateTime']>;
+  readonly updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type UserProgressRelationInput = {
@@ -547,10 +559,16 @@ export type SeriesQuery = (
   { readonly __typename?: 'Query' }
   & { readonly series?: Maybe<(
     { readonly __typename?: 'Series' }
-    & Pick<Series, 'id' | 'title' | 'episodeCount' | 'seasonNumber' | 'releaseSeason' | 'releaseYear' | 'remarks'>
+    & Pick<Series, 'id' | 'title' | 'status' | 'type' | 'episodeCount' | 'seasonNumber' | 'releaseSeason' | 'releaseYear' | 'remarks' | 'createdAt' | 'updatedAt'>
     & { readonly alternativeTitles?: Maybe<ReadonlyArray<Maybe<(
       { readonly __typename?: 'AlternativeTitle' }
       & Pick<AlternativeTitle, 'id' | 'title'>
+    )>>>, readonly references?: Maybe<ReadonlyArray<Maybe<(
+      { readonly __typename?: 'Reference' }
+      & Pick<Reference, 'id' | 'link' | 'source'>
+    )>>>, readonly episodes?: Maybe<ReadonlyArray<Maybe<(
+      { readonly __typename?: 'Episode' }
+      & Pick<Episode, 'id' | 'title' | 'episodeNumber'>
     )>>>, readonly prequels?: Maybe<ReadonlyArray<Maybe<(
       { readonly __typename?: 'Series' }
       & Pick<Series, 'id' | 'title'>
@@ -561,6 +579,12 @@ export type SeriesQuery = (
       { readonly __typename?: 'Series' }
       & Pick<Series, 'id' | 'title'>
     )>>>, readonly sideStories?: Maybe<ReadonlyArray<Maybe<(
+      { readonly __typename?: 'Series' }
+      & Pick<Series, 'id' | 'title'>
+    )>>>, readonly relatedSeries?: Maybe<ReadonlyArray<Maybe<(
+      { readonly __typename?: 'Series' }
+      & Pick<Series, 'id' | 'title'>
+    )>>>, readonly relatedAlternatives?: Maybe<ReadonlyArray<Maybe<(
       { readonly __typename?: 'Series' }
       & Pick<Series, 'id' | 'title'>
     )>>> }
@@ -586,6 +610,20 @@ export type CreateSeriesMutationVariables = Exact<{
 export type CreateSeriesMutation = (
   { readonly __typename?: 'Mutation' }
   & { readonly createSeries: (
+    { readonly __typename?: 'Series' }
+    & Pick<Series, 'id'>
+  ) }
+);
+
+export type UpdateSeriesMutationVariables = Exact<{
+  where: SeriesWhereUniqueInput;
+  data: SeriesCreateUpdateInput;
+}>;
+
+
+export type UpdateSeriesMutation = (
+  { readonly __typename?: 'Mutation' }
+  & { readonly updateSeries: (
     { readonly __typename?: 'Series' }
     & Pick<Series, 'id'>
   ) }
@@ -767,6 +805,18 @@ export const SeriesDocument = gql`
       id
       title
     }
+    references {
+      id
+      link
+      source
+    }
+    status
+    type
+    episodes {
+      id
+      title
+      episodeNumber
+    }
     episodeCount
     seasonNumber
     releaseSeason
@@ -788,6 +838,16 @@ export const SeriesDocument = gql`
       id
       title
     }
+    relatedSeries {
+      id
+      title
+    }
+    relatedAlternatives {
+      id
+      title
+    }
+    createdAt
+    updatedAt
   }
 }
     `;
@@ -945,6 +1005,58 @@ export function useCreateSeriesMutation(baseOptions?: ApolloReactHooks.MutationH
 export type CreateSeriesMutationHookResult = ReturnType<typeof useCreateSeriesMutation>;
 export type CreateSeriesMutationResult = ApolloReactCommon.MutationResult<CreateSeriesMutation>;
 export type CreateSeriesMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateSeriesMutation, CreateSeriesMutationVariables>;
+export const UpdateSeriesDocument = gql`
+    mutation UpdateSeries($where: SeriesWhereUniqueInput!, $data: SeriesCreateUpdateInput!) {
+  updateSeries(where: $where, data: $data) {
+    id
+  }
+}
+    `;
+export type UpdateSeriesMutationFn = ApolloReactCommon.MutationFunction<UpdateSeriesMutation, UpdateSeriesMutationVariables>;
+export type UpdateSeriesComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateSeriesMutation, UpdateSeriesMutationVariables>, 'mutation'>;
+
+    export const UpdateSeriesComponent = (props: UpdateSeriesComponentProps) => (
+      <ApolloReactComponents.Mutation<UpdateSeriesMutation, UpdateSeriesMutationVariables> mutation={UpdateSeriesDocument} {...props} />
+    );
+    
+export type UpdateSeriesProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: ApolloReactCommon.MutationFunction<UpdateSeriesMutation, UpdateSeriesMutationVariables>
+    } & TChildProps;
+export function withUpdateSeries<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  UpdateSeriesMutation,
+  UpdateSeriesMutationVariables,
+  UpdateSeriesProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, UpdateSeriesMutation, UpdateSeriesMutationVariables, UpdateSeriesProps<TChildProps, TDataName>>(UpdateSeriesDocument, {
+      alias: 'updateSeries',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useUpdateSeriesMutation__
+ *
+ * To run a mutation, you first call `useUpdateSeriesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSeriesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSeriesMutation, { data, loading, error }] = useUpdateSeriesMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateSeriesMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateSeriesMutation, UpdateSeriesMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateSeriesMutation, UpdateSeriesMutationVariables>(UpdateSeriesDocument, baseOptions);
+      }
+export type UpdateSeriesMutationHookResult = ReturnType<typeof useUpdateSeriesMutation>;
+export type UpdateSeriesMutationResult = ApolloReactCommon.MutationResult<UpdateSeriesMutation>;
+export type UpdateSeriesMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateSeriesMutation, UpdateSeriesMutationVariables>;
 export const DeleteSeriesDocument = gql`
     mutation DeleteSeries($where: SeriesWhereUniqueInput!) {
   deleteSeries(where: $where) {

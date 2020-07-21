@@ -9,11 +9,13 @@ import {
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
+import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { AgGridReact } from 'ag-grid-react';
 import moment from 'moment';
 import React, { useCallback, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { SeriesForm } from '../Forms/SeriesForm';
 import { Series } from '../gql/documents';
 import { useAllSeriesQuery, useDeleteSeriesMutation } from '../gql/queries';
@@ -70,6 +72,7 @@ const columnDefs = [
 
 export const SeriesTable = () => {
   const classes = useStyles();
+  const history = useHistory();
   const [gridApi, setGridApi] = useState<any>(undefined);
   const [showForm, setShowForm] = useState<boolean>(false);
   const [formAction, setFormAction] = useState<Action_Type>(Action_Type.CREATE);
@@ -99,6 +102,13 @@ export const SeriesTable = () => {
     }
   };
 
+  const viewSelected = () => {
+    if (selectedRows.length === 1 && selectedRows[0].id) {
+      const seriesId = selectedRows[0].id;
+      history.push(`/series/${seriesId}`);
+    }
+  };
+
   const deleteSelected = () => {
     if (selectedRows.length === 1 && selectedRows[0].id) {
       const seriesId = selectedRows[0].id;
@@ -117,7 +127,7 @@ export const SeriesTable = () => {
       <Paper elevation={3} className={classes.paper}>
         <Grid container spacing={3}>
           <Grid item>
-            <Typography variant="h4">All Series</Typography>
+            <Typography variant="h5">All Series</Typography>
           </Grid>
           <Grid item xs />
           <Grid item className={classes.headerButton}>
@@ -132,6 +142,19 @@ export const SeriesTable = () => {
               }}
             >
               Add New
+            </Button>
+          </Grid>
+          <Grid item className={classes.headerButton}>
+            <Button
+              startIcon={<PageviewOutlinedIcon />}
+              disabled={selectedRows.length !== 1}
+              variant="contained"
+              size="small"
+              onClick={() => {
+                viewSelected();
+              }}
+            >
+              View
             </Button>
           </Grid>
           <Grid item className={classes.headerButton}>
