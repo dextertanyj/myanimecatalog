@@ -1,15 +1,15 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Navigation from "../Navigation";
-import EpisodePage from "../pages/EpisodePage";
-import HomePage from "../pages/HomePage";
-import { LoginPage } from "../pages/LoginPage";
-import { LogoutPage } from "../pages/LogoutPage";
-import ManagePage from "../pages/ManagePage";
-import SearchPage from "../pages/SearchPage";
-import SeriesPage from "../pages/SeriesPage";
-import { SetupPage } from "../pages/SetupPage";
-import UsersPage from "../pages/UsersPage";
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Navigation from '../Navigation';
+import EpisodePage from '../pages/EpisodePage';
+import HomePage from '../pages/HomePage';
+import { LoginPage } from '../pages/LoginPage';
+import { LogoutPage } from '../pages/LogoutPage';
+import ManagePage from '../pages/ManagePage';
+import SearchPage from '../pages/SearchPage';
+import SeriesPage from '../pages/SeriesPage';
+import { SetupPage } from '../pages/SetupPage';
+import UsersPage from '../pages/UsersPage';
 
 export default function ReactRouter() {
   return (

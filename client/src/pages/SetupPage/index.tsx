@@ -7,34 +7,34 @@ import {
   Snackbar,
   TextField,
   Theme,
-  Typography
-} from "@material-ui/core";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import { ApolloError } from "apollo-client";
-import { Formik } from "formik";
-import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import sha from "sha.js";
-import * as Yup from "yup";
+  Typography,
+} from '@material-ui/core';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { ApolloError } from 'apollo-client';
+import { Formik } from 'formik';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import sha from 'sha.js';
+import * as Yup from 'yup';
 import {
   Role,
   useCreateUserMutation,
-  useUserCountQuery
-} from "../../gql/queries";
+  useUserCountQuery,
+} from '../../gql/queries';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
     marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -48,7 +48,7 @@ export const SetupPage = () => {
   const [error, setError] = useState<string | undefined>(undefined);
 
   const { data: count } = useUserCountQuery({
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
 
   const [createUserMutation, { data }] = useCreateUserMutation({
@@ -58,7 +58,7 @@ export const SetupPage = () => {
   });
 
   const onSubmit = async (values: any) => {
-    const password = sha("sha256").update(values.password).digest("hex");
+    const password = sha('sha256').update(values.password).digest('hex');
     await createUserMutation({
       variables: {
         data: {
@@ -74,7 +74,7 @@ export const SetupPage = () => {
 
   useEffect(() => {
     if (data?.createUser.id) {
-      history.push("/login");
+      history.push('/login');
     }
   }, [data, history]);
 
@@ -84,7 +84,7 @@ export const SetupPage = () => {
         open={!!error}
         autoHideDuration={1500}
         onClose={() => setError(undefined)}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         message={error}
       />
       <Container component="main" maxWidth="xs">
@@ -98,21 +98,21 @@ export const SetupPage = () => {
           </Typography>
           <Formik
             initialValues={{
-              username: "",
-              name: "",
-              password: "",
-              passwordConfirm: "",
+              username: '',
+              name: '',
+              password: '',
+              passwordConfirm: '',
             }}
             validationSchema={Yup.object({
               username: Yup.string().required(`Please enter a username.`),
               name: Yup.string().required(`Please enter your name.`),
-              password: Yup.string().required("Please enter a password."),
+              password: Yup.string().required('Please enter a password.'),
               passwordConfirm: Yup.string()
                 .oneOf(
-                  [Yup.ref("password"), undefined],
+                  [Yup.ref('password'), undefined],
                   `Passwords do not match`
                 )
-                .required("Please enter your password again."),
+                .required('Please enter your password again.'),
             })}
             onSubmit={onSubmit}
           >

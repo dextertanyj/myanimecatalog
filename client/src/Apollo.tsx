@@ -1,9 +1,9 @@
-import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
-import { ApolloClient } from "apollo-client";
-import { ApolloLink } from "apollo-link";
-import { setContext } from "apollo-link-context";
-import { onError } from "apollo-link-error";
-import { createHttpLink } from "apollo-link-http";
+import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
+import { ApolloClient } from 'apollo-client';
+import { ApolloLink } from 'apollo-link';
+import { setContext } from 'apollo-link-context';
+import { onError } from 'apollo-link-error';
+import { createHttpLink } from 'apollo-link-http';
 
 type CreateOptions = {
   getToken: () => string;
@@ -14,12 +14,12 @@ const IS_IP_ADDRESS = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[
 );
 
 const persistentUri =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:4000/graphql"
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:4000/graphql'
     : `${window.location.protocol}//${window.location.hostname}${
         window.location.port
           ? `:${window.location.port}`
-          : `${IS_IP_ADDRESS ? ":4000" : ""}`
+          : `${IS_IP_ADDRESS ? ':4000' : ''}`
       }/graphql`;
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
@@ -57,7 +57,7 @@ const create = (
       return {
         headers: {
           ...headers,
-          authorization: token ? `Token ${token}` : "",
+          authorization: token ? `Token ${token}` : '',
         },
       };
     } else {
@@ -68,8 +68,8 @@ const create = (
   return new ApolloClient({
     link: ApolloLink.from([authLink, errorLink, persistentHttpLink]),
     cache: cache.restore(initialState || {}),
-    name: "Anime Database",
-    version: "1",
+    name: 'Anime Database',
+    version: '1',
   });
 };
 
