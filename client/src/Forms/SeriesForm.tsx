@@ -15,7 +15,13 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
-import { FieldArray, Formik, FormikProps, FormikValues } from 'formik';
+import {
+  FieldArray,
+  Formik,
+  FormikErrors,
+  FormikProps,
+  FormikValues,
+} from 'formik';
 import { Moment } from 'moment';
 import React, { ReactElement, useEffect, useState } from 'react';
 import * as Yup from 'yup';
@@ -85,14 +91,14 @@ type SeriesRelation = {
 };
 
 type FormValues = {
-  title: string;
-  seasonNumber: number;
-  episodeCount: number;
-  status: Status;
-  type: Type;
-  releaseSeason: string;
-  releaseYear: Moment;
-  remarks: string;
+  title: string | undefined;
+  seasonNumber: number | undefined;
+  episodeCount: number | undefined;
+  status: Status | undefined;
+  type: Type | undefined;
+  releaseSeason: string | undefined;
+  releaseYear: Moment | undefined;
+  remarks: string | undefined;
   alternativeTitles: AlternativeTitle[];
   references: Reference[];
   prequels: SeriesRelation[];
@@ -248,7 +254,7 @@ export const SeriesForm = (props: Props): ReactElement => {
         setAutoCompleteOptions(seriesList.allSeries as Series[]);
       }
     }
-  }, [seriesList?.allSeries, props.seriesId]);
+  }, [seriesList, props.seriesId]);
 
   useEffect(() => {
     if (props.open && props.seriesId) {
@@ -260,7 +266,7 @@ export const SeriesForm = (props: Props): ReactElement => {
         },
       });
     }
-  }, [props.seriesId, props.open]);
+  }, [props.seriesId, props.open, loadSeries]);
 
   const [createSeriesMutation] = useCreateSeriesMutation({
     onCompleted: () => {
@@ -500,7 +506,7 @@ export const SeriesForm = (props: Props): ReactElement => {
     });
   };
 
-  const initialFormValues: Partial<FormValues> = {
+  const initialFormValues: FormValues = {
     title: seriesData?.series?.title || undefined,
     seasonNumber: seriesData?.series?.seasonNumber || undefined,
     episodeCount: seriesData?.series?.episodeCount || undefined,
@@ -514,11 +520,11 @@ export const SeriesForm = (props: Props): ReactElement => {
         (Array.from(
           seriesData?.series?.alternativeTitles
         ) as AlternativeTitle[])) ||
-      [],
+      ([] as AlternativeTitle[]),
     references:
       (seriesData?.series?.references &&
         (Array.from(seriesData?.series?.references) as Reference[])) ||
-      [],
+      ([] as Reference[]),
     prequels:
       (seriesData?.series?.prequels &&
         (Array.from(seriesData?.series?.prequels) as SeriesRelation[])) ||
@@ -582,9 +588,22 @@ export const SeriesForm = (props: Props): ReactElement => {
                 .min(0, `Number of episodes should be positive`),
               status: Yup.string().required(`Please select a status`),
               type: Yup.string().required(`Please select a type`),
+              alternativeTitles: Yup.array().of(
+                Yup.object().shape({
+                  title: Yup.string().required(`Please enter a title`),
+                })
+              ),
+              references: Yup.array().of(
+                Yup.object().shape({
+                  link: Yup.string()
+                    .required(`Please enter a link`)
+                    .url(`Please enter a valid link`),
+                  source: Yup.string().required(`Please enter the source name`),
+                })
+              ),
             })}
           >
-            {(props: FormikProps<Partial<FormValues>>) => {
+            {(props: FormikProps<FormValues>) => {
               const {
                 values,
                 errors,
@@ -781,6 +800,34 @@ export const SeriesForm = (props: Props): ReactElement => {
                                               key={`alternativeTitles.${index}.title`}
                                               name={`alternativeTitles.${index}.title`}
                                               label="Alternative Title"
+                                              error={
+                                                !!touched?.alternativeTitles &&
+                                                touched?.alternativeTitles[
+                                                  index
+                                                ]?.title &&
+                                                !!Array.isArray(
+                                                  errors?.alternativeTitles
+                                                ) &&
+                                                !!(errors.alternativeTitles[
+                                                  index
+                                                ] as FormikErrors<
+                                                  AlternativeTitle
+                                                >)?.title
+                                              }
+                                              helperText={
+                                                !!touched?.alternativeTitles &&
+                                                touched?.alternativeTitles[
+                                                  index
+                                                ]?.title &&
+                                                !!Array.isArray(
+                                                  errors?.alternativeTitles
+                                                ) &&
+                                                (errors.alternativeTitles[
+                                                  index
+                                                ] as FormikErrors<
+                                                  AlternativeTitle
+                                                >)?.title
+                                              }
                                               id={`alternativeTitles.${index}.title`}
                                               value={altTitle.title || ''}
                                               onChange={handleChange}
@@ -857,6 +904,30 @@ export const SeriesForm = (props: Props): ReactElement => {
                                             label="Link"
                                             type="url"
                                             id={`references.${index}.link`}
+                                            error={
+                                              !!touched?.references &&
+                                              touched?.references[index]
+                                                ?.link &&
+                                              !!Array.isArray(
+                                                errors?.references
+                                              ) &&
+                                              !!(errors.references[
+                                                index
+                                              ] as FormikErrors<Reference>)
+                                                ?.link
+                                            }
+                                            helperText={
+                                              !!touched?.references &&
+                                              touched?.references[index]
+                                                ?.link &&
+                                              !!Array.isArray(
+                                                errors?.references
+                                              ) &&
+                                              (errors.references[
+                                                index
+                                              ] as FormikErrors<Reference>)
+                                                ?.link
+                                            }
                                             value={reference.link || null}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
@@ -876,6 +947,30 @@ export const SeriesForm = (props: Props): ReactElement => {
                                             name={`references.${index}.source`}
                                             label="Source"
                                             id={`references.${index}.source`}
+                                            error={
+                                              !!touched?.references &&
+                                              touched?.references[index]
+                                                ?.source &&
+                                              !!Array.isArray(
+                                                errors?.references
+                                              ) &&
+                                              !!(errors.references[
+                                                index
+                                              ] as FormikErrors<Reference>)
+                                                ?.source
+                                            }
+                                            helperText={
+                                              !!touched?.references &&
+                                              touched?.references[index]
+                                                ?.source &&
+                                              !!Array.isArray(
+                                                errors?.references
+                                              ) &&
+                                              (errors.references[
+                                                index
+                                              ] as FormikErrors<Reference>)
+                                                ?.source
+                                            }
                                             value={reference.source || null}
                                             onChange={handleChange}
                                             onBlur={handleBlur}

@@ -188,17 +188,19 @@ export const SeriesTable = () => {
           </Grid>
         </Grid>
       </Paper>
-      <SeriesForm
-        open={showForm}
-        action={formAction}
-        onSubmit={() => {
-          refetch();
-          setFormAction(Action_Type.CREATE);
-        }}
-        onClose={() => {
-          setShowForm(false);
-        }}
-      />
+      {showForm && (
+        <SeriesForm
+          open={showForm}
+          action={formAction}
+          onSubmit={() => {
+            refetch();
+            setFormAction(Action_Type.CREATE);
+          }}
+          onClose={() => {
+            setShowForm(false);
+          }}
+        />
+      )}
     </div>
   );
 };
