@@ -40,8 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
       height: '5px',
     },
     chip: {
-      marginLeft: '2px',
-      marginRight: '2px',
+      margin: '3px',
     },
   })
 );
@@ -81,7 +80,7 @@ const SeriesPage = () => {
             <Typography>Title</Typography>
           </Grid>
           <Grid item xs={10} className={classes.grid}>
-            <Typography>{seriesData?.series?.title}</Typography>
+            <Typography noWrap>{seriesData?.series?.title}</Typography>
           </Grid>
           {seriesData?.series?.alternativeTitles &&
             seriesData.series?.alternativeTitles.map((altTitle) => {
@@ -92,7 +91,7 @@ const SeriesPage = () => {
                       <Typography>Alternative Title</Typography>
                     </Grid>
                     <Grid item xs={10}>
-                      <Typography>{altTitle.title}</Typography>
+                      <Typography noWrap>{altTitle.title}</Typography>
                     </Grid>
                   </>
                 )
@@ -158,7 +157,7 @@ const SeriesPage = () => {
                     <Typography>{reference?.source}</Typography>
                   </Grid>
                   <Grid item xs={10}>
-                    <Typography>
+                    <Typography noWrap>
                       <Link href={reference?.link || undefined} target="_blank">
                         {reference?.link}
                       </Link>
@@ -171,7 +170,7 @@ const SeriesPage = () => {
             seriesData?.series?.prequels.length > 0 && (
               <>
                 <Grid item xs={2} className={classes.grid}>
-                  Prequels
+                  <Typography>Prequels</Typography>
                 </Grid>
                 <Grid item xs={10}>
                   {seriesData?.series?.prequels?.map((series) => (
@@ -188,7 +187,7 @@ const SeriesPage = () => {
             seriesData?.series?.sequels.length > 0 && (
               <>
                 <Grid item xs={2} className={classes.grid}>
-                  Sequels
+                  <Typography>Sequels</Typography>
                 </Grid>
                 <Grid item xs={10}>
                   {seriesData?.series?.sequels?.map((series) => (
@@ -205,7 +204,7 @@ const SeriesPage = () => {
             seriesData?.series?.mainStories.length > 0 && (
               <>
                 <Grid item xs={2} className={classes.grid}>
-                  Main Story
+                  <Typography>Main Story</Typography>
                 </Grid>
                 <Grid item xs={10}>
                   {seriesData?.series?.mainStories?.map((series) => (
@@ -222,7 +221,7 @@ const SeriesPage = () => {
             seriesData?.series?.sideStories.length > 0 && (
               <>
                 <Grid item xs={2} className={classes.grid}>
-                  Side Stories
+                  <Typography>Side Stories</Typography>
                 </Grid>
                 <Grid item xs={10} className={classes.grid}>
                   {seriesData?.series?.sideStories?.map((series) => (
@@ -241,7 +240,7 @@ const SeriesPage = () => {
               seriesData.series.relatedAlternatives.length > 0)) && (
             <>
               <Grid item xs={2}>
-                Related Animes
+                <Typography>Related Animes</Typography>
               </Grid>
               <Grid item xs={10}>
                 {seriesData?.series?.relatedSeries?.map((series) => (
