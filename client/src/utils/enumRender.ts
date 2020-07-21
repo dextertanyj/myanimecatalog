@@ -38,3 +38,16 @@ export const renderSeason = (season: Season): string => {
       return 'Spring';
   }
 };
+
+export const renderSeasonInfo = (season: Season): string => {
+  switch (season) {
+    case Season.Winter:
+      return 'Winter (Dec - Feb)';
+    case Season.Fall:
+      return 'Fall (Sept - Nov)';
+    case Season.Summer:
+      return 'Summer (Jun - Aug)';
+    case Season.Spring:
+      return 'Spring (Mar - May)';
+  }
+};

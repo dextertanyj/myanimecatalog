@@ -36,6 +36,11 @@ import {
   useUpdateSeriesMutation,
 } from '../gql/queries';
 import { Action_Type } from '../utils/constants';
+import {
+  renderSeasonInfo,
+  renderStatus,
+  renderType,
+} from '../utils/enumRender';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -687,15 +692,13 @@ export const SeriesForm = (props: Props): ReactElement => {
                         onBlur={handleBlur}
                         className={classes.formItem}
                       >
-                        {Object.entries(Season).map(
-                          (value: [string, Season]) => {
-                            return (
-                              <MenuItem key={value[1]} value={value[1]}>
-                                {value[0]}
-                              </MenuItem>
-                            );
-                          }
-                        )}
+                        {Object.values(Season).map((value: Season) => {
+                          return (
+                            <MenuItem key={value} value={value}>
+                              {renderSeasonInfo(value)}
+                            </MenuItem>
+                          );
+                        })}
                       </TextField>
                     </Grid>
                     <Grid item xs={3}>
@@ -733,10 +736,10 @@ export const SeriesForm = (props: Props): ReactElement => {
                         onBlur={handleBlur}
                         className={classes.formItem}
                       >
-                        {Object.entries(Type).map((value: [string, Type]) => {
+                        {Object.values(Type).map((value: Type) => {
                           return (
-                            <MenuItem key={value[1]} value={value[1]}>
-                              {value[0]}
+                            <MenuItem key={value} value={value}>
+                              {renderType(value)}
                             </MenuItem>
                           );
                         })}
@@ -759,15 +762,13 @@ export const SeriesForm = (props: Props): ReactElement => {
                         onBlur={handleBlur}
                         className={classes.formItem}
                       >
-                        {Object.entries(Status).map(
-                          (value: [string, Status]) => {
-                            return (
-                              <MenuItem key={value[1]} value={value[1]}>
-                                {value[0]}
-                              </MenuItem>
-                            );
-                          }
-                        )}
+                        {Object.values(Status).map((value: Status) => {
+                          return (
+                            <MenuItem key={value} value={value}>
+                              {renderStatus(value)}
+                            </MenuItem>
+                          );
+                        })}
                       </TextField>
                     </Grid>
                     <Grid item xs={12}>

@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import moment from 'moment';
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { SeriesForm } from '../../Forms/SeriesForm';
 import { useSeriesQuery } from '../../gql/queries';
 import { withAuth } from '../../HOC/withAuth';
@@ -24,6 +24,11 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(2),
       textAlign: 'center',
       color: theme.palette.text.secondary,
+    },
+    grid: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
     },
     gridTitle: {
       textAlign: 'left',
@@ -43,6 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const SeriesPage = () => {
   const classes = useStyles();
+  const history = useHistory();
   const { seriesId } = useParams();
   const [showForm, setShowForm] = useState<boolean>(false);
 
@@ -71,10 +77,10 @@ const SeriesPage = () => {
             </Button>
           </Grid>
           <Grid item xs={12} className={classes.gridSpacer} />
-          <Grid item xs={2}>
+          <Grid item xs={2} className={classes.grid}>
             <Typography>Title</Typography>
           </Grid>
-          <Grid item xs={10}>
+          <Grid item xs={10} className={classes.grid}>
             <Typography>{seriesData?.series?.title}</Typography>
           </Grid>
           {seriesData?.series?.alternativeTitles &&
@@ -92,40 +98,40 @@ const SeriesPage = () => {
                 )
               );
             })}
-          <Grid item xs={2}>
+          <Grid item xs={2} className={classes.grid}>
             <Typography>Season No.</Typography>
           </Grid>
           <Grid item xs={2}>
             <Typography>{seriesData?.series?.seasonNumber || '-'}</Typography>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={2} className={classes.grid}>
             <Typography>No. of Episodes</Typography>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={2} className={classes.grid}>
             <Typography>{seriesData?.series?.episodeCount}</Typography>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={2} className={classes.grid}>
             <Typography>Status</Typography>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={2} className={classes.grid}>
             <Typography>
               {!!seriesData?.series?.status &&
                 renderStatus(seriesData?.series?.status)}
             </Typography>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={2} className={classes.grid}>
             <Typography>Type</Typography>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={2} className={classes.grid}>
             <Typography>
               {!!seriesData?.series?.type &&
                 renderType(seriesData?.series?.type)}
             </Typography>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={2} className={classes.grid}>
             <Typography>Release Season</Typography>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={2} className={classes.grid}>
             <Typography>{`${
               !!seriesData?.series?.releaseSeason &&
               renderSeason(seriesData?.series?.releaseSeason)
@@ -133,10 +139,10 @@ const SeriesPage = () => {
               'YYYY'
             )}`}</Typography>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={2} className={classes.grid}>
             <Typography>Last Updated</Typography>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={2} className={classes.grid}>
             <Typography>
               {moment(
                 seriesData?.series?.updatedAt || seriesData?.series?.createdAt
@@ -164,12 +170,16 @@ const SeriesPage = () => {
           {!!seriesData?.series?.prequels &&
             seriesData?.series?.prequels.length > 0 && (
               <>
-                <Grid item xs={2}>
+                <Grid item xs={2} className={classes.grid}>
                   Prequels
                 </Grid>
                 <Grid item xs={10}>
                   {seriesData?.series?.prequels?.map((series) => (
-                    <Chip label={series?.title} className={classes.chip} />
+                    <Chip
+                      label={series?.title}
+                      className={classes.chip}
+                      onClick={() => history.push(`/series/${series?.id}`)}
+                    />
                   ))}
                 </Grid>
               </>
@@ -177,12 +187,16 @@ const SeriesPage = () => {
           {!!seriesData?.series?.sequels &&
             seriesData?.series?.sequels.length > 0 && (
               <>
-                <Grid item xs={2}>
+                <Grid item xs={2} className={classes.grid}>
                   Sequels
                 </Grid>
                 <Grid item xs={10}>
                   {seriesData?.series?.sequels?.map((series) => (
-                    <Chip label={series?.title} className={classes.chip} />
+                    <Chip
+                      label={series?.title}
+                      className={classes.chip}
+                      onClick={() => history.push(`/series/${series?.id}`)}
+                    />
                   ))}
                 </Grid>
               </>
@@ -190,12 +204,16 @@ const SeriesPage = () => {
           {!!seriesData?.series?.mainStories &&
             seriesData?.series?.mainStories.length > 0 && (
               <>
-                <Grid item xs={2}>
+                <Grid item xs={2} className={classes.grid}>
                   Main Story
                 </Grid>
                 <Grid item xs={10}>
                   {seriesData?.series?.mainStories?.map((series) => (
-                    <Chip label={series?.title} className={classes.chip} />
+                    <Chip
+                      label={series?.title}
+                      className={classes.chip}
+                      onClick={() => history.push(`/series/${series?.id}`)}
+                    />
                   ))}
                 </Grid>
               </>
@@ -203,12 +221,16 @@ const SeriesPage = () => {
           {!!seriesData?.series?.sideStories &&
             seriesData?.series?.sideStories.length > 0 && (
               <>
-                <Grid item xs={2}>
+                <Grid item xs={2} className={classes.grid}>
                   Side Stories
                 </Grid>
-                <Grid item xs={10}>
+                <Grid item xs={10} className={classes.grid}>
                   {seriesData?.series?.sideStories?.map((series) => (
-                    <Chip label={series?.title} className={classes.chip} />
+                    <Chip
+                      label={series?.title}
+                      className={classes.chip}
+                      onClick={() => history.push(`/series/${series?.id}`)}
+                    />
                   ))}
                 </Grid>
               </>
@@ -223,10 +245,18 @@ const SeriesPage = () => {
               </Grid>
               <Grid item xs={10}>
                 {seriesData?.series?.relatedSeries?.map((series) => (
-                  <Chip label={series?.title} className={classes.chip} />
+                  <Chip
+                    label={series?.title}
+                    className={classes.chip}
+                    onClick={() => history.push(`/series/${series?.id}`)}
+                  />
                 ))}
                 {seriesData?.series?.relatedAlternatives?.map((series) => (
-                  <Chip label={series?.title} className={classes.chip} />
+                  <Chip
+                    label={series?.title}
+                    className={classes.chip}
+                    onClick={() => history.push(`/series/${series?.id}`)}
+                  />
                 ))}
               </Grid>
             </>

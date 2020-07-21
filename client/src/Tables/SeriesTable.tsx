@@ -10,6 +10,7 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
+import { ColumnApi, GridApi } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { AgGridReact } from 'ag-grid-react';
@@ -40,9 +41,38 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const seasonComparator = (date1: string, date2: string): number => {
+  console.log(date1);
+  console.log(date2);
+  if (!date1 && !date2) {
+    return 0;
+  } else if (!date1) {
+    return -1;
+  } else if (!date2) {
+    return 1;
+  }
+  const season1 = date1.split(' ')[0];
+  const year1 = date1.split(' ')[1];
+  const season2 = date2.split(' ')[0];
+  const year2 = date2.split(' ')[1];
+  if (Number.parseInt(year2) - Number.parseInt(year1) > 0) {
+    return -1;
+  } else {
+    const seasonOrder = ['Winter', 'Spring', 'Summer', 'Fall'];
+    return seasonOrder.indexOf(season1) - seasonOrder.indexOf(season2);
+  }
+};
+
 const columnDefs = [
-  { headerName: 'Title', field: 'title', flex: 1 },
-  { headerName: 'Episodes', field: 'episodeCount', width: 120 },
+  {
+    headerName: 'Title',
+    field: 'title',
+    flex: 1,
+    filter: true,
+    sortable: true,
+  },
+  { headerName: 'Season', field: 'seasonNumber', width: 120, sortable: true },
+  { headerName: 'Episodes', field: 'episodeCount', width: 120, sortable: true },
   {
     headerName: 'Release Season',
     valueGetter: (params: { data: Series }) => {
@@ -53,6 +83,10 @@ const columnDefs = [
         : '';
     },
     width: 180,
+    filter: true,
+    sortable: true,
+    comparator: seasonComparator,
+    sortingOrder: ['asc', 'desc'],
   },
   {
     headerName: 'Status',
@@ -60,6 +94,8 @@ const columnDefs = [
       return renderStatus(params.data.status);
     },
     width: 180,
+    filter: true,
+    sortable: true,
   },
   {
     headerName: 'Type',
@@ -67,13 +103,21 @@ const columnDefs = [
       return renderType(params.data.type);
     },
     width: 180,
+    filter: true,
+    sortable: true,
   },
 ];
 
 export const SeriesTable = () => {
   const classes = useStyles();
   const history = useHistory();
-  const [gridApi, setGridApi] = useState<any>(undefined);
+  const [gridApi, setGridApi] = useState<
+    | {
+        api: GridApi;
+        columnApi: ColumnApi;
+      }
+    | undefined
+  >(undefined);
   const [showForm, setShowForm] = useState<boolean>(false);
   const [formAction, setFormAction] = useState<Action_Type>(Action_Type.CREATE);
   const [selectedRows, setSelectedRows] = useState<Series[]>([]);
@@ -96,7 +140,17 @@ export const SeriesTable = () => {
     setGridApi({ api, columnApi });
   }, []);
 
-  const onRowSelectionChanged = () => {
+  const onFirstDataRendered = () => {
+    if (gridApi?.api) {
+      gridApi.api.setSortModel([
+        {
+          colId: 'title',
+          sort: 'asc',
+        },
+      ]);
+    }
+  };
+  const onSelectionChanged = () => {
     if (gridApi !== undefined) {
       setSelectedRows(gridApi?.api?.getSelectedRows());
     }
@@ -179,7 +233,8 @@ export const SeriesTable = () => {
                 enableCellTextSelection
                 rowDeselection
                 rowSelection="single"
-                onSelectionChanged={onRowSelectionChanged}
+                onSelectionChanged={onSelectionChanged}
+                onFirstDataRendered={onFirstDataRendered}
                 gridOptions={gridOptions}
                 columnDefs={columnDefs}
                 rowData={(rowData?.allSeries as any[]) || []}
