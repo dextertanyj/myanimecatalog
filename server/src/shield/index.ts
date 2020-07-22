@@ -7,6 +7,7 @@ import { Context } from '../utils';
 const rules = {
   isAuthenticatedUser: rule()(
     async (_parent: unknown, _args: unknown, ctx: Context) => {
+      console.log('test');
       return Boolean(ctx.userId);
     }
   ),
@@ -53,21 +54,24 @@ const rules = {
 
 // Permissions
 
-export const permissions = shield({
-  Query: {
-    loggedIn: rules.isAuthenticatedUser,
-    user: rules.isAuthenticatedUser,
-    users: rules.isAdminUser,
-    series: rules.isAuthenticatedUser,
-    allSeries: rules.isAuthenticatedUser,
+export const permissions = shield(
+  {
+    Query: {
+      loggedIn: rules.isAuthenticatedUser,
+      user: rules.isAuthenticatedUser,
+      users: rules.isAdminUser,
+      series: rules.isAuthenticatedUser,
+      allSeries: rules.isAuthenticatedUser,
+    },
+    Mutation: {
+      createSeries: or(rules.isWriteUser, rules.isAdminUser),
+      updateSeries: or(rules.isWriteUser, rules.isAdminUser),
+      deleteSeries: or(rules.isWriteUser, rules.isAdminUser),
+      createUser: rules.isAdminUser,
+      updateMe: rules.isAuthenticatedUser,
+      updateUser: rules.isAdminUser,
+      deleteUser: rules.isAdminUser,
+    },
   },
-  Mutation: {
-    createSeries: or(rules.isWriteUser, rules.isAdminUser),
-    updateSeries: or(rules.isWriteUser, rules.isAdminUser),
-    deleteSeries: or(rules.isWriteUser, rules.isAdminUser),
-    createUser: rules.isAdminUser,
-    updateMe: rules.isAuthenticatedUser,
-    updateUser: rules.isAdminUser,
-    deleteUser: rules.isAdminUser,
-  },
-});
+  { allowExternalErrors: true }
+);
