@@ -134,9 +134,10 @@ export type FileWhereUniqueInput = {
 export type Mutation = {
   readonly __typename?: 'Mutation';
   readonly login: AuthPayload;
+  readonly updateMe: User;
+  readonly createInitialUser: User;
   readonly createUser: User;
   readonly updateUser: User;
-  readonly adminUpdateUser: User;
   readonly deleteUser: User;
   readonly createSeries: Series;
   readonly updateSeries: Series;
@@ -158,17 +159,22 @@ export type MutationLoginArgs = {
 };
 
 
+export type MutationUpdateMeArgs = {
+  data: UserCreateUpdateInput;
+};
+
+
+export type MutationCreateInitialUserArgs = {
+  data: UserCreateUpdateInput;
+};
+
+
 export type MutationCreateUserArgs = {
   data: UserCreateUpdateInput;
 };
 
 
 export type MutationUpdateUserArgs = {
-  data: UserCreateUpdateInput;
-};
-
-
-export type MutationAdminUpdateUserArgs = {
   where: UserWhereUniqueInput;
   data: UserCreateUpdateInput;
 };
@@ -682,6 +688,59 @@ export type CreateUserMutationVariables = Exact<{
 export type CreateUserMutation = (
   { readonly __typename?: 'Mutation' }
   & { readonly createUser: (
+    { readonly __typename?: 'User' }
+    & Pick<User, 'id'>
+  ) }
+);
+
+export type CreateInitialUserMutationVariables = Exact<{
+  data: UserCreateUpdateInput;
+}>;
+
+
+export type CreateInitialUserMutation = (
+  { readonly __typename?: 'Mutation' }
+  & { readonly createInitialUser: (
+    { readonly __typename?: 'User' }
+    & Pick<User, 'id'>
+  ) }
+);
+
+export type UpdateMeMutationVariables = Exact<{
+  data: UserCreateUpdateInput;
+}>;
+
+
+export type UpdateMeMutation = (
+  { readonly __typename?: 'Mutation' }
+  & { readonly updateMe: (
+    { readonly __typename?: 'User' }
+    & Pick<User, 'id'>
+  ) }
+);
+
+export type UpdateUserMutationVariables = Exact<{
+  where: UserWhereUniqueInput;
+  data: UserCreateUpdateInput;
+}>;
+
+
+export type UpdateUserMutation = (
+  { readonly __typename?: 'Mutation' }
+  & { readonly updateUser: (
+    { readonly __typename?: 'User' }
+    & Pick<User, 'id'>
+  ) }
+);
+
+export type DeleteUserMutationVariables = Exact<{
+  where: UserWhereUniqueInput;
+}>;
+
+
+export type DeleteUserMutation = (
+  { readonly __typename?: 'Mutation' }
+  & { readonly deleteUser: (
     { readonly __typename?: 'User' }
     & Pick<User, 'id'>
   ) }
@@ -1313,3 +1372,208 @@ export function useCreateUserMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = ApolloReactCommon.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export const CreateInitialUserDocument = gql`
+    mutation CreateInitialUser($data: UserCreateUpdateInput!) {
+  createInitialUser(data: $data) {
+    id
+  }
+}
+    `;
+export type CreateInitialUserMutationFn = ApolloReactCommon.MutationFunction<CreateInitialUserMutation, CreateInitialUserMutationVariables>;
+export type CreateInitialUserComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<CreateInitialUserMutation, CreateInitialUserMutationVariables>, 'mutation'>;
+
+    export const CreateInitialUserComponent = (props: CreateInitialUserComponentProps) => (
+      <ApolloReactComponents.Mutation<CreateInitialUserMutation, CreateInitialUserMutationVariables> mutation={CreateInitialUserDocument} {...props} />
+    );
+    
+export type CreateInitialUserProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: ApolloReactCommon.MutationFunction<CreateInitialUserMutation, CreateInitialUserMutationVariables>
+    } & TChildProps;
+export function withCreateInitialUser<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  CreateInitialUserMutation,
+  CreateInitialUserMutationVariables,
+  CreateInitialUserProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, CreateInitialUserMutation, CreateInitialUserMutationVariables, CreateInitialUserProps<TChildProps, TDataName>>(CreateInitialUserDocument, {
+      alias: 'createInitialUser',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useCreateInitialUserMutation__
+ *
+ * To run a mutation, you first call `useCreateInitialUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateInitialUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createInitialUserMutation, { data, loading, error }] = useCreateInitialUserMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateInitialUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateInitialUserMutation, CreateInitialUserMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateInitialUserMutation, CreateInitialUserMutationVariables>(CreateInitialUserDocument, baseOptions);
+      }
+export type CreateInitialUserMutationHookResult = ReturnType<typeof useCreateInitialUserMutation>;
+export type CreateInitialUserMutationResult = ApolloReactCommon.MutationResult<CreateInitialUserMutation>;
+export type CreateInitialUserMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateInitialUserMutation, CreateInitialUserMutationVariables>;
+export const UpdateMeDocument = gql`
+    mutation UpdateMe($data: UserCreateUpdateInput!) {
+  updateMe(data: $data) {
+    id
+  }
+}
+    `;
+export type UpdateMeMutationFn = ApolloReactCommon.MutationFunction<UpdateMeMutation, UpdateMeMutationVariables>;
+export type UpdateMeComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateMeMutation, UpdateMeMutationVariables>, 'mutation'>;
+
+    export const UpdateMeComponent = (props: UpdateMeComponentProps) => (
+      <ApolloReactComponents.Mutation<UpdateMeMutation, UpdateMeMutationVariables> mutation={UpdateMeDocument} {...props} />
+    );
+    
+export type UpdateMeProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: ApolloReactCommon.MutationFunction<UpdateMeMutation, UpdateMeMutationVariables>
+    } & TChildProps;
+export function withUpdateMe<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  UpdateMeMutation,
+  UpdateMeMutationVariables,
+  UpdateMeProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, UpdateMeMutation, UpdateMeMutationVariables, UpdateMeProps<TChildProps, TDataName>>(UpdateMeDocument, {
+      alias: 'updateMe',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useUpdateMeMutation__
+ *
+ * To run a mutation, you first call `useUpdateMeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMeMutation, { data, loading, error }] = useUpdateMeMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateMeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateMeMutation, UpdateMeMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateMeMutation, UpdateMeMutationVariables>(UpdateMeDocument, baseOptions);
+      }
+export type UpdateMeMutationHookResult = ReturnType<typeof useUpdateMeMutation>;
+export type UpdateMeMutationResult = ApolloReactCommon.MutationResult<UpdateMeMutation>;
+export type UpdateMeMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateMeMutation, UpdateMeMutationVariables>;
+export const UpdateUserDocument = gql`
+    mutation UpdateUser($where: UserWhereUniqueInput!, $data: UserCreateUpdateInput!) {
+  updateUser(where: $where, data: $data) {
+    id
+  }
+}
+    `;
+export type UpdateUserMutationFn = ApolloReactCommon.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
+export type UpdateUserComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateUserMutation, UpdateUserMutationVariables>, 'mutation'>;
+
+    export const UpdateUserComponent = (props: UpdateUserComponentProps) => (
+      <ApolloReactComponents.Mutation<UpdateUserMutation, UpdateUserMutationVariables> mutation={UpdateUserDocument} {...props} />
+    );
+    
+export type UpdateUserProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: ApolloReactCommon.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>
+    } & TChildProps;
+export function withUpdateUser<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  UpdateUserMutation,
+  UpdateUserMutationVariables,
+  UpdateUserProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, UpdateUserMutation, UpdateUserMutationVariables, UpdateUserProps<TChildProps, TDataName>>(UpdateUserDocument, {
+      alias: 'updateUser',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useUpdateUserMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, baseOptions);
+      }
+export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
+export type UpdateUserMutationResult = ApolloReactCommon.MutationResult<UpdateUserMutation>;
+export type UpdateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
+export const DeleteUserDocument = gql`
+    mutation DeleteUser($where: UserWhereUniqueInput!) {
+  deleteUser(where: $where) {
+    id
+  }
+}
+    `;
+export type DeleteUserMutationFn = ApolloReactCommon.MutationFunction<DeleteUserMutation, DeleteUserMutationVariables>;
+export type DeleteUserComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<DeleteUserMutation, DeleteUserMutationVariables>, 'mutation'>;
+
+    export const DeleteUserComponent = (props: DeleteUserComponentProps) => (
+      <ApolloReactComponents.Mutation<DeleteUserMutation, DeleteUserMutationVariables> mutation={DeleteUserDocument} {...props} />
+    );
+    
+export type DeleteUserProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: ApolloReactCommon.MutationFunction<DeleteUserMutation, DeleteUserMutationVariables>
+    } & TChildProps;
+export function withDeleteUser<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  DeleteUserMutation,
+  DeleteUserMutationVariables,
+  DeleteUserProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, DeleteUserMutation, DeleteUserMutationVariables, DeleteUserProps<TChildProps, TDataName>>(DeleteUserDocument, {
+      alias: 'deleteUser',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useDeleteUserMutation__
+ *
+ * To run a mutation, you first call `useDeleteUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteUserMutation, { data, loading, error }] = useDeleteUserMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useDeleteUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteUserMutation, DeleteUserMutationVariables>) {
+        return ApolloReactHooks.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(DeleteUserDocument, baseOptions);
+      }
+export type DeleteUserMutationHookResult = ReturnType<typeof useDeleteUserMutation>;
+export type DeleteUserMutationResult = ApolloReactCommon.MutationResult<DeleteUserMutation>;
+export type DeleteUserMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteUserMutation, DeleteUserMutationVariables>;

@@ -18,7 +18,7 @@ import sha from 'sha.js';
 import * as Yup from 'yup';
 import {
   Role,
-  useCreateUserMutation,
+  useCreateInitialUserMutation,
   useUserCountQuery,
 } from '../../gql/queries';
 
@@ -51,7 +51,7 @@ export const SetupPage = () => {
     fetchPolicy: 'cache-and-network',
   });
 
-  const [createUserMutation, { data }] = useCreateUserMutation({
+  const [createInitialUserMutation, { data }] = useCreateInitialUserMutation({
     onError: (error: ApolloError) => {
       setError(error.message);
     },
@@ -59,7 +59,7 @@ export const SetupPage = () => {
 
   const onSubmit = async (values: any) => {
     const password = sha('sha256').update(values.password).digest('hex');
-    await createUserMutation({
+    await createInitialUserMutation({
       variables: {
         data: {
           name: values.name,
@@ -73,7 +73,7 @@ export const SetupPage = () => {
   };
 
   useEffect(() => {
-    if (data?.createUser.id) {
+    if (data?.createInitialUser.id) {
       history.push('/login');
     }
   }, [data, history]);

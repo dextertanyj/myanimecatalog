@@ -21,3 +21,30 @@ mutation CreateUser($data: UserCreateUpdateInput!) {
     id
   }
 }
+
+mutation CreateInitialUser($data: UserCreateUpdateInput!) {
+  createInitialUser(data: $data) {
+    id
+  }
+}
+
+mutation UpdateMe($data: UserCreateUpdateInput!) {
+  updateMe(data: $data) {
+    id
+  }
+}
+
+mutation UpdateUser(
+  $where: UserWhereUniqueInput!
+  $data: UserCreateUpdateInput!
+) {
+  updateUser(where: $where, data: $data) {
+    id
+  }
+}
+
+mutation DeleteUser($where: UserWhereUniqueInput!) {
+  deleteUser(where: $where) {
+    id
+  }
+}

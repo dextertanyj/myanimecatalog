@@ -261,12 +261,10 @@ type Query {
 type Mutation {
   login(data: UserCreateUpdateInput!): AuthPayload!
 
+  updateMe(data: UserCreateUpdateInput!): User!
+  createInitialUser(data: UserCreateUpdateInput!): User!
   createUser(data: UserCreateUpdateInput!): User!
-  updateUser(data: UserCreateUpdateInput!): User!
-  adminUpdateUser(
-    where: UserWhereUniqueInput!
-    data: UserCreateUpdateInput!
-  ): User!
+  updateUser(where: UserWhereUniqueInput!, data: UserCreateUpdateInput!): User!
   deleteUser(where: UserWhereUniqueInput!): User!
 
   createSeries(data: SeriesCreateUpdateInput!): Series!

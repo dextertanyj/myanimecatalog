@@ -1,48 +1,54 @@
-import { Role } from "@prisma/client";
-import { rule, shield } from "graphql-shield";
-import { Context } from "../utils";
+import { Role } from '@prisma/client';
+import { or, rule, shield } from 'graphql-shield';
+import { Context } from '../utils';
 
 // Rules
 
 const rules = {
   isAuthenticatedUser: rule()(
-    async (_parent: any, _args: any, ctx: Context) => {
+    async (_parent: unknown, _args: unknown, ctx: Context) => {
       return Boolean(ctx.userId);
     }
   ),
 
-  isAdminUser: rule()(async (_parent: any, _args: any, ctx: Context) => {
-    if (!ctx.userId) {
-      return false;
+  isAdminUser: rule()(
+    async (_parent: unknown, _args: unknown, ctx: Context) => {
+      if (!ctx.userId) {
+        return false;
+      }
+      const user = await ctx.prisma.user.findOne({
+        where: { id: ctx.userId },
+        select: { role: true },
+      });
+      return !!user && user?.role === Role.ADMIN;
     }
-    const user = await ctx.prisma.user.findOne({
-      where: { id: ctx.userId },
-      select: { role: true },
-    });
-    return !!user && user?.role === Role.ADMIN;
-  }),
+  ),
 
-  isWriteUser: rule()(async (_parent: any, _args: any, ctx: Context) => {
-    if (!ctx.userId) {
-      return false;
+  isWriteUser: rule()(
+    async (_parent: unknown, _args: unknown, ctx: Context) => {
+      if (!ctx.userId) {
+        return false;
+      }
+      const user = await ctx.prisma.user.findOne({
+        where: { id: ctx.userId },
+        select: { role: true },
+      });
+      return !!user && user?.role === Role.WRITE;
     }
-    const user = await ctx.prisma.user.findOne({
-      where: { id: ctx.userId },
-      select: { role: true },
-    });
-    return !!user && user?.role === Role.WRITE;
-  }),
+  ),
 
-  isReadOnlyUser: rule()(async (_parent: any, _args: any, ctx: Context) => {
-    if (!ctx.userId) {
-      return false;
+  isReadOnlyUser: rule()(
+    async (_parent: unknown, _args: unknown, ctx: Context) => {
+      if (!ctx.userId) {
+        return false;
+      }
+      const user = await ctx.prisma.user.findOne({
+        where: { id: ctx.userId },
+        select: { role: true },
+      });
+      return !!user && user?.role === Role.READONLY;
     }
-    const user = await ctx.prisma.user.findOne({
-      where: { id: ctx.userId },
-      select: { role: true },
-    });
-    return !!user && user?.role === Role.READONLY;
-  }),
+  ),
 };
 
 // Permissions
@@ -52,5 +58,16 @@ export const permissions = shield({
     loggedIn: rules.isAuthenticatedUser,
     user: rules.isAuthenticatedUser,
     users: rules.isAdminUser,
+    series: rules.isAuthenticatedUser,
+    allSeries: rules.isAuthenticatedUser,
+  },
+  Mutation: {
+    createSeries: or(rules.isWriteUser, rules.isAdminUser),
+    updateSeries: or(rules.isWriteUser, rules.isAdminUser),
+    deleteSeries: or(rules.isWriteUser, rules.isAdminUser),
+    createUser: rules.isAdminUser,
+    updateMe: rules.isAuthenticatedUser,
+    updateUser: rules.isAdminUser,
+    deleteUser: rules.isAdminUser,
   },
 });

@@ -99,8 +99,8 @@ export const LoginPage = () => {
               password: '',
             }}
             validationSchema={Yup.object({
-              username: Yup.string().required(`Please enter your username.`),
-              password: Yup.string().required(`Please enter your password.`),
+              username: Yup.string().required(`Please enter your username`),
+              password: Yup.string().required(`Please enter your password`),
             })}
             onSubmit={onSubmit}
           >

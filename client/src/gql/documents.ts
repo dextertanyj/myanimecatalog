@@ -128,9 +128,10 @@ export type FileWhereUniqueInput = {
 export type Mutation = {
   readonly __typename?: 'Mutation';
   readonly login: AuthPayload;
+  readonly updateMe: User;
+  readonly createInitialUser: User;
   readonly createUser: User;
   readonly updateUser: User;
-  readonly adminUpdateUser: User;
   readonly deleteUser: User;
   readonly createSeries: Series;
   readonly updateSeries: Series;
@@ -152,17 +153,22 @@ export type MutationLoginArgs = {
 };
 
 
+export type MutationUpdateMeArgs = {
+  data: UserCreateUpdateInput;
+};
+
+
+export type MutationCreateInitialUserArgs = {
+  data: UserCreateUpdateInput;
+};
+
+
 export type MutationCreateUserArgs = {
   data: UserCreateUpdateInput;
 };
 
 
 export type MutationUpdateUserArgs = {
-  data: UserCreateUpdateInput;
-};
-
-
-export type MutationAdminUpdateUserArgs = {
   where: UserWhereUniqueInput;
   data: UserCreateUpdateInput;
 };
@@ -651,6 +657,34 @@ export const UserCount = gql`
 export const CreateUser = gql`
     mutation CreateUser($data: UserCreateUpdateInput!) {
   createUser(data: $data) {
+    id
+  }
+}
+    `;
+export const CreateInitialUser = gql`
+    mutation CreateInitialUser($data: UserCreateUpdateInput!) {
+  createInitialUser(data: $data) {
+    id
+  }
+}
+    `;
+export const UpdateMe = gql`
+    mutation UpdateMe($data: UserCreateUpdateInput!) {
+  updateMe(data: $data) {
+    id
+  }
+}
+    `;
+export const UpdateUser = gql`
+    mutation UpdateUser($where: UserWhereUniqueInput!, $data: UserCreateUpdateInput!) {
+  updateUser(where: $where, data: $data) {
+    id
+  }
+}
+    `;
+export const DeleteUser = gql`
+    mutation DeleteUser($where: UserWhereUniqueInput!) {
+  deleteUser(where: $where) {
     id
   }
 }
