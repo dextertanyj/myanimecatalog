@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
     },
     paper: {
-      padding: theme.spacing(2),
+      padding: theme.spacing(3),
       textAlign: 'center',
       color: theme.palette.text.secondary,
     },
@@ -42,8 +42,6 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const seasonComparator = (date1: string, date2: string): number => {
-  console.log(date1);
-  console.log(date2);
   if (!date1 && !date2) {
     return 0;
   } else if (!date1) {

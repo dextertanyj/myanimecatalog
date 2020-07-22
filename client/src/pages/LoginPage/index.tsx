@@ -20,9 +20,6 @@ import { useLoginMutation } from '../../gql/queries';
 import { setLoginToken } from '../../utils/auth';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    backgroundColor: 'red',
-  },
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -30,8 +27,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
   },
   avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    margin: theme.spacing(3),
+    width: theme.spacing(7),
+    height: theme.spacing(7),
+    backgroundColor: theme.palette.primary.main,
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -89,10 +88,10 @@ export const LoginPage = () => {
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
+            <LockOutlinedIcon fontSize="large" />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Welcome
           </Typography>
           <Formik
             initialValues={{

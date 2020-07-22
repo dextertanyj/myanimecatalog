@@ -51,7 +51,6 @@ export const Series = {
     ctx: Context,
     _info: unknown
   ): Promise<SeriesType> {
-    console.log('update');
     const { progress, ...rest } = data;
     const currentUserId = ctx.userId;
     if (progress?.create) {

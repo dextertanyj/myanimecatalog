@@ -489,8 +489,6 @@ export const SeriesForm = (props: Props): ReactElement => {
       (seriesData?.series?.relatedAlternatives as SeriesRelation[]) || [],
       related
     );
-    console.log(relatedSeries);
-    console.log(relatedAlternatives);
     updateSeriesMutation({
       variables: {
         where: { id: props.seriesId || '' },
