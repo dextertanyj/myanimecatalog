@@ -13,7 +13,7 @@ import moment from 'moment';
 import React, { useState } from 'react';
 import { SeriesForm } from '../Forms/SeriesForm';
 import { useSeriesQuery } from '../gql/queries';
-import { Action_Type } from '../utils/constants';
+import { ActionType } from '../utils/constants';
 import { renderSeason, renderStatus, renderType } from '../utils/enumRender';
 import { SeriesRelatedDisplay } from './SeriesRelatedDisplay';
 
@@ -246,7 +246,7 @@ export const SeriesInfoTable = (props: Props) => {
           <SeriesForm
             seriesId={props.seriesId}
             open={showForm}
-            action={Action_Type.UPDATE}
+            action={ActionType.UPDATE}
             onSubmit={() => refetch()}
             onClose={() => setShowForm(false)}
           />

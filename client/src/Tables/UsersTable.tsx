@@ -18,7 +18,7 @@ import { useHistory } from 'react-router-dom';
 import { UserForm } from '../Forms/UserForm';
 import { User } from '../gql/documents';
 import { useUsersQuery } from '../gql/queries';
-import { Action_Type } from '../utils/constants';
+import { ActionType } from '../utils/constants';
 import { renderRole } from '../utils/enumRender';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -82,7 +82,7 @@ export const UsersTable = () => {
     | undefined
   >(undefined);
   const [showForm, setShowForm] = useState<boolean>(false);
-  const [formAction, setFormAction] = useState<Action_Type>(Action_Type.CREATE);
+  const [formAction, setFormAction] = useState<ActionType>(ActionType.CREATE);
   const [selectedRows, setSelectedRows] = useState<User[]>([]);
 
   const { data: rowData, refetch } = useUsersQuery();
@@ -127,7 +127,7 @@ export const UsersTable = () => {
               color="primary"
               size="small"
               onClick={() => {
-                setFormAction(Action_Type.CREATE);
+                setFormAction(ActionType.CREATE);
                 setShowForm(true);
               }}
             >
@@ -141,7 +141,7 @@ export const UsersTable = () => {
               variant="contained"
               size="small"
               onClick={() => {
-                setFormAction(Action_Type.UPDATE);
+                setFormAction(ActionType.UPDATE);
                 setShowForm(true);
               }}
             >
@@ -175,7 +175,7 @@ export const UsersTable = () => {
           action={formAction}
           onSubmit={() => {
             refetch();
-            setFormAction(Action_Type.CREATE);
+            setFormAction(ActionType.CREATE);
           }}
           onClose={() => {
             setShowForm(false);

@@ -35,7 +35,7 @@ import {
   useSeriesLazyQuery,
   useUpdateSeriesMutation,
 } from '../gql/queries';
-import { Action_Type } from '../utils/constants';
+import { ActionType } from '../utils/constants';
 import {
   renderSeasonInfo,
   renderStatus,
@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 type Props = {
   seriesId?: string;
   open: boolean;
-  action: Action_Type;
+  action: ActionType;
   onSubmit: () => void;
   onClose: () => void;
 };
@@ -558,7 +558,7 @@ export const SeriesForm = (props: Props): ReactElement => {
       maxWidth={'lg'}
     >
       <DialogTitle key="DialogTitle">
-        {props.action === Action_Type.CREATE
+        {props.action === ActionType.CREATE
           ? `Add A New Series`
           : `Editing ${seriesData?.series?.title}`}
       </DialogTitle>
@@ -570,7 +570,7 @@ export const SeriesForm = (props: Props): ReactElement => {
             enableReinitialize={true}
             initialValues={initialFormValues}
             onSubmit={
-              props.action === Action_Type.CREATE
+              props.action === ActionType.CREATE
                 ? onSubmitCreate
                 : onSubmitUpdate
             }
@@ -1098,7 +1098,7 @@ export const SeriesForm = (props: Props): ReactElement => {
                   <DialogActions className={classes.dialogButtons}>
                     <Button onClick={handleReset}>Reset</Button>
                     <Button type="submit" color="primary">
-                      {actionType === Action_Type.CREATE ? 'Create' : 'Update'}
+                      {actionType === ActionType.CREATE ? 'Create' : 'Update'}
                     </Button>
                   </DialogActions>
                 </form>

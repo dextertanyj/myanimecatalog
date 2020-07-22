@@ -20,7 +20,7 @@ import { useHistory } from 'react-router-dom';
 import { SeriesForm } from '../Forms/SeriesForm';
 import { Series } from '../gql/documents';
 import { useAllSeriesQuery, useDeleteSeriesMutation } from '../gql/queries';
-import { Action_Type } from '../utils/constants';
+import { ActionType } from '../utils/constants';
 import { renderSeason, renderStatus, renderType } from '../utils/enumRender';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -117,7 +117,7 @@ export const SeriesTable = () => {
     | undefined
   >(undefined);
   const [showForm, setShowForm] = useState<boolean>(false);
-  const [formAction, setFormAction] = useState<Action_Type>(Action_Type.CREATE);
+  const [formAction, setFormAction] = useState<ActionType>(ActionType.CREATE);
   const [selectedRows, setSelectedRows] = useState<Series[]>([]);
 
   const { data: rowData, refetch } = useAllSeriesQuery();
@@ -189,7 +189,7 @@ export const SeriesTable = () => {
               color="primary"
               size="small"
               onClick={() => {
-                setFormAction(Action_Type.CREATE);
+                setFormAction(ActionType.CREATE);
                 setShowForm(true);
               }}
             >
@@ -247,7 +247,7 @@ export const SeriesTable = () => {
           action={formAction}
           onSubmit={() => {
             refetch();
-            setFormAction(Action_Type.CREATE);
+            setFormAction(ActionType.CREATE);
           }}
           onClose={() => {
             setShowForm(false);

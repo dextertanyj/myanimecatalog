@@ -13,7 +13,7 @@ import {
 import Skeleton from '@material-ui/lab/Skeleton';
 import { ApolloError } from 'apollo-client';
 import { Formik, FormikProps, FormikValues } from 'formik';
-import React, { ReactElement, useEffect } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import sha from 'sha.js';
 import * as Yup from 'yup';
 import { Role } from '../gql/documents';
@@ -23,7 +23,7 @@ import {
   useUpdateUserMutation,
   useUserLazyQuery,
 } from '../gql/queries';
-import { Action_Type } from '../utils/constants';
+import { ActionType } from '../utils/constants';
 import { renderRole } from '../utils/enumRender';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 type Props = {
   userId?: string;
   open: boolean;
-  action: Action_Type;
+  action: ActionType;
   onSubmit: () => void;
   onClose: () => void;
 };
@@ -74,6 +74,7 @@ type FormValues = {
 export const UserForm = (props: Props): ReactElement => {
   const { action: actionType } = props;
   const classes = useStyles();
+  const [showDelete, setShowDelete] = useState<boolean>(false);
 
   const [createUserMutation] = useCreateUserMutation({
     onCompleted: () => {
@@ -97,6 +98,7 @@ export const UserForm = (props: Props): ReactElement => {
 
   const [deleteUserMutation] = useDeleteUserMutation({
     onCompleted: () => {
+      setShowDelete(false);
       props.onSubmit();
       props.onClose();
     },
@@ -159,12 +161,26 @@ export const UserForm = (props: Props): ReactElement => {
     }
   };
 
+  const onSubmitDelete = async () => {
+    if (props.userId) {
+      await deleteUserMutation({
+        variables: {
+          where: { id: props.userId },
+        },
+      });
+    }
+  };
+
   const initialFormValues: FormValues = {
-    username: userData?.user?.username || undefined,
-    name: userData?.user?.name || undefined,
+    username:
+      (actionType === ActionType.UPDATE && userData?.user?.username) ||
+      undefined,
+    name:
+      (actionType === ActionType.UPDATE && userData?.user?.name) || undefined,
     password: undefined,
     passwordConfirm: undefined,
-    role: userData?.user?.role || undefined,
+    role:
+      (actionType === ActionType.UPDATE && userData?.user?.role) || undefined,
   };
 
   const createValidationSchema = Yup.object({
@@ -201,7 +217,7 @@ export const UserForm = (props: Props): ReactElement => {
       maxWidth={'lg'}
     >
       <DialogTitle key="DialogTitle">
-        {props.action === Action_Type.CREATE
+        {props.action === ActionType.CREATE
           ? `Add A New User`
           : `Editing ${userData?.user?.name}`}
       </DialogTitle>
@@ -213,12 +229,12 @@ export const UserForm = (props: Props): ReactElement => {
             enableReinitialize={true}
             initialValues={initialFormValues}
             onSubmit={
-              props.action === Action_Type.CREATE
+              props.action === ActionType.CREATE
                 ? onSubmitCreate
                 : onSubmitUpdate
             }
             validationSchema={
-              props.action === Action_Type.CREATE
+              props.action === ActionType.CREATE
                 ? createValidationSchema
                 : updateValidationSchema
             }
@@ -333,9 +349,17 @@ export const UserForm = (props: Props): ReactElement => {
                     </Grid>
                   </Grid>
                   <DialogActions className={classes.dialogButtons}>
+                    {actionType === ActionType.UPDATE && (
+                      <Button
+                        onClick={() => setShowDelete(true)}
+                        color="secondary"
+                      >
+                        Delete
+                      </Button>
+                    )}
                     <Button onClick={handleReset}>Reset</Button>
                     <Button type="submit" color="primary">
-                      {actionType === Action_Type.CREATE ? 'Create' : 'Update'}
+                      {actionType === ActionType.CREATE ? 'Create' : 'Update'}
                     </Button>
                   </DialogActions>
                 </form>
@@ -344,6 +368,20 @@ export const UserForm = (props: Props): ReactElement => {
           </Formik>
         )}
       </DialogContent>
+      <Dialog
+        open={showDelete}
+        onClose={() => setShowDelete(false)}
+        fullWidth={true}
+        maxWidth={'md'}
+      >
+        <DialogTitle id="alert-dialog-title">{`Delete ${userData?.user?.name}?`}</DialogTitle>
+        <DialogActions>
+          <Button onClick={() => setShowDelete(false)}>Cancel</Button>
+          <Button onClick={() => onSubmitDelete()} color="secondary">
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Dialog>
   );
 };

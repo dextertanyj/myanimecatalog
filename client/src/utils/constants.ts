@@ -1,5 +1,5 @@
-export enum Action_Type {
-  CREATE = "CREATE",
-  UPDATE = "UPDATE",
-  VIEW = "VIEW"
+export enum ActionType {
+  CREATE = 'CREATE',
+  UPDATE = 'UPDATE',
+  VIEW = 'VIEW',
 }
