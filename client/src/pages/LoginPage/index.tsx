@@ -7,34 +7,33 @@ import {
   Snackbar,
   TextField,
   Theme,
-  Typography
-} from "@material-ui/core";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import { ApolloError } from "apollo-client";
-import { Formik } from "formik";
-import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import sha from "sha.js";
-import * as Yup from "yup";
-import { useLoginMutation } from "../../gql/queries";
-import { setLoginToken } from "../../utils/auth";
+  Typography,
+} from '@material-ui/core';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { ApolloError } from 'apollo-client';
+import { Formik } from 'formik';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import sha from 'sha.js';
+import * as Yup from 'yup';
+import { useLoginMutation } from '../../gql/queries';
+import { setLoginToken } from '../../utils/auth';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    backgroundColor: "red",
-  },
   paper: {
     marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    margin: theme.spacing(3),
+    width: theme.spacing(7),
+    height: theme.spacing(7),
+    backgroundColor: theme.palette.primary.main,
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -54,7 +53,7 @@ export const LoginPage = () => {
   });
 
   const onSubmit = async (values: any) => {
-    const password = sha("sha256").update(values.password).digest("hex");
+    const password = sha('sha256').update(values.password).digest('hex');
     await loginMutation({
       variables: {
         data: {
@@ -69,9 +68,9 @@ export const LoginPage = () => {
     if (data?.login.user && data?.login.token) {
       try {
         setLoginToken(data?.login.token);
-        history.push("/");
+        history.push('/');
       } catch (error) {
-        setError("Failed to login.");
+        setError('Failed to login.');
       }
     }
   }, [data, history]);
@@ -82,22 +81,22 @@ export const LoginPage = () => {
         open={!!error}
         autoHideDuration={1500}
         onClose={() => setError(undefined)}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         message={error}
       />
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
+            <LockOutlinedIcon fontSize="large" />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Welcome
           </Typography>
           <Formik
             initialValues={{
-              username: "",
-              password: "",
+              username: '',
+              password: '',
             }}
             validationSchema={Yup.object({
               username: Yup.string().required(`Please enter your username.`),

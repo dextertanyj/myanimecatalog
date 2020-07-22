@@ -1,9 +1,9 @@
-import Skeleton from "@material-ui/lab/Skeleton";
-import React, { useEffect, useState } from "react";
-import { Redirect } from "react-router-dom";
-import { Role } from "../gql/documents";
-import { useLoggedInQuery } from "../gql/queries";
-import Unauthorised from "../Templates/403";
+import Skeleton from '@material-ui/lab/Skeleton';
+import React, { useEffect, useState } from 'react';
+import { Redirect } from 'react-router-dom';
+import { Role } from '../gql/documents';
+import { useLoggedInQuery } from '../gql/queries';
+import Unauthorised from '../Templates/403';
 
 export const withAuth = (roles?: Role[]) => (Component: any) => (
   props?: any
@@ -11,7 +11,7 @@ export const withAuth = (roles?: Role[]) => (Component: any) => (
   const [loggedIn, setLoggedIn] = useState<boolean | undefined>(undefined);
   const [authorised, setAuthorised] = useState<boolean | undefined>(undefined);
   const { data, loading } = useLoggedInQuery({
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export const withAuth = (roles?: Role[]) => (Component: any) => (
   if (loggedIn && authorised) {
     return <Component {...props} {...data} />;
   } else if (loggedIn === false && authorised === false) {
-    return <Redirect to={"/login"} />;
+    return <Redirect to={'/login'} />;
   } else {
     return <Unauthorised />;
   }

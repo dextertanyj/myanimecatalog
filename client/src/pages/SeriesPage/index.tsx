@@ -1,31 +1,14 @@
-import {
-  createStyles,
-  makeStyles,
-  Paper,
-  Theme,
-  Typography,
-} from "@material-ui/core";
-import React from "react";
-import { withAuth } from "../../HOC/withAuth";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: "center",
-      color: theme.palette.text.secondary,
-    },
-  })
-);
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import { SeriesInfoTable } from '../../Components/SeriesInfoTable';
+import { withAuth } from '../../HOC/withAuth';
 
 const SeriesPage = () => {
-  const classes = useStyles();
+  const { seriesId } = useParams();
+
   return (
     <div>
-      <Paper elevation={3} className={classes.paper}>
-        <Typography>Series Page</Typography>
-        Coming Soon...
-      </Paper>
+      <SeriesInfoTable seriesId={seriesId} key={seriesId} />
     </div>
   );
 };

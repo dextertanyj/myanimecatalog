@@ -1,0 +1,87 @@
+query Series($where: SeriesWhereUniqueInput!) {
+  series(where: $where) {
+    id
+    title
+    alternativeTitles {
+      id
+      title
+    }
+    references {
+      id
+      link
+      source
+    }
+    status
+    type
+    episodes {
+      id
+      title
+      episodeNumber
+    }
+    episodeCount
+    seasonNumber
+    releaseSeason
+    releaseYear
+    remarks
+    prequels {
+      id
+      title
+    }
+    sequels {
+      id
+      title
+    }
+    mainStories {
+      id
+      title
+    }
+    sideStories {
+      id
+      title
+    }
+    relatedSeries {
+      id
+      title
+    }
+    relatedAlternatives {
+      id
+      title
+    }
+    createdAt
+    updatedAt
+  }
+}
+
+query AllSeries {
+  allSeries {
+    id
+    title
+    seasonNumber
+    episodeCount
+    type
+    status
+    releaseSeason
+    releaseYear
+  }
+}
+
+mutation CreateSeries($data: SeriesCreateUpdateInput!) {
+  createSeries(data: $data) {
+    id
+  }
+}
+
+mutation UpdateSeries(
+  $where: SeriesWhereUniqueInput!
+  $data: SeriesCreateUpdateInput!
+) {
+  updateSeries(where: $where, data: $data) {
+    id
+  }
+}
+
+mutation DeleteSeries($where: SeriesWhereUniqueInput!) {
+  deleteSeries(where: $where) {
+    id
+  }
+}

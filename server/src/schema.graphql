@@ -74,6 +74,8 @@ input EpisodeCreateUpdateInput {
   episodeNumber: Int
   files: FileRelationInput
   remarks: String
+  createdAt: DateTime
+  updatedAt: DateTime
 }
 
 input EpisodeManyRelationInput {
@@ -99,7 +101,7 @@ input SeriesCreateUpdateInput {
   episodeCount: Int
   status: Status
   type: Type
-  releaseSeason: String
+  releaseSeason: Season
   releaseYear: DateTime
   remarks: String
   prequels: SeriesManyRelationInput
@@ -110,6 +112,8 @@ input SeriesCreateUpdateInput {
   relatedAlternatives: SeriesManyRelationInput
   references: ReferenceRelationInput
   progress: UserProgressRelationInput
+  createdAt: DateTime
+  updatedAt: DateTime
 }
 
 input SeriesManyRelationInput {
@@ -160,6 +164,8 @@ input FileCreateUpdateInput {
   codec: String
   remarks: String
   episode: EpisodeRelationInput
+  createdAt: DateTime
+  updatedAt: DateTime
 }
 
 input FileRelationInput {
@@ -191,6 +197,8 @@ input UserProgressCreateUpdateInput {
   character: Int
   appeal: Int
   remarks: String
+  createdAt: DateTime
+  updatedAt: DateTime
 }
 
 input UserProgressRelationInput {
@@ -310,6 +318,8 @@ type Episode {
   episodeNumber: Int
   files: [File]
   remarks: String
+  createdAt: DateTime
+  updatedAt: DateTime
 }
 
 type Series {
@@ -321,7 +331,7 @@ type Series {
   episodeCount: Int
   status: Status
   type: Type
-  releaseSeason: String
+  releaseSeason: Season
   releaseYear: DateTime
   remarks: String
   prequels: [Series]
@@ -333,6 +343,8 @@ type Series {
   references: [Reference]
   progress: UserProgress
   allProgress: [UserProgress]
+  createdAt: DateTime
+  updatedAt: DateTime
 }
 
 type AlternativeTitle {
