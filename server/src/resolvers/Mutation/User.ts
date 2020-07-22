@@ -3,11 +3,31 @@ import {
   UserCreateArgs,
   UserDeleteArgs,
   UserUpdateArgs,
-} from "@prisma/client";
-import bcrypt from "bcryptjs";
-import { Context } from "../../utils";
+} from '@prisma/client';
+import bcrypt from 'bcryptjs';
+import { Context } from '../../utils';
 
 export const User = {
+  async createInitialUser(
+    _parent: unknown,
+    { data }: UserCreateArgs,
+    ctx: Context,
+    _info: unknown
+  ): Promise<UserType> {
+    if ((await ctx.prisma.user.count()) !== 0) {
+      throw new Error(`There is an existing account.`);
+    }
+    const encryptPassword = await bcrypt.hash(data.password, 10);
+    const user = await ctx.prisma.user.create({
+      data: {
+        ...data,
+        password: encryptPassword,
+        username: data.username.toLowerCase().trim(),
+      },
+    });
+    return user;
+  },
+
   async createUser(
     _parent: any,
     { data }: UserCreateArgs,
@@ -25,7 +45,7 @@ export const User = {
     return user;
   },
 
-  async updateUser(
+  async updateMe(
     _parent: any,
     { data }: UserUpdateArgs,
     ctx: Context,
@@ -47,7 +67,7 @@ export const User = {
     return user;
   },
 
-  async adminUpdateUser(
+  async updateUser(
     _parent: any,
     { where, data }: UserUpdateArgs,
     ctx: Context,
