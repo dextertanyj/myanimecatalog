@@ -657,7 +657,7 @@ export type UserQuery = (
   { readonly __typename?: 'Query' }
   & { readonly user?: Maybe<(
     { readonly __typename?: 'User' }
-    & Pick<User, 'id' | 'username' | 'name'>
+    & Pick<User, 'id' | 'username' | 'name' | 'role' | 'passwordAttempts'>
   )> }
 );
 
@@ -668,7 +668,7 @@ export type UsersQuery = (
   { readonly __typename?: 'Query' }
   & { readonly users?: Maybe<ReadonlyArray<Maybe<(
     { readonly __typename?: 'User' }
-    & Pick<User, 'id'>
+    & Pick<User, 'id' | 'username' | 'name' | 'role' | 'passwordAttempts'>
   )>>> }
 );
 
@@ -1173,6 +1173,8 @@ export const UserDocument = gql`
     id
     username
     name
+    role
+    passwordAttempts
   }
 }
     `;
@@ -1225,6 +1227,10 @@ export const UsersDocument = gql`
     query Users {
   users {
     id
+    username
+    name
+    role
+    passwordAttempts
   }
 }
     `;

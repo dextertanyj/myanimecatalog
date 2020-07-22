@@ -1,13 +1,8 @@
-import {
-  createStyles,
-  makeStyles,
-  Paper,
-  Theme,
-  Typography,
-} from '@material-ui/core';
+import { createStyles, Grid, makeStyles, Theme } from '@material-ui/core';
 import React from 'react';
 import { Role } from '../../gql/documents';
 import { withAuth } from '../../HOC/withAuth';
+import { UsersTable } from '../../Tables/UsersTable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -23,10 +18,11 @@ const UsersPage = () => {
   const classes = useStyles();
   return (
     <div>
-      <Paper elevation={3} className={classes.paper}>
-        <Typography>Users Page</Typography>
-        Coming Soon...
-      </Paper>
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <UsersTable />
+        </Grid>
+      </Grid>
     </div>
   );
 };

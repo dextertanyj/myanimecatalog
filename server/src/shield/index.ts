@@ -7,7 +7,6 @@ import { Context } from '../utils';
 const rules = {
   isAuthenticatedUser: rule()(
     async (_parent: unknown, _args: unknown, ctx: Context) => {
-      console.log('test');
       return Boolean(ctx.userId);
     }
   ),

@@ -639,6 +639,8 @@ export const User = gql`
     id
     username
     name
+    role
+    passwordAttempts
   }
 }
     `;
@@ -646,6 +648,10 @@ export const Users = gql`
     query Users {
   users {
     id
+    username
+    name
+    role
+    passwordAttempts
   }
 }
     `;

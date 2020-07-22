@@ -3,12 +3,18 @@ query User($where: UserWhereUniqueInput!) {
     id
     username
     name
+    role
+    passwordAttempts
   }
 }
 
 query Users {
   users {
     id
+    username
+    name
+    role
+    passwordAttempts
   }
 }
 
