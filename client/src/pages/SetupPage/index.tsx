@@ -104,15 +104,15 @@ export const SetupPage = () => {
               passwordConfirm: '',
             }}
             validationSchema={Yup.object({
-              username: Yup.string().required(`Please enter a username.`),
-              name: Yup.string().required(`Please enter your name.`),
-              password: Yup.string().required('Please enter a password.'),
+              username: Yup.string().required(`Please enter a username`),
+              name: Yup.string().required(`Please enter your name`),
+              password: Yup.string().required('Please enter a password'),
               passwordConfirm: Yup.string()
                 .oneOf(
                   [Yup.ref('password'), undefined],
                   `Passwords do not match`
                 )
-                .required('Please enter your password again.'),
+                .required('Please enter your password again'),
             })}
             onSubmit={onSubmit}
           >

@@ -71,18 +71,22 @@ export const SeriesInfoTable = (props: Props) => {
       ) : (
         <>
           <Paper elevation={3} className={classes.paper}>
-            <Grid container spacing={2}>
-              <Grid item xs={10} className={classes.gridTitle}>
-                <Typography variant="h5"> Series Information</Typography>
-              </Grid>
-              <Grid item xs={2} className={classes.gridButton}>
-                <Button
-                  color="primary"
-                  variant="contained"
-                  onClick={() => setShowForm(true)}
-                >
-                  Edit
-                </Button>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Grid container spacing={3}>
+                  <Grid item xs className={classes.gridTitle}>
+                    <Typography variant="h5"> Series Information</Typography>
+                  </Grid>
+                  <Grid item className={classes.gridButton}>
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      onClick={() => setShowForm(true)}
+                    >
+                      Edit
+                    </Button>
+                  </Grid>
+                </Grid>
               </Grid>
               <Grid item xs={12} className={classes.gridSpacer} />
               <Grid item xs={2} className={classes.grid}>

@@ -535,7 +535,7 @@ export type LoggedInQuery = (
   { readonly __typename?: 'Query' }
   & { readonly loggedIn?: Maybe<(
     { readonly __typename?: 'User' }
-    & Pick<User, 'id' | 'username' | 'role'>
+    & Pick<User, 'id' | 'username' | 'name' | 'role'>
   )> }
 );
 
@@ -752,6 +752,7 @@ export const LoggedInDocument = gql`
   loggedIn {
     id
     username
+    name
     role
   }
 }

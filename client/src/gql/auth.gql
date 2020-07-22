@@ -2,6 +2,7 @@ query LoggedIn {
   loggedIn {
     id
     username
+    name
     role
   }
 }

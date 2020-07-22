@@ -528,6 +528,7 @@ export const LoggedIn = gql`
   loggedIn {
     id
     username
+    name
     role
   }
 }
