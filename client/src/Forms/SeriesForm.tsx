@@ -15,6 +15,7 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
+import { ApolloError } from 'apollo-client';
 import {
   FieldArray,
   Formik,
@@ -23,8 +24,10 @@ import {
   FormikValues,
 } from 'formik';
 import { Moment } from 'moment';
+import { useSnackbar } from 'notistack';
 import React, { ReactElement, useEffect, useState } from 'react';
 import * as Yup from 'yup';
+import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
 import { SeriesAutocomplete } from '../Components/SeriesAutocomplete';
 import { Series, Type } from '../gql/documents';
 import {
@@ -238,6 +241,7 @@ function updateRelatedSeries(
 export const SeriesForm = (props: Props): ReactElement => {
   const { action: actionType } = props;
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
   const { data: seriesList, loading: loadingOptions } = useAllSeriesQuery();
   const [autoCompleteOptions, setAutoCompleteOptions] = useState<Series[]>([]);
@@ -274,14 +278,44 @@ export const SeriesForm = (props: Props): ReactElement => {
   }, [props.seriesId, props.open, loadSeries]);
 
   const [createSeriesMutation] = useCreateSeriesMutation({
+    onError: (error: ApolloError) => {
+      if (error.networkError) {
+        NetworkError();
+      } else if (error.graphQLErrors) {
+        enqueueSnackbar(error.message.replace(`GraphQL error: `, ''), {
+          key: 'series-form-message',
+          variant: 'warning',
+        });
+      } else {
+        GenericError();
+      }
+    },
     onCompleted: () => {
+      enqueueSnackbar(`Successfully created series`, {
+        key: 'series-form-message',
+      });
       props.onSubmit();
       props.onClose();
     },
   });
 
   const [updateSeriesMutation] = useUpdateSeriesMutation({
+    onError: (error: ApolloError) => {
+      if (error.networkError) {
+        NetworkError();
+      } else if (error.graphQLErrors) {
+        enqueueSnackbar(error.message.replace(`GraphQL error: `, ''), {
+          key: 'series-form-message',
+          variant: 'warning',
+        });
+      } else {
+        GenericError();
+      }
+    },
     onCompleted: () => {
+      enqueueSnackbar(`Successfully updated series`, {
+        key: 'series-form-message',
+      });
       props.onSubmit();
       props.onClose();
     },
