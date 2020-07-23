@@ -4,12 +4,12 @@ export const renderRole = (role: Role): string => {
   switch (role) {
     case Role.Admin:
       return 'Admin';
-    case Role.Readonly: 
+    case Role.Readonly:
       return 'Read Only';
     case Role.Write:
-      return 'Write'
+      return 'Read & Write';
   }
-}
+};
 
 export const renderStatus = (status: Status): string => {
   switch (status) {

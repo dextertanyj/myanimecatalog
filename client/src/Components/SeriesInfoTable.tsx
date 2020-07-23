@@ -12,7 +12,8 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import moment from 'moment';
 import React, { useState } from 'react';
 import { SeriesForm } from '../Forms/SeriesForm';
-import { useSeriesQuery } from '../gql/queries';
+import { useLoggedInQuery, useSeriesQuery } from '../gql/queries';
+import { writeAccess } from '../utils/auth';
 import { ActionType } from '../utils/constants';
 import { renderSeason, renderStatus, renderType } from '../utils/enumRender';
 import { SeriesRelatedDisplay } from './SeriesRelatedDisplay';
@@ -49,6 +50,10 @@ export const SeriesInfoTable = (props: Props) => {
   const classes = useStyles();
   const [showForm, setShowForm] = useState<boolean>(false);
 
+  const { data: AuthData } = useLoggedInQuery({
+    fetchPolicy: 'cache-and-network',
+  });
+
   const { data: seriesData, refetch, loading } = useSeriesQuery({
     fetchPolicy: 'cache-and-network',
     variables: {
@@ -77,15 +82,18 @@ export const SeriesInfoTable = (props: Props) => {
                   <Grid item xs className={classes.gridTitle}>
                     <Typography variant="h5"> Series Information</Typography>
                   </Grid>
-                  <Grid item className={classes.gridButton}>
-                    <Button
-                      color="primary"
-                      variant="contained"
-                      onClick={() => setShowForm(true)}
-                    >
-                      Edit
-                    </Button>
-                  </Grid>
+                  {AuthData?.loggedIn?.role &&
+                    writeAccess.includes(AuthData.loggedIn.role) && (
+                      <Grid item className={classes.gridButton}>
+                        <Button
+                          color="primary"
+                          variant="contained"
+                          onClick={() => setShowForm(true)}
+                        >
+                          Edit
+                        </Button>
+                      </Grid>
+                    )}
                 </Grid>
               </Grid>
               <Grid item xs={12} className={classes.gridSpacer} />

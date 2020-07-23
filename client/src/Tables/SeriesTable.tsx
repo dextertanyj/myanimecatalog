@@ -19,7 +19,12 @@ import React, { useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { SeriesForm } from '../Forms/SeriesForm';
 import { Series } from '../gql/documents';
-import { useAllSeriesQuery, useDeleteSeriesMutation } from '../gql/queries';
+import {
+  useAllSeriesQuery,
+  useDeleteSeriesMutation,
+  useLoggedInQuery,
+} from '../gql/queries';
+import { writeAccess } from '../utils/auth';
 import { ActionType } from '../utils/constants';
 import { renderSeason, renderStatus, renderType } from '../utils/enumRender';
 
@@ -120,7 +125,13 @@ export const SeriesTable = () => {
   const [formAction, setFormAction] = useState<ActionType>(ActionType.CREATE);
   const [selectedRows, setSelectedRows] = useState<Series[]>([]);
 
-  const { data: rowData, refetch } = useAllSeriesQuery();
+  const { data: rowData, loading, refetch } = useAllSeriesQuery({
+    fetchPolicy: 'cache-and-network',
+  });
+
+  const { data: AuthData } = useLoggedInQuery({
+    fetchPolicy: 'cache-and-network',
+  });
 
   const [deleteSeriesMutation] = useDeleteSeriesMutation({
     onCompleted: () => {
@@ -182,20 +193,23 @@ export const SeriesTable = () => {
             <Typography variant="h5">All Series</Typography>
           </Grid>
           <Grid item xs />
-          <Grid item className={classes.headerButton}>
-            <Button
-              startIcon={<AddIcon />}
-              variant="contained"
-              color="primary"
-              size="small"
-              onClick={() => {
-                setFormAction(ActionType.CREATE);
-                setShowForm(true);
-              }}
-            >
-              Add New
-            </Button>
-          </Grid>
+          {AuthData?.loggedIn?.role &&
+            writeAccess.includes(AuthData.loggedIn.role) && (
+              <Grid item className={classes.headerButton}>
+                <Button
+                  startIcon={<AddIcon />}
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  onClick={() => {
+                    setFormAction(ActionType.CREATE);
+                    setShowForm(true);
+                  }}
+                >
+                  Add New
+                </Button>
+              </Grid>
+            )}
           <Grid item className={classes.headerButton}>
             <Button
               startIcon={<PageviewOutlinedIcon />}
@@ -209,20 +223,23 @@ export const SeriesTable = () => {
               View
             </Button>
           </Grid>
-          <Grid item className={classes.headerButton}>
-            <Button
-              startIcon={<DeleteIcon />}
-              disabled={selectedRows.length !== 1}
-              variant="contained"
-              color="secondary"
-              size="small"
-              onClick={() => {
-                deleteSelected();
-              }}
-            >
-              Delete
-            </Button>
-          </Grid>
+          {AuthData?.loggedIn?.role &&
+            writeAccess.includes(AuthData.loggedIn.role) && (
+              <Grid item className={classes.headerButton}>
+                <Button
+                  startIcon={<DeleteIcon />}
+                  disabled={selectedRows.length !== 1}
+                  variant="contained"
+                  color="secondary"
+                  size="small"
+                  onClick={() => {
+                    deleteSelected();
+                  }}
+                >
+                  Delete
+                </Button>
+              </Grid>
+            )}
           <Grid item xs={12} className={classes.tableHeader}>
             <div className="ag-theme-material" style={{ height: '500px' }}>
               <AgGridReact

@@ -23,6 +23,11 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(3),
       color: theme.palette.text.secondary,
     },
+    gridItem: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+    },
     gridTitle: {
       textAlign: 'left',
     },
@@ -68,19 +73,19 @@ const ProfilePage = () => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} className={classes.gridItem}>
             <Typography variant="h6">{data?.loggedIn?.name}</Typography>
           </Grid>
-          <Grid item xs={1}>
+          <Grid item xs={1} className={classes.gridItem}>
             <Typography>Username</Typography>
           </Grid>
-          <Grid item xs={11}>
+          <Grid item xs={11} className={classes.gridItem}>
             <Typography>{data?.loggedIn?.username}</Typography>
           </Grid>
-          <Grid item xs={1}>
-            <Typography>Access level</Typography>
+          <Grid item xs={1} className={classes.gridItem}>
+            <Typography>Access Level</Typography>
           </Grid>
-          <Grid item xs={11}>
+          <Grid item xs={11} className={classes.gridItem}>
             <Typography>
               {data?.loggedIn?.role && renderRole(data?.loggedIn?.role)}
             </Typography>

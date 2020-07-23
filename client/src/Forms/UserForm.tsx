@@ -291,7 +291,7 @@ export const UserForm = (props: Props): ReactElement => {
                         variant="outlined"
                         margin="normal"
                         name="role"
-                        label="Role"
+                        label="Access Level"
                         id="role"
                         value={values.role || null}
                         InputLabelProps={{ shrink: !!values.role }}

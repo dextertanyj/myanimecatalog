@@ -49,7 +49,7 @@ const columnDefs = [
     sortable: true,
   },
   {
-    headerName: 'Role',
+    headerName: 'Access Level',
     field: 'role',
     valueGetter: (params: { data: User }) => {
       return params?.data?.role && renderRole(params.data.role);
