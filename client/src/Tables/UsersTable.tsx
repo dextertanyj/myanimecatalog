@@ -14,7 +14,6 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { AgGridReact } from 'ag-grid-react';
 import React, { useCallback, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { UserForm } from '../Forms/UserForm';
 import { User } from '../gql/documents';
 import { useUsersQuery } from '../gql/queries';
@@ -23,18 +22,21 @@ import { renderRole } from '../utils/enumRender';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    tableHeader: {
-      marginTop: '10px',
-    },
-    headerButton: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-    },
     paper: {
       padding: theme.spacing(3),
       textAlign: 'center',
       color: theme.palette.text.secondary,
+    },
+    tableHeader: {
+      'marginBottom': '10px',
+      'textAlign': 'left',
+      '& div': {
+        '& div': {
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        },
+      },
     },
   })
 );
@@ -73,7 +75,6 @@ const columnDefs = [
 
 export const UsersTable = () => {
   const classes = useStyles();
-  const history = useHistory();
   const [gridApi, setGridApi] = useState<
     | {
         api: GridApi;
@@ -116,39 +117,42 @@ export const UsersTable = () => {
     <div>
       <Paper elevation={3} className={classes.paper}>
         <Grid container spacing={3}>
-          <Grid item>
-            <Typography variant="h5">Users</Typography>
-          </Grid>
-          <Grid item xs />
-          <Grid item className={classes.headerButton}>
-            <Button
-              startIcon={<AddIcon />}
-              variant="contained"
-              color="primary"
-              size="small"
-              onClick={() => {
-                setFormAction(ActionType.CREATE);
-                setShowForm(true);
-              }}
-            >
-              Add New
-            </Button>
-          </Grid>
-          <Grid item className={classes.headerButton}>
-            <Button
-              startIcon={<PageviewOutlinedIcon />}
-              disabled={selectedRows.length !== 1}
-              variant="contained"
-              size="small"
-              onClick={() => {
-                setFormAction(ActionType.UPDATE);
-                setShowForm(true);
-              }}
-            >
-              Edit
-            </Button>
-          </Grid>
           <Grid item xs={12} className={classes.tableHeader}>
+            <Grid container spacing={3}>
+              <Grid item xs>
+                <Typography variant="h5">Users</Typography>
+              </Grid>
+              <Grid item>
+                <Button
+                  startIcon={<AddIcon />}
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  onClick={() => {
+                    setFormAction(ActionType.CREATE);
+                    setShowForm(true);
+                  }}
+                >
+                  Add New
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  startIcon={<PageviewOutlinedIcon />}
+                  disabled={selectedRows.length !== 1}
+                  variant="contained"
+                  size="small"
+                  onClick={() => {
+                    setFormAction(ActionType.UPDATE);
+                    setShowForm(true);
+                  }}
+                >
+                  Edit
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
             <div className="ag-theme-material" style={{ height: '500px' }}>
               <AgGridReact
                 onGridReady={onGridReady}
