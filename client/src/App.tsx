@@ -37,6 +37,7 @@ export const App = () => (
     <ThemeProvider theme={theme}>
       <SnackbarProvider
         anchorOrigin={{ horizontal: 'center', vertical: 'top' }}
+        autoHideDuration={1000}
       >
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <ReactRouter />

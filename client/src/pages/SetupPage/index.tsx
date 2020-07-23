@@ -4,7 +4,6 @@ import {
   Container,
   CssBaseline,
   makeStyles,
-  Snackbar,
   TextField,
   Theme,
   Typography,
@@ -12,10 +11,12 @@ import {
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { ApolloError } from 'apollo-client';
 import { Formik } from 'formik';
-import React, { useEffect, useState } from 'react';
+import { useSnackbar } from 'notistack';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 import sha from 'sha.js';
 import * as Yup from 'yup';
+import { GenericError, NetworkError } from '../../Components/ErrorSnackbars';
 import {
   Role,
   useCreateInitialUserMutation,
@@ -34,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: '100%',
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -45,15 +46,33 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const SetupPage = () => {
   const classes = useStyles();
   const history = useHistory();
-  const [error, setError] = useState<string | undefined>(undefined);
+  const { enqueueSnackbar } = useSnackbar();
 
   const { data: count } = useUserCountQuery({
     fetchPolicy: 'cache-and-network',
   });
 
-  const [createInitialUserMutation, { data }] = useCreateInitialUserMutation({
+  const [createInitialUserMutation] = useCreateInitialUserMutation({
     onError: (error: ApolloError) => {
-      setError(error.message);
+      if (error.networkError) {
+        NetworkError();
+      } else if (error.graphQLErrors) {
+        enqueueSnackbar(error.message.replace(`GraphQL error: `, ''), {
+          key: 'login-error',
+          variant: 'warning',
+        });
+      } else {
+        GenericError();
+      }
+    },
+    onCompleted: (data) => {
+      if (data?.createInitialUser.id) {
+        enqueueSnackbar(`Successfully created account`);
+        enqueueSnackbar(`Please login with the account`);
+        history.push('/login');
+      } else {
+        enqueueSnackbar(`Failed to login`);
+      }
     },
   });
 
@@ -72,21 +91,8 @@ export const SetupPage = () => {
     });
   };
 
-  useEffect(() => {
-    if (data?.createInitialUser.id) {
-      history.push('/login');
-    }
-  }, [data, history]);
-
   return (
     <div>
-      <Snackbar
-        open={!!error}
-        autoHideDuration={1500}
-        onClose={() => setError(undefined)}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        message={error}
-      />
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
