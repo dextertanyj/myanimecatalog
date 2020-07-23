@@ -4,6 +4,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import { teal } from '@material-ui/core/colors';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import cookies from 'browser-cookies';
+import { SnackbarProvider } from 'notistack';
 import React from 'react';
 import initApollo from './Apollo';
 import ReactRouter from './Router';
@@ -34,9 +35,13 @@ const apolloClient = initApollo(
 export const App = () => (
   <ApolloProvider client={apolloClient}>
     <ThemeProvider theme={theme}>
-      <MuiPickersUtilsProvider utils={MomentUtils}>
-        <ReactRouter />
-      </MuiPickersUtilsProvider>
+      <SnackbarProvider
+        anchorOrigin={{ horizontal: 'center', vertical: 'top' }}
+      >
+        <MuiPickersUtilsProvider utils={MomentUtils}>
+          <ReactRouter />
+        </MuiPickersUtilsProvider>
+      </SnackbarProvider>
     </ThemeProvider>
   </ApolloProvider>
 );
