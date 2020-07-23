@@ -1,10 +1,10 @@
-import { User as UserType, UserProgress } from "@prisma/client";
-import { Context } from "../../utils";
+import { User as UserType, UserProgress } from '@prisma/client';
+import { Context } from '../../utils';
 
 export const User = {
   async progress(
     parent: UserType,
-    _args: any,
+    _args: unknown,
     ctx: Context
   ): Promise<UserProgress[]> {
     return ctx.prisma.userProgress.findMany({

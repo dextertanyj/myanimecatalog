@@ -29,10 +29,10 @@ export const User = {
   },
 
   async createUser(
-    _parent: any,
+    _parent: unknown,
     { data }: UserCreateArgs,
     ctx: Context,
-    _info: any
+    _info: unknown
   ): Promise<UserType> {
     const encryptPassword = await bcrypt.hash(data.password, 10);
     const user = await ctx.prisma.user.create({
@@ -46,10 +46,10 @@ export const User = {
   },
 
   async updateMe(
-    _parent: any,
+    _parent: unknown,
     { data }: UserUpdateArgs,
     ctx: Context,
-    _info: any
+    _info: unknown
   ): Promise<UserType> {
     const encryptPassword = data.password
       ? await bcrypt.hash(data?.password, 10)
@@ -68,10 +68,10 @@ export const User = {
   },
 
   async updateUser(
-    _parent: any,
+    _parent: unknown,
     { where, data }: UserUpdateArgs,
     ctx: Context,
-    _info: any
+    _info: unknown
   ): Promise<UserType> {
     const encryptPassword = data.password
       ? await bcrypt.hash(data?.password, 10)
@@ -88,10 +88,10 @@ export const User = {
   },
 
   async deleteUser(
-    _parent: any,
+    _parent: unknown,
     args: UserDeleteArgs,
     ctx: Context,
-    _info: any
+    _info: unknown
   ): Promise<UserType> {
     const user = await ctx.prisma.user.delete(args);
     return user;

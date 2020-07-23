@@ -6,7 +6,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "nodemon -e ts,graphql -x \"eslint --fix \"src/**/*.ts\" && ts-node --files src/index.ts\"",
+    "start": "nodemon -e ts,graphql -x \"eslint --ext .ts . && ts-node --files src/index.ts\"",
     "manualStart": "nodemon -r dotenv/config ./src/index.ts",
     "generate:migration": "prisma migrate save --create-db --experimental",
     "migrate": "prisma migrate up --create-db --experimental",
@@ -15,6 +15,7 @@
   "dependencies": {
     "@prisma/client": "^2.2.1",
     "@types/bcryptjs": "^2.4.2",
+    "@types/express": "^4.17.7",
     "@types/jsonwebtoken": "^8.5.0",
     "@types/node": "^14.0.22",
     "@types/sha.js": "^2.4.0",

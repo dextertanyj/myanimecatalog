@@ -1,10 +1,10 @@
-import { FindOneUserArgs, User as UserType } from "@prisma/client";
-import { Context } from "../../utils";
+import { FindOneUserArgs, User as UserType } from '@prisma/client';
+import { Context } from '../../utils';
 
 export const User = {
   async loggedIn(
-    _parent: any,
-    _args: any,
+    _parent: unknown,
+    _args: unknown,
     ctx: Context
   ): Promise<UserType | null> {
     const user = await ctx.prisma.user.findOne({
@@ -14,7 +14,7 @@ export const User = {
   },
 
   async user(
-    _parent: any,
+    _parent: unknown,
     args: FindOneUserArgs,
     ctx: Context
   ): Promise<UserType | null> {
@@ -22,12 +22,20 @@ export const User = {
     return user;
   },
 
-  async users(_parent: any, _args: any, ctx: Context): Promise<UserType[]> {
+  async users(
+    _parent: unknown,
+    _args: unknown,
+    ctx: Context
+  ): Promise<UserType[]> {
     const user = await ctx.prisma.user.findMany();
     return user;
   },
 
-  async userCount(_parent: any, _args: any, ctx: Context): Promise<number> {
+  async userCount(
+    _parent: unknown,
+    _args: unknown,
+    ctx: Context
+  ): Promise<number> {
     const count = await ctx.prisma.user.count();
     return count;
   },

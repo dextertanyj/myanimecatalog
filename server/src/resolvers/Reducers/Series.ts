@@ -1,16 +1,30 @@
-import { Series as SeriesType } from "@prisma/client";
-import { Context } from "../../utils";
+import {
+  AlternativeTitle,
+  Episode,
+  Reference,
+  Series as SeriesType,
+  UserProgress,
+} from '@prisma/client';
+import { Context } from '../../utils';
 
 export const Series = {
-  async alternativeTitles(parent: SeriesType, _args: any, ctx: Context) {
+  async alternativeTitles(
+    parent: SeriesType,
+    _args: unknown,
+    ctx: Context
+  ): Promise<AlternativeTitle[]> {
     return ctx.prisma.alternativeTitle.findMany({
       where: {
-        seriesId: parent.id
-      }
+        seriesId: parent.id,
+      },
     });
   },
 
-  async episodes(parent: SeriesType, _args: any, ctx: Context) {
+  async episodes(
+    parent: SeriesType,
+    _args: unknown,
+    ctx: Context
+  ): Promise<Episode[]> {
     return ctx.prisma.episode.findMany({
       where: {
         seriesId: parent.id,
@@ -18,7 +32,11 @@ export const Series = {
     });
   },
 
-  async prequels(parent: SeriesType, _args: any, ctx: Context) {
+  async prequels(
+    parent: SeriesType,
+    _args: unknown,
+    ctx: Context
+  ): Promise<SeriesType[]> {
     return ctx.prisma.series
       .findOne({
         where: { id: parent.id },
@@ -26,7 +44,11 @@ export const Series = {
       .prequels();
   },
 
-  async sequels(parent: SeriesType, _args: any, ctx: Context) {
+  async sequels(
+    parent: SeriesType,
+    _args: unknown,
+    ctx: Context
+  ): Promise<SeriesType[]> {
     return ctx.prisma.series
       .findOne({
         where: { id: parent.id },
@@ -34,7 +56,11 @@ export const Series = {
       .sequels();
   },
 
-  async sideStories(parent: SeriesType, _args: any, ctx: Context) {
+  async sideStories(
+    parent: SeriesType,
+    _args: unknown,
+    ctx: Context
+  ): Promise<SeriesType[]> {
     return ctx.prisma.series
       .findOne({
         where: { id: parent.id },
@@ -42,7 +68,11 @@ export const Series = {
       .sideStories();
   },
 
-  async mainStories(parent: SeriesType, _args: any, ctx: Context) {
+  async mainStories(
+    parent: SeriesType,
+    _args: unknown,
+    ctx: Context
+  ): Promise<SeriesType[]> {
     return ctx.prisma.series
       .findOne({
         where: { id: parent.id },
@@ -50,7 +80,11 @@ export const Series = {
       .mainStories();
   },
 
-  async relatedSeries(parent: SeriesType, _args: any, ctx: Context) {
+  async relatedSeries(
+    parent: SeriesType,
+    _args: unknown,
+    ctx: Context
+  ): Promise<SeriesType[]> {
     return ctx.prisma.series
       .findOne({
         where: { id: parent.id },
@@ -58,7 +92,11 @@ export const Series = {
       .relatedSeries();
   },
 
-  async relatedAlternatives(parent: SeriesType, _args: any, ctx: Context) {
+  async relatedAlternatives(
+    parent: SeriesType,
+    _args: unknown,
+    ctx: Context
+  ): Promise<SeriesType[]> {
     return ctx.prisma.series
       .findOne({
         where: { id: parent.id },
@@ -66,7 +104,11 @@ export const Series = {
       .relatedAlternatives();
   },
 
-  async references(parent: SeriesType, _args: any, ctx: Context) {
+  async references(
+    parent: SeriesType,
+    _args: unknown,
+    ctx: Context
+  ): Promise<Reference[]> {
     return ctx.prisma.reference.findMany({
       where: {
         seriesId: parent.id,
@@ -74,7 +116,11 @@ export const Series = {
     });
   },
 
-  async progress(parent: SeriesType, _args: any, ctx: Context) {
+  async progress(
+    parent: SeriesType,
+    _args: unknown,
+    ctx: Context
+  ): Promise<UserProgress | null> {
     const userId = ctx.userId;
     if (!userId) {
       return null;
@@ -89,7 +135,11 @@ export const Series = {
     });
   },
 
-  async allProgress(parent: SeriesType, _args: any, ctx: Context) {
+  async allProgress(
+    parent: SeriesType,
+    _args: unknown,
+    ctx: Context
+  ): Promise<UserProgress[]> {
     return ctx.prisma.userProgress.findMany({
       where: { seriesId: parent.id },
     });
