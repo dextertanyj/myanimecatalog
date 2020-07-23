@@ -21,12 +21,7 @@ type Props = {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: 'center',
-      color: theme.palette.text.secondary,
-    },
-    grid: {
+    title: {
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
@@ -43,7 +38,7 @@ export const SeriesRelatedDisplay = (props: Props): ReactElement => {
 
   return !!props.seriesArray && props.seriesArray.length > 0 ? (
     <>
-      <Grid item xs={2} className={classes.grid}>
+      <Grid item xs={2} className={classes.title}>
         <Typography>{props.title}</Typography>
       </Grid>
       <Grid item xs={10}>
