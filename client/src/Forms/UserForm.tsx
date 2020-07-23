@@ -13,9 +13,11 @@ import {
 import Skeleton from '@material-ui/lab/Skeleton';
 import { ApolloError } from 'apollo-client';
 import { Formik, FormikProps, FormikValues } from 'formik';
+import { useSnackbar } from 'notistack';
 import React, { ReactElement, useEffect, useState } from 'react';
 import sha from 'sha.js';
 import * as Yup from 'yup';
+import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
 import { Role } from '../gql/documents';
 import {
   useCreateUserMutation,
@@ -75,35 +77,72 @@ export const UserForm = (props: Props): ReactElement => {
   const { action: actionType } = props;
   const classes = useStyles();
   const [showDelete, setShowDelete] = useState<boolean>(false);
+  const { enqueueSnackbar } = useSnackbar();
 
   const [createUserMutation] = useCreateUserMutation({
+    onError: (error: ApolloError) => {
+      if (error.networkError) {
+        NetworkError();
+      } else if (error.graphQLErrors) {
+        enqueueSnackbar(error.message.replace(`GraphQL error: `, ''), {
+          key: 'user-form-message',
+          variant: 'warning',
+        });
+      } else {
+        GenericError();
+      }
+    },
     onCompleted: () => {
+      enqueueSnackbar(`Successfully created user`, {
+        key: 'user-form-message',
+      });
       props.onSubmit();
       props.onClose();
-    },
-    onError: (error: ApolloError) => {
-      console.log(error);
     },
   });
 
   const [updateUserMutation] = useUpdateUserMutation({
+    onError: (error: ApolloError) => {
+      if (error.networkError) {
+        NetworkError();
+      } else if (error.graphQLErrors) {
+        enqueueSnackbar(error.message.replace(`GraphQL error: `, ''), {
+          key: 'user-form-message',
+          variant: 'warning',
+        });
+      } else {
+        GenericError();
+      }
+    },
     onCompleted: () => {
+      enqueueSnackbar(`Successfully updated user`, {
+        key: 'user-form-message',
+      });
       props.onSubmit();
       props.onClose();
-    },
-    onError: (error: ApolloError) => {
-      console.log(error);
     },
   });
 
   const [deleteUserMutation] = useDeleteUserMutation({
+    onError: (error: ApolloError) => {
+      if (error.networkError) {
+        NetworkError();
+      } else if (error.graphQLErrors) {
+        enqueueSnackbar(error.message.replace(`GraphQL error: `, ''), {
+          key: 'user-form-message',
+          variant: 'warning',
+        });
+      } else {
+        GenericError();
+      }
+    },
     onCompleted: () => {
+      enqueueSnackbar(`Successfully deleted user`, {
+        key: 'user-form-message',
+      });
       setShowDelete(false);
       props.onSubmit();
       props.onClose();
-    },
-    onError: (error: ApolloError) => {
-      console.log(error);
     },
   });
 

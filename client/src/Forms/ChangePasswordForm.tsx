@@ -11,9 +11,11 @@ import {
 } from '@material-ui/core';
 import { ApolloError } from 'apollo-client';
 import { Formik, FormikProps, FormikValues } from 'formik';
+import { useSnackbar } from 'notistack';
 import React, { ReactElement } from 'react';
 import sha from 'sha.js';
 import * as Yup from 'yup';
+import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
 import { useUpdateUserMutation } from '../gql/queries';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -59,14 +61,27 @@ type FormValues = {
 
 export const ChangePasswordForm = (props: Props): ReactElement => {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [updateUserMutation] = useUpdateUserMutation({
+    onError: (error: ApolloError) => {
+      if (error.networkError) {
+        NetworkError();
+      } else if (error.graphQLErrors) {
+        enqueueSnackbar(error.message.replace(`GraphQL error: `, ''), {
+          key: 'change-password-message',
+          variant: 'warning',
+        });
+      } else {
+        GenericError();
+      }
+    },
     onCompleted: () => {
+      enqueueSnackbar(`Successfully changed password`, {
+        key: `change-password-message`,
+      });
       props.onSubmit && props.onSubmit();
       props.onClose();
-    },
-    onError: (error: ApolloError) => {
-      console.log(error);
     },
   });
 

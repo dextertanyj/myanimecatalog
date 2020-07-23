@@ -20,13 +20,13 @@ export default function ReactRouter() {
           <Route exact strict path="/login">
             <LoginPage />
           </Route>
-          <Route exact strict path="/logout">
-            <LogoutPage />
-          </Route>
           <Route exact strict path="/setup">
             <SetupPage />
           </Route>
           <Navigation>
+            <Route exact strict path="/logout">
+              <LogoutPage />
+            </Route>
             <Route exact strict path="/">
               <HomePage />
             </Route>

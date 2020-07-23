@@ -12,8 +12,10 @@ import {
 import Skeleton from '@material-ui/lab/Skeleton';
 import { ApolloError } from 'apollo-client';
 import { Formik, FormikProps, FormikValues } from 'formik';
+import { useSnackbar } from 'notistack';
 import React, { ReactElement, useEffect } from 'react';
 import * as Yup from 'yup';
+import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
 import { useUpdateUserMutation, useUserLazyQuery } from '../gql/queries';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -59,14 +61,27 @@ type FormValues = {
 
 export const ProfileForm = (props: Props): ReactElement => {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [updateUserMutation] = useUpdateUserMutation({
+    onError: (error: ApolloError) => {
+      if (error.networkError) {
+        NetworkError();
+      } else if (error.graphQLErrors) {
+        enqueueSnackbar(error.message.replace(`GraphQL error: `, ''), {
+          key: 'update-profile-message',
+          variant: 'warning',
+        });
+      } else {
+        GenericError();
+      }
+    },
     onCompleted: () => {
+      enqueueSnackbar(`Successfully updated profile`, {
+        key: `update-profile-message`,
+      });
       props.onSubmit();
       props.onClose();
-    },
-    onError: (error: ApolloError) => {
-      console.log(error);
     },
   });
 

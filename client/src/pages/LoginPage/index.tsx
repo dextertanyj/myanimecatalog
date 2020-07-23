@@ -4,7 +4,6 @@ import {
   Container,
   CssBaseline,
   makeStyles,
-  Snackbar,
   TextField,
   Theme,
   Typography,
@@ -12,10 +11,12 @@ import {
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { ApolloError } from 'apollo-client';
 import { Formik } from 'formik';
-import React, { useEffect, useState } from 'react';
+import { useSnackbar } from 'notistack';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 import sha from 'sha.js';
 import * as Yup from 'yup';
+import { GenericError, NetworkError } from '../../Components/ErrorSnackbars';
 import { useLoginMutation } from '../../gql/queries';
 import { setLoginToken } from '../../utils/auth';
 
@@ -44,11 +45,34 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const LoginPage = () => {
   const classes = useStyles();
   const history = useHistory();
-  const [error, setError] = useState<string | undefined>(undefined);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-  const [loginMutation, { data }] = useLoginMutation({
+  const [loginMutation] = useLoginMutation({
     onError: (error: ApolloError) => {
-      setError(error.message);
+      if (error.networkError) {
+        NetworkError();
+      } else if (error.graphQLErrors) {
+        enqueueSnackbar(error.message.replace(`GraphQL error: `, ''), {
+          key: 'login-error',
+          variant: 'warning',
+        });
+      } else {
+        GenericError();
+      }
+    },
+    onCompleted: (data) => {
+      if (data.login.user && data.login.token) {
+        try {
+          setLoginToken(data.login.token);
+          closeSnackbar();
+          enqueueSnackbar(`Successfully logged in`);
+          history.push('/');
+        } catch (error) {
+          enqueueSnackbar(`Failed to login`);
+        }
+      } else {
+        enqueueSnackbar(`Failed to login`);
+      }
     },
   });
 
@@ -64,26 +88,8 @@ export const LoginPage = () => {
     });
   };
 
-  useEffect(() => {
-    if (data?.login.user && data?.login.token) {
-      try {
-        setLoginToken(data?.login.token);
-        history.push('/');
-      } catch (error) {
-        setError('Failed to login.');
-      }
-    }
-  }, [data, history]);
-
   return (
     <div>
-      <Snackbar
-        open={!!error}
-        autoHideDuration={1500}
-        onClose={() => setError(undefined)}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        message={error}
-      />
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
