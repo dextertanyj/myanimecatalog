@@ -316,7 +316,11 @@ export const UserForm = (props: Props): ReactElement => {
                         margin="normal"
                         fullWidth
                         name="password"
-                        label="Password"
+                        label={
+                          actionType === ActionType.CREATE
+                            ? 'Password'
+                            : 'Reset Password'
+                        }
                         type="password"
                         id="password"
                         error={touched.password && !!errors.password}
