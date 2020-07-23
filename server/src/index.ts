@@ -3,6 +3,7 @@ import { loadSchemaSync } from '@graphql-tools/load';
 import { addResolversToSchema } from '@graphql-tools/schema';
 import { PrismaClient } from '@prisma/client';
 import { ApolloServer } from 'apollo-server';
+import express from 'express';
 import { applyMiddleware } from 'graphql-middleware';
 import path from 'path';
 import resolvers from './resolvers';
@@ -25,7 +26,7 @@ const schemaWithMiddleware = applyMiddleware(schemaWithResolvers, permissions);
 
 export const server = new ApolloServer({
   schema: schemaWithMiddleware,
-  context: ({ req }) => ({
+  context: ({ req }: { req: express.Request }) => ({
     ...req,
     prisma,
     userId: getContextUserId(req),
@@ -39,4 +40,8 @@ export const server = new ApolloServer({
   },
 });
 
-server.listen().then(({ url }) => console.log(`Server is running on ${url}`));
+server
+  .listen()
+  .then(({ url }: { url: string }) =>
+    console.log(`Server is running on ${url}`)
+  );
