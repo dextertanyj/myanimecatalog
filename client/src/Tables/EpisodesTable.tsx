@@ -1,0 +1,263 @@
+import {
+  Button,
+  createStyles,
+  Grid,
+  makeStyles,
+  Paper,
+  Theme,
+  Typography,
+} from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
+import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
+import { ColumnApi, GridApi } from 'ag-grid-community';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-material.css';
+import { AgGridReact } from 'ag-grid-react';
+import { useSnackbar } from 'notistack';
+import React, { useCallback, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { EpisodeForm } from '../Forms/EpisodeForm';
+import { Episode } from '../gql/documents';
+import {
+  useDeleteEpisodeMutation,
+  useEpisodesInSeriesQuery,
+  useLoggedInQuery,
+} from '../gql/queries';
+import { writeAccess } from '../utils/auth';
+import { ActionType } from '../utils/constants';
+
+type Props = {
+  seriesId: string;
+};
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    paper: {
+      padding: theme.spacing(3),
+      textAlign: 'center',
+      color: theme.palette.text.secondary,
+    },
+    tableHeader: {
+      'marginBottom': '10px',
+      'textAlign': 'left',
+      '& div': {
+        '& div': {
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        },
+      },
+    },
+  })
+);
+
+const columnDefs = [
+  {
+    headerName: 'Title',
+    field: 'title',
+    flex: 1,
+    filter: true,
+    sortable: true,
+  },
+  {
+    headerName: 'Episode No.',
+    field: 'episodeNumber',
+    width: 120,
+    sortable: true,
+  },
+  { headerName: 'Remarks', field: 'remarks', width: 360, sortable: true },
+];
+
+export const EpisodesTable = (props: Props) => {
+  const classes = useStyles();
+  const history = useHistory();
+  const { enqueueSnackbar } = useSnackbar();
+  const [gridApi, setGridApi] = useState<
+    | {
+        api: GridApi;
+        columnApi: ColumnApi;
+      }
+    | undefined
+  >(undefined);
+  const [showForm, setShowForm] = useState<boolean>(false);
+  const [formAction, setFormAction] = useState<ActionType>(ActionType.CREATE);
+  const [selectedRows, setSelectedRows] = useState<Episode[]>([]);
+
+  const { data: rowData, loading, refetch } = useEpisodesInSeriesQuery({
+    fetchPolicy: 'cache-and-network',
+    variables: {
+      where: {
+        id: props.seriesId,
+      },
+    },
+  });
+
+  const { data: AuthData } = useLoggedInQuery({
+    fetchPolicy: 'cache-and-network',
+  });
+
+  const [deleteSeriesMutation] = useDeleteEpisodeMutation({
+    onCompleted: () => {
+      enqueueSnackbar(`Successfully deleted episode`, {
+        key: 'delete-episode-message',
+      });
+      refetch();
+      setSelectedRows([]);
+    },
+  });
+
+  const gridOptions = {
+    enableCellTextSelection: true,
+  };
+
+  const onGridReady = useCallback((params: any) => {
+    const { api, columnApi } = params;
+    setGridApi({ api, columnApi });
+  }, []);
+
+  const onFirstDataRendered = () => {
+    if (gridApi?.api) {
+      gridApi.api.setSortModel([
+        {
+          colId: 'title',
+          sort: 'asc',
+        },
+      ]);
+    }
+  };
+  const onSelectionChanged = () => {
+    if (gridApi !== undefined) {
+      setSelectedRows(gridApi?.api?.getSelectedRows());
+    }
+  };
+
+  const viewSelected = () => {
+    if (selectedRows.length === 1 && selectedRows[0].id) {
+      const seriesId = selectedRows[0].id;
+      history.push(`/episode/${seriesId}`);
+    }
+  };
+
+  const deleteSelected = () => {
+    if (selectedRows.length === 1 && selectedRows[0].id) {
+      const seriesId = selectedRows[0].id;
+      deleteSeriesMutation({
+        variables: {
+          where: {
+            id: seriesId,
+          },
+        },
+      });
+    }
+  };
+
+  return (
+    <div>
+      <Paper elevation={3} className={classes.paper}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} className={classes.tableHeader}>
+            <Grid container spacing={3}>
+              <Grid item xs>
+                <Typography variant="h5">{`Episodes`}</Typography>
+              </Grid>
+              {AuthData?.loggedIn?.role &&
+                writeAccess.includes(AuthData.loggedIn.role) && (
+                  <>
+                    <Grid item>
+                      <Button
+                        startIcon={<AddIcon />}
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                          setFormAction(ActionType.CREATE);
+                          setShowForm(true);
+                        }}
+                      >
+                        Add New
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        startIcon={<EditOutlinedIcon />}
+                        variant="contained"
+                        color="primary"
+                        disabled={selectedRows.length !== 1}
+                        onClick={() => {
+                          setFormAction(ActionType.UPDATE);
+                          setShowForm(true);
+                        }}
+                      >
+                        Edit
+                      </Button>
+                    </Grid>
+                  </>
+                )}
+              <Grid item>
+                <Button
+                  startIcon={<PageviewOutlinedIcon />}
+                  disabled={selectedRows.length !== 1}
+                  variant="contained"
+                  onClick={() => {
+                    viewSelected();
+                  }}
+                >
+                  View
+                </Button>
+              </Grid>
+              {AuthData?.loggedIn?.role &&
+                writeAccess.includes(AuthData.loggedIn.role) && (
+                  <Grid item>
+                    <Button
+                      startIcon={<EditOutlinedIcon />}
+                      disabled={selectedRows.length !== 1}
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => {
+                        deleteSelected();
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </Grid>
+                )}
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <div className="ag-theme-material" style={{ height: '500px' }}>
+              <AgGridReact
+                onGridReady={onGridReady}
+                animateRows
+                enableCellTextSelection
+                rowDeselection
+                rowSelection="single"
+                onSelectionChanged={onSelectionChanged}
+                onFirstDataRendered={onFirstDataRendered}
+                gridOptions={gridOptions}
+                columnDefs={columnDefs}
+                rowData={(rowData?.episodesInSeries as any[]) || []}
+              ></AgGridReact>
+            </div>
+          </Grid>
+        </Grid>
+      </Paper>
+      {showForm && (
+        <EpisodeForm
+          episodeId={
+            (selectedRows.length === 1 && selectedRows[0].id) || undefined
+          }
+          seriesId={props.seriesId}
+          open={showForm}
+          action={formAction}
+          onSubmit={() => {
+            refetch();
+            setFormAction(ActionType.CREATE);
+          }}
+          onClose={() => {
+            setShowForm(false);
+          }}
+        />
+      )}
+    </div>
+  );
+};

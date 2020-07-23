@@ -544,6 +544,64 @@ export const Login = gql`
   }
 }
     `;
+export const Episode = gql`
+    query Episode($where: EpisodeWhereUniqueInput!) {
+  episode(where: $where) {
+    id
+    title
+    alternativeTitles {
+      id
+      title
+    }
+    episodeNumber
+    remarks
+    files {
+      id
+      path
+      fileSize
+      checksum
+      duration
+      resolution
+      source
+      codec
+      remarks
+    }
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export const EpisodesInSeries = gql`
+    query EpisodesInSeries($where: SeriesWhereUniqueInput!) {
+  episodesInSeries(where: $where) {
+    id
+    title
+    episodeNumber
+    remarks
+  }
+}
+    `;
+export const CreateEpisode = gql`
+    mutation CreateEpisode($data: EpisodeCreateUpdateInput!) {
+  createEpisode(data: $data) {
+    id
+  }
+}
+    `;
+export const UpdateEpisode = gql`
+    mutation UpdateEpisode($data: EpisodeCreateUpdateInput!, $where: EpisodeWhereUniqueInput!) {
+  updateEpisode(data: $data, where: $where) {
+    id
+  }
+}
+    `;
+export const DeleteEpisode = gql`
+    mutation DeleteEpisode($where: EpisodeWhereUniqueInput!) {
+  deleteEpisode(where: $where) {
+    id
+  }
+}
+    `;
 export const Series = gql`
     query Series($where: SeriesWhereUniqueInput!) {
   series(where: $where) {
