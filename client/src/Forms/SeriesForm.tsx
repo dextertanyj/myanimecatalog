@@ -35,7 +35,7 @@ import {
   useSeriesLazyQuery,
   useUpdateSeriesMutation,
 } from '../gql/queries';
-import { Action_Type } from '../utils/constants';
+import { ActionType } from '../utils/constants';
 import {
   renderSeasonInfo,
   renderStatus,
@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 type Props = {
   seriesId?: string;
   open: boolean;
-  action: Action_Type;
+  action: ActionType;
   onSubmit: () => void;
   onClose: () => void;
 };
@@ -510,44 +510,69 @@ export const SeriesForm = (props: Props): ReactElement => {
   };
 
   const initialFormValues: FormValues = {
-    title: seriesData?.series?.title || undefined,
-    seasonNumber: seriesData?.series?.seasonNumber || undefined,
-    episodeCount: seriesData?.series?.episodeCount || undefined,
-    status: seriesData?.series?.status || undefined,
-    type: seriesData?.series?.type || undefined,
-    releaseSeason: seriesData?.series?.releaseSeason || undefined,
-    releaseYear: seriesData?.series?.releaseYear || undefined,
-    remarks: seriesData?.series?.remarks || undefined,
+    title:
+      (actionType === ActionType.UPDATE && seriesData?.series?.title) ||
+      undefined,
+    seasonNumber:
+      (actionType === ActionType.UPDATE && seriesData?.series?.seasonNumber) ||
+      undefined,
+    episodeCount:
+      (actionType === ActionType.UPDATE && seriesData?.series?.episodeCount) ||
+      undefined,
+    status:
+      (actionType === ActionType.UPDATE && seriesData?.series?.status) ||
+      undefined,
+    type:
+      (actionType === ActionType.UPDATE && seriesData?.series?.type) ||
+      undefined,
+    releaseSeason:
+      (actionType === ActionType.UPDATE && seriesData?.series?.releaseSeason) ||
+      undefined,
+    releaseYear:
+      (actionType === ActionType.UPDATE && seriesData?.series?.releaseYear) ||
+      undefined,
+    remarks:
+      (actionType === ActionType.UPDATE && seriesData?.series?.remarks) ||
+      undefined,
     alternativeTitles:
-      (seriesData?.series?.alternativeTitles &&
+      (actionType === ActionType.UPDATE &&
+        seriesData?.series?.alternativeTitles &&
         (Array.from(
           seriesData?.series?.alternativeTitles
         ) as AlternativeTitle[])) ||
       ([] as AlternativeTitle[]),
     references:
-      (seriesData?.series?.references &&
+      (actionType === ActionType.UPDATE &&
+        seriesData?.series?.references &&
         (Array.from(seriesData?.series?.references) as Reference[])) ||
       ([] as Reference[]),
     prequels:
-      (seriesData?.series?.prequels &&
+      (actionType === ActionType.UPDATE &&
+        seriesData?.series?.prequels &&
         (Array.from(seriesData?.series?.prequels) as SeriesRelation[])) ||
       [],
     sequels:
-      (seriesData?.series?.sequels &&
+      (actionType === ActionType.UPDATE &&
+        seriesData?.series?.sequels &&
         (Array.from(seriesData?.series?.sequels) as SeriesRelation[])) ||
       [],
     mainStories:
-      (seriesData?.series?.mainStories &&
+      (actionType === ActionType.UPDATE &&
+        seriesData?.series?.mainStories &&
         (Array.from(seriesData?.series?.mainStories) as SeriesRelation[])) ||
       [],
     sideStories:
-      (seriesData?.series?.sideStories &&
+      (actionType === ActionType.UPDATE &&
+        seriesData?.series?.sideStories &&
         (Array.from(seriesData?.series?.sideStories) as SeriesRelation[])) ||
       [],
-    related: [
-      ...(seriesData?.series?.relatedSeries || []),
-      ...(seriesData?.series?.relatedAlternatives || []),
-    ] as SeriesRelation[],
+    related:
+      (actionType === ActionType.UPDATE &&
+        ([
+          ...(seriesData?.series?.relatedSeries || []),
+          ...(seriesData?.series?.relatedAlternatives || []),
+        ] as SeriesRelation[])) ||
+      [],
   };
 
   return (
@@ -558,7 +583,7 @@ export const SeriesForm = (props: Props): ReactElement => {
       maxWidth={'lg'}
     >
       <DialogTitle key="DialogTitle">
-        {props.action === Action_Type.CREATE
+        {props.action === ActionType.CREATE
           ? `Add A New Series`
           : `Editing ${seriesData?.series?.title}`}
       </DialogTitle>
@@ -570,7 +595,7 @@ export const SeriesForm = (props: Props): ReactElement => {
             enableReinitialize={true}
             initialValues={initialFormValues}
             onSubmit={
-              props.action === Action_Type.CREATE
+              props.action === ActionType.CREATE
                 ? onSubmitCreate
                 : onSubmitUpdate
             }
@@ -1098,7 +1123,7 @@ export const SeriesForm = (props: Props): ReactElement => {
                   <DialogActions className={classes.dialogButtons}>
                     <Button onClick={handleReset}>Reset</Button>
                     <Button type="submit" color="primary">
-                      {actionType === Action_Type.CREATE ? 'Create' : 'Update'}
+                      {actionType === ActionType.CREATE ? 'Create' : 'Update'}
                     </Button>
                   </DialogActions>
                 </form>

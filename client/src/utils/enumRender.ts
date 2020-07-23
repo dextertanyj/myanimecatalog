@@ -1,4 +1,15 @@
-import { Season, Status, Type } from '../gql/documents';
+import { Role, Season, Status, Type } from '../gql/documents';
+
+export const renderRole = (role: Role): string => {
+  switch (role) {
+    case Role.Admin:
+      return 'Admin';
+    case Role.Readonly:
+      return 'Read Only';
+    case Role.Write:
+      return 'Read & Write';
+  }
+};
 
 export const renderStatus = (status: Status): string => {
   switch (status) {

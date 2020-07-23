@@ -528,6 +528,7 @@ export const LoggedIn = gql`
   loggedIn {
     id
     username
+    name
     role
   }
 }
@@ -639,6 +640,8 @@ export const User = gql`
     id
     username
     name
+    role
+    passwordAttempts
   }
 }
     `;
@@ -646,6 +649,10 @@ export const Users = gql`
     query Users {
   users {
     id
+    username
+    name
+    role
+    passwordAttempts
   }
 }
     `;

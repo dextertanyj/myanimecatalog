@@ -19,24 +19,32 @@ import React, { useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { SeriesForm } from '../Forms/SeriesForm';
 import { Series } from '../gql/documents';
-import { useAllSeriesQuery, useDeleteSeriesMutation } from '../gql/queries';
-import { Action_Type } from '../utils/constants';
+import {
+  useAllSeriesQuery,
+  useDeleteSeriesMutation,
+  useLoggedInQuery,
+} from '../gql/queries';
+import { writeAccess } from '../utils/auth';
+import { ActionType } from '../utils/constants';
 import { renderSeason, renderStatus, renderType } from '../utils/enumRender';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    tableHeader: {
-      marginTop: '10px',
-    },
-    headerButton: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-    },
     paper: {
       padding: theme.spacing(3),
       textAlign: 'center',
       color: theme.palette.text.secondary,
+    },
+    tableHeader: {
+      'marginBottom': '10px',
+      'textAlign': 'left',
+      '& div': {
+        '& div': {
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        },
+      },
     },
   })
 );
@@ -117,10 +125,16 @@ export const SeriesTable = () => {
     | undefined
   >(undefined);
   const [showForm, setShowForm] = useState<boolean>(false);
-  const [formAction, setFormAction] = useState<Action_Type>(Action_Type.CREATE);
+  const [formAction, setFormAction] = useState<ActionType>(ActionType.CREATE);
   const [selectedRows, setSelectedRows] = useState<Series[]>([]);
 
-  const { data: rowData, refetch } = useAllSeriesQuery();
+  const { data: rowData, loading, refetch } = useAllSeriesQuery({
+    fetchPolicy: 'cache-and-network',
+  });
+
+  const { data: AuthData } = useLoggedInQuery({
+    fetchPolicy: 'cache-and-network',
+  });
 
   const [deleteSeriesMutation] = useDeleteSeriesMutation({
     onCompleted: () => {
@@ -178,52 +192,61 @@ export const SeriesTable = () => {
     <div>
       <Paper elevation={3} className={classes.paper}>
         <Grid container spacing={3}>
-          <Grid item>
-            <Typography variant="h5">All Series</Typography>
-          </Grid>
-          <Grid item xs />
-          <Grid item className={classes.headerButton}>
-            <Button
-              startIcon={<AddIcon />}
-              variant="contained"
-              color="primary"
-              size="small"
-              onClick={() => {
-                setFormAction(Action_Type.CREATE);
-                setShowForm(true);
-              }}
-            >
-              Add New
-            </Button>
-          </Grid>
-          <Grid item className={classes.headerButton}>
-            <Button
-              startIcon={<PageviewOutlinedIcon />}
-              disabled={selectedRows.length !== 1}
-              variant="contained"
-              size="small"
-              onClick={() => {
-                viewSelected();
-              }}
-            >
-              View
-            </Button>
-          </Grid>
-          <Grid item className={classes.headerButton}>
-            <Button
-              startIcon={<DeleteIcon />}
-              disabled={selectedRows.length !== 1}
-              variant="contained"
-              color="secondary"
-              size="small"
-              onClick={() => {
-                deleteSelected();
-              }}
-            >
-              Delete
-            </Button>
-          </Grid>
           <Grid item xs={12} className={classes.tableHeader}>
+            <Grid container spacing={3}>
+              <Grid item xs>
+                <Typography variant="h5">All Series</Typography>
+              </Grid>
+              {AuthData?.loggedIn?.role &&
+                writeAccess.includes(AuthData.loggedIn.role) && (
+                  <Grid item>
+                    <Button
+                      startIcon={<AddIcon />}
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                      onClick={() => {
+                        setFormAction(ActionType.CREATE);
+                        setShowForm(true);
+                      }}
+                    >
+                      Add New
+                    </Button>
+                  </Grid>
+                )}
+              <Grid item>
+                <Button
+                  startIcon={<PageviewOutlinedIcon />}
+                  disabled={selectedRows.length !== 1}
+                  variant="contained"
+                  size="small"
+                  onClick={() => {
+                    viewSelected();
+                  }}
+                >
+                  View
+                </Button>
+              </Grid>
+              {AuthData?.loggedIn?.role &&
+                writeAccess.includes(AuthData.loggedIn.role) && (
+                  <Grid item>
+                    <Button
+                      startIcon={<DeleteIcon />}
+                      disabled={selectedRows.length !== 1}
+                      variant="contained"
+                      color="secondary"
+                      size="small"
+                      onClick={() => {
+                        deleteSelected();
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </Grid>
+                )}
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
             <div className="ag-theme-material" style={{ height: '500px' }}>
               <AgGridReact
                 onGridReady={onGridReady}
@@ -247,7 +270,7 @@ export const SeriesTable = () => {
           action={formAction}
           onSubmit={() => {
             refetch();
-            setFormAction(Action_Type.CREATE);
+            setFormAction(ActionType.CREATE);
           }}
           onClose={() => {
             setShowForm(false);

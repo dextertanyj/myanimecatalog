@@ -2,6 +2,8 @@ import {
   AppBar,
   Divider,
   Drawer,
+  Grid,
+  IconButton,
   List,
   ListItem,
   ListItemIcon,
@@ -9,7 +11,9 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core';
+import { grey } from '@material-ui/core/colors';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
 import ExitToAppOutlinedIcon from '@material-ui/icons/ExitToAppOutlined';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import LibraryBooksOutlinedIcon from '@material-ui/icons/LibraryBooksOutlined';
@@ -38,7 +42,15 @@ const useStyles = makeStyles((theme: Theme) =>
     drawerPaper: {
       width: drawerWidth,
     },
-
+    grid: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+    },
+    button: {
+      marginRight: '10px',
+      color: grey[100],
+    },
     toolbar: theme.mixins.toolbar,
     content: {
       flexGrow: 1,
@@ -59,9 +71,30 @@ const Navigation = (props: any) => {
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>
-          <Typography variant="h6">Anime Database</Typography>
-        </Toolbar>
+        <Grid container spacing={0}>
+          <Grid item>
+            <Toolbar>
+              <Typography variant="h6">My Anime Manager</Typography>
+            </Toolbar>
+          </Grid>
+          <Grid item xs />
+          <Grid item className={classes.grid}>
+            <IconButton
+              onClick={() => history.push('/profile')}
+              className={classes.button}
+            >
+              <AccountCircleOutlinedIcon />
+            </IconButton>
+          </Grid>
+          <Grid item className={classes.grid}>
+            <IconButton
+              onClick={() => history.push('/logout')}
+              className={classes.button}
+            >
+              <ExitToAppOutlinedIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
       </AppBar>
       <Drawer
         variant="permanent"
@@ -112,17 +145,6 @@ const Navigation = (props: any) => {
               <ListItemText primary={'Users'} />
             </ListItem>
           )}
-          <Divider />
-          <ListItem
-            button
-            key={'logout'}
-            onClick={() => history.push('/logout')}
-          >
-            <ListItemIcon>
-              <ExitToAppOutlinedIcon />
-            </ListItemIcon>
-            <ListItemText primary={'Logout'} />
-          </ListItem>
         </List>
       </Drawer>
       <main className={classes.content}>

@@ -73,11 +73,15 @@ export const User = {
     ctx: Context,
     _info: any
   ): Promise<UserType> {
+    const encryptPassword = data.password
+      ? await bcrypt.hash(data?.password, 10)
+      : undefined;
     const user = await ctx.prisma.user.update({
       where,
       data: {
         ...data,
         username: data.username?.toLowerCase().trim(),
+        password: encryptPassword,
       },
     });
     return user;

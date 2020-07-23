@@ -6,6 +6,7 @@ import HomePage from '../pages/HomePage';
 import { LoginPage } from '../pages/LoginPage';
 import { LogoutPage } from '../pages/LogoutPage';
 import ManagePage from '../pages/ManagePage';
+import ProfilePage from '../pages/ProfilePage';
 import SearchPage from '../pages/SearchPage';
 import SeriesPage from '../pages/SeriesPage';
 import { SetupPage } from '../pages/SetupPage';
@@ -28,6 +29,9 @@ export default function ReactRouter() {
           <Navigation>
             <Route exact strict path="/">
               <HomePage />
+            </Route>
+            <Route exact strict path="/profile">
+              <ProfilePage />
             </Route>
             <Route exact strict path="/manage">
               <ManagePage />

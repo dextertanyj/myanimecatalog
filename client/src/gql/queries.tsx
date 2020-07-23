@@ -535,7 +535,7 @@ export type LoggedInQuery = (
   { readonly __typename?: 'Query' }
   & { readonly loggedIn?: Maybe<(
     { readonly __typename?: 'User' }
-    & Pick<User, 'id' | 'username' | 'role'>
+    & Pick<User, 'id' | 'username' | 'name' | 'role'>
   )> }
 );
 
@@ -657,7 +657,7 @@ export type UserQuery = (
   { readonly __typename?: 'Query' }
   & { readonly user?: Maybe<(
     { readonly __typename?: 'User' }
-    & Pick<User, 'id' | 'username' | 'name'>
+    & Pick<User, 'id' | 'username' | 'name' | 'role' | 'passwordAttempts'>
   )> }
 );
 
@@ -668,7 +668,7 @@ export type UsersQuery = (
   { readonly __typename?: 'Query' }
   & { readonly users?: Maybe<ReadonlyArray<Maybe<(
     { readonly __typename?: 'User' }
-    & Pick<User, 'id'>
+    & Pick<User, 'id' | 'username' | 'name' | 'role' | 'passwordAttempts'>
   )>>> }
 );
 
@@ -752,6 +752,7 @@ export const LoggedInDocument = gql`
   loggedIn {
     id
     username
+    name
     role
   }
 }
@@ -1173,6 +1174,8 @@ export const UserDocument = gql`
     id
     username
     name
+    role
+    passwordAttempts
   }
 }
     `;
@@ -1225,6 +1228,10 @@ export const UsersDocument = gql`
     query Users {
   users {
     id
+    username
+    name
+    role
+    passwordAttempts
   }
 }
     `;
