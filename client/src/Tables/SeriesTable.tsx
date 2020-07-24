@@ -7,23 +7,19 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
+import AddOutlinedIcon from '@material-ui/icons/AddOutlined';
 import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
 import { ColumnApi, GridApi } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { AgGridReact } from 'ag-grid-react';
 import moment from 'moment';
+import { useSnackbar } from 'notistack';
 import React, { useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { SeriesForm } from '../Forms/SeriesForm';
 import { Series } from '../gql/documents';
-import {
-  useAllSeriesQuery,
-  useDeleteSeriesMutation,
-  useLoggedInQuery,
-} from '../gql/queries';
+import { useAllSeriesQuery, useLoggedInQuery } from '../gql/queries';
 import { writeAccess } from '../utils/auth';
 import { ActionType } from '../utils/constants';
 import { renderSeason, renderStatus, renderType } from '../utils/enumRender';
@@ -117,6 +113,7 @@ const columnDefs = [
 export const SeriesTable = () => {
   const classes = useStyles();
   const history = useHistory();
+  const { enqueueSnackbar } = useSnackbar();
   const [gridApi, setGridApi] = useState<
     | {
         api: GridApi;
@@ -134,13 +131,6 @@ export const SeriesTable = () => {
 
   const { data: AuthData } = useLoggedInQuery({
     fetchPolicy: 'cache-and-network',
-  });
-
-  const [deleteSeriesMutation] = useDeleteSeriesMutation({
-    onCompleted: () => {
-      refetch();
-      setSelectedRows([]);
-    },
   });
 
   const gridOptions = {
@@ -165,19 +155,6 @@ export const SeriesTable = () => {
     }
   };
 
-  const deleteSelected = () => {
-    if (selectedRows.length === 1 && selectedRows[0].id) {
-      const seriesId = selectedRows[0].id;
-      deleteSeriesMutation({
-        variables: {
-          where: {
-            id: seriesId,
-          },
-        },
-      });
-    }
-  };
-
   return (
     <div>
       <Paper elevation={3} className={classes.paper}>
@@ -191,10 +168,9 @@ export const SeriesTable = () => {
                 writeAccess.includes(AuthData.loggedIn.role) && (
                   <Grid item>
                     <Button
-                      startIcon={<AddIcon />}
+                      startIcon={<AddOutlinedIcon />}
                       variant="contained"
                       color="primary"
-                      size="small"
                       onClick={() => {
                         setFormAction(ActionType.CREATE);
                         setShowForm(true);
@@ -209,7 +185,6 @@ export const SeriesTable = () => {
                   startIcon={<PageviewOutlinedIcon />}
                   disabled={selectedRows.length !== 1}
                   variant="contained"
-                  size="small"
                   onClick={() => {
                     viewSelected();
                   }}
@@ -217,23 +192,6 @@ export const SeriesTable = () => {
                   View
                 </Button>
               </Grid>
-              {AuthData?.loggedIn?.role &&
-                writeAccess.includes(AuthData.loggedIn.role) && (
-                  <Grid item>
-                    <Button
-                      startIcon={<DeleteIcon />}
-                      disabled={selectedRows.length !== 1}
-                      variant="contained"
-                      color="secondary"
-                      size="small"
-                      onClick={() => {
-                        deleteSelected();
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  </Grid>
-                )}
             </Grid>
           </Grid>
           <Grid item xs={12}>

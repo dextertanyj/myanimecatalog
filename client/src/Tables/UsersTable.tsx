@@ -7,7 +7,7 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import AddOutlinedIcon from '@material-ui/icons/AddOutlined';
 import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
 import { ColumnApi, GridApi } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
@@ -114,10 +114,9 @@ export const UsersTable = () => {
               </Grid>
               <Grid item>
                 <Button
-                  startIcon={<AddIcon />}
+                  startIcon={<AddOutlinedIcon />}
                   variant="contained"
                   color="primary"
-                  size="small"
                   onClick={() => {
                     setFormAction(ActionType.CREATE);
                     setShowForm(true);
@@ -131,7 +130,6 @@ export const UsersTable = () => {
                   startIcon={<PageviewOutlinedIcon />}
                   disabled={selectedRows.length !== 1}
                   variant="contained"
-                  size="small"
                   onClick={() => {
                     setFormAction(ActionType.UPDATE);
                     setShowForm(true);

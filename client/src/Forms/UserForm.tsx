@@ -17,6 +17,7 @@ import { useSnackbar } from 'notistack';
 import React, { ReactElement, useEffect, useState } from 'react';
 import sha from 'sha.js';
 import * as Yup from 'yup';
+import { DeleteConfirmDialog } from '../Components/DeleteConfirmDialog';
 import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
 import { Role } from '../gql/documents';
 import {
@@ -411,20 +412,14 @@ export const UserForm = (props: Props): ReactElement => {
           </Formik>
         )}
       </DialogContent>
-      <Dialog
-        open={showDelete}
-        onClose={() => setShowDelete(false)}
-        fullWidth={true}
-        maxWidth={'md'}
-      >
-        <DialogTitle id="alert-dialog-title">{`Delete ${userData?.user?.name}?`}</DialogTitle>
-        <DialogActions>
-          <Button onClick={() => setShowDelete(false)}>Cancel</Button>
-          <Button onClick={() => onSubmitDelete()} color="secondary">
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {showDelete && (
+        <DeleteConfirmDialog
+          open={showDelete}
+          onClose={() => setShowDelete(false)}
+          title={`Delete ${userData?.user?.name}?`}
+          onSubmit={() => onSubmitDelete()}
+        />
+      )}
     </Dialog>
   );
 };

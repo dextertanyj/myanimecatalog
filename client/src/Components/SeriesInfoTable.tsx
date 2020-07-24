@@ -8,14 +8,24 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
+import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import Skeleton from '@material-ui/lab/Skeleton';
+import { ApolloError } from 'apollo-client';
 import moment from 'moment';
+import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
 import { SeriesForm } from '../Forms/SeriesForm';
-import { useLoggedInQuery, useSeriesQuery } from '../gql/queries';
+import {
+  useDeleteSeriesMutation,
+  useLoggedInQuery,
+  useSeriesQuery,
+} from '../gql/queries';
 import { writeAccess } from '../utils/auth';
 import { ActionType } from '../utils/constants';
 import { renderSeason, renderStatus, renderType } from '../utils/enumRender';
+import { DeleteConfirmDialog } from './DeleteConfirmDialog';
+import { GenericError, NetworkError } from './ErrorSnackbars';
 import { SeriesRelatedDisplay } from './SeriesRelatedDisplay';
 
 type Props = {
@@ -54,7 +64,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const SeriesInfoTable = (props: Props) => {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
   const [showForm, setShowForm] = useState<boolean>(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
 
   const { data: AuthData } = useLoggedInQuery({
     fetchPolicy: 'cache-and-network',
@@ -68,6 +80,36 @@ export const SeriesInfoTable = (props: Props) => {
       },
     },
   });
+
+  const [deleteSeriesMutation] = useDeleteSeriesMutation({
+    onError: (error: ApolloError) => {
+      if (error.networkError) {
+        NetworkError();
+      } else if (error.graphQLErrors) {
+        enqueueSnackbar(error.message.replace(`GraphQL error: `, ''), {
+          key: 'delete-series-message',
+          variant: 'warning',
+        });
+      } else {
+        GenericError();
+      }
+    },
+    onCompleted: () => {
+      enqueueSnackbar(`Successfully updated series`, {
+        key: `delete-series-message`,
+      });
+      refetch();
+    },
+  });
+
+  const deleteSelected = () =>
+    deleteSeriesMutation({
+      variables: {
+        where: {
+          id: props.seriesId,
+        },
+      },
+    });
 
   return (
     <div>
@@ -90,15 +132,28 @@ export const SeriesInfoTable = (props: Props) => {
                   </Grid>
                   {AuthData?.loggedIn?.role &&
                     writeAccess.includes(AuthData.loggedIn.role) && (
-                      <Grid item>
-                        <Button
-                          color="primary"
-                          variant="contained"
-                          onClick={() => setShowForm(true)}
-                        >
-                          Edit
-                        </Button>
-                      </Grid>
+                      <>
+                        <Grid item>
+                          <Button
+                            startIcon={<EditOutlinedIcon />}
+                            color="primary"
+                            variant="contained"
+                            onClick={() => setShowForm(true)}
+                          >
+                            Edit
+                          </Button>
+                        </Grid>
+                        <Grid item>
+                          <Button
+                            startIcon={<DeleteOutlinedIcon />}
+                            color="secondary"
+                            variant="contained"
+                            onClick={() => setShowDeleteDialog(true)}
+                          >
+                            Delete
+                          </Button>
+                        </Grid>
+                      </>
                     )}
                 </Grid>
               </Grid>
@@ -269,13 +324,23 @@ export const SeriesInfoTable = (props: Props) => {
               </Grid>
             </Grid>
           </Paper>
-          <SeriesForm
-            seriesId={props.seriesId}
-            open={showForm}
-            action={ActionType.UPDATE}
-            onSubmit={() => refetch()}
-            onClose={() => setShowForm(false)}
-          />
+          {showForm && (
+            <SeriesForm
+              seriesId={props.seriesId}
+              open={showForm}
+              action={ActionType.UPDATE}
+              onSubmit={() => refetch()}
+              onClose={() => setShowForm(false)}
+            />
+          )}
+          {showDeleteDialog && (
+            <DeleteConfirmDialog
+              open={showDeleteDialog}
+              title={`Delete ${seriesData?.series?.title} ?`}
+              onClose={() => setShowDeleteDialog(false)}
+              onSubmit={() => deleteSelected()}
+            />
+          )}
         </>
       )}
     </div>
