@@ -32,6 +32,9 @@ export const Episode = {
         where: {
           seriesId: args.where.id,
         },
+        orderBy: {
+          episodeNumber: 'asc',
+        },
       });
     } else {
       throw new Error(`No series was specified.`);

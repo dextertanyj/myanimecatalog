@@ -152,16 +152,6 @@ export const SeriesTable = () => {
     setGridApi({ api, columnApi });
   }, []);
 
-  const onFirstDataRendered = () => {
-    if (gridApi?.api) {
-      gridApi.api.setSortModel([
-        {
-          colId: 'title',
-          sort: 'asc',
-        },
-      ]);
-    }
-  };
   const onSelectionChanged = () => {
     if (gridApi !== undefined) {
       setSelectedRows(gridApi?.api?.getSelectedRows());
@@ -255,7 +245,6 @@ export const SeriesTable = () => {
                 rowDeselection
                 rowSelection="single"
                 onSelectionChanged={onSelectionChanged}
-                onFirstDataRendered={onFirstDataRendered}
                 gridOptions={gridOptions}
                 columnDefs={columnDefs}
                 rowData={(rowData?.allSeries as any[]) || []}

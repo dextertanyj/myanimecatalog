@@ -27,7 +27,11 @@ export const User = {
     _args: unknown,
     ctx: Context
   ): Promise<UserType[]> {
-    const user = await ctx.prisma.user.findMany();
+    const user = await ctx.prisma.user.findMany({
+      orderBy: {
+        username: 'asc',
+      },
+    });
     return user;
   },
 
