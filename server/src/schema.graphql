@@ -256,6 +256,8 @@ type Query {
 
   reference(where: ReferenceCreateUpdateInput): Reference
   references: [Reference]
+
+  quickSearch(where: String!): SearchPayload
 }
 
 type Mutation {
@@ -388,4 +390,9 @@ type Reference {
   id: String
   link: String
   source: String
+}
+
+type SearchPayload {
+  series: [Series]!
+  episodes: [Episode]!
 }

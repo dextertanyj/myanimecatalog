@@ -266,6 +266,7 @@ export type Query = {
   readonly allUserProgresses?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
   readonly reference?: Maybe<Reference>;
   readonly references?: Maybe<ReadonlyArray<Maybe<Reference>>>;
+  readonly quickSearch?: Maybe<SearchPayload>;
 };
 
 
@@ -303,6 +304,11 @@ export type QueryReferenceArgs = {
   where?: Maybe<ReferenceCreateUpdateInput>;
 };
 
+
+export type QueryQuickSearchArgs = {
+  where: Scalars['String'];
+};
+
 export type Reference = {
   readonly __typename?: 'Reference';
   readonly id?: Maybe<Scalars['String']>;
@@ -337,6 +343,12 @@ export enum Role {
   Write = 'WRITE',
   Admin = 'ADMIN'
 }
+
+export type SearchPayload = {
+  readonly __typename?: 'SearchPayload';
+  readonly series: ReadonlyArray<Maybe<Series>>;
+  readonly episodes: ReadonlyArray<Maybe<Episode>>;
+};
 
 export enum Season {
   Winter = 'WINTER',
@@ -612,6 +624,20 @@ export const DeleteEpisode = gql`
     mutation DeleteEpisode($where: EpisodeWhereUniqueInput!) {
   deleteEpisode(where: $where) {
     id
+  }
+}
+    `;
+export const QuickSearch = gql`
+    query QuickSearch($where: String!) {
+  quickSearch(where: $where) {
+    series {
+      id
+      title
+    }
+    episodes {
+      id
+      title
+    }
   }
 }
     `;

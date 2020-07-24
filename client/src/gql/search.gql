@@ -1,0 +1,12 @@
+query QuickSearch($where: String!) {
+  quickSearch(where: $where) {
+    series {
+      id
+      title
+    }
+    episodes {
+      id
+      title
+    }
+  }
+}
