@@ -1,5 +1,6 @@
 import {
   Button,
+  ButtonGroup,
   createStyles,
   Grid,
   makeStyles,
@@ -10,6 +11,7 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
+import QueueOutlinedIcon from '@material-ui/icons/QueueOutlined';
 import { ColumnApi, GridApi } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
@@ -17,6 +19,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { useSnackbar } from 'notistack';
 import React, { useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { BatchEpisodeForm } from '../Forms/BatchEpisodeForm';
 import { EpisodeForm } from '../Forms/EpisodeForm';
 import { Episode } from '../gql/documents';
 import {
@@ -39,14 +42,19 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.secondary,
     },
     tableHeader: {
-      'marginBottom': '10px',
-      'textAlign': 'left',
+      marginBottom: '10px',
+      textAlign: 'left',
+    },
+    tableHeaderItems: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+    },
+    buttonGroup: {
       '& div': {
-        '& div': {
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        },
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
       },
     },
   })
@@ -81,6 +89,7 @@ export const EpisodesTable = (props: Props) => {
     | undefined
   >(undefined);
   const [showForm, setShowForm] = useState<boolean>(false);
+  const [showBatchForm, setShowBatchForm] = useState<boolean>(false);
   const [formAction, setFormAction] = useState<ActionType>(ActionType.CREATE);
   const [selectedRows, setSelectedRows] = useState<Episode[]>([]);
 
@@ -158,26 +167,35 @@ export const EpisodesTable = (props: Props) => {
         <Grid container spacing={3}>
           <Grid item xs={12} className={classes.tableHeader}>
             <Grid container spacing={3}>
-              <Grid item xs>
+              <Grid item xs className={classes.tableHeaderItems}>
                 <Typography variant="h5">{`Episodes`}</Typography>
               </Grid>
               {AuthData?.loggedIn?.role &&
                 writeAccess.includes(AuthData.loggedIn.role) && (
                   <>
-                    <Grid item>
-                      <Button
-                        startIcon={<AddIcon />}
-                        variant="contained"
-                        color="primary"
-                        onClick={() => {
-                          setFormAction(ActionType.CREATE);
-                          setShowForm(true);
-                        }}
-                      >
-                        Add New
-                      </Button>
+                    <Grid item className={classes.buttonGroup}>
+                      <ButtonGroup>
+                        <Button
+                          startIcon={<AddIcon />}
+                          variant="contained"
+                          color="primary"
+                          onClick={() => {
+                            setFormAction(ActionType.CREATE);
+                            setShowForm(true);
+                          }}
+                        >
+                          Add New
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => setShowBatchForm(true)}
+                        >
+                          <QueueOutlinedIcon />
+                        </Button>
+                      </ButtonGroup>
                     </Grid>
-                    <Grid item>
+                    <Grid item className={classes.tableHeaderItems}>
                       <Button
                         startIcon={<EditOutlinedIcon />}
                         variant="contained"
@@ -193,7 +211,7 @@ export const EpisodesTable = (props: Props) => {
                     </Grid>
                   </>
                 )}
-              <Grid item>
+              <Grid item className={classes.tableHeaderItems}>
                 <Button
                   startIcon={<PageviewOutlinedIcon />}
                   disabled={selectedRows.length !== 1}
@@ -207,7 +225,7 @@ export const EpisodesTable = (props: Props) => {
               </Grid>
               {AuthData?.loggedIn?.role &&
                 writeAccess.includes(AuthData.loggedIn.role) && (
-                  <Grid item>
+                  <Grid item className={classes.tableHeaderItems}>
                     <Button
                       startIcon={<EditOutlinedIcon />}
                       disabled={selectedRows.length !== 1}
@@ -255,6 +273,18 @@ export const EpisodesTable = (props: Props) => {
           }}
           onClose={() => {
             setShowForm(false);
+          }}
+        />
+      )}
+      {showBatchForm && (
+        <BatchEpisodeForm
+          seriesId={props.seriesId}
+          open={showBatchForm}
+          onSubmit={() => {
+            refetch();
+          }}
+          onClose={() => {
+            setShowBatchForm(false);
           }}
         />
       )}

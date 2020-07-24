@@ -143,6 +143,7 @@ export type Mutation = {
   readonly updateSeries: Series;
   readonly deleteSeries: Series;
   readonly createEpisode: Episode;
+  readonly batchCreateEpisode: ReadonlyArray<Maybe<Episode>>;
   readonly updateEpisode: Episode;
   readonly deleteEpisode: Episode;
   readonly createFile: File;
@@ -203,6 +204,11 @@ export type MutationDeleteSeriesArgs = {
 
 export type MutationCreateEpisodeArgs = {
   data: EpisodeCreateUpdateInput;
+};
+
+
+export type MutationBatchCreateEpisodeArgs = {
+  data: ReadonlyArray<EpisodeCreateUpdateInput>;
 };
 
 
@@ -600,6 +606,19 @@ export type CreateEpisodeMutation = (
     { readonly __typename?: 'Episode' }
     & Pick<Episode, 'id'>
   ) }
+);
+
+export type BatchCreateEpisodeMutationVariables = Exact<{
+  data: ReadonlyArray<EpisodeCreateUpdateInput>;
+}>;
+
+
+export type BatchCreateEpisodeMutation = (
+  { readonly __typename?: 'Mutation' }
+  & { readonly batchCreateEpisode: ReadonlyArray<Maybe<(
+    { readonly __typename?: 'Episode' }
+    & Pick<Episode, 'id'>
+  )>> }
 );
 
 export type UpdateEpisodeMutationVariables = Exact<{
@@ -1107,6 +1126,57 @@ export function useCreateEpisodeMutation(baseOptions?: ApolloReactHooks.Mutation
 export type CreateEpisodeMutationHookResult = ReturnType<typeof useCreateEpisodeMutation>;
 export type CreateEpisodeMutationResult = ApolloReactCommon.MutationResult<CreateEpisodeMutation>;
 export type CreateEpisodeMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateEpisodeMutation, CreateEpisodeMutationVariables>;
+export const BatchCreateEpisodeDocument = gql`
+    mutation BatchCreateEpisode($data: [EpisodeCreateUpdateInput!]!) {
+  batchCreateEpisode(data: $data) {
+    id
+  }
+}
+    `;
+export type BatchCreateEpisodeMutationFn = ApolloReactCommon.MutationFunction<BatchCreateEpisodeMutation, BatchCreateEpisodeMutationVariables>;
+export type BatchCreateEpisodeComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<BatchCreateEpisodeMutation, BatchCreateEpisodeMutationVariables>, 'mutation'>;
+
+    export const BatchCreateEpisodeComponent = (props: BatchCreateEpisodeComponentProps) => (
+      <ApolloReactComponents.Mutation<BatchCreateEpisodeMutation, BatchCreateEpisodeMutationVariables> mutation={BatchCreateEpisodeDocument} {...props} />
+    );
+    
+export type BatchCreateEpisodeProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: ApolloReactCommon.MutationFunction<BatchCreateEpisodeMutation, BatchCreateEpisodeMutationVariables>
+    } & TChildProps;
+export function withBatchCreateEpisode<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  BatchCreateEpisodeMutation,
+  BatchCreateEpisodeMutationVariables,
+  BatchCreateEpisodeProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, BatchCreateEpisodeMutation, BatchCreateEpisodeMutationVariables, BatchCreateEpisodeProps<TChildProps, TDataName>>(BatchCreateEpisodeDocument, {
+      alias: 'batchCreateEpisode',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useBatchCreateEpisodeMutation__
+ *
+ * To run a mutation, you first call `useBatchCreateEpisodeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBatchCreateEpisodeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [batchCreateEpisodeMutation, { data, loading, error }] = useBatchCreateEpisodeMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useBatchCreateEpisodeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<BatchCreateEpisodeMutation, BatchCreateEpisodeMutationVariables>) {
+        return ApolloReactHooks.useMutation<BatchCreateEpisodeMutation, BatchCreateEpisodeMutationVariables>(BatchCreateEpisodeDocument, baseOptions);
+      }
+export type BatchCreateEpisodeMutationHookResult = ReturnType<typeof useBatchCreateEpisodeMutation>;
+export type BatchCreateEpisodeMutationResult = ApolloReactCommon.MutationResult<BatchCreateEpisodeMutation>;
+export type BatchCreateEpisodeMutationOptions = ApolloReactCommon.BaseMutationOptions<BatchCreateEpisodeMutation, BatchCreateEpisodeMutationVariables>;
 export const UpdateEpisodeDocument = gql`
     mutation UpdateEpisode($data: EpisodeCreateUpdateInput!, $where: EpisodeWhereUniqueInput!) {
   updateEpisode(data: $data, where: $where) {

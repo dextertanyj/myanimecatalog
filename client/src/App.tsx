@@ -17,9 +17,6 @@ const theme = createMuiTheme({
   },
   typography: {
     fontWeightMedium: 400,
-    subtitle2: {
-      fontWeight: 'bold',
-    },
   },
 });
 

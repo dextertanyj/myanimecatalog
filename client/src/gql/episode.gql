@@ -39,6 +39,12 @@ mutation CreateEpisode($data: EpisodeCreateUpdateInput!) {
   }
 }
 
+mutation BatchCreateEpisode($data: [EpisodeCreateUpdateInput!]!) {
+  batchCreateEpisode(data: $data) {
+    id
+  }
+}
+
 mutation UpdateEpisode(
   $data: EpisodeCreateUpdateInput!
   $where: EpisodeWhereUniqueInput!

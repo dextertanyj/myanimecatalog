@@ -333,7 +333,10 @@ export const EpisodeForm = (props: Props) => {
                         label="Episode Number"
                         id="episodeNumber"
                         type="number"
-                        value={values.episodeNumber || null}
+                        value={
+                          values.episodeNumber ||
+                          (values.episodeNumber === 0 ? 0 : null)
+                        }
                         error={touched.episodeNumber && !!errors.episodeNumber}
                         helperText={
                           touched.episodeNumber && errors.episodeNumber

@@ -1,10 +1,15 @@
 import {
   Episode as EpisodeType,
   EpisodeCreateArgs,
+  EpisodeCreateInput,
   EpisodeDeleteArgs,
   EpisodeUpdateArgs,
 } from '@prisma/client';
 import { Context } from '../../utils';
+
+type BatchCreateEpisodeArgs = {
+  data: [EpisodeCreateInput];
+};
 
 export const Episode = {
   async createEpisode(
@@ -14,6 +19,23 @@ export const Episode = {
     _info: unknown
   ): Promise<EpisodeType> {
     return await ctx.prisma.episode.create(args);
+  },
+
+  async batchCreateEpisode(
+    _parent: unknown,
+    args: BatchCreateEpisodeArgs,
+    ctx: Context,
+    _info: unknown
+  ): Promise<EpisodeType[]> {
+    const createOperation = args.data.map(async (input: EpisodeCreateInput) => {
+      return await ctx.prisma.episode.create({
+        data: input,
+      });
+    });
+
+    const created = await Promise.all(createOperation);
+
+    return created;
   },
 
   async updateEpisode(

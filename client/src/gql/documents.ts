@@ -137,6 +137,7 @@ export type Mutation = {
   readonly updateSeries: Series;
   readonly deleteSeries: Series;
   readonly createEpisode: Episode;
+  readonly batchCreateEpisode: ReadonlyArray<Maybe<Episode>>;
   readonly updateEpisode: Episode;
   readonly deleteEpisode: Episode;
   readonly createFile: File;
@@ -197,6 +198,11 @@ export type MutationDeleteSeriesArgs = {
 
 export type MutationCreateEpisodeArgs = {
   data: EpisodeCreateUpdateInput;
+};
+
+
+export type MutationBatchCreateEpisodeArgs = {
+  data: ReadonlyArray<EpisodeCreateUpdateInput>;
 };
 
 
@@ -584,6 +590,13 @@ export const EpisodesInSeries = gql`
 export const CreateEpisode = gql`
     mutation CreateEpisode($data: EpisodeCreateUpdateInput!) {
   createEpisode(data: $data) {
+    id
+  }
+}
+    `;
+export const BatchCreateEpisode = gql`
+    mutation BatchCreateEpisode($data: [EpisodeCreateUpdateInput!]!) {
+  batchCreateEpisode(data: $data) {
     id
   }
 }
