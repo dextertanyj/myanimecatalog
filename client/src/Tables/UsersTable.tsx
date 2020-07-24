@@ -97,16 +97,6 @@ export const UsersTable = () => {
     setGridApi({ api, columnApi });
   }, []);
 
-  const onFirstDataRendered = () => {
-    if (gridApi?.api) {
-      gridApi.api.setSortModel([
-        {
-          colId: 'username',
-          sort: 'asc',
-        },
-      ]);
-    }
-  };
   const onSelectionChanged = () => {
     if (gridApi !== undefined) {
       setSelectedRows(gridApi?.api?.getSelectedRows());
@@ -161,7 +151,6 @@ export const UsersTable = () => {
                 rowDeselection
                 rowSelection="single"
                 onSelectionChanged={onSelectionChanged}
-                onFirstDataRendered={onFirstDataRendered}
                 gridOptions={gridOptions}
                 columnDefs={columnDefs}
                 rowData={(rowData?.users as any[]) || []}

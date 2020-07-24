@@ -15,6 +15,10 @@ export const Series = {
     _args: unknown,
     ctx: Context
   ): Promise<SeriesType[]> {
-    return await ctx.prisma.series.findMany();
+    return await ctx.prisma.series.findMany({
+      orderBy: {
+        title: 'asc',
+      },
+    });
   },
 };

@@ -1,5 +1,6 @@
 import {
   Button,
+  ButtonGroup,
   createStyles,
   Grid,
   makeStyles,
@@ -8,25 +9,33 @@ import {
   Typography,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
+import QueueOutlinedIcon from '@material-ui/icons/QueueOutlined';
 import { ColumnApi, GridApi } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { AgGridReact } from 'ag-grid-react';
-import moment from 'moment';
+import { ApolloError } from 'apollo-client';
+import { useSnackbar } from 'notistack';
 import React, { useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { SeriesForm } from '../Forms/SeriesForm';
-import { Series } from '../gql/documents';
+import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
+import { BatchEpisodeForm } from '../Forms/BatchEpisodeForm';
+import { EpisodeForm } from '../Forms/EpisodeForm';
+import { Episode } from '../gql/documents';
 import {
-  useAllSeriesQuery,
-  useDeleteSeriesMutation,
+  useDeleteEpisodeMutation,
+  useEpisodesInSeriesQuery,
   useLoggedInQuery,
 } from '../gql/queries';
 import { writeAccess } from '../utils/auth';
 import { ActionType } from '../utils/constants';
-import { renderSeason, renderStatus, renderType } from '../utils/enumRender';
+
+type Props = {
+  seriesId: string;
+};
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -36,38 +45,23 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.secondary,
     },
     tableHeader: {
-      'marginBottom': '10px',
-      'textAlign': 'left',
+      marginBottom: '10px',
+      textAlign: 'left',
+    },
+    tableHeaderItems: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+    },
+    buttonGroup: {
       '& div': {
-        '& div': {
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        },
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
       },
     },
   })
 );
-
-const seasonComparator = (date1: string, date2: string): number => {
-  if (!date1 && !date2) {
-    return 0;
-  } else if (!date1) {
-    return -1;
-  } else if (!date2) {
-    return 1;
-  }
-  const season1 = date1.split(' ')[0];
-  const year1 = date1.split(' ')[1];
-  const season2 = date2.split(' ')[0];
-  const year2 = date2.split(' ')[1];
-  if (Number.parseInt(year2) - Number.parseInt(year1) > 0) {
-    return -1;
-  } else {
-    const seasonOrder = ['Winter', 'Spring', 'Summer', 'Fall'];
-    return seasonOrder.indexOf(season1) - seasonOrder.indexOf(season2);
-  }
-};
 
 const columnDefs = [
   {
@@ -77,46 +71,19 @@ const columnDefs = [
     filter: true,
     sortable: true,
   },
-  { headerName: 'Season', field: 'seasonNumber', width: 120, sortable: true },
-  { headerName: 'Episodes', field: 'episodeCount', width: 120, sortable: true },
   {
-    headerName: 'Release Season',
-    valueGetter: (params: { data: Series }) => {
-      return params.data.releaseSeason && params.data.releaseYear
-        ? `${renderSeason(params.data.releaseSeason)} ${moment(
-            params.data.releaseYear
-          ).format('YYYY')}`
-        : '';
-    },
-    width: 180,
-    filter: true,
-    sortable: true,
-    comparator: seasonComparator,
-    sortingOrder: ['asc', 'desc'],
-  },
-  {
-    headerName: 'Status',
-    valueGetter: (params: any) => {
-      return renderStatus(params.data.status);
-    },
-    width: 180,
-    filter: true,
+    headerName: 'Episode No.',
+    field: 'episodeNumber',
+    width: 120,
     sortable: true,
   },
-  {
-    headerName: 'Type',
-    valueGetter: (params: any) => {
-      return renderType(params.data.type);
-    },
-    width: 180,
-    filter: true,
-    sortable: true,
-  },
+  { headerName: 'Remarks', field: 'remarks', width: 360, sortable: true },
 ];
 
-export const SeriesTable = () => {
+export const EpisodesTable = (props: Props) => {
   const classes = useStyles();
   const history = useHistory();
+  const { enqueueSnackbar } = useSnackbar();
   const [gridApi, setGridApi] = useState<
     | {
         api: GridApi;
@@ -125,19 +92,40 @@ export const SeriesTable = () => {
     | undefined
   >(undefined);
   const [showForm, setShowForm] = useState<boolean>(false);
+  const [showBatchForm, setShowBatchForm] = useState<boolean>(false);
   const [formAction, setFormAction] = useState<ActionType>(ActionType.CREATE);
-  const [selectedRows, setSelectedRows] = useState<Series[]>([]);
+  const [selectedRows, setSelectedRows] = useState<Episode[]>([]);
 
-  const { data: rowData, loading, refetch } = useAllSeriesQuery({
+  const { data: rowData, loading, refetch } = useEpisodesInSeriesQuery({
     fetchPolicy: 'cache-and-network',
+    variables: {
+      where: {
+        id: props.seriesId,
+      },
+    },
   });
 
   const { data: AuthData } = useLoggedInQuery({
     fetchPolicy: 'cache-and-network',
   });
 
-  const [deleteSeriesMutation] = useDeleteSeriesMutation({
+  const [deleteSeriesMutation] = useDeleteEpisodeMutation({
+    onError: (error: ApolloError) => {
+      if (error.networkError) {
+        NetworkError();
+      } else if (error.graphQLErrors) {
+        enqueueSnackbar(error.message.replace(`GraphQL error: `, ''), {
+          key: 'delete-episode-message',
+          variant: 'warning',
+        });
+      } else {
+        GenericError();
+      }
+    },
     onCompleted: () => {
+      enqueueSnackbar(`Successfully deleted episode`, {
+        key: 'delete-episode-message',
+      });
       refetch();
       setSelectedRows([]);
     },
@@ -161,7 +149,7 @@ export const SeriesTable = () => {
   const viewSelected = () => {
     if (selectedRows.length === 1 && selectedRows[0].id) {
       const seriesId = selectedRows[0].id;
-      history.push(`/series/${seriesId}`);
+      history.push(`/episode/${seriesId}`);
     }
   };
 
@@ -184,32 +172,55 @@ export const SeriesTable = () => {
         <Grid container spacing={3}>
           <Grid item xs={12} className={classes.tableHeader}>
             <Grid container spacing={3}>
-              <Grid item xs>
-                <Typography variant="h5">All Series</Typography>
+              <Grid item xs className={classes.tableHeaderItems}>
+                <Typography variant="h5">{`Episodes`}</Typography>
               </Grid>
               {AuthData?.loggedIn?.role &&
                 writeAccess.includes(AuthData.loggedIn.role) && (
-                  <Grid item>
-                    <Button
-                      startIcon={<AddIcon />}
-                      variant="contained"
-                      color="primary"
-                      size="small"
-                      onClick={() => {
-                        setFormAction(ActionType.CREATE);
-                        setShowForm(true);
-                      }}
-                    >
-                      Add New
-                    </Button>
-                  </Grid>
+                  <>
+                    <Grid item className={classes.buttonGroup}>
+                      <ButtonGroup>
+                        <Button
+                          startIcon={<AddIcon />}
+                          variant="contained"
+                          color="primary"
+                          onClick={() => {
+                            setFormAction(ActionType.CREATE);
+                            setShowForm(true);
+                          }}
+                        >
+                          Add New
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => setShowBatchForm(true)}
+                        >
+                          <QueueOutlinedIcon />
+                        </Button>
+                      </ButtonGroup>
+                    </Grid>
+                    <Grid item className={classes.tableHeaderItems}>
+                      <Button
+                        startIcon={<EditOutlinedIcon />}
+                        variant="contained"
+                        color="primary"
+                        disabled={selectedRows.length !== 1}
+                        onClick={() => {
+                          setFormAction(ActionType.UPDATE);
+                          setShowForm(true);
+                        }}
+                      >
+                        Edit
+                      </Button>
+                    </Grid>
+                  </>
                 )}
-              <Grid item>
+              <Grid item className={classes.tableHeaderItems}>
                 <Button
                   startIcon={<PageviewOutlinedIcon />}
                   disabled={selectedRows.length !== 1}
                   variant="contained"
-                  size="small"
                   onClick={() => {
                     viewSelected();
                   }}
@@ -219,13 +230,12 @@ export const SeriesTable = () => {
               </Grid>
               {AuthData?.loggedIn?.role &&
                 writeAccess.includes(AuthData.loggedIn.role) && (
-                  <Grid item>
+                  <Grid item className={classes.tableHeaderItems}>
                     <Button
-                      startIcon={<DeleteIcon />}
+                      startIcon={<DeleteOutlinedIcon />}
                       disabled={selectedRows.length !== 1}
                       variant="contained"
                       color="secondary"
-                      size="small"
                       onClick={() => {
                         deleteSelected();
                       }}
@@ -247,14 +257,18 @@ export const SeriesTable = () => {
                 onSelectionChanged={onSelectionChanged}
                 gridOptions={gridOptions}
                 columnDefs={columnDefs}
-                rowData={(rowData?.allSeries as any[]) || []}
+                rowData={(rowData?.episodesInSeries as any[]) || []}
               ></AgGridReact>
             </div>
           </Grid>
         </Grid>
       </Paper>
       {showForm && (
-        <SeriesForm
+        <EpisodeForm
+          episodeId={
+            (selectedRows.length === 1 && selectedRows[0].id) || undefined
+          }
+          seriesId={props.seriesId}
           open={showForm}
           action={formAction}
           onSubmit={() => {
@@ -263,6 +277,18 @@ export const SeriesTable = () => {
           }}
           onClose={() => {
             setShowForm(false);
+          }}
+        />
+      )}
+      {showBatchForm && (
+        <BatchEpisodeForm
+          seriesId={props.seriesId}
+          open={showBatchForm}
+          onSubmit={() => {
+            refetch();
+          }}
+          onClose={() => {
+            setShowBatchForm(false);
           }}
         />
       )}

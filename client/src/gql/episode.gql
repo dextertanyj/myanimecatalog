@@ -1,0 +1,61 @@
+query Episode($where: EpisodeWhereUniqueInput!) {
+  episode(where: $where) {
+    id
+    title
+    alternativeTitles {
+      id
+      title
+    }
+    episodeNumber
+    remarks
+    files {
+      id
+      path
+      fileSize
+      checksum
+      duration
+      resolution
+      source
+      codec
+      remarks
+    }
+    createdAt
+    updatedAt
+  }
+}
+
+query EpisodesInSeries($where: SeriesWhereUniqueInput!) {
+  episodesInSeries(where: $where) {
+    id
+    title
+    episodeNumber
+    remarks
+  }
+}
+
+mutation CreateEpisode($data: EpisodeCreateUpdateInput!) {
+  createEpisode(data: $data) {
+    id
+  }
+}
+
+mutation BatchCreateEpisode($data: [EpisodeCreateUpdateInput!]!) {
+  batchCreateEpisode(data: $data) {
+    id
+  }
+}
+
+mutation UpdateEpisode(
+  $data: EpisodeCreateUpdateInput!
+  $where: EpisodeWhereUniqueInput!
+) {
+  updateEpisode(data: $data, where: $where) {
+    id
+  }
+}
+
+mutation DeleteEpisode($where: EpisodeWhereUniqueInput!) {
+  deleteEpisode(where: $where) {
+    id
+  }
+}

@@ -143,6 +143,7 @@ export type Mutation = {
   readonly updateSeries: Series;
   readonly deleteSeries: Series;
   readonly createEpisode: Episode;
+  readonly batchCreateEpisode: ReadonlyArray<Maybe<Episode>>;
   readonly updateEpisode: Episode;
   readonly deleteEpisode: Episode;
   readonly createFile: File;
@@ -203,6 +204,11 @@ export type MutationDeleteSeriesArgs = {
 
 export type MutationCreateEpisodeArgs = {
   data: EpisodeCreateUpdateInput;
+};
+
+
+export type MutationBatchCreateEpisodeArgs = {
+  data: ReadonlyArray<EpisodeCreateUpdateInput>;
 };
 
 
@@ -556,6 +562,92 @@ export type LoginMutation = (
   ) }
 );
 
+export type EpisodeQueryVariables = Exact<{
+  where: EpisodeWhereUniqueInput;
+}>;
+
+
+export type EpisodeQuery = (
+  { readonly __typename?: 'Query' }
+  & { readonly episode?: Maybe<(
+    { readonly __typename?: 'Episode' }
+    & Pick<Episode, 'id' | 'title' | 'episodeNumber' | 'remarks' | 'createdAt' | 'updatedAt'>
+    & { readonly alternativeTitles?: Maybe<ReadonlyArray<Maybe<(
+      { readonly __typename?: 'AlternativeTitle' }
+      & Pick<AlternativeTitle, 'id' | 'title'>
+    )>>>, readonly files?: Maybe<ReadonlyArray<Maybe<(
+      { readonly __typename?: 'File' }
+      & Pick<File, 'id' | 'path' | 'fileSize' | 'checksum' | 'duration' | 'resolution' | 'source' | 'codec' | 'remarks'>
+    )>>> }
+  )> }
+);
+
+export type EpisodesInSeriesQueryVariables = Exact<{
+  where: SeriesWhereUniqueInput;
+}>;
+
+
+export type EpisodesInSeriesQuery = (
+  { readonly __typename?: 'Query' }
+  & { readonly episodesInSeries?: Maybe<ReadonlyArray<Maybe<(
+    { readonly __typename?: 'Episode' }
+    & Pick<Episode, 'id' | 'title' | 'episodeNumber' | 'remarks'>
+  )>>> }
+);
+
+export type CreateEpisodeMutationVariables = Exact<{
+  data: EpisodeCreateUpdateInput;
+}>;
+
+
+export type CreateEpisodeMutation = (
+  { readonly __typename?: 'Mutation' }
+  & { readonly createEpisode: (
+    { readonly __typename?: 'Episode' }
+    & Pick<Episode, 'id'>
+  ) }
+);
+
+export type BatchCreateEpisodeMutationVariables = Exact<{
+  data: ReadonlyArray<EpisodeCreateUpdateInput>;
+}>;
+
+
+export type BatchCreateEpisodeMutation = (
+  { readonly __typename?: 'Mutation' }
+  & { readonly batchCreateEpisode: ReadonlyArray<Maybe<(
+    { readonly __typename?: 'Episode' }
+    & Pick<Episode, 'id'>
+  )>> }
+);
+
+export type UpdateEpisodeMutationVariables = Exact<{
+  data: EpisodeCreateUpdateInput;
+  where: EpisodeWhereUniqueInput;
+}>;
+
+
+export type UpdateEpisodeMutation = (
+  { readonly __typename?: 'Mutation' }
+  & { readonly updateEpisode: (
+    { readonly __typename?: 'Episode' }
+    & Pick<Episode, 'id'>
+  ) }
+);
+
+export type DeleteEpisodeMutationVariables = Exact<{
+  where: EpisodeWhereUniqueInput;
+}>;
+
+
+export type DeleteEpisodeMutation = (
+  { readonly __typename?: 'Mutation' }
+  & { readonly deleteEpisode: (
+    { readonly __typename?: 'Episode' }
+    & Pick<Episode, 'id'>
+  ) }
+);
+
 export type SeriesQueryVariables = Exact<{
   where: SeriesWhereUniqueInput;
 }>;
@@ -856,6 +948,338 @@ export function useLoginMutation(baseOptions?: ApolloReactHooks.MutationHookOpti
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = ApolloReactCommon.MutationResult<LoginMutation>;
 export type LoginMutationOptions = ApolloReactCommon.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const EpisodeDocument = gql`
+    query Episode($where: EpisodeWhereUniqueInput!) {
+  episode(where: $where) {
+    id
+    title
+    alternativeTitles {
+      id
+      title
+    }
+    episodeNumber
+    remarks
+    files {
+      id
+      path
+      fileSize
+      checksum
+      duration
+      resolution
+      source
+      codec
+      remarks
+    }
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export type EpisodeComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<EpisodeQuery, EpisodeQueryVariables>, 'query'> & ({ variables: EpisodeQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const EpisodeComponent = (props: EpisodeComponentProps) => (
+      <ApolloReactComponents.Query<EpisodeQuery, EpisodeQueryVariables> query={EpisodeDocument} {...props} />
+    );
+    
+export type EpisodeProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<EpisodeQuery, EpisodeQueryVariables>
+    } & TChildProps;
+export function withEpisode<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  EpisodeQuery,
+  EpisodeQueryVariables,
+  EpisodeProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, EpisodeQuery, EpisodeQueryVariables, EpisodeProps<TChildProps, TDataName>>(EpisodeDocument, {
+      alias: 'episode',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useEpisodeQuery__
+ *
+ * To run a query within a React component, call `useEpisodeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEpisodeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useEpisodeQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useEpisodeQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<EpisodeQuery, EpisodeQueryVariables>) {
+        return ApolloReactHooks.useQuery<EpisodeQuery, EpisodeQueryVariables>(EpisodeDocument, baseOptions);
+      }
+export function useEpisodeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<EpisodeQuery, EpisodeQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<EpisodeQuery, EpisodeQueryVariables>(EpisodeDocument, baseOptions);
+        }
+export type EpisodeQueryHookResult = ReturnType<typeof useEpisodeQuery>;
+export type EpisodeLazyQueryHookResult = ReturnType<typeof useEpisodeLazyQuery>;
+export type EpisodeQueryResult = ApolloReactCommon.QueryResult<EpisodeQuery, EpisodeQueryVariables>;
+export const EpisodesInSeriesDocument = gql`
+    query EpisodesInSeries($where: SeriesWhereUniqueInput!) {
+  episodesInSeries(where: $where) {
+    id
+    title
+    episodeNumber
+    remarks
+  }
+}
+    `;
+export type EpisodesInSeriesComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<EpisodesInSeriesQuery, EpisodesInSeriesQueryVariables>, 'query'> & ({ variables: EpisodesInSeriesQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const EpisodesInSeriesComponent = (props: EpisodesInSeriesComponentProps) => (
+      <ApolloReactComponents.Query<EpisodesInSeriesQuery, EpisodesInSeriesQueryVariables> query={EpisodesInSeriesDocument} {...props} />
+    );
+    
+export type EpisodesInSeriesProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<EpisodesInSeriesQuery, EpisodesInSeriesQueryVariables>
+    } & TChildProps;
+export function withEpisodesInSeries<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  EpisodesInSeriesQuery,
+  EpisodesInSeriesQueryVariables,
+  EpisodesInSeriesProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, EpisodesInSeriesQuery, EpisodesInSeriesQueryVariables, EpisodesInSeriesProps<TChildProps, TDataName>>(EpisodesInSeriesDocument, {
+      alias: 'episodesInSeries',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useEpisodesInSeriesQuery__
+ *
+ * To run a query within a React component, call `useEpisodesInSeriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEpisodesInSeriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useEpisodesInSeriesQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useEpisodesInSeriesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<EpisodesInSeriesQuery, EpisodesInSeriesQueryVariables>) {
+        return ApolloReactHooks.useQuery<EpisodesInSeriesQuery, EpisodesInSeriesQueryVariables>(EpisodesInSeriesDocument, baseOptions);
+      }
+export function useEpisodesInSeriesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<EpisodesInSeriesQuery, EpisodesInSeriesQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<EpisodesInSeriesQuery, EpisodesInSeriesQueryVariables>(EpisodesInSeriesDocument, baseOptions);
+        }
+export type EpisodesInSeriesQueryHookResult = ReturnType<typeof useEpisodesInSeriesQuery>;
+export type EpisodesInSeriesLazyQueryHookResult = ReturnType<typeof useEpisodesInSeriesLazyQuery>;
+export type EpisodesInSeriesQueryResult = ApolloReactCommon.QueryResult<EpisodesInSeriesQuery, EpisodesInSeriesQueryVariables>;
+export const CreateEpisodeDocument = gql`
+    mutation CreateEpisode($data: EpisodeCreateUpdateInput!) {
+  createEpisode(data: $data) {
+    id
+  }
+}
+    `;
+export type CreateEpisodeMutationFn = ApolloReactCommon.MutationFunction<CreateEpisodeMutation, CreateEpisodeMutationVariables>;
+export type CreateEpisodeComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<CreateEpisodeMutation, CreateEpisodeMutationVariables>, 'mutation'>;
+
+    export const CreateEpisodeComponent = (props: CreateEpisodeComponentProps) => (
+      <ApolloReactComponents.Mutation<CreateEpisodeMutation, CreateEpisodeMutationVariables> mutation={CreateEpisodeDocument} {...props} />
+    );
+    
+export type CreateEpisodeProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: ApolloReactCommon.MutationFunction<CreateEpisodeMutation, CreateEpisodeMutationVariables>
+    } & TChildProps;
+export function withCreateEpisode<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  CreateEpisodeMutation,
+  CreateEpisodeMutationVariables,
+  CreateEpisodeProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, CreateEpisodeMutation, CreateEpisodeMutationVariables, CreateEpisodeProps<TChildProps, TDataName>>(CreateEpisodeDocument, {
+      alias: 'createEpisode',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useCreateEpisodeMutation__
+ *
+ * To run a mutation, you first call `useCreateEpisodeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateEpisodeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createEpisodeMutation, { data, loading, error }] = useCreateEpisodeMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateEpisodeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateEpisodeMutation, CreateEpisodeMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateEpisodeMutation, CreateEpisodeMutationVariables>(CreateEpisodeDocument, baseOptions);
+      }
+export type CreateEpisodeMutationHookResult = ReturnType<typeof useCreateEpisodeMutation>;
+export type CreateEpisodeMutationResult = ApolloReactCommon.MutationResult<CreateEpisodeMutation>;
+export type CreateEpisodeMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateEpisodeMutation, CreateEpisodeMutationVariables>;
+export const BatchCreateEpisodeDocument = gql`
+    mutation BatchCreateEpisode($data: [EpisodeCreateUpdateInput!]!) {
+  batchCreateEpisode(data: $data) {
+    id
+  }
+}
+    `;
+export type BatchCreateEpisodeMutationFn = ApolloReactCommon.MutationFunction<BatchCreateEpisodeMutation, BatchCreateEpisodeMutationVariables>;
+export type BatchCreateEpisodeComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<BatchCreateEpisodeMutation, BatchCreateEpisodeMutationVariables>, 'mutation'>;
+
+    export const BatchCreateEpisodeComponent = (props: BatchCreateEpisodeComponentProps) => (
+      <ApolloReactComponents.Mutation<BatchCreateEpisodeMutation, BatchCreateEpisodeMutationVariables> mutation={BatchCreateEpisodeDocument} {...props} />
+    );
+    
+export type BatchCreateEpisodeProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: ApolloReactCommon.MutationFunction<BatchCreateEpisodeMutation, BatchCreateEpisodeMutationVariables>
+    } & TChildProps;
+export function withBatchCreateEpisode<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  BatchCreateEpisodeMutation,
+  BatchCreateEpisodeMutationVariables,
+  BatchCreateEpisodeProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, BatchCreateEpisodeMutation, BatchCreateEpisodeMutationVariables, BatchCreateEpisodeProps<TChildProps, TDataName>>(BatchCreateEpisodeDocument, {
+      alias: 'batchCreateEpisode',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useBatchCreateEpisodeMutation__
+ *
+ * To run a mutation, you first call `useBatchCreateEpisodeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBatchCreateEpisodeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [batchCreateEpisodeMutation, { data, loading, error }] = useBatchCreateEpisodeMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useBatchCreateEpisodeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<BatchCreateEpisodeMutation, BatchCreateEpisodeMutationVariables>) {
+        return ApolloReactHooks.useMutation<BatchCreateEpisodeMutation, BatchCreateEpisodeMutationVariables>(BatchCreateEpisodeDocument, baseOptions);
+      }
+export type BatchCreateEpisodeMutationHookResult = ReturnType<typeof useBatchCreateEpisodeMutation>;
+export type BatchCreateEpisodeMutationResult = ApolloReactCommon.MutationResult<BatchCreateEpisodeMutation>;
+export type BatchCreateEpisodeMutationOptions = ApolloReactCommon.BaseMutationOptions<BatchCreateEpisodeMutation, BatchCreateEpisodeMutationVariables>;
+export const UpdateEpisodeDocument = gql`
+    mutation UpdateEpisode($data: EpisodeCreateUpdateInput!, $where: EpisodeWhereUniqueInput!) {
+  updateEpisode(data: $data, where: $where) {
+    id
+  }
+}
+    `;
+export type UpdateEpisodeMutationFn = ApolloReactCommon.MutationFunction<UpdateEpisodeMutation, UpdateEpisodeMutationVariables>;
+export type UpdateEpisodeComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateEpisodeMutation, UpdateEpisodeMutationVariables>, 'mutation'>;
+
+    export const UpdateEpisodeComponent = (props: UpdateEpisodeComponentProps) => (
+      <ApolloReactComponents.Mutation<UpdateEpisodeMutation, UpdateEpisodeMutationVariables> mutation={UpdateEpisodeDocument} {...props} />
+    );
+    
+export type UpdateEpisodeProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: ApolloReactCommon.MutationFunction<UpdateEpisodeMutation, UpdateEpisodeMutationVariables>
+    } & TChildProps;
+export function withUpdateEpisode<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  UpdateEpisodeMutation,
+  UpdateEpisodeMutationVariables,
+  UpdateEpisodeProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, UpdateEpisodeMutation, UpdateEpisodeMutationVariables, UpdateEpisodeProps<TChildProps, TDataName>>(UpdateEpisodeDocument, {
+      alias: 'updateEpisode',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useUpdateEpisodeMutation__
+ *
+ * To run a mutation, you first call `useUpdateEpisodeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateEpisodeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateEpisodeMutation, { data, loading, error }] = useUpdateEpisodeMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useUpdateEpisodeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateEpisodeMutation, UpdateEpisodeMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateEpisodeMutation, UpdateEpisodeMutationVariables>(UpdateEpisodeDocument, baseOptions);
+      }
+export type UpdateEpisodeMutationHookResult = ReturnType<typeof useUpdateEpisodeMutation>;
+export type UpdateEpisodeMutationResult = ApolloReactCommon.MutationResult<UpdateEpisodeMutation>;
+export type UpdateEpisodeMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateEpisodeMutation, UpdateEpisodeMutationVariables>;
+export const DeleteEpisodeDocument = gql`
+    mutation DeleteEpisode($where: EpisodeWhereUniqueInput!) {
+  deleteEpisode(where: $where) {
+    id
+  }
+}
+    `;
+export type DeleteEpisodeMutationFn = ApolloReactCommon.MutationFunction<DeleteEpisodeMutation, DeleteEpisodeMutationVariables>;
+export type DeleteEpisodeComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<DeleteEpisodeMutation, DeleteEpisodeMutationVariables>, 'mutation'>;
+
+    export const DeleteEpisodeComponent = (props: DeleteEpisodeComponentProps) => (
+      <ApolloReactComponents.Mutation<DeleteEpisodeMutation, DeleteEpisodeMutationVariables> mutation={DeleteEpisodeDocument} {...props} />
+    );
+    
+export type DeleteEpisodeProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: ApolloReactCommon.MutationFunction<DeleteEpisodeMutation, DeleteEpisodeMutationVariables>
+    } & TChildProps;
+export function withDeleteEpisode<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  DeleteEpisodeMutation,
+  DeleteEpisodeMutationVariables,
+  DeleteEpisodeProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, DeleteEpisodeMutation, DeleteEpisodeMutationVariables, DeleteEpisodeProps<TChildProps, TDataName>>(DeleteEpisodeDocument, {
+      alias: 'deleteEpisode',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useDeleteEpisodeMutation__
+ *
+ * To run a mutation, you first call `useDeleteEpisodeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteEpisodeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteEpisodeMutation, { data, loading, error }] = useDeleteEpisodeMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useDeleteEpisodeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteEpisodeMutation, DeleteEpisodeMutationVariables>) {
+        return ApolloReactHooks.useMutation<DeleteEpisodeMutation, DeleteEpisodeMutationVariables>(DeleteEpisodeDocument, baseOptions);
+      }
+export type DeleteEpisodeMutationHookResult = ReturnType<typeof useDeleteEpisodeMutation>;
+export type DeleteEpisodeMutationResult = ApolloReactCommon.MutationResult<DeleteEpisodeMutation>;
+export type DeleteEpisodeMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteEpisodeMutation, DeleteEpisodeMutationVariables>;
 export const SeriesDocument = gql`
     query Series($where: SeriesWhereUniqueInput!) {
   series(where: $where) {

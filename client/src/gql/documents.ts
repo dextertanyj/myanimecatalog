@@ -137,6 +137,7 @@ export type Mutation = {
   readonly updateSeries: Series;
   readonly deleteSeries: Series;
   readonly createEpisode: Episode;
+  readonly batchCreateEpisode: ReadonlyArray<Maybe<Episode>>;
   readonly updateEpisode: Episode;
   readonly deleteEpisode: Episode;
   readonly createFile: File;
@@ -197,6 +198,11 @@ export type MutationDeleteSeriesArgs = {
 
 export type MutationCreateEpisodeArgs = {
   data: EpisodeCreateUpdateInput;
+};
+
+
+export type MutationBatchCreateEpisodeArgs = {
+  data: ReadonlyArray<EpisodeCreateUpdateInput>;
 };
 
 
@@ -541,6 +547,71 @@ export const Login = gql`
       id
       username
     }
+  }
+}
+    `;
+export const Episode = gql`
+    query Episode($where: EpisodeWhereUniqueInput!) {
+  episode(where: $where) {
+    id
+    title
+    alternativeTitles {
+      id
+      title
+    }
+    episodeNumber
+    remarks
+    files {
+      id
+      path
+      fileSize
+      checksum
+      duration
+      resolution
+      source
+      codec
+      remarks
+    }
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export const EpisodesInSeries = gql`
+    query EpisodesInSeries($where: SeriesWhereUniqueInput!) {
+  episodesInSeries(where: $where) {
+    id
+    title
+    episodeNumber
+    remarks
+  }
+}
+    `;
+export const CreateEpisode = gql`
+    mutation CreateEpisode($data: EpisodeCreateUpdateInput!) {
+  createEpisode(data: $data) {
+    id
+  }
+}
+    `;
+export const BatchCreateEpisode = gql`
+    mutation BatchCreateEpisode($data: [EpisodeCreateUpdateInput!]!) {
+  batchCreateEpisode(data: $data) {
+    id
+  }
+}
+    `;
+export const UpdateEpisode = gql`
+    mutation UpdateEpisode($data: EpisodeCreateUpdateInput!, $where: EpisodeWhereUniqueInput!) {
+  updateEpisode(data: $data, where: $where) {
+    id
+  }
+}
+    `;
+export const DeleteEpisode = gql`
+    mutation DeleteEpisode($where: EpisodeWhereUniqueInput!) {
+  deleteEpisode(where: $where) {
+    id
   }
 }
     `;
