@@ -90,6 +90,18 @@ function convertDuration(
   return [hours, minutes, seconds];
 }
 
+function numberOrUndefined(
+  duration: number | undefined | boolean
+): number | undefined {
+  if (!!duration && duration !== true) {
+    return duration;
+  } else if (duration === 0) {
+    return 0;
+  } else {
+    return undefined;
+  }
+}
+
 export const FileForm = (props: Props) => {
   const { action: actionType } = props;
   const classes = useStyles();
@@ -126,7 +138,7 @@ export const FileForm = (props: Props) => {
       }
     },
     onCompleted: () => {
-      enqueueSnackbar(`Successfully created episode`, {
+      enqueueSnackbar(`Successfully created file record`, {
         key: 'file-form-message',
       });
       props.onSubmit();
@@ -148,7 +160,7 @@ export const FileForm = (props: Props) => {
       }
     },
     onCompleted: () => {
-      enqueueSnackbar(`Successfully updated episode`, {
+      enqueueSnackbar(`Successfully updated file record`, {
         key: 'file-form-message',
       });
       props.onSubmit();
@@ -159,6 +171,7 @@ export const FileForm = (props: Props) => {
   const onSubmitCreate = async (values: FormikValues) => {
     if (props.episodeId) {
       let {
+        path,
         hours,
         minutes,
         seconds,
@@ -166,11 +179,13 @@ export const FileForm = (props: Props) => {
         y_resolution,
         ...rest
       } = values;
+      path = path.replace(/\\/g, '/');
       const duration = hours * 3600 + minutes * 60 + seconds;
       const resolution = `${x_resolution.toString()} × ${y_resolution.toString()}`;
       await createFileMutation({
         variables: {
           data: {
+            path,
             duration,
             resolution,
             ...rest,
@@ -192,6 +207,7 @@ export const FileForm = (props: Props) => {
   const onSubmitUpdate = async (values: FormikValues) => {
     if (props.fileId) {
       let {
+        path,
         hours,
         minutes,
         seconds,
@@ -199,12 +215,14 @@ export const FileForm = (props: Props) => {
         y_resolution,
         ...rest
       } = values;
+      path = path.replace(/\\/g, '/');
       const duration = hours * 3600 + minutes * 60 + seconds;
       const resolution = `${x_resolution.toString()} × ${y_resolution.toString()}`;
       await updateFileMutation({
         variables: {
           where: { id: props.fileId },
           data: {
+            path,
             duration,
             resolution,
             ...rest,
@@ -224,18 +242,18 @@ export const FileForm = (props: Props) => {
     fileSize:
       (actionType === ActionType.UPDATE && fileData?.file?.fileSize) ||
       undefined,
-    hours:
-      (actionType === ActionType.UPDATE &&
-        convertDuration(fileData?.file?.duration)[0]) ||
-      undefined,
-    minutes:
-      (actionType === ActionType.UPDATE &&
-        convertDuration(fileData?.file?.duration)[1]) ||
-      undefined,
-    seconds:
-      (actionType === ActionType.UPDATE &&
-        convertDuration(fileData?.file?.duration)[2]) ||
-      undefined,
+    hours: numberOrUndefined(
+      actionType === ActionType.UPDATE &&
+        convertDuration(fileData?.file?.duration)[0]
+    ),
+    minutes: numberOrUndefined(
+      actionType === ActionType.UPDATE &&
+        convertDuration(fileData?.file?.duration)[1]
+    ),
+    seconds: numberOrUndefined(
+      actionType === ActionType.UPDATE &&
+        convertDuration(fileData?.file?.duration)[2]
+    ),
     x_resolution:
       (actionType === ActionType.UPDATE &&
         fileData?.file?.resolution &&
@@ -268,7 +286,7 @@ export const FileForm = (props: Props) => {
       <DialogTitle key="DialogTitle">
         {props.action === ActionType.CREATE
           ? `Add A New File`
-          : `Editing ${fileData?.file?.path?.split('\\').pop()}`}
+          : `Editing ${fileData?.file?.path?.split('/').pop()}`}
       </DialogTitle>
       <DialogContent>
         {loadingFile && !fileData ? (
@@ -282,7 +300,30 @@ export const FileForm = (props: Props) => {
                 ? onSubmitCreate
                 : onSubmitUpdate
             }
-            validationSchema={Yup.object({})}
+            validationSchema={Yup.object({
+              path: Yup.string().required(`Please enter the file path`),
+              codec: Yup.string().required(`Please enter the video codec`),
+              hours: Yup.number()
+                .required(`Please input the duration`)
+                .min(0, `Invalid duration`),
+              minutes: Yup.number()
+                .required(`Please input the duration`)
+                .min(0, `Invalid duration`),
+              seconds: Yup.number()
+                .required(`Please input the duration`)
+                .min(0, `Invalid duration`),
+              fileSize: Yup.number()
+                .required(`Please enter the file size`)
+                .min(1, `Invalid file size`),
+              source: Yup.string().required(`Please choose a source type`),
+              x_resolution: Yup.number()
+                .required(`Please enter the resolution`)
+                .min(1, `Invalid resolution`),
+              y_resolution: Yup.number()
+                .required(`Please enter the resolution`)
+                .min(1, `Invalid resolution`),
+              checksum: Yup.string().required(`Please enter the checksum`),
+            })}
           >
             {(props: FormikProps<FormValues>) => {
               const {
@@ -322,7 +363,7 @@ export const FileForm = (props: Props) => {
                         label="Hours"
                         id="hours"
                         type="number"
-                        value={values.hours || (values.hours === 0 ? 0 : null)}
+                        value={values.hours || (values.hours === 0 ? 0 : '')}
                         error={touched.hours && !!errors.hours}
                         helperText={touched.hours && errors.hours}
                         onChange={handleChange}
@@ -340,7 +381,7 @@ export const FileForm = (props: Props) => {
                         id="minutes"
                         type="number"
                         value={
-                          values.minutes || (values.minutes === 0 ? 0 : null)
+                          values.minutes || (values.minutes === 0 ? 0 : '')
                         }
                         error={touched.minutes && !!errors.minutes}
                         helperText={touched.minutes && errors.minutes}
@@ -359,7 +400,7 @@ export const FileForm = (props: Props) => {
                         id="seconds"
                         type="number"
                         value={
-                          values.seconds || (values.seconds === 0 ? 0 : null)
+                          values.seconds || (values.seconds === 0 ? 0 : '')
                         }
                         error={touched.seconds && !!errors.seconds}
                         helperText={touched.seconds && errors.seconds}
@@ -378,7 +419,7 @@ export const FileForm = (props: Props) => {
                         id="fileSize"
                         type="number"
                         value={
-                          values.fileSize || (values.fileSize === 0 ? 0 : null)
+                          values.fileSize || (values.fileSize === 0 ? 0 : '')
                         }
                         error={touched.fileSize && !!errors.fileSize}
                         helperText={touched.fileSize && errors.fileSize}
@@ -396,7 +437,7 @@ export const FileForm = (props: Props) => {
                         name="source"
                         label="Source"
                         id="source"
-                        value={values.source || null}
+                        value={values.source || ''}
                         InputLabelProps={{ shrink: !!values.source }}
                         error={touched.source && !!errors.source}
                         helperText={touched.source && errors.source}
@@ -424,7 +465,7 @@ export const FileForm = (props: Props) => {
                         type="number"
                         value={
                           values.x_resolution ||
-                          (values.x_resolution === 0 ? 0 : null)
+                          (values.x_resolution === 0 ? 0 : '')
                         }
                         error={touched.x_resolution && !!errors.x_resolution}
                         helperText={touched.x_resolution && errors.x_resolution}
@@ -444,7 +485,7 @@ export const FileForm = (props: Props) => {
                         type="number"
                         value={
                           values.y_resolution ||
-                          (values.y_resolution === 0 ? 0 : null)
+                          (values.y_resolution === 0 ? 0 : '')
                         }
                         error={touched.y_resolution && !!errors.y_resolution}
                         helperText={touched.y_resolution && errors.y_resolution}
