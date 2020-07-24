@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type Props = {
   episodeId?: string;
-  seriesId: string;
+  seriesId?: string;
   open: boolean;
   action: ActionType;
   onSubmit: () => void;
@@ -156,31 +156,36 @@ export const EpisodeForm = (props: Props) => {
   });
 
   const onSubmitCreate = (values: FormikValues) => {
-    console.log('create');
-    let { alternativeTitles, ...rest } = values;
-    alternativeTitles =
-      alternativeTitles.length > 0
-        ? {
-            create: alternativeTitles
-              .filter((altTitle: AlternativeTitle) => !altTitle.id)
-              .map((altTitle: AlternativeTitle) => {
-                return { title: altTitle.title };
-              }),
-          }
-        : undefined;
-    createEpisodeMutation({
-      variables: {
-        data: {
-          alternativeTitles,
-          ...rest,
-          series: {
-            connect: {
-              id: props.seriesId,
+    if (props.seriesId) {
+      let { alternativeTitles, ...rest } = values;
+      alternativeTitles =
+        alternativeTitles.length > 0
+          ? {
+              create: alternativeTitles
+                .filter((altTitle: AlternativeTitle) => !altTitle.id)
+                .map((altTitle: AlternativeTitle) => {
+                  return { title: altTitle.title };
+                }),
+            }
+          : undefined;
+      createEpisodeMutation({
+        variables: {
+          data: {
+            alternativeTitles,
+            ...rest,
+            series: {
+              connect: {
+                id: props.seriesId,
+              },
             },
           },
         },
-      },
-    });
+      });
+    } else {
+      enqueueSnackbar(`Something went wrong. Please reload the page.`, {
+        key: 'episode-form-message',
+      });
+    }
   };
 
   const onSubmitUpdate = async (values: FormikValues) => {
@@ -229,11 +234,6 @@ export const EpisodeForm = (props: Props) => {
         data: {
           alternativeTitles,
           ...rest,
-          series: {
-            connect: {
-              id: props.seriesId,
-            },
-          },
         },
       },
     });

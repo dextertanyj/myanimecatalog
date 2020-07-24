@@ -1,31 +1,18 @@
-import {
-  createStyles,
-  makeStyles,
-  Paper,
-  Theme,
-  Typography,
-} from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import React from 'react';
+import { useParams } from 'react-router-dom';
+import { EpisodeInfoTable } from '../../Components/EpisodeInfoTable';
 import { withAuth } from '../../HOC/withAuth';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: 'center',
-      color: theme.palette.text.secondary,
-    },
-  })
-);
-
 const EpisodePage = () => {
-  const classes = useStyles();
+  const { episodeId } = useParams();
   return (
     <div>
-      <Paper elevation={3} className={classes.paper}>
-        <Typography>Episode Page</Typography>
-        Coming Soon...
-      </Paper>
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <EpisodeInfoTable episodeId={episodeId} key={episodeId} />
+        </Grid>
+      </Grid>
     </div>
   );
 };
