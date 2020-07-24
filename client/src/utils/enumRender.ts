@@ -1,4 +1,4 @@
-import { Role, Season, Status, Type } from '../gql/documents';
+import { Role, Season, Source, Status, Type } from '../gql/documents';
 
 export const renderRole = (role: Role): string => {
   switch (role) {
@@ -61,4 +61,26 @@ export const renderSeasonInfo = (season: Season): string => {
     case Season.Spring:
       return 'Spring (Mar - May)';
   }
+};
+
+export const renderSource = (source: Source): string => {
+  switch (source) {
+    case Source.Bluray:
+      return 'Blu-ray';
+    case Source.Cd:
+      return 'CD';
+    case Source.Dvd:
+      return 'DVD';
+    case Source.Tv:
+      return 'TV';
+    case Source.Web:
+      return 'Web';
+  }
+};
+
+export const renderDuration = (duration: number): string => {
+  const hours = Math.floor(duration / 3600);
+  const minutes = Math.floor((duration - hours * 3600) / 60);
+  const seconds = duration - hours * 3600 - minutes * 60;
+  return `${hours}:${minutes}.${seconds}`;
 };
