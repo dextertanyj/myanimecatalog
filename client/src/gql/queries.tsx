@@ -14,7 +14,9 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  DateTime: any;
+  /** Long (64-bit) custom scalar type */
+  Long: number;
+  DateTime: string;
 };
 
 export type AlternativeTitle = {
@@ -96,7 +98,7 @@ export type File = {
   readonly id?: Maybe<Scalars['String']>;
   readonly path?: Maybe<Scalars['String']>;
   readonly checksum?: Maybe<Scalars['String']>;
-  readonly fileSize?: Maybe<Scalars['Int']>;
+  readonly fileSize?: Maybe<Scalars['Long']>;
   readonly duration?: Maybe<Scalars['Int']>;
   readonly resolution?: Maybe<Scalars['String']>;
   readonly source?: Maybe<Source>;
@@ -111,7 +113,7 @@ export type FileCreateUpdateInput = {
   readonly id?: Maybe<Scalars['String']>;
   readonly path?: Maybe<Scalars['String']>;
   readonly checksum?: Maybe<Scalars['String']>;
-  readonly fileSize?: Maybe<Scalars['Int']>;
+  readonly fileSize?: Maybe<Scalars['Long']>;
   readonly duration?: Maybe<Scalars['Int']>;
   readonly resolution?: Maybe<Scalars['String']>;
   readonly source?: Maybe<Source>;
@@ -130,6 +132,7 @@ export type FileRelationInput = {
 export type FileWhereUniqueInput = {
   readonly id: Scalars['String'];
 };
+
 
 export type Mutation = {
   readonly __typename?: 'Mutation';

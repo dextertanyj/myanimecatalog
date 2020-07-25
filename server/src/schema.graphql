@@ -1,4 +1,5 @@
 scalar DateTime
+scalar Long
 
 enum Status {
   DOWNLOADED
@@ -157,7 +158,7 @@ input FileCreateUpdateInput {
   id: String
   path: String
   checksum: String
-  fileSize: Int
+  fileSize: Long
   duration: Int
   resolution: String
   source: Source
@@ -356,7 +357,7 @@ type File {
   id: String
   path: String
   checksum: String
-  fileSize: Int
+  fileSize: Long
   duration: Int
   resolution: String
   source: Source

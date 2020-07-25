@@ -17,6 +17,9 @@ generates:
       apolloReactComponentsImportFrom: "@apollo/react-components"
       apolloReactHocImportFrom: "@apollo/react-hoc"
       apolloReactHooksImportFrom: "@apollo/react-hooks"
+      scalars:
+        DateTime: string
+        Long: number
     plugins:
       - "typescript"
       - "typescript-operations"
@@ -33,6 +36,9 @@ generates:
       apolloReactComponentsImportFrom: "@apollo/react-components"
       apolloReactHocImportFrom: "@apollo/react-hoc"
       apolloReactHooksImportFrom: "@apollo/react-hooks"
+      scalars:
+        DateTime: string
+        Long: number
     plugins:
       - typescript
       - typescript-document-nodes
