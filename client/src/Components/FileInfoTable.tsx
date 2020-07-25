@@ -92,6 +92,9 @@ export const FileInfoTable = (props: Props) => {
     }
   };
 
+  const filePath = file.path?.substring(0, file.path?.lastIndexOf('/'));
+  const fileName = file.path?.substring(file.path?.lastIndexOf('/'));
+
   return (
     <Grid container spacing={3}>
       {props.editable && (
@@ -129,8 +132,14 @@ export const FileInfoTable = (props: Props) => {
           <Grid item xs={2}>
             <Typography>File Name</Typography>
           </Grid>
-          <Grid item xs={10}>
-            <Typography noWrap>{file.path}</Typography>
+          <Grid item xs={4} wrap={'nowrap'}>
+            <Typography>{fileName}</Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <Typography>File Path</Typography>
+          </Grid>
+          <Grid item xs={4} wrap={'nowrap'}>
+            <Typography>{filePath}</Typography>
           </Grid>
           <Grid item xs={2}>
             <Typography>Codec</Typography>
@@ -173,7 +182,7 @@ export const FileInfoTable = (props: Props) => {
           <Grid item xs={2}>
             <Typography>Remarks</Typography>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={6} wrap={'nowrap'}>
             <Typography>{file.remarks}</Typography>
           </Grid>
           <Grid item xs={2}>
