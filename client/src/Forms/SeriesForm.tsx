@@ -23,7 +23,7 @@ import {
   FormikProps,
   FormikValues,
 } from 'formik';
-import { Moment } from 'moment';
+import moment, { Moment } from 'moment';
 import { useSnackbar } from 'notistack';
 import React, { ReactElement, useEffect, useState } from 'react';
 import * as Yup from 'yup';
@@ -563,7 +563,8 @@ export const SeriesForm = (props: Props): ReactElement => {
       (actionType === ActionType.UPDATE && seriesData?.series?.releaseSeason) ||
       undefined,
     releaseYear:
-      (actionType === ActionType.UPDATE && seriesData?.series?.releaseYear) ||
+      (actionType === ActionType.UPDATE &&
+        moment(seriesData?.series?.releaseYear)) ||
       undefined,
     remarks:
       (actionType === ActionType.UPDATE && seriesData?.series?.remarks) ||

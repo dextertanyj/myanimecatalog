@@ -14,7 +14,9 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  DateTime: any;
+  /** Long (64-bit) custom scalar type */
+  Long: number;
+  DateTime: string;
 };
 
 export type AlternativeTitle = {
@@ -96,8 +98,8 @@ export type File = {
   readonly id?: Maybe<Scalars['String']>;
   readonly path?: Maybe<Scalars['String']>;
   readonly checksum?: Maybe<Scalars['String']>;
-  readonly fileSize?: Maybe<Scalars['Int']>;
-  readonly duration?: Maybe<Scalars['String']>;
+  readonly fileSize?: Maybe<Scalars['Long']>;
+  readonly duration?: Maybe<Scalars['Int']>;
   readonly resolution?: Maybe<Scalars['String']>;
   readonly source?: Maybe<Source>;
   readonly codec?: Maybe<Scalars['String']>;
@@ -111,8 +113,8 @@ export type FileCreateUpdateInput = {
   readonly id?: Maybe<Scalars['String']>;
   readonly path?: Maybe<Scalars['String']>;
   readonly checksum?: Maybe<Scalars['String']>;
-  readonly fileSize?: Maybe<Scalars['Int']>;
-  readonly duration?: Maybe<Scalars['String']>;
+  readonly fileSize?: Maybe<Scalars['Long']>;
+  readonly duration?: Maybe<Scalars['Int']>;
   readonly resolution?: Maybe<Scalars['String']>;
   readonly source?: Maybe<Source>;
   readonly codec?: Maybe<Scalars['String']>;
@@ -130,6 +132,7 @@ export type FileRelationInput = {
 export type FileWhereUniqueInput = {
   readonly id: Scalars['String'];
 };
+
 
 export type Mutation = {
   readonly __typename?: 'Mutation';
@@ -266,6 +269,7 @@ export type Query = {
   readonly episodes?: Maybe<ReadonlyArray<Maybe<Episode>>>;
   readonly episodesInSeries?: Maybe<ReadonlyArray<Maybe<Episode>>>;
   readonly file?: Maybe<File>;
+  readonly filesForEpisode?: Maybe<ReadonlyArray<Maybe<File>>>;
   readonly files?: Maybe<ReadonlyArray<Maybe<File>>>;
   readonly userProgress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
   readonly userProgresses?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
@@ -297,6 +301,11 @@ export type QueryEpisodesInSeriesArgs = {
 
 export type QueryFileArgs = {
   where?: Maybe<FileWhereUniqueInput>;
+};
+
+
+export type QueryFilesForEpisodeArgs = {
+  where: EpisodeWhereUniqueInput;
 };
 
 
@@ -645,6 +654,83 @@ export type DeleteEpisodeMutation = (
   & { readonly deleteEpisode: (
     { readonly __typename?: 'Episode' }
     & Pick<Episode, 'id'>
+  ) }
+);
+
+export type FilesForEpisodeQueryVariables = Exact<{
+  where: EpisodeWhereUniqueInput;
+}>;
+
+
+export type FilesForEpisodeQuery = (
+  { readonly __typename?: 'Query' }
+  & { readonly filesForEpisode?: Maybe<ReadonlyArray<Maybe<(
+    { readonly __typename?: 'File' }
+    & Pick<File, 'id' | 'path' | 'duration' | 'fileSize' | 'source' | 'resolution' | 'codec' | 'checksum' | 'remarks' | 'createdAt' | 'updatedAt'>
+  )>>> }
+);
+
+export type FileQueryVariables = Exact<{
+  where: FileWhereUniqueInput;
+}>;
+
+
+export type FileQuery = (
+  { readonly __typename?: 'Query' }
+  & { readonly file?: Maybe<(
+    { readonly __typename?: 'File' }
+    & Pick<File, 'id' | 'path' | 'duration' | 'fileSize' | 'source' | 'resolution' | 'codec' | 'checksum' | 'remarks' | 'createdAt' | 'updatedAt'>
+  )> }
+);
+
+export type FilesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FilesQuery = (
+  { readonly __typename?: 'Query' }
+  & { readonly files?: Maybe<ReadonlyArray<Maybe<(
+    { readonly __typename?: 'File' }
+    & Pick<File, 'id' | 'path' | 'duration' | 'fileSize' | 'source' | 'resolution' | 'codec' | 'checksum' | 'remarks' | 'createdAt' | 'updatedAt'>
+  )>>> }
+);
+
+export type CreateFileMutationVariables = Exact<{
+  data: FileCreateUpdateInput;
+}>;
+
+
+export type CreateFileMutation = (
+  { readonly __typename?: 'Mutation' }
+  & { readonly createFile: (
+    { readonly __typename?: 'File' }
+    & Pick<File, 'id'>
+  ) }
+);
+
+export type UpdateFileMutationVariables = Exact<{
+  where: FileWhereUniqueInput;
+  data: FileCreateUpdateInput;
+}>;
+
+
+export type UpdateFileMutation = (
+  { readonly __typename?: 'Mutation' }
+  & { readonly updateFile: (
+    { readonly __typename?: 'File' }
+    & Pick<File, 'id'>
+  ) }
+);
+
+export type DeleteFileMutationVariables = Exact<{
+  where: FileWhereUniqueInput;
+}>;
+
+
+export type DeleteFileMutation = (
+  { readonly __typename?: 'Mutation' }
+  & { readonly deleteFile: (
+    { readonly __typename?: 'File' }
+    & Pick<File, 'id'>
   ) }
 );
 
@@ -1280,6 +1366,345 @@ export function useDeleteEpisodeMutation(baseOptions?: ApolloReactHooks.Mutation
 export type DeleteEpisodeMutationHookResult = ReturnType<typeof useDeleteEpisodeMutation>;
 export type DeleteEpisodeMutationResult = ApolloReactCommon.MutationResult<DeleteEpisodeMutation>;
 export type DeleteEpisodeMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteEpisodeMutation, DeleteEpisodeMutationVariables>;
+export const FilesForEpisodeDocument = gql`
+    query FilesForEpisode($where: EpisodeWhereUniqueInput!) {
+  filesForEpisode(where: $where) {
+    id
+    path
+    duration
+    fileSize
+    source
+    resolution
+    codec
+    checksum
+    remarks
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export type FilesForEpisodeComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<FilesForEpisodeQuery, FilesForEpisodeQueryVariables>, 'query'> & ({ variables: FilesForEpisodeQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const FilesForEpisodeComponent = (props: FilesForEpisodeComponentProps) => (
+      <ApolloReactComponents.Query<FilesForEpisodeQuery, FilesForEpisodeQueryVariables> query={FilesForEpisodeDocument} {...props} />
+    );
+    
+export type FilesForEpisodeProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<FilesForEpisodeQuery, FilesForEpisodeQueryVariables>
+    } & TChildProps;
+export function withFilesForEpisode<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  FilesForEpisodeQuery,
+  FilesForEpisodeQueryVariables,
+  FilesForEpisodeProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, FilesForEpisodeQuery, FilesForEpisodeQueryVariables, FilesForEpisodeProps<TChildProps, TDataName>>(FilesForEpisodeDocument, {
+      alias: 'filesForEpisode',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useFilesForEpisodeQuery__
+ *
+ * To run a query within a React component, call `useFilesForEpisodeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFilesForEpisodeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFilesForEpisodeQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useFilesForEpisodeQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FilesForEpisodeQuery, FilesForEpisodeQueryVariables>) {
+        return ApolloReactHooks.useQuery<FilesForEpisodeQuery, FilesForEpisodeQueryVariables>(FilesForEpisodeDocument, baseOptions);
+      }
+export function useFilesForEpisodeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FilesForEpisodeQuery, FilesForEpisodeQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<FilesForEpisodeQuery, FilesForEpisodeQueryVariables>(FilesForEpisodeDocument, baseOptions);
+        }
+export type FilesForEpisodeQueryHookResult = ReturnType<typeof useFilesForEpisodeQuery>;
+export type FilesForEpisodeLazyQueryHookResult = ReturnType<typeof useFilesForEpisodeLazyQuery>;
+export type FilesForEpisodeQueryResult = ApolloReactCommon.QueryResult<FilesForEpisodeQuery, FilesForEpisodeQueryVariables>;
+export const FileDocument = gql`
+    query File($where: FileWhereUniqueInput!) {
+  file(where: $where) {
+    id
+    path
+    duration
+    fileSize
+    source
+    resolution
+    codec
+    checksum
+    remarks
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export type FileComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<FileQuery, FileQueryVariables>, 'query'> & ({ variables: FileQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const FileComponent = (props: FileComponentProps) => (
+      <ApolloReactComponents.Query<FileQuery, FileQueryVariables> query={FileDocument} {...props} />
+    );
+    
+export type FileProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<FileQuery, FileQueryVariables>
+    } & TChildProps;
+export function withFile<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  FileQuery,
+  FileQueryVariables,
+  FileProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, FileQuery, FileQueryVariables, FileProps<TChildProps, TDataName>>(FileDocument, {
+      alias: 'file',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useFileQuery__
+ *
+ * To run a query within a React component, call `useFileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFileQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useFileQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FileQuery, FileQueryVariables>) {
+        return ApolloReactHooks.useQuery<FileQuery, FileQueryVariables>(FileDocument, baseOptions);
+      }
+export function useFileLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FileQuery, FileQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<FileQuery, FileQueryVariables>(FileDocument, baseOptions);
+        }
+export type FileQueryHookResult = ReturnType<typeof useFileQuery>;
+export type FileLazyQueryHookResult = ReturnType<typeof useFileLazyQuery>;
+export type FileQueryResult = ApolloReactCommon.QueryResult<FileQuery, FileQueryVariables>;
+export const FilesDocument = gql`
+    query Files {
+  files {
+    id
+    path
+    duration
+    fileSize
+    source
+    resolution
+    codec
+    checksum
+    remarks
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export type FilesComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<FilesQuery, FilesQueryVariables>, 'query'>;
+
+    export const FilesComponent = (props: FilesComponentProps) => (
+      <ApolloReactComponents.Query<FilesQuery, FilesQueryVariables> query={FilesDocument} {...props} />
+    );
+    
+export type FilesProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<FilesQuery, FilesQueryVariables>
+    } & TChildProps;
+export function withFiles<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  FilesQuery,
+  FilesQueryVariables,
+  FilesProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, FilesQuery, FilesQueryVariables, FilesProps<TChildProps, TDataName>>(FilesDocument, {
+      alias: 'files',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useFilesQuery__
+ *
+ * To run a query within a React component, call `useFilesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFilesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFilesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFilesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FilesQuery, FilesQueryVariables>) {
+        return ApolloReactHooks.useQuery<FilesQuery, FilesQueryVariables>(FilesDocument, baseOptions);
+      }
+export function useFilesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FilesQuery, FilesQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<FilesQuery, FilesQueryVariables>(FilesDocument, baseOptions);
+        }
+export type FilesQueryHookResult = ReturnType<typeof useFilesQuery>;
+export type FilesLazyQueryHookResult = ReturnType<typeof useFilesLazyQuery>;
+export type FilesQueryResult = ApolloReactCommon.QueryResult<FilesQuery, FilesQueryVariables>;
+export const CreateFileDocument = gql`
+    mutation CreateFile($data: FileCreateUpdateInput!) {
+  createFile(data: $data) {
+    id
+  }
+}
+    `;
+export type CreateFileMutationFn = ApolloReactCommon.MutationFunction<CreateFileMutation, CreateFileMutationVariables>;
+export type CreateFileComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<CreateFileMutation, CreateFileMutationVariables>, 'mutation'>;
+
+    export const CreateFileComponent = (props: CreateFileComponentProps) => (
+      <ApolloReactComponents.Mutation<CreateFileMutation, CreateFileMutationVariables> mutation={CreateFileDocument} {...props} />
+    );
+    
+export type CreateFileProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: ApolloReactCommon.MutationFunction<CreateFileMutation, CreateFileMutationVariables>
+    } & TChildProps;
+export function withCreateFile<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  CreateFileMutation,
+  CreateFileMutationVariables,
+  CreateFileProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, CreateFileMutation, CreateFileMutationVariables, CreateFileProps<TChildProps, TDataName>>(CreateFileDocument, {
+      alias: 'createFile',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useCreateFileMutation__
+ *
+ * To run a mutation, you first call `useCreateFileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateFileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createFileMutation, { data, loading, error }] = useCreateFileMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateFileMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateFileMutation, CreateFileMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateFileMutation, CreateFileMutationVariables>(CreateFileDocument, baseOptions);
+      }
+export type CreateFileMutationHookResult = ReturnType<typeof useCreateFileMutation>;
+export type CreateFileMutationResult = ApolloReactCommon.MutationResult<CreateFileMutation>;
+export type CreateFileMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateFileMutation, CreateFileMutationVariables>;
+export const UpdateFileDocument = gql`
+    mutation UpdateFile($where: FileWhereUniqueInput!, $data: FileCreateUpdateInput!) {
+  updateFile(where: $where, data: $data) {
+    id
+  }
+}
+    `;
+export type UpdateFileMutationFn = ApolloReactCommon.MutationFunction<UpdateFileMutation, UpdateFileMutationVariables>;
+export type UpdateFileComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateFileMutation, UpdateFileMutationVariables>, 'mutation'>;
+
+    export const UpdateFileComponent = (props: UpdateFileComponentProps) => (
+      <ApolloReactComponents.Mutation<UpdateFileMutation, UpdateFileMutationVariables> mutation={UpdateFileDocument} {...props} />
+    );
+    
+export type UpdateFileProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: ApolloReactCommon.MutationFunction<UpdateFileMutation, UpdateFileMutationVariables>
+    } & TChildProps;
+export function withUpdateFile<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  UpdateFileMutation,
+  UpdateFileMutationVariables,
+  UpdateFileProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, UpdateFileMutation, UpdateFileMutationVariables, UpdateFileProps<TChildProps, TDataName>>(UpdateFileDocument, {
+      alias: 'updateFile',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useUpdateFileMutation__
+ *
+ * To run a mutation, you first call `useUpdateFileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateFileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateFileMutation, { data, loading, error }] = useUpdateFileMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateFileMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateFileMutation, UpdateFileMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateFileMutation, UpdateFileMutationVariables>(UpdateFileDocument, baseOptions);
+      }
+export type UpdateFileMutationHookResult = ReturnType<typeof useUpdateFileMutation>;
+export type UpdateFileMutationResult = ApolloReactCommon.MutationResult<UpdateFileMutation>;
+export type UpdateFileMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateFileMutation, UpdateFileMutationVariables>;
+export const DeleteFileDocument = gql`
+    mutation DeleteFile($where: FileWhereUniqueInput!) {
+  deleteFile(where: $where) {
+    id
+  }
+}
+    `;
+export type DeleteFileMutationFn = ApolloReactCommon.MutationFunction<DeleteFileMutation, DeleteFileMutationVariables>;
+export type DeleteFileComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<DeleteFileMutation, DeleteFileMutationVariables>, 'mutation'>;
+
+    export const DeleteFileComponent = (props: DeleteFileComponentProps) => (
+      <ApolloReactComponents.Mutation<DeleteFileMutation, DeleteFileMutationVariables> mutation={DeleteFileDocument} {...props} />
+    );
+    
+export type DeleteFileProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: ApolloReactCommon.MutationFunction<DeleteFileMutation, DeleteFileMutationVariables>
+    } & TChildProps;
+export function withDeleteFile<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  DeleteFileMutation,
+  DeleteFileMutationVariables,
+  DeleteFileProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, DeleteFileMutation, DeleteFileMutationVariables, DeleteFileProps<TChildProps, TDataName>>(DeleteFileDocument, {
+      alias: 'deleteFile',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useDeleteFileMutation__
+ *
+ * To run a mutation, you first call `useDeleteFileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteFileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteFileMutation, { data, loading, error }] = useDeleteFileMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useDeleteFileMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteFileMutation, DeleteFileMutationVariables>) {
+        return ApolloReactHooks.useMutation<DeleteFileMutation, DeleteFileMutationVariables>(DeleteFileDocument, baseOptions);
+      }
+export type DeleteFileMutationHookResult = ReturnType<typeof useDeleteFileMutation>;
+export type DeleteFileMutationResult = ApolloReactCommon.MutationResult<DeleteFileMutation>;
+export type DeleteFileMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteFileMutation, DeleteFileMutationVariables>;
 export const SeriesDocument = gql`
     query Series($where: SeriesWhereUniqueInput!) {
   series(where: $where) {

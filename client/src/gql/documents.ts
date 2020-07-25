@@ -8,7 +8,9 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  DateTime: any;
+  /** Long (64-bit) custom scalar type */
+  Long: number;
+  DateTime: string;
 };
 
 export type AlternativeTitle = {
@@ -90,8 +92,8 @@ export type File = {
   readonly id?: Maybe<Scalars['String']>;
   readonly path?: Maybe<Scalars['String']>;
   readonly checksum?: Maybe<Scalars['String']>;
-  readonly fileSize?: Maybe<Scalars['Int']>;
-  readonly duration?: Maybe<Scalars['String']>;
+  readonly fileSize?: Maybe<Scalars['Long']>;
+  readonly duration?: Maybe<Scalars['Int']>;
   readonly resolution?: Maybe<Scalars['String']>;
   readonly source?: Maybe<Source>;
   readonly codec?: Maybe<Scalars['String']>;
@@ -105,8 +107,8 @@ export type FileCreateUpdateInput = {
   readonly id?: Maybe<Scalars['String']>;
   readonly path?: Maybe<Scalars['String']>;
   readonly checksum?: Maybe<Scalars['String']>;
-  readonly fileSize?: Maybe<Scalars['Int']>;
-  readonly duration?: Maybe<Scalars['String']>;
+  readonly fileSize?: Maybe<Scalars['Long']>;
+  readonly duration?: Maybe<Scalars['Int']>;
   readonly resolution?: Maybe<Scalars['String']>;
   readonly source?: Maybe<Source>;
   readonly codec?: Maybe<Scalars['String']>;
@@ -124,6 +126,7 @@ export type FileRelationInput = {
 export type FileWhereUniqueInput = {
   readonly id: Scalars['String'];
 };
+
 
 export type Mutation = {
   readonly __typename?: 'Mutation';
@@ -260,6 +263,7 @@ export type Query = {
   readonly episodes?: Maybe<ReadonlyArray<Maybe<Episode>>>;
   readonly episodesInSeries?: Maybe<ReadonlyArray<Maybe<Episode>>>;
   readonly file?: Maybe<File>;
+  readonly filesForEpisode?: Maybe<ReadonlyArray<Maybe<File>>>;
   readonly files?: Maybe<ReadonlyArray<Maybe<File>>>;
   readonly userProgress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
   readonly userProgresses?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
@@ -291,6 +295,11 @@ export type QueryEpisodesInSeriesArgs = {
 
 export type QueryFileArgs = {
   where?: Maybe<FileWhereUniqueInput>;
+};
+
+
+export type QueryFilesForEpisodeArgs = {
+  where: EpisodeWhereUniqueInput;
 };
 
 
@@ -611,6 +620,78 @@ export const UpdateEpisode = gql`
 export const DeleteEpisode = gql`
     mutation DeleteEpisode($where: EpisodeWhereUniqueInput!) {
   deleteEpisode(where: $where) {
+    id
+  }
+}
+    `;
+export const FilesForEpisode = gql`
+    query FilesForEpisode($where: EpisodeWhereUniqueInput!) {
+  filesForEpisode(where: $where) {
+    id
+    path
+    duration
+    fileSize
+    source
+    resolution
+    codec
+    checksum
+    remarks
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export const File = gql`
+    query File($where: FileWhereUniqueInput!) {
+  file(where: $where) {
+    id
+    path
+    duration
+    fileSize
+    source
+    resolution
+    codec
+    checksum
+    remarks
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export const Files = gql`
+    query Files {
+  files {
+    id
+    path
+    duration
+    fileSize
+    source
+    resolution
+    codec
+    checksum
+    remarks
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export const CreateFile = gql`
+    mutation CreateFile($data: FileCreateUpdateInput!) {
+  createFile(data: $data) {
+    id
+  }
+}
+    `;
+export const UpdateFile = gql`
+    mutation UpdateFile($where: FileWhereUniqueInput!, $data: FileCreateUpdateInput!) {
+  updateFile(where: $where, data: $data) {
+    id
+  }
+}
+    `;
+export const DeleteFile = gql`
+    mutation DeleteFile($where: FileWhereUniqueInput!) {
+  deleteFile(where: $where) {
     id
   }
 }
