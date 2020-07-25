@@ -15,8 +15,9 @@ export type Scalars = {
   Int: number;
   Float: number;
   /** Long (64-bit) custom scalar type */
-  Long: number;
-  DateTime: string;
+  Long: any;
+  /** DateTime custom scalar type */
+  DateTime: any;
 };
 
 export type AlternativeTitle = {
@@ -276,6 +277,7 @@ export type Query = {
   readonly allUserProgresses?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
   readonly reference?: Maybe<Reference>;
   readonly references?: Maybe<ReadonlyArray<Maybe<Reference>>>;
+  readonly quickSearch?: Maybe<SearchPayload>;
 };
 
 
@@ -318,6 +320,11 @@ export type QueryReferenceArgs = {
   where?: Maybe<ReferenceCreateUpdateInput>;
 };
 
+
+export type QueryQuickSearchArgs = {
+  where: Scalars['String'];
+};
+
 export type Reference = {
   readonly __typename?: 'Reference';
   readonly id?: Maybe<Scalars['String']>;
@@ -352,6 +359,12 @@ export enum Role {
   Write = 'WRITE',
   Admin = 'ADMIN'
 }
+
+export type SearchPayload = {
+  readonly __typename?: 'SearchPayload';
+  readonly series: ReadonlyArray<Maybe<Series>>;
+  readonly episodes: ReadonlyArray<Maybe<Episode>>;
+};
 
 export enum Season {
   Winter = 'WINTER',
@@ -732,6 +745,25 @@ export type DeleteFileMutation = (
     { readonly __typename?: 'File' }
     & Pick<File, 'id'>
   ) }
+);
+
+export type QuickSearchQueryVariables = Exact<{
+  where: Scalars['String'];
+}>;
+
+
+export type QuickSearchQuery = (
+  { readonly __typename?: 'Query' }
+  & { readonly quickSearch?: Maybe<(
+    { readonly __typename?: 'SearchPayload' }
+    & { readonly series: ReadonlyArray<Maybe<(
+      { readonly __typename?: 'Series' }
+      & Pick<Series, 'id' | 'title'>
+    )>>, readonly episodes: ReadonlyArray<Maybe<(
+      { readonly __typename?: 'Episode' }
+      & Pick<Episode, 'id' | 'title'>
+    )>> }
+  )> }
 );
 
 export type SeriesQueryVariables = Exact<{
@@ -1705,6 +1737,65 @@ export function useDeleteFileMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type DeleteFileMutationHookResult = ReturnType<typeof useDeleteFileMutation>;
 export type DeleteFileMutationResult = ApolloReactCommon.MutationResult<DeleteFileMutation>;
 export type DeleteFileMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteFileMutation, DeleteFileMutationVariables>;
+export const QuickSearchDocument = gql`
+    query QuickSearch($where: String!) {
+  quickSearch(where: $where) {
+    series {
+      id
+      title
+    }
+    episodes {
+      id
+      title
+    }
+  }
+}
+    `;
+export type QuickSearchComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<QuickSearchQuery, QuickSearchQueryVariables>, 'query'> & ({ variables: QuickSearchQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const QuickSearchComponent = (props: QuickSearchComponentProps) => (
+      <ApolloReactComponents.Query<QuickSearchQuery, QuickSearchQueryVariables> query={QuickSearchDocument} {...props} />
+    );
+    
+export type QuickSearchProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<QuickSearchQuery, QuickSearchQueryVariables>
+    } & TChildProps;
+export function withQuickSearch<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  QuickSearchQuery,
+  QuickSearchQueryVariables,
+  QuickSearchProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, QuickSearchQuery, QuickSearchQueryVariables, QuickSearchProps<TChildProps, TDataName>>(QuickSearchDocument, {
+      alias: 'quickSearch',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useQuickSearchQuery__
+ *
+ * To run a query within a React component, call `useQuickSearchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useQuickSearchQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useQuickSearchQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useQuickSearchQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<QuickSearchQuery, QuickSearchQueryVariables>) {
+        return ApolloReactHooks.useQuery<QuickSearchQuery, QuickSearchQueryVariables>(QuickSearchDocument, baseOptions);
+      }
+export function useQuickSearchLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<QuickSearchQuery, QuickSearchQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<QuickSearchQuery, QuickSearchQueryVariables>(QuickSearchDocument, baseOptions);
+        }
+export type QuickSearchQueryHookResult = ReturnType<typeof useQuickSearchQuery>;
+export type QuickSearchLazyQueryHookResult = ReturnType<typeof useQuickSearchLazyQuery>;
+export type QuickSearchQueryResult = ApolloReactCommon.QueryResult<QuickSearchQuery, QuickSearchQueryVariables>;
 export const SeriesDocument = gql`
     query Series($where: SeriesWhereUniqueInput!) {
   series(where: $where) {
