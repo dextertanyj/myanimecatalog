@@ -1,0 +1,68 @@
+query FilesForEpisode($where: EpisodeWhereUniqueInput!) {
+  filesForEpisode(where: $where) {
+    id
+    path
+    duration
+    fileSize
+    source
+    resolution
+    codec
+    checksum
+    remarks
+    createdAt
+    updatedAt
+  }
+}
+
+query File($where: FileWhereUniqueInput!) {
+  file(where: $where) {
+    id
+    path
+    duration
+    fileSize
+    source
+    resolution
+    codec
+    checksum
+    remarks
+    createdAt
+    updatedAt
+  }
+}
+
+query Files {
+  files {
+    id
+    path
+    duration
+    fileSize
+    source
+    resolution
+    codec
+    checksum
+    remarks
+    createdAt
+    updatedAt
+  }
+}
+
+mutation CreateFile($data: FileCreateUpdateInput!) {
+  createFile(data: $data) {
+    id
+  }
+}
+
+mutation UpdateFile(
+  $where: FileWhereUniqueInput!
+  $data: FileCreateUpdateInput!
+) {
+  updateFile(where: $where, data: $data) {
+    id
+  }
+}
+
+mutation DeleteFile($where: FileWhereUniqueInput!) {
+  deleteFile(where: $where) {
+    id
+  }
+}

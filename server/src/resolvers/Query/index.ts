@@ -1,6 +1,7 @@
 import { Episode as EpisodeType, Series as SeriesType } from '@prisma/client';
 import { Context } from '../../utils';
 import { Episode } from './Episode';
+import { File } from './File';
 import { Series } from './Series';
 import { User } from './User';
 
@@ -10,10 +11,10 @@ type SearchPayload = {
 };
 
 export const Query = {
-  ...User,
-  ...Series,
   ...Episode,
-
+  ...File,
+  ...Series,
+  ...User,
   async quickSearch(
     _parent: unknown,
     args: { where: string },
