@@ -597,7 +597,10 @@ export type EpisodeQuery = (
     & { readonly alternativeTitles?: Maybe<ReadonlyArray<Maybe<(
       { readonly __typename?: 'AlternativeTitle' }
       & Pick<AlternativeTitle, 'id' | 'title'>
-    )>>>, readonly files?: Maybe<ReadonlyArray<Maybe<(
+    )>>>, readonly series?: Maybe<(
+      { readonly __typename?: 'Series' }
+      & Pick<Series, 'id' | 'title'>
+    )>, readonly files?: Maybe<ReadonlyArray<Maybe<(
       { readonly __typename?: 'File' }
       & Pick<File, 'id' | 'path' | 'fileSize' | 'checksum' | 'duration' | 'resolution' | 'source' | 'codec' | 'remarks'>
     )>>> }
@@ -1072,6 +1075,10 @@ export const EpisodeDocument = gql`
     id
     title
     alternativeTitles {
+      id
+      title
+    }
+    series {
       id
       title
     }

@@ -9,7 +9,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
 import QueueOutlinedIcon from '@material-ui/icons/QueueOutlined';
@@ -17,19 +16,13 @@ import { ColumnApi, GridApi } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { AgGridReact } from 'ag-grid-react';
-import { ApolloError } from 'apollo-client';
 import { useSnackbar } from 'notistack';
 import React, { useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
 import { BatchEpisodeForm } from '../Forms/BatchEpisodeForm';
 import { EpisodeForm } from '../Forms/EpisodeForm';
 import { Episode } from '../gql/documents';
-import {
-  useDeleteEpisodeMutation,
-  useEpisodesInSeriesQuery,
-  useLoggedInQuery,
-} from '../gql/queries';
+import { useEpisodesInSeriesQuery, useLoggedInQuery } from '../gql/queries';
 import { writeAccess } from '../utils/auth';
 import { ActionType } from '../utils/constants';
 
@@ -109,28 +102,6 @@ export const EpisodesTable = (props: Props) => {
     fetchPolicy: 'cache-and-network',
   });
 
-  const [deleteSeriesMutation] = useDeleteEpisodeMutation({
-    onError: (error: ApolloError) => {
-      if (error.networkError) {
-        NetworkError();
-      } else if (error.graphQLErrors) {
-        enqueueSnackbar(error.message.replace(`GraphQL error: `, ''), {
-          key: 'delete-episode-message',
-          variant: 'warning',
-        });
-      } else {
-        GenericError();
-      }
-    },
-    onCompleted: () => {
-      enqueueSnackbar(`Successfully deleted episode`, {
-        key: 'delete-episode-message',
-      });
-      refetch();
-      setSelectedRows([]);
-    },
-  });
-
   const gridOptions = {
     enableCellTextSelection: true,
   };
@@ -150,19 +121,6 @@ export const EpisodesTable = (props: Props) => {
     if (selectedRows.length === 1 && selectedRows[0].id) {
       const seriesId = selectedRows[0].id;
       history.push(`/episode/${seriesId}`);
-    }
-  };
-
-  const deleteSelected = () => {
-    if (selectedRows.length === 1 && selectedRows[0].id) {
-      const seriesId = selectedRows[0].id;
-      deleteSeriesMutation({
-        variables: {
-          where: {
-            id: seriesId,
-          },
-        },
-      });
     }
   };
 
@@ -228,22 +186,6 @@ export const EpisodesTable = (props: Props) => {
                   View
                 </Button>
               </Grid>
-              {AuthData?.loggedIn?.role &&
-                writeAccess.includes(AuthData.loggedIn.role) && (
-                  <Grid item className={classes.tableHeaderItems}>
-                    <Button
-                      startIcon={<DeleteOutlinedIcon />}
-                      disabled={selectedRows.length !== 1}
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => {
-                        deleteSelected();
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  </Grid>
-                )}
             </Grid>
           </Grid>
           <Grid item xs={12}>

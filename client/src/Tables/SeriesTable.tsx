@@ -176,7 +176,7 @@ export const SeriesTable = () => {
                         setShowForm(true);
                       }}
                     >
-                      Add New
+                      Add
                     </Button>
                   </Grid>
                 )}

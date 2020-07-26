@@ -6,6 +6,10 @@ query Episode($where: EpisodeWhereUniqueInput!) {
       id
       title
     }
+    series {
+      id
+      title
+    }
     episodeNumber
     remarks
     files {
