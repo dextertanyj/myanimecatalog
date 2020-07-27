@@ -31,6 +31,7 @@ import {
 } from '../gql/queries';
 import { ActionType } from '../utils/constants';
 import { renderWatchStatus } from '../utils/enumRender';
+import { calculateOverall, isNumberOrElse } from '../utils/form';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -85,36 +86,6 @@ type FormValues = {
   appeal: number | undefined | null;
   remarks: string | undefined | null;
 };
-
-function calculateOverall(
-  execution: number[] | number | undefined | null,
-  story: number[] | number | undefined | null,
-  sound: number[] | number | undefined | null,
-  art: number[] | number | undefined | null,
-  character: number[] | number | undefined | null,
-  appeal: number[] | number | undefined | null
-): number | undefined | null {
-  if (
-    (execution === undefined || execution === null) &&
-    (story === undefined || story === null) &&
-    (sound === undefined || sound === null) &&
-    (art === undefined || art === null) &&
-    (character === undefined || character === null) &&
-    (appeal === undefined || appeal === null)
-  ) {
-    return null;
-  } else {
-    return Math.round(
-      (((execution as number) || 0) +
-        ((story as number) || 0) +
-        ((sound as number) || 0) +
-        ((art as number) || 0) +
-        ((character as number) || 0) +
-        ((appeal as number) || 0)) /
-        6
-    );
-  }
-}
 
 export const UserProgressForm = (props: Props) => {
   const { action: actionType } = props;
@@ -240,6 +211,7 @@ export const UserProgressForm = (props: Props) => {
   };
 
   const onSubmitUpdate = async (values: FormikValues) => {
+    console.log(values);
     let { ...data } = values;
     if (props.progressId) {
       await updateUserProgressMutation({
@@ -437,7 +409,7 @@ export const UserProgressForm = (props: Props) => {
                             name="completed"
                             id="completed"
                             className={classes.sliderBox}
-                            value={values.completed || 0}
+                            value={isNumberOrElse(values.completed, '')}
                             margin="dense"
                             disabled={
                               !values.status ||
@@ -490,7 +462,7 @@ export const UserProgressForm = (props: Props) => {
                             name="story"
                             id="story"
                             className={classes.sliderBox}
-                            value={values.story || 0}
+                            value={isNumberOrElse(values.story, '')}
                             margin="dense"
                             disabled={
                               !values.status ||
@@ -556,7 +528,7 @@ export const UserProgressForm = (props: Props) => {
                             name="execution"
                             id="execution"
                             className={classes.sliderBox}
-                            value={values.execution || 0}
+                            value={isNumberOrElse(values.execution, '')}
                             margin="dense"
                             disabled={
                               !values.status ||
@@ -622,7 +594,7 @@ export const UserProgressForm = (props: Props) => {
                             name="appeal"
                             id="appeal"
                             className={classes.sliderBox}
-                            value={values.appeal || 0}
+                            value={isNumberOrElse(values.appeal, '')}
                             margin="dense"
                             onChange={(event) => {
                               setFieldValue(
@@ -688,7 +660,7 @@ export const UserProgressForm = (props: Props) => {
                             name="character"
                             id="character"
                             className={classes.sliderBox}
-                            value={values.character || 0}
+                            value={isNumberOrElse(values.character, '')}
                             margin="dense"
                             disabled={
                               !values.status ||
@@ -754,7 +726,7 @@ export const UserProgressForm = (props: Props) => {
                             name="art"
                             id="art"
                             className={classes.sliderBox}
-                            value={values.art || 0}
+                            value={isNumberOrElse(values.art, '')}
                             margin="dense"
                             disabled={
                               !values.status ||
@@ -820,7 +792,7 @@ export const UserProgressForm = (props: Props) => {
                             name="sound"
                             id="sound"
                             className={classes.sliderBox}
-                            value={values.sound || 0}
+                            value={isNumberOrElse(values.sound, '')}
                             margin="dense"
                             disabled={
                               !values.status ||
@@ -870,7 +842,7 @@ export const UserProgressForm = (props: Props) => {
                             id="overall"
                             disabled
                             className={classes.sliderBox}
-                            value={values.overall || 0}
+                            value={isNumberOrElse(values.overall, '')}
                             margin="dense"
                             inputProps={{
                               step: 1,
