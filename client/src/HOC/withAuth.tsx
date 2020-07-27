@@ -1,4 +1,3 @@
-import Skeleton from '@material-ui/lab/Skeleton';
 import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Role } from '../gql/documents';
@@ -35,7 +34,7 @@ export const withAuth = (roles?: Role[]) => (Component: any) => (
   }, [data, loggedIn]);
 
   if (loading || authorised === undefined) {
-    return <Skeleton />;
+    return <></>;
   }
 
   if (loggedIn && authorised) {
