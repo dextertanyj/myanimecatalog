@@ -454,72 +454,6 @@ export const UserProgressForm = (props: Props) => {
                     <Grid item xs={6}>
                       <Grid container spacing={3} alignItems="center">
                         <Grid item xs={2}>
-                          <Typography gutterBottom>Execution: </Typography>
-                        </Grid>
-                        <Grid item xs>
-                          <Slider
-                            disabled={
-                              !values.status ||
-                              values.status === WatchStatus.Pending
-                            }
-                            value={values.execution || 0}
-                            onChange={(_event, newValue) => {
-                              setFieldValue(
-                                'overall',
-                                calculateOverall(
-                                  newValue,
-                                  values.story,
-                                  values.sound,
-                                  values.art,
-                                  values.character,
-                                  values.appeal
-                                )
-                              );
-                              setFieldValue('execution', newValue);
-                            }}
-                            min={0}
-                            max={100}
-                          />
-                        </Grid>
-                        <Grid item>
-                          <Input
-                            name="execution"
-                            id="execution"
-                            className={classes.sliderBox}
-                            value={values.execution || 0}
-                            margin="dense"
-                            disabled={
-                              !values.status ||
-                              values.status === WatchStatus.Pending
-                            }
-                            onChange={(event) => {
-                              setFieldValue(
-                                'overall',
-                                calculateOverall(
-                                  Number.parseInt(event.target.value),
-                                  values.story,
-                                  values.sound,
-                                  values.art,
-                                  values.character,
-                                  values.appeal
-                                )
-                              );
-                              handleChange(event);
-                            }}
-                            onBlur={handleBlur}
-                            inputProps={{
-                              step: 1,
-                              min: 0,
-                              max: 100,
-                              type: 'number',
-                            }}
-                          />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Grid container spacing={3} alignItems="center">
-                        <Grid item xs={2}>
                           <Typography gutterBottom>Story: </Typography>
                         </Grid>
                         <Grid item xs>
@@ -586,7 +520,7 @@ export const UserProgressForm = (props: Props) => {
                     <Grid item xs={6}>
                       <Grid container spacing={3} alignItems="center">
                         <Grid item xs={2}>
-                          <Typography gutterBottom>Music: </Typography>
+                          <Typography gutterBottom>Execution: </Typography>
                         </Grid>
                         <Grid item xs>
                           <Slider
@@ -594,20 +528,20 @@ export const UserProgressForm = (props: Props) => {
                               !values.status ||
                               values.status === WatchStatus.Pending
                             }
-                            value={values.sound || 0}
+                            value={values.execution || 0}
                             onChange={(_event, newValue) => {
                               setFieldValue(
                                 'overall',
                                 calculateOverall(
-                                  values.execution,
-                                  values.story,
                                   newValue,
+                                  values.story,
+                                  values.sound,
                                   values.art,
                                   values.character,
                                   values.appeal
                                 )
                               );
-                              setFieldValue('sound', newValue);
+                              setFieldValue('execution', newValue);
                             }}
                             min={0}
                             max={100}
@@ -615,10 +549,142 @@ export const UserProgressForm = (props: Props) => {
                         </Grid>
                         <Grid item>
                           <Input
-                            name="sound"
-                            id="sound"
+                            name="execution"
+                            id="execution"
                             className={classes.sliderBox}
-                            value={values.sound || 0}
+                            value={values.execution || 0}
+                            margin="dense"
+                            disabled={
+                              !values.status ||
+                              values.status === WatchStatus.Pending
+                            }
+                            onChange={(event) => {
+                              setFieldValue(
+                                'overall',
+                                calculateOverall(
+                                  Number.parseInt(event.target.value),
+                                  values.story,
+                                  values.sound,
+                                  values.art,
+                                  values.character,
+                                  values.appeal
+                                )
+                              );
+                              handleChange(event);
+                            }}
+                            onBlur={handleBlur}
+                            inputProps={{
+                              step: 1,
+                              min: 0,
+                              max: 100,
+                              type: 'number',
+                            }}
+                          />
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Grid container spacing={3} alignItems="center">
+                        <Grid item xs={2}>
+                          <Typography gutterBottom>Appeal: </Typography>
+                        </Grid>
+                        <Grid item xs>
+                          <Slider
+                            disabled={
+                              !values.status ||
+                              values.status === WatchStatus.Pending
+                            }
+                            value={values.appeal || 0}
+                            onChange={(_event, newValue) => {
+                              setFieldValue(
+                                'overall',
+                                calculateOverall(
+                                  values.execution,
+                                  values.story,
+                                  values.sound,
+                                  values.art,
+                                  values.character,
+                                  newValue
+                                )
+                              );
+                              setFieldValue('appeal', newValue);
+                            }}
+                            min={0}
+                            max={100}
+                          />
+                        </Grid>
+                        <Grid item>
+                          <Input
+                            name="appeal"
+                            id="appeal"
+                            className={classes.sliderBox}
+                            value={values.appeal || 0}
+                            margin="dense"
+                            onChange={(event) => {
+                              setFieldValue(
+                                'overall',
+                                calculateOverall(
+                                  values.execution,
+                                  values.story,
+                                  values.sound,
+                                  values.art,
+                                  values.character,
+                                  Number.parseInt(event.target.value)
+                                )
+                              );
+                              handleChange(event);
+                            }}
+                            onBlur={handleBlur}
+                            disabled={
+                              !values.status ||
+                              values.status === WatchStatus.Pending
+                            }
+                            inputProps={{
+                              step: 1,
+                              min: 0,
+                              max: 100,
+                              type: 'number',
+                            }}
+                          />
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Grid container spacing={3} alignItems="center">
+                        <Grid item xs={2}>
+                          <Typography gutterBottom>Character: </Typography>
+                        </Grid>
+                        <Grid item xs>
+                          <Slider
+                            disabled={
+                              !values.status ||
+                              values.status === WatchStatus.Pending
+                            }
+                            value={values.character || 0}
+                            onChange={(_event, newValue) => {
+                              setFieldValue(
+                                'overall',
+                                calculateOverall(
+                                  values.execution,
+                                  values.story,
+                                  values.sound,
+                                  values.art,
+                                  newValue,
+                                  values.appeal
+                                )
+                              );
+                              setFieldValue('character', newValue);
+                            }}
+                            min={0}
+                            max={100}
+                          />
+                        </Grid>
+                        <Grid item>
+                          <Input
+                            name="character"
+                            id="character"
+                            className={classes.sliderBox}
+                            value={values.character || 0}
                             margin="dense"
                             disabled={
                               !values.status ||
@@ -630,9 +696,9 @@ export const UserProgressForm = (props: Props) => {
                                 calculateOverall(
                                   values.execution,
                                   values.story,
-                                  Number.parseInt(event.target.value),
+                                  values.sound,
                                   values.art,
-                                  values.character,
+                                  Number.parseInt(event.target.value),
                                   values.appeal
                                 )
                               );
@@ -718,7 +784,7 @@ export const UserProgressForm = (props: Props) => {
                     <Grid item xs={6}>
                       <Grid container spacing={3} alignItems="center">
                         <Grid item xs={2}>
-                          <Typography gutterBottom>Character: </Typography>
+                          <Typography gutterBottom>Music: </Typography>
                         </Grid>
                         <Grid item xs>
                           <Slider
@@ -726,20 +792,20 @@ export const UserProgressForm = (props: Props) => {
                               !values.status ||
                               values.status === WatchStatus.Pending
                             }
-                            value={values.character || 0}
+                            value={values.sound || 0}
                             onChange={(_event, newValue) => {
                               setFieldValue(
                                 'overall',
                                 calculateOverall(
                                   values.execution,
                                   values.story,
-                                  values.sound,
-                                  values.art,
                                   newValue,
+                                  values.art,
+                                  values.character,
                                   values.appeal
                                 )
                               );
-                              setFieldValue('character', newValue);
+                              setFieldValue('sound', newValue);
                             }}
                             min={0}
                             max={100}
@@ -747,10 +813,10 @@ export const UserProgressForm = (props: Props) => {
                         </Grid>
                         <Grid item>
                           <Input
-                            name="character"
-                            id="character"
+                            name="sound"
+                            id="sound"
                             className={classes.sliderBox}
-                            value={values.character || 0}
+                            value={values.sound || 0}
                             margin="dense"
                             disabled={
                               !values.status ||
@@ -762,81 +828,15 @@ export const UserProgressForm = (props: Props) => {
                                 calculateOverall(
                                   values.execution,
                                   values.story,
-                                  values.sound,
-                                  values.art,
                                   Number.parseInt(event.target.value),
+                                  values.art,
+                                  values.character,
                                   values.appeal
                                 )
                               );
                               handleChange(event);
                             }}
                             onBlur={handleBlur}
-                            inputProps={{
-                              step: 1,
-                              min: 0,
-                              max: 100,
-                              type: 'number',
-                            }}
-                          />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Grid container spacing={3} alignItems="center">
-                        <Grid item xs={2}>
-                          <Typography gutterBottom>Appeal: </Typography>
-                        </Grid>
-                        <Grid item xs>
-                          <Slider
-                            disabled={
-                              !values.status ||
-                              values.status === WatchStatus.Pending
-                            }
-                            value={values.appeal || 0}
-                            onChange={(_event, newValue) => {
-                              setFieldValue(
-                                'overall',
-                                calculateOverall(
-                                  values.execution,
-                                  values.story,
-                                  values.sound,
-                                  values.art,
-                                  values.character,
-                                  newValue
-                                )
-                              );
-                              setFieldValue('appeal', newValue);
-                            }}
-                            min={0}
-                            max={100}
-                          />
-                        </Grid>
-                        <Grid item>
-                          <Input
-                            name="appeal"
-                            id="appeal"
-                            className={classes.sliderBox}
-                            value={values.appeal || 0}
-                            margin="dense"
-                            onChange={(event) => {
-                              setFieldValue(
-                                'overall',
-                                calculateOverall(
-                                  values.execution,
-                                  values.story,
-                                  values.sound,
-                                  values.art,
-                                  values.character,
-                                  Number.parseInt(event.target.value)
-                                )
-                              );
-                              handleChange(event);
-                            }}
-                            onBlur={handleBlur}
-                            disabled={
-                              !values.status ||
-                              values.status === WatchStatus.Pending
-                            }
                             inputProps={{
                               step: 1,
                               min: 0,
@@ -897,13 +897,14 @@ export const UserProgressForm = (props: Props) => {
                     </Grid>
                   </Grid>
                   <DialogActions className={classes.dialogButtons}>
-                    <Button
-                      onClick={() => setShowDeleteDialog(true)}
-                      color="secondary"
-                      disabled={actionType === ActionType.CREATE}
-                    >
-                      Delete
-                    </Button>
+                    {actionType === ActionType.UPDATE && (
+                      <Button
+                        onClick={() => setShowDeleteDialog(true)}
+                        color="secondary"
+                      >
+                        Delete
+                      </Button>
+                    )}
                     <Button onClick={handleReset}>Reset</Button>
                     <Button type="submit" color="primary">
                       Update

@@ -182,60 +182,6 @@ export const UserProgressInfo = (props: Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={2}>
-                  <Typography>Appeal</Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  {progress?.mySeriesProgress?.appeal ? (
-                    <BorderLinearProgress
-                      variant="determinate"
-                      value={progress?.mySeriesProgress?.appeal}
-                    />
-                  ) : (
-                    <BorderLinearProgress variant="determinate" value={0} />
-                  )}
-                </Grid>
-                <Grid item xs={1}>
-                  <Typography>
-                    {progress?.mySeriesProgress?.appeal || 0} / 100
-                  </Typography>
-                </Grid>
-                <Grid item xs={2}>
-                  <Typography>Art</Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  {progress?.mySeriesProgress?.art ? (
-                    <BorderLinearProgress
-                      variant="determinate"
-                      value={progress?.mySeriesProgress?.art}
-                    />
-                  ) : (
-                    <BorderLinearProgress variant="determinate" value={0} />
-                  )}
-                </Grid>
-                <Grid item xs={1}>
-                  <Typography>
-                    {progress?.mySeriesProgress?.art || 0} / 100
-                  </Typography>
-                </Grid>
-                <Grid item xs={2}>
-                  <Typography>Character</Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  {progress?.mySeriesProgress?.character ? (
-                    <BorderLinearProgress
-                      variant="determinate"
-                      value={progress?.mySeriesProgress?.character}
-                    />
-                  ) : (
-                    <BorderLinearProgress variant="determinate" value={0} />
-                  )}
-                </Grid>
-                <Grid item xs={1}>
-                  <Typography>
-                    {progress?.mySeriesProgress?.character || 0} / 100
-                  </Typography>
-                </Grid>
-                <Grid item xs={2}>
                   <Typography>Story</Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -269,6 +215,60 @@ export const UserProgressInfo = (props: Props) => {
                 <Grid item xs={1}>
                   <Typography>
                     {progress?.mySeriesProgress?.execution || 0} / 100
+                  </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <Typography>Appeal</Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  {progress?.mySeriesProgress?.appeal ? (
+                    <BorderLinearProgress
+                      variant="determinate"
+                      value={progress?.mySeriesProgress?.appeal}
+                    />
+                  ) : (
+                    <BorderLinearProgress variant="determinate" value={0} />
+                  )}
+                </Grid>
+                <Grid item xs={1}>
+                  <Typography>
+                    {progress?.mySeriesProgress?.appeal || 0} / 100
+                  </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <Typography>Character</Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  {progress?.mySeriesProgress?.character ? (
+                    <BorderLinearProgress
+                      variant="determinate"
+                      value={progress?.mySeriesProgress?.character}
+                    />
+                  ) : (
+                    <BorderLinearProgress variant="determinate" value={0} />
+                  )}
+                </Grid>
+                <Grid item xs={1}>
+                  <Typography>
+                    {progress?.mySeriesProgress?.character || 0} / 100
+                  </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <Typography>Art</Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  {progress?.mySeriesProgress?.art ? (
+                    <BorderLinearProgress
+                      variant="determinate"
+                      value={progress?.mySeriesProgress?.art}
+                    />
+                  ) : (
+                    <BorderLinearProgress variant="determinate" value={0} />
+                  )}
+                </Grid>
+                <Grid item xs={1}>
+                  <Typography>
+                    {progress?.mySeriesProgress?.art || 0} / 100
                   </Typography>
                 </Grid>
                 <Grid item xs={2}>
