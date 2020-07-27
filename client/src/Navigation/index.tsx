@@ -74,7 +74,9 @@ const Navigation = (props: any) => {
         <Grid container spacing={0}>
           <Grid item>
             <Toolbar>
-              <Typography variant="h6">My Anime Manager</Typography>
+              <Typography variant="h5" style={{ fontWeight: 375 }}>
+                My Anime Manager
+              </Typography>
             </Toolbar>
           </Grid>
           <Grid item xs />

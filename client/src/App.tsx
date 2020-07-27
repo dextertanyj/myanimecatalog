@@ -4,6 +4,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import { teal } from '@material-ui/core/colors';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import cookies from 'browser-cookies';
+import 'fontsource-roboto';
 import { SnackbarProvider } from 'notistack';
 import React from 'react';
 import initApollo from './Apollo';
