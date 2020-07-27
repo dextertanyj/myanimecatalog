@@ -9,7 +9,7 @@ import {
   Typography,
   withStyles,
 } from '@material-ui/core';
-import AddOutlinedIcon from '@material-ui/icons/AddOutlined';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import moment from 'moment';
 import React, { useState } from 'react';
 import { UserProgressForm } from '../Forms/UserProgressForm';
@@ -99,7 +99,7 @@ export const UserProgressInfo = (props: Props) => {
                   <Button
                     color="primary"
                     variant="contained"
-                    startIcon={<AddOutlinedIcon />}
+                    startIcon={<EditOutlinedIcon />}
                     onClick={() => {
                       setFormActionType(ActionType.CREATE);
                       setShowForm(true);
@@ -113,7 +113,7 @@ export const UserProgressInfo = (props: Props) => {
                   <Button
                     color="primary"
                     variant="contained"
-                    startIcon={<AddOutlinedIcon />}
+                    startIcon={<EditOutlinedIcon />}
                     onClick={() => {
                       setFormActionType(ActionType.UPDATE);
                       setShowForm(true);
