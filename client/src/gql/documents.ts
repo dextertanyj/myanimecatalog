@@ -9,9 +9,9 @@ export type Scalars = {
   Int: number;
   Float: number;
   /** Long (64-bit) custom scalar type */
-  Long: any;
+  Long: number;
   /** DateTime custom scalar type */
-  DateTime: any;
+  DateTime: string;
 };
 
 export type AlternativeTitle = {
@@ -266,9 +266,10 @@ export type Query = {
   readonly file?: Maybe<File>;
   readonly filesForEpisode?: Maybe<ReadonlyArray<Maybe<File>>>;
   readonly files?: Maybe<ReadonlyArray<Maybe<File>>>;
+  readonly myProgress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
+  readonly mySeriesProgress?: Maybe<UserProgress>;
   readonly userProgress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
-  readonly userProgresses?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
-  readonly allUserProgresses?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
+  readonly allUserProgress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
   readonly reference?: Maybe<Reference>;
   readonly references?: Maybe<ReadonlyArray<Maybe<Reference>>>;
   readonly quickSearch?: Maybe<SearchPayload>;
@@ -302,6 +303,11 @@ export type QueryFileArgs = {
 
 export type QueryFilesForEpisodeArgs = {
   where: EpisodeWhereUniqueInput;
+};
+
+
+export type QueryMySeriesProgressArgs = {
+  where: SeriesWhereUniqueInput;
 };
 
 
@@ -871,6 +877,73 @@ export const UpdateUser = gql`
 export const DeleteUser = gql`
     mutation DeleteUser($where: UserWhereUniqueInput!) {
   deleteUser(where: $where) {
+    id
+  }
+}
+    `;
+export const MySeriesProgress = gql`
+    query mySeriesProgress($where: SeriesWhereUniqueInput!) {
+  mySeriesProgress(where: $where) {
+    id
+    status
+    completed
+    overall
+    execution
+    story
+    sound
+    art
+    character
+    appeal
+    remarks
+    series {
+      episodeCount
+    }
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export const MyProgress = gql`
+    query myProgress {
+  myProgress {
+    id
+    series {
+      id
+      title
+      episodeCount
+    }
+    status
+    completed
+    overall
+    execution
+    story
+    sound
+    art
+    character
+    appeal
+    remarks
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export const CreateUserProgress = gql`
+    mutation CreateUserProgress($data: UserProgressCreateUpdateInput!) {
+  createUserProgress(data: $data) {
+    id
+  }
+}
+    `;
+export const UpdateUserProgress = gql`
+    mutation UpdateUserProgress($where: UserProgressWhereUniqueInput!, $data: UserProgressCreateUpdateInput!) {
+  updateUserProgress(where: $where, data: $data) {
+    id
+  }
+}
+    `;
+export const DeleteUserProgress = gql`
+    mutation DeleteUserProgress($where: UserProgressWhereUniqueInput!) {
+  deleteUserProgress(where: $where) {
     id
   }
 }

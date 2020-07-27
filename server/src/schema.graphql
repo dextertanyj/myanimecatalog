@@ -252,9 +252,10 @@ type Query {
   filesForEpisode(where: EpisodeWhereUniqueInput!): [File]
   files: [File]
 
+  myProgress: [UserProgress]
+  mySeriesProgress(where: SeriesWhereUniqueInput!): UserProgress
   userProgress(where: UserProgressWhereUniqueInput!): [UserProgress]
-  userProgresses: [UserProgress]
-  allUserProgresses: [UserProgress]
+  allUserProgress: [UserProgress]
 
   reference(where: ReferenceCreateUpdateInput): Reference
   references: [Reference]

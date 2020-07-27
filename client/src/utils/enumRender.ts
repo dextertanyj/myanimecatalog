@@ -1,4 +1,11 @@
-import { Role, Season, Source, Status, Type } from '../gql/documents';
+import {
+  Role,
+  Season,
+  Source,
+  Status,
+  Type,
+  WatchStatus,
+} from '../gql/documents';
 
 export const renderRole = (role: Role): string => {
   switch (role) {
@@ -75,6 +82,21 @@ export const renderSource = (source: Source): string => {
       return 'TV';
     case Source.Web:
       return 'Web';
+  }
+};
+
+export const renderWatchStatus = (watchStatus: WatchStatus): string => {
+  switch (watchStatus) {
+    case WatchStatus.Completed:
+      return 'Completed';
+    case WatchStatus.Dropped:
+      return 'Dropped';
+    case WatchStatus.Onhold:
+      return 'On-Hold';
+    case WatchStatus.Pending:
+      return 'Plan to Watch';
+    case WatchStatus.Watching:
+      return 'Watching';
   }
 };
 
