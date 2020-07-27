@@ -4,6 +4,7 @@ import { Episode } from './Episode';
 import { File } from './File';
 import { Series } from './Series';
 import { User } from './User';
+import { UserProgress } from './UserProgress';
 
 type SearchPayload = {
   series: SeriesType[];
@@ -15,6 +16,7 @@ export const Query = {
   ...File,
   ...Series,
   ...User,
+  ...UserProgress,
   async quickSearch(
     _parent: unknown,
     args: { where: string },

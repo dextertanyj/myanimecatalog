@@ -15,9 +15,9 @@ export type Scalars = {
   Int: number;
   Float: number;
   /** Long (64-bit) custom scalar type */
-  Long: any;
+  Long: number;
   /** DateTime custom scalar type */
-  DateTime: any;
+  DateTime: string;
 };
 
 export type AlternativeTitle = {
@@ -272,9 +272,10 @@ export type Query = {
   readonly file?: Maybe<File>;
   readonly filesForEpisode?: Maybe<ReadonlyArray<Maybe<File>>>;
   readonly files?: Maybe<ReadonlyArray<Maybe<File>>>;
+  readonly myProgress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
+  readonly mySeriesProgress?: Maybe<UserProgress>;
   readonly userProgress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
-  readonly userProgresses?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
-  readonly allUserProgresses?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
+  readonly allUserProgress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
   readonly reference?: Maybe<Reference>;
   readonly references?: Maybe<ReadonlyArray<Maybe<Reference>>>;
   readonly quickSearch?: Maybe<SearchPayload>;
@@ -308,6 +309,11 @@ export type QueryFileArgs = {
 
 export type QueryFilesForEpisodeArgs = {
   where: EpisodeWhereUniqueInput;
+};
+
+
+export type QueryMySeriesProgressArgs = {
+  where: SeriesWhereUniqueInput;
 };
 
 
@@ -956,6 +962,78 @@ export type DeleteUserMutation = (
   & { readonly deleteUser: (
     { readonly __typename?: 'User' }
     & Pick<User, 'id'>
+  ) }
+);
+
+export type MySeriesProgressQueryVariables = Exact<{
+  where: SeriesWhereUniqueInput;
+}>;
+
+
+export type MySeriesProgressQuery = (
+  { readonly __typename?: 'Query' }
+  & { readonly mySeriesProgress?: Maybe<(
+    { readonly __typename?: 'UserProgress' }
+    & Pick<UserProgress, 'id' | 'status' | 'completed' | 'overall' | 'execution' | 'story' | 'sound' | 'art' | 'character' | 'appeal' | 'remarks' | 'createdAt' | 'updatedAt'>
+    & { readonly series?: Maybe<(
+      { readonly __typename?: 'Series' }
+      & Pick<Series, 'episodeCount'>
+    )> }
+  )> }
+);
+
+export type MyProgressQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyProgressQuery = (
+  { readonly __typename?: 'Query' }
+  & { readonly myProgress?: Maybe<ReadonlyArray<Maybe<(
+    { readonly __typename?: 'UserProgress' }
+    & Pick<UserProgress, 'id' | 'status' | 'completed' | 'overall' | 'execution' | 'story' | 'sound' | 'art' | 'character' | 'appeal' | 'remarks' | 'createdAt' | 'updatedAt'>
+    & { readonly series?: Maybe<(
+      { readonly __typename?: 'Series' }
+      & Pick<Series, 'id' | 'title' | 'episodeCount'>
+    )> }
+  )>>> }
+);
+
+export type CreateUserProgressMutationVariables = Exact<{
+  data: UserProgressCreateUpdateInput;
+}>;
+
+
+export type CreateUserProgressMutation = (
+  { readonly __typename?: 'Mutation' }
+  & { readonly createUserProgress: (
+    { readonly __typename?: 'UserProgress' }
+    & Pick<UserProgress, 'id'>
+  ) }
+);
+
+export type UpdateUserProgressMutationVariables = Exact<{
+  where: UserProgressWhereUniqueInput;
+  data: UserProgressCreateUpdateInput;
+}>;
+
+
+export type UpdateUserProgressMutation = (
+  { readonly __typename?: 'Mutation' }
+  & { readonly updateUserProgress: (
+    { readonly __typename?: 'UserProgress' }
+    & Pick<UserProgress, 'id'>
+  ) }
+);
+
+export type DeleteUserProgressMutationVariables = Exact<{
+  where: UserProgressWhereUniqueInput;
+}>;
+
+
+export type DeleteUserProgressMutation = (
+  { readonly __typename?: 'Mutation' }
+  & { readonly deleteUserProgress: (
+    { readonly __typename?: 'UserProgress' }
+    & Pick<UserProgress, 'id'>
   ) }
 );
 
@@ -2531,3 +2609,292 @@ export function useDeleteUserMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type DeleteUserMutationHookResult = ReturnType<typeof useDeleteUserMutation>;
 export type DeleteUserMutationResult = ApolloReactCommon.MutationResult<DeleteUserMutation>;
 export type DeleteUserMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteUserMutation, DeleteUserMutationVariables>;
+export const MySeriesProgressDocument = gql`
+    query mySeriesProgress($where: SeriesWhereUniqueInput!) {
+  mySeriesProgress(where: $where) {
+    id
+    status
+    completed
+    overall
+    execution
+    story
+    sound
+    art
+    character
+    appeal
+    remarks
+    series {
+      episodeCount
+    }
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export type MySeriesProgressComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<MySeriesProgressQuery, MySeriesProgressQueryVariables>, 'query'> & ({ variables: MySeriesProgressQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const MySeriesProgressComponent = (props: MySeriesProgressComponentProps) => (
+      <ApolloReactComponents.Query<MySeriesProgressQuery, MySeriesProgressQueryVariables> query={MySeriesProgressDocument} {...props} />
+    );
+    
+export type MySeriesProgressProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<MySeriesProgressQuery, MySeriesProgressQueryVariables>
+    } & TChildProps;
+export function withMySeriesProgress<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  MySeriesProgressQuery,
+  MySeriesProgressQueryVariables,
+  MySeriesProgressProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, MySeriesProgressQuery, MySeriesProgressQueryVariables, MySeriesProgressProps<TChildProps, TDataName>>(MySeriesProgressDocument, {
+      alias: 'mySeriesProgress',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useMySeriesProgressQuery__
+ *
+ * To run a query within a React component, call `useMySeriesProgressQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMySeriesProgressQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMySeriesProgressQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useMySeriesProgressQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MySeriesProgressQuery, MySeriesProgressQueryVariables>) {
+        return ApolloReactHooks.useQuery<MySeriesProgressQuery, MySeriesProgressQueryVariables>(MySeriesProgressDocument, baseOptions);
+      }
+export function useMySeriesProgressLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MySeriesProgressQuery, MySeriesProgressQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<MySeriesProgressQuery, MySeriesProgressQueryVariables>(MySeriesProgressDocument, baseOptions);
+        }
+export type MySeriesProgressQueryHookResult = ReturnType<typeof useMySeriesProgressQuery>;
+export type MySeriesProgressLazyQueryHookResult = ReturnType<typeof useMySeriesProgressLazyQuery>;
+export type MySeriesProgressQueryResult = ApolloReactCommon.QueryResult<MySeriesProgressQuery, MySeriesProgressQueryVariables>;
+export const MyProgressDocument = gql`
+    query myProgress {
+  myProgress {
+    id
+    series {
+      id
+      title
+      episodeCount
+    }
+    status
+    completed
+    overall
+    execution
+    story
+    sound
+    art
+    character
+    appeal
+    remarks
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export type MyProgressComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<MyProgressQuery, MyProgressQueryVariables>, 'query'>;
+
+    export const MyProgressComponent = (props: MyProgressComponentProps) => (
+      <ApolloReactComponents.Query<MyProgressQuery, MyProgressQueryVariables> query={MyProgressDocument} {...props} />
+    );
+    
+export type MyProgressProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<MyProgressQuery, MyProgressQueryVariables>
+    } & TChildProps;
+export function withMyProgress<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  MyProgressQuery,
+  MyProgressQueryVariables,
+  MyProgressProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, MyProgressQuery, MyProgressQueryVariables, MyProgressProps<TChildProps, TDataName>>(MyProgressDocument, {
+      alias: 'myProgress',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useMyProgressQuery__
+ *
+ * To run a query within a React component, call `useMyProgressQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyProgressQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyProgressQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMyProgressQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MyProgressQuery, MyProgressQueryVariables>) {
+        return ApolloReactHooks.useQuery<MyProgressQuery, MyProgressQueryVariables>(MyProgressDocument, baseOptions);
+      }
+export function useMyProgressLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MyProgressQuery, MyProgressQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<MyProgressQuery, MyProgressQueryVariables>(MyProgressDocument, baseOptions);
+        }
+export type MyProgressQueryHookResult = ReturnType<typeof useMyProgressQuery>;
+export type MyProgressLazyQueryHookResult = ReturnType<typeof useMyProgressLazyQuery>;
+export type MyProgressQueryResult = ApolloReactCommon.QueryResult<MyProgressQuery, MyProgressQueryVariables>;
+export const CreateUserProgressDocument = gql`
+    mutation CreateUserProgress($data: UserProgressCreateUpdateInput!) {
+  createUserProgress(data: $data) {
+    id
+  }
+}
+    `;
+export type CreateUserProgressMutationFn = ApolloReactCommon.MutationFunction<CreateUserProgressMutation, CreateUserProgressMutationVariables>;
+export type CreateUserProgressComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<CreateUserProgressMutation, CreateUserProgressMutationVariables>, 'mutation'>;
+
+    export const CreateUserProgressComponent = (props: CreateUserProgressComponentProps) => (
+      <ApolloReactComponents.Mutation<CreateUserProgressMutation, CreateUserProgressMutationVariables> mutation={CreateUserProgressDocument} {...props} />
+    );
+    
+export type CreateUserProgressProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: ApolloReactCommon.MutationFunction<CreateUserProgressMutation, CreateUserProgressMutationVariables>
+    } & TChildProps;
+export function withCreateUserProgress<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  CreateUserProgressMutation,
+  CreateUserProgressMutationVariables,
+  CreateUserProgressProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, CreateUserProgressMutation, CreateUserProgressMutationVariables, CreateUserProgressProps<TChildProps, TDataName>>(CreateUserProgressDocument, {
+      alias: 'createUserProgress',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useCreateUserProgressMutation__
+ *
+ * To run a mutation, you first call `useCreateUserProgressMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUserProgressMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUserProgressMutation, { data, loading, error }] = useCreateUserProgressMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateUserProgressMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateUserProgressMutation, CreateUserProgressMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateUserProgressMutation, CreateUserProgressMutationVariables>(CreateUserProgressDocument, baseOptions);
+      }
+export type CreateUserProgressMutationHookResult = ReturnType<typeof useCreateUserProgressMutation>;
+export type CreateUserProgressMutationResult = ApolloReactCommon.MutationResult<CreateUserProgressMutation>;
+export type CreateUserProgressMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateUserProgressMutation, CreateUserProgressMutationVariables>;
+export const UpdateUserProgressDocument = gql`
+    mutation UpdateUserProgress($where: UserProgressWhereUniqueInput!, $data: UserProgressCreateUpdateInput!) {
+  updateUserProgress(where: $where, data: $data) {
+    id
+  }
+}
+    `;
+export type UpdateUserProgressMutationFn = ApolloReactCommon.MutationFunction<UpdateUserProgressMutation, UpdateUserProgressMutationVariables>;
+export type UpdateUserProgressComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateUserProgressMutation, UpdateUserProgressMutationVariables>, 'mutation'>;
+
+    export const UpdateUserProgressComponent = (props: UpdateUserProgressComponentProps) => (
+      <ApolloReactComponents.Mutation<UpdateUserProgressMutation, UpdateUserProgressMutationVariables> mutation={UpdateUserProgressDocument} {...props} />
+    );
+    
+export type UpdateUserProgressProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: ApolloReactCommon.MutationFunction<UpdateUserProgressMutation, UpdateUserProgressMutationVariables>
+    } & TChildProps;
+export function withUpdateUserProgress<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  UpdateUserProgressMutation,
+  UpdateUserProgressMutationVariables,
+  UpdateUserProgressProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, UpdateUserProgressMutation, UpdateUserProgressMutationVariables, UpdateUserProgressProps<TChildProps, TDataName>>(UpdateUserProgressDocument, {
+      alias: 'updateUserProgress',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useUpdateUserProgressMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserProgressMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserProgressMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserProgressMutation, { data, loading, error }] = useUpdateUserProgressMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateUserProgressMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateUserProgressMutation, UpdateUserProgressMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateUserProgressMutation, UpdateUserProgressMutationVariables>(UpdateUserProgressDocument, baseOptions);
+      }
+export type UpdateUserProgressMutationHookResult = ReturnType<typeof useUpdateUserProgressMutation>;
+export type UpdateUserProgressMutationResult = ApolloReactCommon.MutationResult<UpdateUserProgressMutation>;
+export type UpdateUserProgressMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateUserProgressMutation, UpdateUserProgressMutationVariables>;
+export const DeleteUserProgressDocument = gql`
+    mutation DeleteUserProgress($where: UserProgressWhereUniqueInput!) {
+  deleteUserProgress(where: $where) {
+    id
+  }
+}
+    `;
+export type DeleteUserProgressMutationFn = ApolloReactCommon.MutationFunction<DeleteUserProgressMutation, DeleteUserProgressMutationVariables>;
+export type DeleteUserProgressComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<DeleteUserProgressMutation, DeleteUserProgressMutationVariables>, 'mutation'>;
+
+    export const DeleteUserProgressComponent = (props: DeleteUserProgressComponentProps) => (
+      <ApolloReactComponents.Mutation<DeleteUserProgressMutation, DeleteUserProgressMutationVariables> mutation={DeleteUserProgressDocument} {...props} />
+    );
+    
+export type DeleteUserProgressProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: ApolloReactCommon.MutationFunction<DeleteUserProgressMutation, DeleteUserProgressMutationVariables>
+    } & TChildProps;
+export function withDeleteUserProgress<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  DeleteUserProgressMutation,
+  DeleteUserProgressMutationVariables,
+  DeleteUserProgressProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, DeleteUserProgressMutation, DeleteUserProgressMutationVariables, DeleteUserProgressProps<TChildProps, TDataName>>(DeleteUserProgressDocument, {
+      alias: 'deleteUserProgress',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useDeleteUserProgressMutation__
+ *
+ * To run a mutation, you first call `useDeleteUserProgressMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteUserProgressMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteUserProgressMutation, { data, loading, error }] = useDeleteUserProgressMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useDeleteUserProgressMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteUserProgressMutation, DeleteUserProgressMutationVariables>) {
+        return ApolloReactHooks.useMutation<DeleteUserProgressMutation, DeleteUserProgressMutationVariables>(DeleteUserProgressDocument, baseOptions);
+      }
+export type DeleteUserProgressMutationHookResult = ReturnType<typeof useDeleteUserProgressMutation>;
+export type DeleteUserProgressMutationResult = ApolloReactCommon.MutationResult<DeleteUserProgressMutation>;
+export type DeleteUserProgressMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteUserProgressMutation, DeleteUserProgressMutationVariables>;

@@ -1,0 +1,64 @@
+query mySeriesProgress($where: SeriesWhereUniqueInput!) {
+  mySeriesProgress(where: $where) {
+    id
+    status
+    completed
+    overall
+    execution
+    story
+    sound
+    art
+    character
+    appeal
+    remarks
+    series {
+      episodeCount
+    }
+    createdAt
+    updatedAt
+  }
+}
+
+query myProgress {
+  myProgress {
+    id
+    series {
+      id
+      title
+      episodeCount
+    }
+    status
+    completed
+    overall
+    execution
+    story
+    sound
+    art
+    character
+    appeal
+    remarks
+    createdAt
+    updatedAt
+  }
+}
+
+mutation CreateUserProgress($data: UserProgressCreateUpdateInput!) {
+  createUserProgress(data: $data) {
+    id
+  }
+}
+
+mutation UpdateUserProgress(
+  $where: UserProgressWhereUniqueInput!
+  $data: UserProgressCreateUpdateInput!
+) {
+  updateUserProgress(where: $where, data: $data) {
+    id
+  }
+}
+
+mutation DeleteUserProgress($where: UserProgressWhereUniqueInput!) {
+  deleteUserProgress(where: $where) {
+    id
+  }
+}
