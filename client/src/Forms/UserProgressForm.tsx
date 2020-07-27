@@ -17,12 +17,14 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import { ApolloError } from 'apollo-client';
 import { Formik, FormikProps, FormikValues } from 'formik';
 import { useSnackbar } from 'notistack';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import * as Yup from 'yup';
+import { DeleteConfirmDialog } from '../Components/DeleteConfirmDialog';
 import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
 import { WatchStatus } from '../gql/documents';
 import {
   useCreateUserProgressMutation,
+  useDeleteUserProgressMutation,
   useMySeriesProgressLazyQuery,
   useSeriesLazyQuery,
   useUpdateUserProgressMutation,
@@ -118,6 +120,7 @@ export const UserProgressForm = (props: Props) => {
   const { action: actionType } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+  const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
 
   const [
     loadSeries,
@@ -194,6 +197,28 @@ export const UserProgressForm = (props: Props) => {
     },
   });
 
+  const [deleteUserProgressMutation] = useDeleteUserProgressMutation({
+    onError: (error: ApolloError) => {
+      if (error.networkError) {
+        NetworkError();
+      } else if (error.graphQLErrors) {
+        enqueueSnackbar(error.message.replace(`GraphQL error: `, ''), {
+          key: 'progress-form-message',
+          variant: 'warning',
+        });
+      } else {
+        GenericError();
+      }
+    },
+    onCompleted: () => {
+      enqueueSnackbar(`Successfully removed watch progress record`, {
+        key: 'progress-form-message',
+      });
+      props.onSubmit();
+      props.onClose();
+    },
+  });
+
   const onSubmitCreate = (values: FormikValues) => {
     const { ...data } = values;
     createUserProgressMutation({
@@ -219,6 +244,20 @@ export const UserProgressForm = (props: Props) => {
           data: {
             ...data,
           },
+        },
+      });
+    } else {
+      enqueueSnackbar(`Something went wrong. Please reload the page.`, {
+        key: 'progress-form-message',
+      });
+    }
+  };
+
+  const onDelete = async () => {
+    if (props.progressId) {
+      await deleteUserProgressMutation({
+        variables: {
+          where: { id: props.progressId },
         },
       });
     } else {
@@ -287,6 +326,7 @@ export const UserProgressForm = (props: Props) => {
         ) : (
           <Formik
             enableReinitialize={true}
+            validateOnChange={false}
             initialValues={initialFormValues}
             onSubmit={
               props.action === ActionType.CREATE
@@ -327,18 +367,30 @@ export const UserProgressForm = (props: Props) => {
                         helperText={touched.status && errors.status}
                         onChange={(event) => {
                           if (event.target.value === WatchStatus.Pending) {
-                            setValues({
-                              appeal: null,
-                              art: null,
-                              character: null,
-                              completed: null,
-                              execution: null,
-                              overall: null,
-                              sound: null,
-                              story: null,
-                              remarks: values.remarks,
-                              status: WatchStatus.Pending,
-                            });
+                            setValues(
+                              {
+                                appeal: null,
+                                art: null,
+                                character: null,
+                                completed: null,
+                                execution: null,
+                                overall: null,
+                                sound: null,
+                                story: null,
+                                remarks: values.remarks,
+                                status: WatchStatus.Pending,
+                              },
+                              false
+                            );
+                          } else if (
+                            event.target.value === WatchStatus.Completed
+                          ) {
+                            setFieldValue(
+                              'completed',
+                              seriesData?.series?.episodeCount || 0,
+                              false
+                            );
+                            handleChange(event);
                           } else {
                             handleChange(event);
                           }
@@ -845,6 +897,13 @@ export const UserProgressForm = (props: Props) => {
                     </Grid>
                   </Grid>
                   <DialogActions className={classes.dialogButtons}>
+                    <Button
+                      onClick={() => setShowDeleteDialog(true)}
+                      color="secondary"
+                      disabled={actionType === ActionType.CREATE}
+                    >
+                      Delete
+                    </Button>
                     <Button onClick={handleReset}>Reset</Button>
                     <Button type="submit" color="primary">
                       Update
@@ -856,6 +915,12 @@ export const UserProgressForm = (props: Props) => {
           </Formik>
         )}
       </DialogContent>
+      <DeleteConfirmDialog
+        open={showDeleteDialog}
+        title={`Delete Watch Progress Record?`}
+        onClose={() => setShowDeleteDialog(false)}
+        onSubmit={() => onDelete()}
+      />
     </Dialog>
   );
 };
