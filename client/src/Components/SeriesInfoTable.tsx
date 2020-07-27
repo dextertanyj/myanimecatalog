@@ -15,6 +15,7 @@ import { ApolloError } from 'apollo-client';
 import moment from 'moment';
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { SeriesForm } from '../Forms/SeriesForm';
 import {
   useDeleteSeriesMutation,
@@ -64,6 +65,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const SeriesInfoTable = (props: Props) => {
   const classes = useStyles();
+  const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
   const [showForm, setShowForm] = useState<boolean>(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
@@ -95,10 +97,10 @@ export const SeriesInfoTable = (props: Props) => {
       }
     },
     onCompleted: () => {
-      enqueueSnackbar(`Successfully updated series`, {
+      enqueueSnackbar(`Successfully deleted series`, {
         key: `delete-series-message`,
       });
-      refetch();
+      history.goBack();
     },
   });
 

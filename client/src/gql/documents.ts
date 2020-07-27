@@ -581,6 +581,10 @@ export const Episode = gql`
       id
       title
     }
+    series {
+      id
+      title
+    }
     episodeNumber
     remarks
     files {

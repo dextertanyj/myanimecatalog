@@ -1,5 +1,6 @@
 import {
   Button,
+  Chip,
   createStyles,
   Grid,
   makeStyles,
@@ -7,13 +8,24 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
+import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import Skeleton from '@material-ui/lab/Skeleton';
+import { ApolloError } from 'apollo-client';
 import moment from 'moment';
+import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { EpisodeForm } from '../Forms/EpisodeForm';
-import { useEpisodeQuery, useLoggedInQuery } from '../gql/queries';
+import {
+  useDeleteEpisodeMutation,
+  useEpisodeQuery,
+  useLoggedInQuery,
+} from '../gql/queries';
 import { writeAccess } from '../utils/auth';
 import { ActionType } from '../utils/constants';
+import { DeleteConfirmDialog } from './DeleteConfirmDialog';
+import { GenericError, NetworkError } from './ErrorSnackbars';
 
 type Props = {
   episodeId: string;
@@ -51,7 +63,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const EpisodeInfoTable = (props: Props) => {
   const classes = useStyles();
+  const history = useHistory();
+  const { enqueueSnackbar } = useSnackbar();
   const [showForm, setShowForm] = useState<boolean>(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
 
   const { data: AuthData } = useLoggedInQuery({
     fetchPolicy: 'cache-and-network',
@@ -65,6 +80,37 @@ export const EpisodeInfoTable = (props: Props) => {
       },
     },
   });
+
+  const [deleteEpisodeMutation] = useDeleteEpisodeMutation({
+    onError: (error: ApolloError) => {
+      if (error.networkError) {
+        NetworkError();
+      } else if (error.graphQLErrors) {
+        enqueueSnackbar(error.message.replace(`GraphQL error: `, ''), {
+          key: 'delete-episode-message',
+          variant: 'warning',
+        });
+      } else {
+        GenericError();
+      }
+    },
+    onCompleted: () => {
+      enqueueSnackbar(`Successfully deleted episode`, {
+        key: 'delete-episode-message',
+      });
+      history.goBack();
+    },
+  });
+
+  const deleteEpisode = () => {
+    deleteEpisodeMutation({
+      variables: {
+        where: {
+          id: props.episodeId,
+        },
+      },
+    });
+  };
 
   return (
     <div>
@@ -87,15 +133,30 @@ export const EpisodeInfoTable = (props: Props) => {
                   </Grid>
                   {AuthData?.loggedIn?.role &&
                     writeAccess.includes(AuthData.loggedIn.role) && (
-                      <Grid item>
-                        <Button
-                          color="primary"
-                          variant="contained"
-                          onClick={() => setShowForm(true)}
-                        >
-                          Edit
-                        </Button>
-                      </Grid>
+                      <>
+                        <Grid item>
+                          <Button
+                            startIcon={<EditOutlinedIcon />}
+                            color="primary"
+                            variant="contained"
+                            onClick={() => setShowForm(true)}
+                          >
+                            Edit
+                          </Button>
+                        </Grid>
+                        <Grid item>
+                          <Button
+                            startIcon={<DeleteOutlinedIcon />}
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => {
+                              setShowDeleteDialog(true);
+                            }}
+                          >
+                            Delete
+                          </Button>
+                        </Grid>
+                      </>
                     )}
                 </Grid>
               </Grid>
@@ -125,13 +186,23 @@ export const EpisodeInfoTable = (props: Props) => {
                         )
                       );
                     })}
+
                   <Grid item xs={2}>
-                    <Typography>Remarks</Typography>
+                    <Typography>Series</Typography>
                   </Grid>
-                  <Grid item xs={10}>
-                    <Typography>
-                      {episodeData?.episode?.remarks || ''}
-                    </Typography>
+                  <Grid item xs={6}>
+                    <Grid container>
+                      <Grid item xs={12} style={{ flexDirection: 'row' }}>
+                        <Chip
+                          label={episodeData?.episode?.series?.title}
+                          onClick={() =>
+                            history.push(
+                              `/series/${episodeData?.episode?.series?.id}`
+                            )
+                          }
+                        />
+                      </Grid>
+                    </Grid>
                   </Grid>
                   <Grid item xs={2}>
                     <Typography>Episode No.</Typography>
@@ -141,7 +212,14 @@ export const EpisodeInfoTable = (props: Props) => {
                       {episodeData?.episode?.episodeNumber || '-'}
                     </Typography>
                   </Grid>
-                  <Grid item xs={4} />
+                  <Grid item xs={2}>
+                    <Typography>Remarks</Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography>
+                      {episodeData?.episode?.remarks || ''}
+                    </Typography>
+                  </Grid>
                   <Grid item xs={2}>
                     <Typography>Last Updated</Typography>
                   </Grid>
@@ -165,6 +243,14 @@ export const EpisodeInfoTable = (props: Props) => {
             onClose={() => setShowForm(false)}
           />
         </>
+      )}
+      {showDeleteDialog && (
+        <DeleteConfirmDialog
+          open={showDeleteDialog}
+          title={`Delete ${episodeData?.episode?.title} ?`}
+          onClose={() => setShowDeleteDialog(false)}
+          onSubmit={() => deleteEpisode()}
+        />
       )}
     </div>
   );
