@@ -11,7 +11,6 @@ import {
   Theme,
 } from '@material-ui/core';
 import RemoveIcon from '@material-ui/icons/Remove';
-import Skeleton from '@material-ui/lab/Skeleton';
 import { ApolloError } from 'apollo-client';
 import {
   FieldArray,
@@ -24,6 +23,7 @@ import { useSnackbar } from 'notistack';
 import React, { useEffect } from 'react';
 import * as Yup from 'yup';
 import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
+import { FormLoading } from '../Components/Skeletons/FormLoading';
 import {
   useCreateEpisodeMutation,
   useEpisodeLazyQuery,
@@ -97,7 +97,9 @@ export const EpisodeForm = (props: Props) => {
   const [
     loadEpisode,
     { data: episodeData, loading: loadingEpisode },
-  ] = useEpisodeLazyQuery();
+  ] = useEpisodeLazyQuery({
+    fetchPolicy: 'cache-and-network',
+  });
 
   useEffect(() => {
     if (props.open && props.episodeId) {
@@ -272,8 +274,8 @@ export const EpisodeForm = (props: Props) => {
           : `Editing ${episodeData?.episode?.title}`}
       </DialogTitle>
       <DialogContent>
-        {loadingEpisode && !episodeData ? (
-          <Skeleton variant="rect" height={400} />
+        {loadingEpisode ? (
+          <FormLoading />
         ) : (
           <Formik
             enableReinitialize={true}

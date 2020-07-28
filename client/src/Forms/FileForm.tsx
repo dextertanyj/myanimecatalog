@@ -10,13 +10,13 @@ import {
   TextField,
   Theme,
 } from '@material-ui/core';
-import Skeleton from '@material-ui/lab/Skeleton';
 import { ApolloError } from 'apollo-client';
 import { Formik, FormikProps, FormikValues } from 'formik';
 import { useSnackbar } from 'notistack';
 import React, { useEffect } from 'react';
 import * as Yup from 'yup';
 import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
+import { FormLoading } from '../Components/Skeletons/FormLoading';
 import {
   Source,
   useCreateFileMutation,
@@ -107,10 +107,11 @@ export const FileForm = (props: Props) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [
-    loadFile,
-    { data: fileData, loading: loadingFile },
-  ] = useFileLazyQuery();
+  const [loadFile, { data: fileData, loading: loadingFile }] = useFileLazyQuery(
+    {
+      fetchPolicy: 'cache-and-network',
+    }
+  );
 
   useEffect(() => {
     if (props.open && props.fileId) {
@@ -289,8 +290,8 @@ export const FileForm = (props: Props) => {
           : `Editing ${fileData?.file?.path?.split('/').pop()}`}
       </DialogTitle>
       <DialogContent>
-        {loadingFile && !fileData ? (
-          <Skeleton variant="rect" height={400} />
+        {loadingFile ? (
+          <FormLoading />
         ) : (
           <Formik
             enableReinitialize={true}
