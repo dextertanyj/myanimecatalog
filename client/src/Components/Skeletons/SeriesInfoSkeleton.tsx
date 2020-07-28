@@ -4,7 +4,7 @@ import {
   makeStyles,
   Paper,
   Theme,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
 import React from 'react';
@@ -84,6 +84,12 @@ export const SeriesInfoSkeleton = () => {
               <Typography>Last Updated</Typography>
             </Grid>
             <Grid item xs={2}>
+              <Skeleton />
+            </Grid>
+            <Grid item xs={2}>
+              <Typography>Remarks</Typography>
+            </Grid>
+            <Grid item xs={10}>
               <Skeleton />
             </Grid>
           </Grid>

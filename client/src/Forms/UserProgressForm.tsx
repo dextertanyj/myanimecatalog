@@ -885,7 +885,7 @@ export const UserProgressForm = (props: Props) => {
                         margin="normal"
                         fullWidth
                         id="remarks"
-                        label="Remarks"
+                        label="Comments"
                         name="remarks"
                         value={values.remarks || ''}
                         error={touched.remarks && !!errors.remarks}

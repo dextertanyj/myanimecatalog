@@ -104,6 +104,12 @@ export const UserProgressInfoSkeleton = () => {
             <Grid item xs={4}>
               <Skeleton />
             </Grid>
+            <Grid item xs={2}>
+              <Typography>Comments</Typography>
+            </Grid>
+            <Grid item xs={10}>
+              <Skeleton />
+            </Grid>
           </Grid>
         </Grid>
       </Grid>

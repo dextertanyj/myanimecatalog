@@ -326,6 +326,16 @@ export const SeriesInfo = (props: Props) => {
                 }
               </Grid>
             </Grid>
+            <Grid item xs={2}>
+              <Typography>Remarks</Typography>
+            </Grid>
+            <Grid item xs={10}>
+              <Grid container spacing={3} wrap={'nowrap'}>
+                <Grid item xs={12}>
+                  <Typography>{seriesData?.series?.remarks || ''}</Typography>
+                </Grid>
+              </Grid>
+            </Grid>
           </Grid>
         </Paper>
       )}

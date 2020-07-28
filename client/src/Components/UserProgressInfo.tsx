@@ -300,6 +300,18 @@ export const UserProgressInfo = (props: Props) => {
                       {progress?.mySeriesProgress?.sound || 0} / 100
                     </Typography>
                   </Grid>
+                  <Grid item xs={2}>
+                    <Typography>Comments</Typography>
+                  </Grid>
+                  <Grid item xs={10}>
+                    <Grid container spacing={3} wrap={'nowrap'}>
+                      <Grid item xs={12}>
+                        <Typography>
+                          {progress?.mySeriesProgress?.remarks || ''}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
             )}
