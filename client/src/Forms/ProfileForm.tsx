@@ -9,13 +9,13 @@ import {
   TextField,
   Theme,
 } from '@material-ui/core';
-import Skeleton from '@material-ui/lab/Skeleton';
 import { ApolloError } from 'apollo-client';
 import { Formik, FormikProps, FormikValues } from 'formik';
 import { useSnackbar } from 'notistack';
 import React, { ReactElement, useEffect } from 'react';
 import * as Yup from 'yup';
 import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
+import { FormLoading } from '../Components/Skeletons/FormLoading';
 import { useUpdateUserMutation, useUserLazyQuery } from '../gql/queries';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -133,8 +133,8 @@ export const ProfileForm = (props: Props): ReactElement => {
     >
       <DialogTitle key="DialogTitle">Update Profile</DialogTitle>
       <DialogContent>
-        {loadingUser && !userData?.user ? (
-          <Skeleton variant="rect" height={400} />
+        {loadingUser ? (
+          <FormLoading />
         ) : (
           <Formik
             enableReinitialize={true}

@@ -13,7 +13,6 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
-import Skeleton from '@material-ui/lab/Skeleton';
 import { ApolloError } from 'apollo-client';
 import { Formik, FormikProps, FormikValues } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -21,6 +20,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import * as Yup from 'yup';
 import { DeleteConfirmDialog } from '../Components/DeleteConfirmDialog';
 import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
+import { FormLoading } from '../Components/Skeletons/FormLoading';
 import { WatchStatus } from '../gql/documents';
 import {
   useCreateUserProgressMutation,
@@ -321,8 +321,8 @@ export const UserProgressForm = (props: Props) => {
     >
       <DialogTitle key="DialogTitle">Update Your Watch Progress</DialogTitle>
       <DialogContent>
-        {loadingProgress || loadingSeries || !seriesData ? (
-          <Skeleton variant="rect" height={400} />
+        {loadingProgress || loadingSeries ? (
+          <FormLoading />
         ) : (
           <Formik
             enableReinitialize={true}

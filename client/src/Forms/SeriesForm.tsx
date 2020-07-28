@@ -12,7 +12,6 @@ import {
   Theme,
 } from '@material-ui/core';
 import RemoveIcon from '@material-ui/icons/Remove';
-import Skeleton from '@material-ui/lab/Skeleton';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import { ApolloError } from 'apollo-client';
@@ -29,6 +28,7 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
 import { SeriesAutocomplete } from '../Components/SeriesAutocomplete';
+import { FormLoading } from '../Components/Skeletons/FormLoading';
 import { Series, Type } from '../gql/documents';
 import {
   Season,
@@ -623,8 +623,8 @@ export const SeriesForm = (props: Props): ReactElement => {
           : `Editing ${seriesData?.series?.title}`}
       </DialogTitle>
       <DialogContent>
-        {loadingSeries && seriesData ? (
-          <Skeleton variant="rect" height={400} />
+        {loadingSeries ? (
+          <FormLoading />
         ) : (
           <Formik
             enableReinitialize={true}

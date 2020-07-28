@@ -10,7 +10,6 @@ import {
   TextField,
   Theme,
 } from '@material-ui/core';
-import Skeleton from '@material-ui/lab/Skeleton';
 import { ApolloError } from 'apollo-client';
 import { Formik, FormikProps, FormikValues } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -19,6 +18,7 @@ import sha from 'sha.js';
 import * as Yup from 'yup';
 import { DeleteConfirmDialog } from '../Components/DeleteConfirmDialog';
 import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
+import { FormLoading } from '../Components/Skeletons/FormLoading';
 import { Role } from '../gql/documents';
 import {
   useCreateUserMutation,
@@ -147,10 +147,11 @@ export const UserForm = (props: Props): ReactElement => {
     },
   });
 
-  const [
-    loadUser,
-    { data: userData, loading: loadingUser },
-  ] = useUserLazyQuery();
+  const [loadUser, { data: userData, loading: loadingUser }] = useUserLazyQuery(
+    {
+      fetchPolicy: 'cache-and-network',
+    }
+  );
 
   useEffect(() => {
     if (props.open && props.userId) {
@@ -262,8 +263,8 @@ export const UserForm = (props: Props): ReactElement => {
           : `Editing ${userData?.user?.name}`}
       </DialogTitle>
       <DialogContent>
-        {loadingUser && !userData?.user ? (
-          <Skeleton variant="rect" height={400} />
+        {loadingUser ? (
+          <FormLoading />
         ) : (
           <Formik
             enableReinitialize={true}
