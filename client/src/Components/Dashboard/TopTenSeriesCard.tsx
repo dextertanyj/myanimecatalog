@@ -1,5 +1,4 @@
 import {
-  Button,
   Card,
   CardContent,
   CardHeader,
@@ -12,10 +11,9 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+import Skeleton from '@material-ui/lab/Skeleton';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
-import { useMyCurrentlyWatchingQuery } from '../../gql/queries';
+import { useMyTopTenSeriesQuery } from '../../gql/queries';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,10 +39,10 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const CurrentlyWatching = () => {
+export const TopTenSeriesCard = () => {
   const classes = useStyles();
-  const history = useHistory();
-  const { data, loading } = useMyCurrentlyWatchingQuery({
+
+  const { data, loading } = useMyTopTenSeriesQuery({
     fetchPolicy: 'cache-and-network',
   });
 
@@ -52,37 +50,22 @@ export const CurrentlyWatching = () => {
     <Card elevation={3} className={classes.card} style={{ height: '100%' }}>
       <CardHeader
         className={classes.cardHeader}
-        title={<Typography variant="h5">Currently Watching</Typography>}
+        title={<Typography variant="h5">Your Top Ten Anime</Typography>}
       />
       <CardContent className={classes.cardContent}>
-        {data?.myCurrentlyWatching ? (
-          data?.myCurrentlyWatching.length > 0 ? (
+        {data?.myTopTenSeries ? (
+          data?.myTopTenSeries.length > 0 ? (
             <List>
-              {data?.myCurrentlyWatching.map((item, index) => {
+              {data.myTopTenSeries.map((item, index) => {
                 return (
                   <>
-                    <ListItem key={`currentlyWatching-${index}`}>
+                    <ListItem key={`topten-${index}`}>
                       <Grid container spacing={3} className={classes.gridList}>
+                        <Grid item>
+                          <Typography>{index + 1}</Typography>
+                        </Grid>
                         <Grid item xs>
                           <Typography noWrap>{item?.title}</Typography>
-                        </Grid>
-                        <Grid item>
-                          <Typography>
-                            {`${item?.progress?.completed} / ${item?.episodeCount}`}
-                          </Typography>
-                        </Grid>
-                        <Grid item>
-                          <Typography>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              onClick={() =>
-                                history.push(`/series/${item?.id}`)
-                              }
-                            >
-                              View
-                            </Button>
-                          </Typography>
                         </Grid>
                       </Grid>
                     </ListItem>
@@ -92,7 +75,7 @@ export const CurrentlyWatching = () => {
               })}
             </List>
           ) : (
-            <Typography>Nothing is on your list right now...</Typography>
+            <Typography>You have not rated any animes</Typography>
           )
         ) : (
           <Skeleton />

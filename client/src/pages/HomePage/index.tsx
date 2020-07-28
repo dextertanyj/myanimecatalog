@@ -8,6 +8,8 @@ import {
 import { blueGrey } from '@material-ui/core/colors';
 import React from 'react';
 import { CurrentlyWatching } from '../../Components/Dashboard/CurrentlyWatching';
+import { RatingStatisticsCard } from '../../Components/Dashboard/RatingStatisticsCard';
+import { TopTenSeriesCard } from '../../Components/Dashboard/TopTenSeriesCard';
 import { WatchStatusPaper } from '../../Components/Dashboard/WatchStatusPaper';
 import { UserProgress } from '../../gql/documents';
 import { useLoggedInQuery, useMyProgressQuery } from '../../gql/queries';
@@ -45,15 +47,29 @@ const HomePage = () => {
         </Grid>
         <Grid item xs={12}>
           <Grid container spacing={3}>
-            <Grid item xs={9}>
+            <Grid item xs={8}>
               <CurrentlyWatching />
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={4}>
               {watchProgress?.myProgress && (
                 <WatchStatusPaper
                   watchProgress={watchProgress?.myProgress as UserProgress[]}
                 />
               )}
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container spacing={3}>
+            <Grid item xs={6}>
+              {watchProgress?.myProgress && (
+                <RatingStatisticsCard
+                  watchProgress={watchProgress?.myProgress as UserProgress[]}
+                />
+              )}
+            </Grid>
+            <Grid item xs={6}>
+              <TopTenSeriesCard />
             </Grid>
           </Grid>
         </Grid>
