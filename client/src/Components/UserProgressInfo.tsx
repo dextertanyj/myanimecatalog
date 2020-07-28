@@ -10,7 +10,6 @@ import {
   withStyles,
 } from '@material-ui/core';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
-import Skeleton from '@material-ui/lab/Skeleton';
 import moment from 'moment';
 import React, { useState } from 'react';
 import { UserProgressForm } from '../Forms/UserProgressForm';
@@ -78,6 +77,8 @@ export const UserProgressInfo = (props: Props) => {
     ActionType.CREATE
   );
 
+  console.log(props.seriesId);
+
   const { data: progress, refetch, loading } = useMySeriesProgressQuery({
     fetchPolicy: 'cache-and-network',
     variables: {
@@ -130,13 +131,7 @@ export const UserProgressInfo = (props: Props) => {
                 )}
               </Grid>
             </Grid>
-            {loading && !progress?.mySeriesProgress ? (
-              <Grid item xs={12}>
-                <Skeleton key={`progress-skeleton-1`} />
-                <Skeleton key={`progress-skeleton-2`} width={'85%'} />
-                <Skeleton key={`progress-skeleton-3`} width={'50%'} />
-              </Grid>
-            ) : !loading && !progress?.mySeriesProgress ? (
+            {!progress?.mySeriesProgress ? (
               <Grid item xs={12}>
                 <Typography variant="overline" style={{ fontSize: '1em' }}>
                   No existing watch progress record found

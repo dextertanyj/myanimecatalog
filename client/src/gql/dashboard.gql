@@ -3,6 +3,7 @@ query MyTopTenSeries {
     id
     title
     progress {
+      id
       overall
     }
   }
@@ -14,6 +15,7 @@ query MyCurrentlyWatching {
     title
     episodeCount
     progress {
+      id
       completed
     }
   }

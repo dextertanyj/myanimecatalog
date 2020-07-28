@@ -602,7 +602,7 @@ export type MyTopTenSeriesQuery = (
     & Pick<Series, 'id' | 'title'>
     & { readonly progress?: Maybe<(
       { readonly __typename?: 'UserProgress' }
-      & Pick<UserProgress, 'overall'>
+      & Pick<UserProgress, 'id' | 'overall'>
     )> }
   )>>> }
 );
@@ -617,7 +617,7 @@ export type MyCurrentlyWatchingQuery = (
     & Pick<Series, 'id' | 'title' | 'episodeCount'>
     & { readonly progress?: Maybe<(
       { readonly __typename?: 'UserProgress' }
-      & Pick<UserProgress, 'completed'>
+      & Pick<UserProgress, 'id' | 'completed'>
     )> }
   )>>> }
 );
@@ -1009,7 +1009,7 @@ export type MySeriesProgressQuery = (
     & Pick<UserProgress, 'id' | 'status' | 'completed' | 'overall' | 'execution' | 'story' | 'sound' | 'art' | 'character' | 'appeal' | 'remarks' | 'createdAt' | 'updatedAt'>
     & { readonly series?: Maybe<(
       { readonly __typename?: 'Series' }
-      & Pick<Series, 'episodeCount'>
+      & Pick<Series, 'id' | 'episodeCount'>
     )> }
   )> }
 );
@@ -1185,6 +1185,7 @@ export const MyTopTenSeriesDocument = gql`
     id
     title
     progress {
+      id
       overall
     }
   }
@@ -1241,6 +1242,7 @@ export const MyCurrentlyWatchingDocument = gql`
     title
     episodeCount
     progress {
+      id
       completed
     }
   }
@@ -2767,6 +2769,7 @@ export const MySeriesProgressDocument = gql`
     appeal
     remarks
     series {
+      id
       episodeCount
     }
     createdAt

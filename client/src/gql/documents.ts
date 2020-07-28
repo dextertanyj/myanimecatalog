@@ -586,6 +586,7 @@ export const MyTopTenSeries = gql`
     id
     title
     progress {
+      id
       overall
     }
   }
@@ -598,6 +599,7 @@ export const MyCurrentlyWatching = gql`
     title
     episodeCount
     progress {
+      id
       completed
     }
   }
@@ -925,6 +927,7 @@ export const MySeriesProgress = gql`
     appeal
     remarks
     series {
+      id
       episodeCount
     }
     createdAt
