@@ -260,6 +260,7 @@ export type Query = {
   readonly userCount?: Maybe<Scalars['Int']>;
   readonly series?: Maybe<Series>;
   readonly allSeries?: Maybe<ReadonlyArray<Maybe<Series>>>;
+  readonly totalSeriesCount?: Maybe<Scalars['Int']>;
   readonly episode?: Maybe<Episode>;
   readonly episodes?: Maybe<ReadonlyArray<Maybe<Episode>>>;
   readonly episodesInSeries?: Maybe<ReadonlyArray<Maybe<Episode>>>;
@@ -827,6 +828,11 @@ export const AllSeries = gql`
     releaseSeason
     releaseYear
   }
+}
+    `;
+export const TotalSeriesCount = gql`
+    query TotalSeriesCount {
+  totalSeriesCount
 }
     `;
 export const CreateSeries = gql`

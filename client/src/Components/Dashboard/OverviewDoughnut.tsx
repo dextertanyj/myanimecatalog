@@ -1,14 +1,15 @@
 import {
-  blue,
+  amber,
   blueGrey,
-  green,
   grey,
-  lime,
-  red,
+  lightBlue,
+  lightGreen,
+  pink,
 } from '@material-ui/core/colors';
 import React from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { UserProgress, WatchStatus } from '../../gql/documents';
+import { useTotalSeriesCountQuery } from '../../gql/queries';
 
 type Props = {
   watchProgress: UserProgress[];
@@ -43,6 +44,11 @@ const breakdownWatchProgress = (allProgress: UserProgress[]) => {
 export const OverviewDoughnut = (props: Props) => {
   const { watchProgress } = props;
   const processed = breakdownWatchProgress(watchProgress);
+
+  const { data: seriesCount } = useTotalSeriesCountQuery({
+    fetchPolicy: 'cache-and-network',
+  });
+
   const data = {
     datasets: [
       {
@@ -52,22 +58,24 @@ export const OverviewDoughnut = (props: Props) => {
           processed.onHold,
           processed.pending,
           processed.dropped,
-          10,
+          seriesCount?.totalSeriesCount
+            ? seriesCount.totalSeriesCount - watchProgress.length
+            : 0,
         ],
         backgroundColor: [
-          blue[500],
-          green[500],
-          lime[500],
+          lightBlue[500],
+          lightGreen[500],
+          amber[500],
           blueGrey[500],
-          red[500],
+          pink[500],
           grey[500],
         ],
         hoverBackgroundColor: [
-          blue[300],
-          green[300],
-          lime[300],
+          lightBlue[300],
+          lightGreen[300],
+          amber[300],
           blueGrey[300],
-          red[300],
+          pink[300],
           grey[300],
         ],
       },

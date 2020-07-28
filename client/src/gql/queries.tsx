@@ -266,6 +266,7 @@ export type Query = {
   readonly userCount?: Maybe<Scalars['Int']>;
   readonly series?: Maybe<Series>;
   readonly allSeries?: Maybe<ReadonlyArray<Maybe<Series>>>;
+  readonly totalSeriesCount?: Maybe<Scalars['Int']>;
   readonly episode?: Maybe<Episode>;
   readonly episodes?: Maybe<ReadonlyArray<Maybe<Episode>>>;
   readonly episodesInSeries?: Maybe<ReadonlyArray<Maybe<Episode>>>;
@@ -857,6 +858,14 @@ export type AllSeriesQuery = (
     { readonly __typename?: 'Series' }
     & Pick<Series, 'id' | 'title' | 'seasonNumber' | 'episodeCount' | 'type' | 'status' | 'releaseSeason' | 'releaseYear'>
   )>>> }
+);
+
+export type TotalSeriesCountQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TotalSeriesCountQuery = (
+  { readonly __typename?: 'Query' }
+  & Pick<Query, 'totalSeriesCount'>
 );
 
 export type CreateSeriesMutationVariables = Exact<{
@@ -2184,6 +2193,55 @@ export function useAllSeriesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHo
 export type AllSeriesQueryHookResult = ReturnType<typeof useAllSeriesQuery>;
 export type AllSeriesLazyQueryHookResult = ReturnType<typeof useAllSeriesLazyQuery>;
 export type AllSeriesQueryResult = ApolloReactCommon.QueryResult<AllSeriesQuery, AllSeriesQueryVariables>;
+export const TotalSeriesCountDocument = gql`
+    query TotalSeriesCount {
+  totalSeriesCount
+}
+    `;
+export type TotalSeriesCountComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<TotalSeriesCountQuery, TotalSeriesCountQueryVariables>, 'query'>;
+
+    export const TotalSeriesCountComponent = (props: TotalSeriesCountComponentProps) => (
+      <ApolloReactComponents.Query<TotalSeriesCountQuery, TotalSeriesCountQueryVariables> query={TotalSeriesCountDocument} {...props} />
+    );
+    
+export type TotalSeriesCountProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<TotalSeriesCountQuery, TotalSeriesCountQueryVariables>
+    } & TChildProps;
+export function withTotalSeriesCount<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  TotalSeriesCountQuery,
+  TotalSeriesCountQueryVariables,
+  TotalSeriesCountProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, TotalSeriesCountQuery, TotalSeriesCountQueryVariables, TotalSeriesCountProps<TChildProps, TDataName>>(TotalSeriesCountDocument, {
+      alias: 'totalSeriesCount',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useTotalSeriesCountQuery__
+ *
+ * To run a query within a React component, call `useTotalSeriesCountQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTotalSeriesCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTotalSeriesCountQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useTotalSeriesCountQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<TotalSeriesCountQuery, TotalSeriesCountQueryVariables>) {
+        return ApolloReactHooks.useQuery<TotalSeriesCountQuery, TotalSeriesCountQueryVariables>(TotalSeriesCountDocument, baseOptions);
+      }
+export function useTotalSeriesCountLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TotalSeriesCountQuery, TotalSeriesCountQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<TotalSeriesCountQuery, TotalSeriesCountQueryVariables>(TotalSeriesCountDocument, baseOptions);
+        }
+export type TotalSeriesCountQueryHookResult = ReturnType<typeof useTotalSeriesCountQuery>;
+export type TotalSeriesCountLazyQueryHookResult = ReturnType<typeof useTotalSeriesCountLazyQuery>;
+export type TotalSeriesCountQueryResult = ApolloReactCommon.QueryResult<TotalSeriesCountQuery, TotalSeriesCountQueryVariables>;
 export const CreateSeriesDocument = gql`
     mutation CreateSeries($data: SeriesCreateUpdateInput!) {
   createSeries(data: $data) {
