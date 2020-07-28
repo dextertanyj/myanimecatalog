@@ -76,7 +76,7 @@ const hoverBackgroundColor = [
   grey[400],
 ];
 
-export const RatingStatisticsChart = (props: Props) => {
+export const RatingChart = (props: Props) => {
   const { watchProgress } = props;
   const processed = breakdownRatings(watchProgress);
   const data = {

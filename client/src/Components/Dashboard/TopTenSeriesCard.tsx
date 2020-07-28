@@ -53,32 +53,36 @@ export const TopTenSeriesCard = () => {
         title={<Typography variant="h5">Your Top Ten Anime</Typography>}
       />
       <CardContent className={classes.cardContent}>
-        {data?.myTopTenSeries ? (
-          data?.myTopTenSeries.length > 0 ? (
-            <List>
-              {data.myTopTenSeries.map((item, index) => {
-                return (
-                  <>
-                    <ListItem key={`topten-${index}`}>
-                      <Grid container spacing={3} className={classes.gridList}>
-                        <Grid item>
-                          <Typography>{index + 1}</Typography>
-                        </Grid>
-                        <Grid item xs>
-                          <Typography noWrap>{item?.title}</Typography>
-                        </Grid>
+        {loading ? (
+          <>
+            <Skeleton key={`TopTen-Skeleton-1`} />
+            <Skeleton key={`TopTen-Skeleton-2`} width={'85%'} />
+            <Skeleton key={`TopTen-Skeleton-3`} width={'75%'} />
+            <Skeleton key={`TopTen-Skeleton-4`} width={'50%'} />
+            <Skeleton key={`TopTen-Skeleton-5`} width={'50%'} />
+          </>
+        ) : data?.myTopTenSeries?.length && data?.myTopTenSeries?.length > 0 ? (
+          <List>
+            {data?.myTopTenSeries?.map((item, index) => {
+              return (
+                <>
+                  <ListItem key={`topten-${index}`}>
+                    <Grid container spacing={3} className={classes.gridList}>
+                      <Grid item>
+                        <Typography>{index + 1}</Typography>
                       </Grid>
-                    </ListItem>
-                    <Divider />
-                  </>
-                );
-              })}
-            </List>
-          ) : (
-            <Typography>You have not rated any animes</Typography>
-          )
+                      <Grid item xs>
+                        <Typography noWrap>{item?.title}</Typography>
+                      </Grid>
+                    </Grid>
+                  </ListItem>
+                  <Divider />
+                </>
+              );
+            })}
+          </List>
         ) : (
-          <Skeleton />
+          <Typography>You have not rated any animes</Typography>
         )}
       </CardContent>
     </Card>

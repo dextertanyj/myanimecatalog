@@ -40,7 +40,7 @@ const breakdownWatchProgress = (allProgress: UserProgress[]) => {
   };
 };
 
-export const WatchStatusPieChart = (props: Props) => {
+export const OverviewDoughnut = (props: Props) => {
   const { watchProgress } = props;
   const processed = breakdownWatchProgress(watchProgress);
   const data = {

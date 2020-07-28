@@ -8,8 +8,8 @@ import {
   Typography,
 } from '@material-ui/core';
 import React from 'react';
-import { WatchStatusPieChart } from '../../Components/Dashboard/WatchStatusPieChart';
 import { UserProgress } from '../../gql/documents';
+import { OverviewDoughnut } from './OverviewDoughnut';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,7 +33,7 @@ type Props = {
   watchProgress: UserProgress[];
 };
 
-export const WatchStatusPaper = (props: Props) => {
+export const OverviewCard = (props: Props) => {
   const classes = useStyles();
 
   return (
@@ -43,7 +43,7 @@ export const WatchStatusPaper = (props: Props) => {
         title={<Typography variant="h5">Overview</Typography>}
       />
       <CardContent className={classes.cardContent}>
-        <WatchStatusPieChart watchProgress={props.watchProgress} />
+        <OverviewDoughnut watchProgress={props.watchProgress} />
       </CardContent>
     </Card>
   );

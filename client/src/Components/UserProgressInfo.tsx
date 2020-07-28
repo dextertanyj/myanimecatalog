@@ -77,8 +77,6 @@ export const UserProgressInfo = (props: Props) => {
     ActionType.CREATE
   );
 
-  console.log(props.seriesId);
-
   const { data: progress, refetch, loading } = useMySeriesProgressQuery({
     fetchPolicy: 'cache-and-network',
     variables: {
