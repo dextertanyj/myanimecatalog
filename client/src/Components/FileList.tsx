@@ -17,7 +17,8 @@ import { File } from '../gql/documents';
 import { useFilesForEpisodeQuery, useLoggedInQuery } from '../gql/queries';
 import { writeAccess } from '../utils/auth';
 import { ActionType } from '../utils/constants';
-import { FileInfoTable } from './FileInfoTable';
+import { FileInfo } from './FileInfo';
+import { FileListSkeleton } from './Skeletons/FileListSkeleton';
 
 type Props = {
   episodeId: string;
@@ -58,7 +59,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const FilesTable = (props: Props) => {
+export const FileList = (props: Props) => {
   const classes = useStyles();
   const [showForm, setShowForm] = useState<boolean>(false);
 
@@ -77,47 +78,55 @@ export const FilesTable = (props: Props) => {
 
   return (
     <div>
-      <Paper elevation={3} className={classes.paper}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} className={classes.tableHeader}>
-            <Grid container spacing={3}>
-              <Grid item xs>
-                <Typography variant="h5">Files</Typography>
+      {loading && !files?.filesForEpisode ? (
+        <FileListSkeleton />
+      ) : (
+        <Paper elevation={3} className={classes.paper}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} className={classes.tableHeader}>
+              <Grid container spacing={3}>
+                <Grid item xs>
+                  <Typography variant="h5">Files</Typography>
+                </Grid>
+                {AuthData?.loggedIn?.role &&
+                  writeAccess.includes(AuthData.loggedIn.role) && (
+                    <Grid item>
+                      <Button
+                        color="primary"
+                        variant="contained"
+                        startIcon={<AddOutlinedIcon />}
+                        onClick={() => setShowForm(true)}
+                      >
+                        Add
+                      </Button>
+                    </Grid>
+                  )}
               </Grid>
-              {AuthData?.loggedIn?.role &&
-                writeAccess.includes(AuthData.loggedIn.role) && (
-                  <Grid item>
-                    <Button
-                      color="primary"
-                      variant="contained"
-                      startIcon={<AddOutlinedIcon />}
-                      onClick={() => setShowForm(true)}
-                    >
-                      Add
-                    </Button>
-                  </Grid>
-                )}
             </Grid>
+            <List>
+              {files?.filesForEpisode?.map((file, index) => (
+                <>
+                  <Divider />
+                  <ListItem
+                    className={classes.listItem}
+                    key={`listItem-${index}`}
+                  >
+                    <FileInfo
+                      file={file as File}
+                      editable={
+                        !!AuthData?.loggedIn?.role &&
+                        writeAccess.includes(AuthData?.loggedIn?.role)
+                      }
+                      refetch={refetch}
+                      key={file?.id ?? `file-${index}`}
+                    />
+                  </ListItem>
+                </>
+              ))}
+            </List>
           </Grid>
-          <List>
-            {files?.filesForEpisode?.map((file) => (
-              <>
-                <Divider />
-                <ListItem className={classes.listItem}>
-                  <FileInfoTable
-                    file={file as File}
-                    editable={
-                      !!AuthData?.loggedIn?.role &&
-                      writeAccess.includes(AuthData?.loggedIn?.role)
-                    }
-                    refetch={refetch}
-                  />
-                </ListItem>
-              </>
-            ))}
-          </List>
-        </Grid>
-      </Paper>
+        </Paper>
+      )}
       {showForm && (
         <FileForm
           open={showForm}
