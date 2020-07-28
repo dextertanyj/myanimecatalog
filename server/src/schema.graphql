@@ -261,6 +261,9 @@ type Query {
   references: [Reference]
 
   quickSearch(where: String!): SearchPayload
+
+  myTopTenSeries: [Series]
+  myCurrentlyWatching: [Series]
 }
 
 type Mutation {

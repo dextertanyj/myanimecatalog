@@ -279,6 +279,8 @@ export type Query = {
   readonly reference?: Maybe<Reference>;
   readonly references?: Maybe<ReadonlyArray<Maybe<Reference>>>;
   readonly quickSearch?: Maybe<SearchPayload>;
+  readonly myTopTenSeries?: Maybe<ReadonlyArray<Maybe<Series>>>;
+  readonly myCurrentlyWatching?: Maybe<ReadonlyArray<Maybe<Series>>>;
 };
 
 
@@ -588,6 +590,36 @@ export type LoginMutation = (
       & Pick<User, 'id' | 'username'>
     )> }
   ) }
+);
+
+export type MyTopTenSeriesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyTopTenSeriesQuery = (
+  { readonly __typename?: 'Query' }
+  & { readonly myTopTenSeries?: Maybe<ReadonlyArray<Maybe<(
+    { readonly __typename?: 'Series' }
+    & Pick<Series, 'id' | 'title'>
+    & { readonly progress?: Maybe<(
+      { readonly __typename?: 'UserProgress' }
+      & Pick<UserProgress, 'overall'>
+    )> }
+  )>>> }
+);
+
+export type MyCurrentlyWatchingQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyCurrentlyWatchingQuery = (
+  { readonly __typename?: 'Query' }
+  & { readonly myCurrentlyWatching?: Maybe<ReadonlyArray<Maybe<(
+    { readonly __typename?: 'Series' }
+    & Pick<Series, 'id' | 'title' | 'episodeCount'>
+    & { readonly progress?: Maybe<(
+      { readonly __typename?: 'UserProgress' }
+      & Pick<UserProgress, 'completed'>
+    )> }
+  )>>> }
 );
 
 export type EpisodeQueryVariables = Exact<{
@@ -1147,6 +1179,117 @@ export function useLoginMutation(baseOptions?: ApolloReactHooks.MutationHookOpti
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = ApolloReactCommon.MutationResult<LoginMutation>;
 export type LoginMutationOptions = ApolloReactCommon.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const MyTopTenSeriesDocument = gql`
+    query MyTopTenSeries {
+  myTopTenSeries {
+    id
+    title
+    progress {
+      overall
+    }
+  }
+}
+    `;
+export type MyTopTenSeriesComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<MyTopTenSeriesQuery, MyTopTenSeriesQueryVariables>, 'query'>;
+
+    export const MyTopTenSeriesComponent = (props: MyTopTenSeriesComponentProps) => (
+      <ApolloReactComponents.Query<MyTopTenSeriesQuery, MyTopTenSeriesQueryVariables> query={MyTopTenSeriesDocument} {...props} />
+    );
+    
+export type MyTopTenSeriesProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<MyTopTenSeriesQuery, MyTopTenSeriesQueryVariables>
+    } & TChildProps;
+export function withMyTopTenSeries<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  MyTopTenSeriesQuery,
+  MyTopTenSeriesQueryVariables,
+  MyTopTenSeriesProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, MyTopTenSeriesQuery, MyTopTenSeriesQueryVariables, MyTopTenSeriesProps<TChildProps, TDataName>>(MyTopTenSeriesDocument, {
+      alias: 'myTopTenSeries',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useMyTopTenSeriesQuery__
+ *
+ * To run a query within a React component, call `useMyTopTenSeriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyTopTenSeriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyTopTenSeriesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMyTopTenSeriesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MyTopTenSeriesQuery, MyTopTenSeriesQueryVariables>) {
+        return ApolloReactHooks.useQuery<MyTopTenSeriesQuery, MyTopTenSeriesQueryVariables>(MyTopTenSeriesDocument, baseOptions);
+      }
+export function useMyTopTenSeriesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MyTopTenSeriesQuery, MyTopTenSeriesQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<MyTopTenSeriesQuery, MyTopTenSeriesQueryVariables>(MyTopTenSeriesDocument, baseOptions);
+        }
+export type MyTopTenSeriesQueryHookResult = ReturnType<typeof useMyTopTenSeriesQuery>;
+export type MyTopTenSeriesLazyQueryHookResult = ReturnType<typeof useMyTopTenSeriesLazyQuery>;
+export type MyTopTenSeriesQueryResult = ApolloReactCommon.QueryResult<MyTopTenSeriesQuery, MyTopTenSeriesQueryVariables>;
+export const MyCurrentlyWatchingDocument = gql`
+    query MyCurrentlyWatching {
+  myCurrentlyWatching {
+    id
+    title
+    episodeCount
+    progress {
+      completed
+    }
+  }
+}
+    `;
+export type MyCurrentlyWatchingComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<MyCurrentlyWatchingQuery, MyCurrentlyWatchingQueryVariables>, 'query'>;
+
+    export const MyCurrentlyWatchingComponent = (props: MyCurrentlyWatchingComponentProps) => (
+      <ApolloReactComponents.Query<MyCurrentlyWatchingQuery, MyCurrentlyWatchingQueryVariables> query={MyCurrentlyWatchingDocument} {...props} />
+    );
+    
+export type MyCurrentlyWatchingProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<MyCurrentlyWatchingQuery, MyCurrentlyWatchingQueryVariables>
+    } & TChildProps;
+export function withMyCurrentlyWatching<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  MyCurrentlyWatchingQuery,
+  MyCurrentlyWatchingQueryVariables,
+  MyCurrentlyWatchingProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, MyCurrentlyWatchingQuery, MyCurrentlyWatchingQueryVariables, MyCurrentlyWatchingProps<TChildProps, TDataName>>(MyCurrentlyWatchingDocument, {
+      alias: 'myCurrentlyWatching',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useMyCurrentlyWatchingQuery__
+ *
+ * To run a query within a React component, call `useMyCurrentlyWatchingQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyCurrentlyWatchingQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyCurrentlyWatchingQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMyCurrentlyWatchingQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MyCurrentlyWatchingQuery, MyCurrentlyWatchingQueryVariables>) {
+        return ApolloReactHooks.useQuery<MyCurrentlyWatchingQuery, MyCurrentlyWatchingQueryVariables>(MyCurrentlyWatchingDocument, baseOptions);
+      }
+export function useMyCurrentlyWatchingLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MyCurrentlyWatchingQuery, MyCurrentlyWatchingQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<MyCurrentlyWatchingQuery, MyCurrentlyWatchingQueryVariables>(MyCurrentlyWatchingDocument, baseOptions);
+        }
+export type MyCurrentlyWatchingQueryHookResult = ReturnType<typeof useMyCurrentlyWatchingQuery>;
+export type MyCurrentlyWatchingLazyQueryHookResult = ReturnType<typeof useMyCurrentlyWatchingLazyQuery>;
+export type MyCurrentlyWatchingQueryResult = ApolloReactCommon.QueryResult<MyCurrentlyWatchingQuery, MyCurrentlyWatchingQueryVariables>;
 export const EpisodeDocument = gql`
     query Episode($where: EpisodeWhereUniqueInput!) {
   episode(where: $where) {

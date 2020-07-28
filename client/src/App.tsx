@@ -7,8 +7,11 @@ import cookies from 'browser-cookies';
 import 'fontsource-roboto';
 import { SnackbarProvider } from 'notistack';
 import React from 'react';
+import { defaults } from 'react-chartjs-2';
 import initApollo from './Apollo';
 import ReactRouter from './Router';
+
+defaults.global.defaultFontFamily = 'Roboto';
 
 const theme = createMuiTheme({
   palette: {

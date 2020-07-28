@@ -273,6 +273,8 @@ export type Query = {
   readonly reference?: Maybe<Reference>;
   readonly references?: Maybe<ReadonlyArray<Maybe<Reference>>>;
   readonly quickSearch?: Maybe<SearchPayload>;
+  readonly myTopTenSeries?: Maybe<ReadonlyArray<Maybe<Series>>>;
+  readonly myCurrentlyWatching?: Maybe<ReadonlyArray<Maybe<Series>>>;
 };
 
 
@@ -574,6 +576,29 @@ export const Login = gql`
     user {
       id
       username
+    }
+  }
+}
+    `;
+export const MyTopTenSeries = gql`
+    query MyTopTenSeries {
+  myTopTenSeries {
+    id
+    title
+    progress {
+      overall
+    }
+  }
+}
+    `;
+export const MyCurrentlyWatching = gql`
+    query MyCurrentlyWatching {
+  myCurrentlyWatching {
+    id
+    title
+    episodeCount
+    progress {
+      completed
     }
   }
 }
