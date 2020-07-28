@@ -125,12 +125,16 @@ export const UserProgressForm = (props: Props) => {
   const [
     loadSeries,
     { data: seriesData, loading: loadingSeries },
-  ] = useSeriesLazyQuery();
+  ] = useSeriesLazyQuery({
+    fetchPolicy: 'cache-and-network',
+  });
 
   const [
     loadProgress,
     { data: progressData, loading: loadingProgress },
-  ] = useMySeriesProgressLazyQuery();
+  ] = useMySeriesProgressLazyQuery({
+    fetchPolicy: 'cache-and-network',
+  });
 
   useEffect(() => {
     if (props.open && props.progressId) {

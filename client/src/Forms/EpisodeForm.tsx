@@ -97,7 +97,9 @@ export const EpisodeForm = (props: Props) => {
   const [
     loadEpisode,
     { data: episodeData, loading: loadingEpisode },
-  ] = useEpisodeLazyQuery();
+  ] = useEpisodeLazyQuery({
+    fetchPolicy: 'cache-and-network',
+  });
 
   useEffect(() => {
     if (props.open && props.episodeId) {

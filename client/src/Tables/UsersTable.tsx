@@ -86,7 +86,9 @@ export const UsersTable = () => {
   const [formAction, setFormAction] = useState<ActionType>(ActionType.CREATE);
   const [selectedRows, setSelectedRows] = useState<User[]>([]);
 
-  const { data: rowData, refetch } = useUsersQuery();
+  const { data: rowData, refetch } = useUsersQuery({
+    fetchPolicy: 'cache-and-network',
+  });
 
   const gridOptions = {
     enableCellTextSelection: true,

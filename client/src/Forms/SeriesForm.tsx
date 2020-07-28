@@ -243,13 +243,17 @@ export const SeriesForm = (props: Props): ReactElement => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data: seriesList, loading: loadingOptions } = useAllSeriesQuery();
+  const { data: seriesList, loading: loadingOptions } = useAllSeriesQuery({
+    fetchPolicy: 'cache-and-network',
+  });
   const [autoCompleteOptions, setAutoCompleteOptions] = useState<Series[]>([]);
 
   const [
     loadSeries,
     { data: seriesData, loading: loadingSeries },
-  ] = useSeriesLazyQuery();
+  ] = useSeriesLazyQuery({
+    fetchPolicy: 'cache-and-network',
+  });
 
   useEffect(() => {
     if (!!seriesList?.allSeries) {

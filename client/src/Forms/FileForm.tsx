@@ -107,10 +107,11 @@ export const FileForm = (props: Props) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [
-    loadFile,
-    { data: fileData, loading: loadingFile },
-  ] = useFileLazyQuery();
+  const [loadFile, { data: fileData, loading: loadingFile }] = useFileLazyQuery(
+    {
+      fetchPolicy: 'cache-and-network',
+    }
+  );
 
   useEffect(() => {
     if (props.open && props.fileId) {

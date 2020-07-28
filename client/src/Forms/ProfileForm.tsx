@@ -85,10 +85,11 @@ export const ProfileForm = (props: Props): ReactElement => {
     },
   });
 
-  const [
-    loadUser,
-    { data: userData, loading: loadingUser },
-  ] = useUserLazyQuery();
+  const [loadUser, { data: userData, loading: loadingUser }] = useUserLazyQuery(
+    {
+      fetchPolicy: 'cache-and-network',
+    }
+  );
 
   useEffect(() => {
     if (props.open && props.userId) {
