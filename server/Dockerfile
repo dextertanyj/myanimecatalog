@@ -6,7 +6,6 @@ RUN yarn global add @zeit/ncc
 RUN yarn global add @prisma/cli
 COPY . /app
 
-# installing from yarn before generating
 RUN yarn install --silent 
 RUN prisma generate
 
