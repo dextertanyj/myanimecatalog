@@ -257,7 +257,7 @@ export type Query = {
   readonly loggedIn?: Maybe<User>;
   readonly user?: Maybe<User>;
   readonly users?: Maybe<ReadonlyArray<Maybe<User>>>;
-  readonly userCount?: Maybe<Scalars['Int']>;
+  readonly isInitialized?: Maybe<Scalars['Boolean']>;
   readonly series?: Maybe<Series>;
   readonly allSeries?: Maybe<ReadonlyArray<Maybe<Series>>>;
   readonly totalSeriesCount?: Maybe<Scalars['Int']>;
@@ -878,9 +878,9 @@ export const Users = gql`
   }
 }
     `;
-export const UserCount = gql`
-    query UserCount {
-  userCount
+export const IsInitialized = gql`
+    query IsInitialized {
+  isInitialized
 }
     `;
 export const CreateUser = gql`

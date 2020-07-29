@@ -239,7 +239,7 @@ type Query {
   loggedIn: User
   user(where: UserWhereUniqueInput!): User
   users: [User]
-  userCount: Int
+  isInitialized: Boolean
 
   series(where: SeriesWhereUniqueInput!): Series
   allSeries: [Series]

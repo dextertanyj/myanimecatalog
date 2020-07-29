@@ -8,7 +8,7 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import SupervisorAccountOutlinedIcon from '@material-ui/icons/SupervisorAccountOutlined';
 import { ApolloError } from 'apollo-client';
 import { Formik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -20,7 +20,7 @@ import { GenericError, NetworkError } from '../../Components/ErrorSnackbars';
 import {
   Role,
   useCreateInitialUserMutation,
-  useUserCountQuery,
+  useIsInitializedQuery,
 } from '../../gql/queries';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.primary.main,
   },
   form: {
     width: '100%',
@@ -48,7 +48,7 @@ export const SetupPage = () => {
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data: count } = useUserCountQuery({
+  const { data: user } = useIsInitializedQuery({
     fetchPolicy: 'cache-and-network',
   });
 
@@ -97,10 +97,10 @@ export const SetupPage = () => {
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
+            <SupervisorAccountOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Create Admin Account
           </Typography>
           <Formik
             initialValues={{
@@ -192,12 +192,12 @@ export const SetupPage = () => {
                   <Button
                     type="submit"
                     fullWidth
-                    disabled={count?.userCount !== 0}
+                    disabled={user?.isInitialized ?? true}
                     variant="contained"
                     color="primary"
                     className={classes.submit}
                   >
-                    Sign In
+                    Create
                   </Button>
                 </form>
               );

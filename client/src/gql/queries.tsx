@@ -263,7 +263,7 @@ export type Query = {
   readonly loggedIn?: Maybe<User>;
   readonly user?: Maybe<User>;
   readonly users?: Maybe<ReadonlyArray<Maybe<User>>>;
-  readonly userCount?: Maybe<Scalars['Int']>;
+  readonly isInitialized?: Maybe<Scalars['Boolean']>;
   readonly series?: Maybe<Series>;
   readonly allSeries?: Maybe<ReadonlyArray<Maybe<Series>>>;
   readonly totalSeriesCount?: Maybe<Scalars['Int']>;
@@ -932,12 +932,12 @@ export type UsersQuery = (
   )>>> }
 );
 
-export type UserCountQueryVariables = Exact<{ [key: string]: never; }>;
+export type IsInitializedQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserCountQuery = (
+export type IsInitializedQuery = (
   { readonly __typename?: 'Query' }
-  & Pick<Query, 'userCount'>
+  & Pick<Query, 'isInitialized'>
 );
 
 export type CreateUserMutationVariables = Exact<{
@@ -2507,55 +2507,55 @@ export function useUsersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOp
 export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
 export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
 export type UsersQueryResult = ApolloReactCommon.QueryResult<UsersQuery, UsersQueryVariables>;
-export const UserCountDocument = gql`
-    query UserCount {
-  userCount
+export const IsInitializedDocument = gql`
+    query IsInitialized {
+  isInitialized
 }
     `;
-export type UserCountComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<UserCountQuery, UserCountQueryVariables>, 'query'>;
+export type IsInitializedComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<IsInitializedQuery, IsInitializedQueryVariables>, 'query'>;
 
-    export const UserCountComponent = (props: UserCountComponentProps) => (
-      <ApolloReactComponents.Query<UserCountQuery, UserCountQueryVariables> query={UserCountDocument} {...props} />
+    export const IsInitializedComponent = (props: IsInitializedComponentProps) => (
+      <ApolloReactComponents.Query<IsInitializedQuery, IsInitializedQueryVariables> query={IsInitializedDocument} {...props} />
     );
     
-export type UserCountProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<UserCountQuery, UserCountQueryVariables>
+export type IsInitializedProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<IsInitializedQuery, IsInitializedQueryVariables>
     } & TChildProps;
-export function withUserCount<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+export function withIsInitialized<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
   TProps,
-  UserCountQuery,
-  UserCountQueryVariables,
-  UserCountProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, UserCountQuery, UserCountQueryVariables, UserCountProps<TChildProps, TDataName>>(UserCountDocument, {
-      alias: 'userCount',
+  IsInitializedQuery,
+  IsInitializedQueryVariables,
+  IsInitializedProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, IsInitializedQuery, IsInitializedQueryVariables, IsInitializedProps<TChildProps, TDataName>>(IsInitializedDocument, {
+      alias: 'isInitialized',
       ...operationOptions
     });
 };
 
 /**
- * __useUserCountQuery__
+ * __useIsInitializedQuery__
  *
- * To run a query within a React component, call `useUserCountQuery` and pass it any options that fit your needs.
- * When your component renders, `useUserCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useIsInitializedQuery` and pass it any options that fit your needs.
+ * When your component renders, `useIsInitializedQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useUserCountQuery({
+ * const { data, loading, error } = useIsInitializedQuery({
  *   variables: {
  *   },
  * });
  */
-export function useUserCountQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<UserCountQuery, UserCountQueryVariables>) {
-        return ApolloReactHooks.useQuery<UserCountQuery, UserCountQueryVariables>(UserCountDocument, baseOptions);
+export function useIsInitializedQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<IsInitializedQuery, IsInitializedQueryVariables>) {
+        return ApolloReactHooks.useQuery<IsInitializedQuery, IsInitializedQueryVariables>(IsInitializedDocument, baseOptions);
       }
-export function useUserCountLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<UserCountQuery, UserCountQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<UserCountQuery, UserCountQueryVariables>(UserCountDocument, baseOptions);
+export function useIsInitializedLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<IsInitializedQuery, IsInitializedQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<IsInitializedQuery, IsInitializedQueryVariables>(IsInitializedDocument, baseOptions);
         }
-export type UserCountQueryHookResult = ReturnType<typeof useUserCountQuery>;
-export type UserCountLazyQueryHookResult = ReturnType<typeof useUserCountLazyQuery>;
-export type UserCountQueryResult = ApolloReactCommon.QueryResult<UserCountQuery, UserCountQueryVariables>;
+export type IsInitializedQueryHookResult = ReturnType<typeof useIsInitializedQuery>;
+export type IsInitializedLazyQueryHookResult = ReturnType<typeof useIsInitializedLazyQuery>;
+export type IsInitializedQueryResult = ApolloReactCommon.QueryResult<IsInitializedQuery, IsInitializedQueryVariables>;
 export const CreateUserDocument = gql`
     mutation CreateUser($data: UserCreateUpdateInput!) {
   createUser(data: $data) {
