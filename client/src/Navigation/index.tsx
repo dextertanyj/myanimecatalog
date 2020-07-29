@@ -1,6 +1,5 @@
 import {
   AppBar,
-  Divider,
   Drawer,
   Grid,
   IconButton,
@@ -14,12 +13,15 @@ import {
 import { grey } from '@material-ui/core/colors';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
+import ChevronLeftOutlinedIcon from '@material-ui/icons/ChevronLeftOutlined';
+import ChevronRightOutlinedIcon from '@material-ui/icons/ChevronRightOutlined';
 import ExitToAppOutlinedIcon from '@material-ui/icons/ExitToAppOutlined';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import LibraryBooksOutlinedIcon from '@material-ui/icons/LibraryBooksOutlined';
 import PermIdentityOutlinedIcon from '@material-ui/icons/PermIdentityOutlined';
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
-import React from 'react';
+import clsx from 'clsx';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Role } from '../gql/documents';
 import { useLoggedInQuery } from '../gql/queries';
@@ -36,11 +38,43 @@ const useStyles = makeStyles((theme: Theme) =>
       zIndex: theme.zIndex.drawer + 1,
     },
     drawer: {
-      width: drawerWidth,
       flexShrink: 0,
+      whiteSpace: 'nowrap',
+      overflowX: 'hidden',
+    },
+    drawerOpen: {
+      width: drawerWidth,
+      transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    },
+    drawerClose: {
+      width: theme.spacing(7),
+      transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
     },
     drawerPaper: {
+      justifyContent: 'space-between',
+      top: '64px',
+      height: 'calc(100% - 64px)',
+      overflowX: 'hidden',
+    },
+    drawerPaperOpen: {
       width: drawerWidth,
+      transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    },
+    drawerPaperClose: {
+      width: theme.spacing(7),
+      transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
     },
     grid: {
       display: 'flex',
@@ -63,6 +97,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const Navigation = (props: any) => {
   const classes = useStyles();
   const history = useHistory();
+  const [expanded, setExpanded] = useState<boolean>(true);
 
   const { data: AuthData } = useLoggedInQuery({
     fetchPolicy: 'cache-and-network',
@@ -100,14 +135,18 @@ const Navigation = (props: any) => {
       </AppBar>
       <Drawer
         variant="permanent"
-        className={classes.drawer}
+        className={clsx(classes.drawer, {
+          [classes.drawerOpen]: expanded,
+          [classes.drawerClose]: !expanded,
+        })}
         classes={{
-          paper: classes.drawerPaper,
+          paper: clsx(classes.drawerPaper, {
+            [classes.drawerPaperOpen]: expanded,
+            [classes.drawerPaperClose]: !expanded,
+          }),
         }}
         anchor="left"
       >
-        <div className={classes.toolbar} />
-        <Divider />
         <List>
           <ListItem button key={'/'} onClick={() => history.push('/')}>
             <ListItemIcon>
@@ -148,6 +187,30 @@ const Navigation = (props: any) => {
             </ListItem>
           )}
         </List>
+        <ListItem
+          button
+          style={{
+            position: 'sticky',
+            bottom: 0,
+            backgroundColor: grey[100],
+            borderTopColor: grey[400],
+            borderTopWidth: '1px',
+            borderTopStyle: 'solid',
+          }}
+          onClick={() => setExpanded(!expanded)}
+        >
+          <ListItemIcon>
+            {expanded ? (
+              <ChevronLeftOutlinedIcon />
+            ) : (
+              <ChevronRightOutlinedIcon />
+            )}
+          </ListItemIcon>
+          <ListItemText
+            primary={'Collapse Sidebar'}
+            primaryTypographyProps={{ color: 'textSecondary' }}
+          />
+        </ListItem>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
