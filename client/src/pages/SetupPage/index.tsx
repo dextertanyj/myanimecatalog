@@ -50,6 +50,11 @@ export const SetupPage = () => {
 
   const { data: user } = useIsInitializedQuery({
     fetchPolicy: 'cache-and-network',
+    onCompleted: (result) => {
+      if (result.isInitialized) {
+        history.push('/');
+      }
+    },
   });
 
   const [createInitialUserMutation] = useCreateInitialUserMutation({
