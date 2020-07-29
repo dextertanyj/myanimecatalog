@@ -14,7 +14,6 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { AgGridReact } from 'ag-grid-react';
 import moment from 'moment';
-import { useSnackbar } from 'notistack';
 import React, { useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { SeriesForm } from '../Forms/SeriesForm';
@@ -72,9 +71,22 @@ const columnDefs = [
     flex: 1,
     filter: true,
     sortable: true,
+    lockVisible: true,
   },
-  { headerName: 'Season', field: 'seasonNumber', width: 120, sortable: true },
-  { headerName: 'Episodes', field: 'episodeCount', width: 120, sortable: true },
+  {
+    headerName: 'Season',
+    field: 'seasonNumber',
+    width: 120,
+    sortable: true,
+    lockVisible: true,
+  },
+  {
+    headerName: 'Episodes',
+    field: 'episodeCount',
+    width: 120,
+    sortable: true,
+    lockVisible: true,
+  },
   {
     headerName: 'Release Season',
     valueGetter: (params: { data: Series }) => {
@@ -89,6 +101,7 @@ const columnDefs = [
     sortable: true,
     comparator: seasonComparator,
     sortingOrder: ['asc', 'desc'],
+    lockVisible: true,
   },
   {
     headerName: 'Status',
@@ -98,6 +111,7 @@ const columnDefs = [
     width: 180,
     filter: true,
     sortable: true,
+    lockVisible: true,
   },
   {
     headerName: 'Type',
@@ -107,13 +121,13 @@ const columnDefs = [
     width: 180,
     filter: true,
     sortable: true,
+    lockVisible: true,
   },
 ];
 
 export const SeriesTable = () => {
   const classes = useStyles();
   const history = useHistory();
-  const { enqueueSnackbar } = useSnackbar();
   const [gridApi, setGridApi] = useState<
     | {
         api: GridApi;
@@ -125,7 +139,7 @@ export const SeriesTable = () => {
   const [formAction, setFormAction] = useState<ActionType>(ActionType.CREATE);
   const [selectedRows, setSelectedRows] = useState<Series[]>([]);
 
-  const { data: rowData, loading, refetch } = useAllSeriesQuery({
+  const { data: rowData, refetch } = useAllSeriesQuery({
     fetchPolicy: 'cache-and-network',
   });
 
