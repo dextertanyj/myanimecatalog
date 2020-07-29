@@ -35,12 +35,12 @@ export const User = {
     return user;
   },
 
-  async userCount(
+  async isInitialized(
     _parent: unknown,
     _args: unknown,
     ctx: Context
-  ): Promise<number> {
+  ): Promise<boolean> {
     const count = await ctx.prisma.user.count();
-    return count;
+    return count !== 0;
   },
 };

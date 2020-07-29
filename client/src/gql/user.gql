@@ -18,8 +18,8 @@ query Users {
   }
 }
 
-query UserCount {
-  userCount
+query IsInitialized {
+  isInitialized
 }
 
 mutation CreateUser($data: UserCreateUpdateInput!) {
