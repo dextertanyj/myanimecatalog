@@ -49,6 +49,7 @@ const columnDefs = [
     width: 240,
     filter: true,
     sortable: true,
+    lockVisible: true,
   },
   {
     headerName: 'Access Level',
@@ -58,6 +59,7 @@ const columnDefs = [
     },
     width: 180,
     sortable: true,
+    lockVisible: true,
   },
   {
     headerName: 'Locked',
@@ -70,6 +72,7 @@ const columnDefs = [
     width: 180,
     filter: true,
     sortable: true,
+    lockVisible: true,
   },
 ];
 

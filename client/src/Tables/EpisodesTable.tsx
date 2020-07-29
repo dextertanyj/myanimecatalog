@@ -16,7 +16,6 @@ import { ColumnApi, GridApi } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { AgGridReact } from 'ag-grid-react';
-import { useSnackbar } from 'notistack';
 import React, { useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { BatchEpisodeForm } from '../Forms/BatchEpisodeForm';
@@ -63,20 +62,27 @@ const columnDefs = [
     flex: 1,
     filter: true,
     sortable: true,
+    lockVisible: true,
   },
   {
     headerName: 'Episode No.',
     field: 'episodeNumber',
     width: 120,
     sortable: true,
+    lockVisible: true,
   },
-  { headerName: 'Remarks', field: 'remarks', width: 360, sortable: true },
+  {
+    headerName: 'Remarks',
+    field: 'remarks',
+    width: 360,
+    sortable: true,
+    lockVisible: true,
+  },
 ];
 
 export const EpisodesTable = (props: Props) => {
   const classes = useStyles();
   const history = useHistory();
-  const { enqueueSnackbar } = useSnackbar();
   const [gridApi, setGridApi] = useState<
     | {
         api: GridApi;
@@ -89,7 +95,7 @@ export const EpisodesTable = (props: Props) => {
   const [formAction, setFormAction] = useState<ActionType>(ActionType.CREATE);
   const [selectedRows, setSelectedRows] = useState<Episode[]>([]);
 
-  const { data: rowData, loading, refetch } = useEpisodesInSeriesQuery({
+  const { data: rowData, refetch } = useEpisodesInSeriesQuery({
     fetchPolicy: 'cache-and-network',
     variables: {
       where: {
