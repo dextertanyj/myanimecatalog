@@ -1,0 +1,22 @@
+query MyTopTenSeries {
+  myTopTenSeries {
+    id
+    title
+    progress {
+      id
+      overall
+    }
+  }
+}
+
+query MyCurrentlyWatching {
+  myCurrentlyWatching {
+    id
+    title
+    episodeCount
+    progress {
+      id
+      completed
+    }
+  }
+}

@@ -65,6 +65,10 @@ query AllSeries {
   }
 }
 
+query TotalSeriesCount {
+  totalSeriesCount
+}
+
 mutation CreateSeries($data: SeriesCreateUpdateInput!) {
   createSeries(data: $data) {
     id

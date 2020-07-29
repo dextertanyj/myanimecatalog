@@ -21,4 +21,12 @@ export const Series = {
       },
     });
   },
+
+  async totalSeriesCount(
+    _parent: unknown,
+    _args: unknown,
+    ctx: Context
+  ): Promise<number> {
+    return await ctx.prisma.series.count();
+  },
 };

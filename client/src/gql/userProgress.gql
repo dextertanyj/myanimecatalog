@@ -12,6 +12,7 @@ query mySeriesProgress($where: SeriesWhereUniqueInput!) {
     appeal
     remarks
     series {
+      id
       episodeCount
     }
     createdAt

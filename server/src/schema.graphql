@@ -243,6 +243,7 @@ type Query {
 
   series(where: SeriesWhereUniqueInput!): Series
   allSeries: [Series]
+  totalSeriesCount: Int
 
   episode(where: EpisodeWhereUniqueInput!): Episode
   episodes: [Episode]
@@ -261,6 +262,9 @@ type Query {
   references: [Reference]
 
   quickSearch(where: String!): SearchPayload
+
+  myTopTenSeries: [Series]
+  myCurrentlyWatching: [Series]
 }
 
 type Mutation {

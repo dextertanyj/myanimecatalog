@@ -260,6 +260,7 @@ export type Query = {
   readonly userCount?: Maybe<Scalars['Int']>;
   readonly series?: Maybe<Series>;
   readonly allSeries?: Maybe<ReadonlyArray<Maybe<Series>>>;
+  readonly totalSeriesCount?: Maybe<Scalars['Int']>;
   readonly episode?: Maybe<Episode>;
   readonly episodes?: Maybe<ReadonlyArray<Maybe<Episode>>>;
   readonly episodesInSeries?: Maybe<ReadonlyArray<Maybe<Episode>>>;
@@ -273,6 +274,8 @@ export type Query = {
   readonly reference?: Maybe<Reference>;
   readonly references?: Maybe<ReadonlyArray<Maybe<Reference>>>;
   readonly quickSearch?: Maybe<SearchPayload>;
+  readonly myTopTenSeries?: Maybe<ReadonlyArray<Maybe<Series>>>;
+  readonly myCurrentlyWatching?: Maybe<ReadonlyArray<Maybe<Series>>>;
 };
 
 
@@ -578,6 +581,31 @@ export const Login = gql`
   }
 }
     `;
+export const MyTopTenSeries = gql`
+    query MyTopTenSeries {
+  myTopTenSeries {
+    id
+    title
+    progress {
+      id
+      overall
+    }
+  }
+}
+    `;
+export const MyCurrentlyWatching = gql`
+    query MyCurrentlyWatching {
+  myCurrentlyWatching {
+    id
+    title
+    episodeCount
+    progress {
+      id
+      completed
+    }
+  }
+}
+    `;
 export const Episode = gql`
     query Episode($where: EpisodeWhereUniqueInput!) {
   episode(where: $where) {
@@ -802,6 +830,11 @@ export const AllSeries = gql`
   }
 }
     `;
+export const TotalSeriesCount = gql`
+    query TotalSeriesCount {
+  totalSeriesCount
+}
+    `;
 export const CreateSeries = gql`
     mutation CreateSeries($data: SeriesCreateUpdateInput!) {
   createSeries(data: $data) {
@@ -900,6 +933,7 @@ export const MySeriesProgress = gql`
     appeal
     remarks
     series {
+      id
       episodeCount
     }
     createdAt
