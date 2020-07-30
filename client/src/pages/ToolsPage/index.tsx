@@ -4,6 +4,7 @@ import {
   makeStyles,
   Paper,
   Theme,
+  Typography,
 } from '@material-ui/core';
 import React, { useState } from 'react';
 import { ExportData } from '../../Components/ExportData';
@@ -18,6 +19,17 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'center',
       color: theme.palette.text.secondary,
     },
+    tableHeader: {
+      'marginBottom': '10px',
+      'textAlign': 'left',
+      '& div': {
+        '& div': {
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        },
+      },
+    },
   })
 );
 
@@ -29,8 +41,15 @@ const ToolsPage = () => {
     <div>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <Paper className={classes.paper}>
+          <Paper elevation={3} className={classes.paper}>
             <Grid container spacing={3}>
+              <Grid item xs={12} className={classes.tableHeader}>
+                <Grid container spacing={3}>
+                  <Grid item>
+                    <Typography variant="h5">Admin Tools</Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
               <Grid item>
                 <FileListExport setLoading={setLoading} loading={loading} />
               </Grid>

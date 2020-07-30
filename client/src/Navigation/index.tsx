@@ -23,6 +23,7 @@ import ListOutlinedIcon from '@material-ui/icons/ListOutlined';
 import MenuOutlinedIcon from '@material-ui/icons/MenuOutlined';
 import PermIdentityOutlinedIcon from '@material-ui/icons/PermIdentityOutlined';
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
+import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -275,7 +276,7 @@ const Navigation = (props: any) => {
                 onClick={() => { history.push('/tools'); setMobileOpen(false); }}
               >
                 <ListItemIcon>
-                  <PermIdentityOutlinedIcon />
+                  <SettingsOutlinedIcon />
                 </ListItemIcon>
                 <ListItemText primary={'Tools'} />
               </ListItem>

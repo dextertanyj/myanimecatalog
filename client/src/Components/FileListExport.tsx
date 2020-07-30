@@ -1,7 +1,14 @@
-import { Button } from '@material-ui/core';
+import {
+  Button,
+  CircularProgress,
+  createStyles,
+  makeStyles,
+  Theme,
+} from '@material-ui/core';
+import { teal } from '@material-ui/core/colors';
 import { saveAs } from 'file-saver';
 import { useSnackbar } from 'notistack';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useFileExportLazyQuery } from '../gql/queries';
 
 type Props = {
@@ -9,11 +16,28 @@ type Props = {
   loading: boolean;
 };
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    wrapper: {
+      position: 'relative',
+    },
+    buttonProgress: {
+      color: teal[500],
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      marginTop: -12,
+      marginLeft: -12,
+    },
+  })
+);
+
 export const FileListExport = (props: Props) => {
+  const classes = useStyles();
   const { setLoading, loading: anyLoading } = props;
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-  const [fileExportQuery, { loading }] = useFileExportLazyQuery({
+  const [fileExportQuery] = useFileExportLazyQuery({
     fetchPolicy: 'no-cache',
     onCompleted: (data) => {
       const content = data.files
@@ -28,7 +52,7 @@ export const FileListExport = (props: Props) => {
           type: 'text/csv,charset=utf-8',
         });
         enqueueSnackbar(`Generated file.`, {
-          key: 'file-generation',
+          key: 'file-generation-success',
           variant: 'success',
         });
         saveAs(file);
@@ -38,14 +62,12 @@ export const FileListExport = (props: Props) => {
           variant: 'warning',
         });
       }
+      setLoading(false);
     },
   });
 
-  useEffect(() => {
-    setLoading(loading);
-  }, [loading, setLoading]);
-
   const handleClick = () => {
+    setLoading(true);
     enqueueSnackbar(`Generating file... Please wait...`, {
       key: 'file-generation',
       autoHideDuration: null,
@@ -54,12 +76,17 @@ export const FileListExport = (props: Props) => {
   };
 
   return (
-    <Button
-      onClick={() => handleClick()}
-      disabled={anyLoading}
-      variant="contained"
-    >
-      Download File CSV
-    </Button>
+    <div className={classes.wrapper}>
+      <Button
+        onClick={() => handleClick()}
+        disabled={anyLoading}
+        variant="contained"
+      >
+        Export File List CSV
+      </Button>
+      {anyLoading && (
+        <CircularProgress size={24} className={classes.buttonProgress} />
+      )}
+    </div>
   );
 };
