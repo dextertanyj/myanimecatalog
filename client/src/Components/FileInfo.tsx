@@ -1,3 +1,4 @@
+import { ApolloError } from '@apollo/client';
 import {
   Button,
   createStyles,
@@ -8,7 +9,6 @@ import {
 } from '@material-ui/core';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
-import { ApolloError } from 'apollo-client';
 import moment from 'moment';
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';

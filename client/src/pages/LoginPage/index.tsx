@@ -1,3 +1,4 @@
+import { ApolloError } from '@apollo/client';
 import {
   Avatar,
   Button,
@@ -9,7 +10,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { ApolloError } from 'apollo-client';
 import { Formik } from 'formik';
 import { useSnackbar } from 'notistack';
 import React from 'react';

@@ -1,4 +1,4 @@
-import { ApolloProvider } from '@apollo/react-hoc';
+import { ApolloProvider } from '@apollo/client';
 import MomentUtils from '@date-io/moment';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import { teal } from '@material-ui/core/colors';
