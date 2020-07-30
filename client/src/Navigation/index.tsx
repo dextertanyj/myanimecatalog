@@ -255,19 +255,31 @@ const Navigation = (props: any) => {
             <ListItemText primary={'Search'} />
           </ListItem>
           {AuthData?.loggedIn?.role === Role.Admin && (
-            <ListItem
-              button
-              key={'users'}
-              onClick={() => {
-                history.push('/users');
-                setMobileOpen(false);
-              }}
-            >
-              <ListItemIcon>
-                <PermIdentityOutlinedIcon />
-              </ListItemIcon>
-              <ListItemText primary={'Users'} />
-            </ListItem>
+            <>
+              <ListItem
+                button
+                key={'users'}
+                onClick={() => {
+                  history.push('/users');
+                  setMobileOpen(false);
+                }}
+              >
+                <ListItemIcon>
+                  <PermIdentityOutlinedIcon />
+                </ListItemIcon>
+                <ListItemText primary={'Users'} />
+              </ListItem>
+              <ListItem
+                button
+                key={'tools'}
+                onClick={() => { history.push('/tools'); setMobileOpen(false); }}
+              >
+                <ListItemIcon>
+                  <PermIdentityOutlinedIcon />
+                </ListItemIcon>
+                <ListItemText primary={'Tools'} />
+              </ListItem>
+            </>
           )}
           {innerWidth < 960 && (
             <>
@@ -318,8 +330,8 @@ const Navigation = (props: any) => {
             {expanded ? (
               <ChevronLeftOutlinedIcon />
             ) : (
-              <ChevronRightOutlinedIcon />
-            )}
+                <ChevronRightOutlinedIcon />
+              )}
           </ListItemIcon>
           <ListItemText
             primary={'Collapse Sidebar'}

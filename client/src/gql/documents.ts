@@ -653,6 +653,63 @@ export const MyCurrentlyWatching = gql`
   }
 }
     `;
+export const ExportData = gql`
+    query ExportData {
+  allSeries {
+    title
+    seasonNumber
+    episodeCount
+    status
+    type
+    releaseSeason
+    releaseYear
+    remarks
+    alternativeTitles {
+      title
+    }
+    episodes {
+      title
+      episodeNumber
+      remarks
+      alternativeTitles {
+        title
+      }
+      files {
+        path
+        fileSize
+        checksum
+        duration
+        resolution
+        source
+        codec
+        remarks
+      }
+    }
+    prequels {
+      title
+    }
+    sequels {
+      title
+    }
+    sideStories {
+      title
+    }
+    mainStories {
+      title
+    }
+    relatedSeries {
+      title
+    }
+    relatedAlternatives {
+      title
+    }
+    references {
+      link
+      source
+    }
+  }
+}
+    `;
 export const Episode = gql`
     query Episode($where: EpisodeWhereUniqueInput!) {
   episode(where: $where) {
@@ -766,6 +823,13 @@ export const SuggestedCodecs = gql`
     query SuggestedCodecs {
   suggestedCodecs {
     codec
+  }
+}
+    `;
+export const FileExport = gql`
+    query FileExport {
+  files {
+    path
   }
 }
     `;

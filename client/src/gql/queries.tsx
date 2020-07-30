@@ -643,6 +643,52 @@ export type MyCurrentlyWatchingQuery = (
   )>>> }
 );
 
+export type ExportDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ExportDataQuery = (
+  { readonly __typename?: 'Query' }
+  & { readonly allSeries?: Maybe<ReadonlyArray<Maybe<(
+    { readonly __typename?: 'Series' }
+    & Pick<Series, 'title' | 'seasonNumber' | 'episodeCount' | 'status' | 'type' | 'releaseSeason' | 'releaseYear' | 'remarks'>
+    & { readonly alternativeTitles?: Maybe<ReadonlyArray<Maybe<(
+      { readonly __typename?: 'AlternativeTitle' }
+      & Pick<AlternativeTitle, 'title'>
+    )>>>, readonly episodes?: Maybe<ReadonlyArray<Maybe<(
+      { readonly __typename?: 'Episode' }
+      & Pick<Episode, 'title' | 'episodeNumber' | 'remarks'>
+      & { readonly alternativeTitles?: Maybe<ReadonlyArray<Maybe<(
+        { readonly __typename?: 'AlternativeTitle' }
+        & Pick<AlternativeTitle, 'title'>
+      )>>>, readonly files?: Maybe<ReadonlyArray<Maybe<(
+        { readonly __typename?: 'File' }
+        & Pick<File, 'path' | 'fileSize' | 'checksum' | 'duration' | 'resolution' | 'source' | 'codec' | 'remarks'>
+      )>>> }
+    )>>>, readonly prequels?: Maybe<ReadonlyArray<Maybe<(
+      { readonly __typename?: 'Series' }
+      & Pick<Series, 'title'>
+    )>>>, readonly sequels?: Maybe<ReadonlyArray<Maybe<(
+      { readonly __typename?: 'Series' }
+      & Pick<Series, 'title'>
+    )>>>, readonly sideStories?: Maybe<ReadonlyArray<Maybe<(
+      { readonly __typename?: 'Series' }
+      & Pick<Series, 'title'>
+    )>>>, readonly mainStories?: Maybe<ReadonlyArray<Maybe<(
+      { readonly __typename?: 'Series' }
+      & Pick<Series, 'title'>
+    )>>>, readonly relatedSeries?: Maybe<ReadonlyArray<Maybe<(
+      { readonly __typename?: 'Series' }
+      & Pick<Series, 'title'>
+    )>>>, readonly relatedAlternatives?: Maybe<ReadonlyArray<Maybe<(
+      { readonly __typename?: 'Series' }
+      & Pick<Series, 'title'>
+    )>>>, readonly references?: Maybe<ReadonlyArray<Maybe<(
+      { readonly __typename?: 'Reference' }
+      & Pick<Reference, 'link' | 'source'>
+    )>>> }
+  )>>> }
+);
+
 export type EpisodeQueryVariables = Exact<{
   where: EpisodeWhereUniqueInput;
 }>;
@@ -774,6 +820,17 @@ export type SuggestedCodecsQuery = (
   & { readonly suggestedCodecs?: Maybe<ReadonlyArray<Maybe<(
     { readonly __typename?: 'Codec' }
     & Pick<Codec, 'codec'>
+  )>>> }
+);
+
+export type FileExportQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FileExportQuery = (
+  { readonly __typename?: 'Query' }
+  & { readonly files?: Maybe<ReadonlyArray<Maybe<(
+    { readonly __typename?: 'File' }
+    & Pick<File, 'path'>
   )>>> }
 );
 
@@ -1387,6 +1444,107 @@ export function useMyCurrentlyWatchingLazyQuery(baseOptions?: ApolloReactHooks.L
 export type MyCurrentlyWatchingQueryHookResult = ReturnType<typeof useMyCurrentlyWatchingQuery>;
 export type MyCurrentlyWatchingLazyQueryHookResult = ReturnType<typeof useMyCurrentlyWatchingLazyQuery>;
 export type MyCurrentlyWatchingQueryResult = ApolloReactCommon.QueryResult<MyCurrentlyWatchingQuery, MyCurrentlyWatchingQueryVariables>;
+export const ExportDataDocument = gql`
+    query ExportData {
+  allSeries {
+    title
+    seasonNumber
+    episodeCount
+    status
+    type
+    releaseSeason
+    releaseYear
+    remarks
+    alternativeTitles {
+      title
+    }
+    episodes {
+      title
+      episodeNumber
+      remarks
+      alternativeTitles {
+        title
+      }
+      files {
+        path
+        fileSize
+        checksum
+        duration
+        resolution
+        source
+        codec
+        remarks
+      }
+    }
+    prequels {
+      title
+    }
+    sequels {
+      title
+    }
+    sideStories {
+      title
+    }
+    mainStories {
+      title
+    }
+    relatedSeries {
+      title
+    }
+    relatedAlternatives {
+      title
+    }
+    references {
+      link
+      source
+    }
+  }
+}
+    `;
+export type ExportDataComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<ExportDataQuery, ExportDataQueryVariables>, 'query'>;
+
+    export const ExportDataComponent = (props: ExportDataComponentProps) => (
+      <ApolloReactComponents.Query<ExportDataQuery, ExportDataQueryVariables> query={ExportDataDocument} {...props} />
+    );
+    
+export type ExportDataProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<ExportDataQuery, ExportDataQueryVariables>
+    } & TChildProps;
+export function withExportData<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  ExportDataQuery,
+  ExportDataQueryVariables,
+  ExportDataProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, ExportDataQuery, ExportDataQueryVariables, ExportDataProps<TChildProps, TDataName>>(ExportDataDocument, {
+      alias: 'exportData',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useExportDataQuery__
+ *
+ * To run a query within a React component, call `useExportDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useExportDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useExportDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useExportDataQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ExportDataQuery, ExportDataQueryVariables>) {
+        return ApolloReactHooks.useQuery<ExportDataQuery, ExportDataQueryVariables>(ExportDataDocument, baseOptions);
+      }
+export function useExportDataLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ExportDataQuery, ExportDataQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<ExportDataQuery, ExportDataQueryVariables>(ExportDataDocument, baseOptions);
+        }
+export type ExportDataQueryHookResult = ReturnType<typeof useExportDataQuery>;
+export type ExportDataLazyQueryHookResult = ReturnType<typeof useExportDataLazyQuery>;
+export type ExportDataQueryResult = ApolloReactCommon.QueryResult<ExportDataQuery, ExportDataQueryVariables>;
 export const EpisodeDocument = gql`
     query Episode($where: EpisodeWhereUniqueInput!) {
   episode(where: $where) {
@@ -1948,6 +2106,57 @@ export function useSuggestedCodecsLazyQuery(baseOptions?: ApolloReactHooks.LazyQ
 export type SuggestedCodecsQueryHookResult = ReturnType<typeof useSuggestedCodecsQuery>;
 export type SuggestedCodecsLazyQueryHookResult = ReturnType<typeof useSuggestedCodecsLazyQuery>;
 export type SuggestedCodecsQueryResult = ApolloReactCommon.QueryResult<SuggestedCodecsQuery, SuggestedCodecsQueryVariables>;
+export const FileExportDocument = gql`
+    query FileExport {
+  files {
+    path
+  }
+}
+    `;
+export type FileExportComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<FileExportQuery, FileExportQueryVariables>, 'query'>;
+
+    export const FileExportComponent = (props: FileExportComponentProps) => (
+      <ApolloReactComponents.Query<FileExportQuery, FileExportQueryVariables> query={FileExportDocument} {...props} />
+    );
+    
+export type FileExportProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<FileExportQuery, FileExportQueryVariables>
+    } & TChildProps;
+export function withFileExport<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  FileExportQuery,
+  FileExportQueryVariables,
+  FileExportProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, FileExportQuery, FileExportQueryVariables, FileExportProps<TChildProps, TDataName>>(FileExportDocument, {
+      alias: 'fileExport',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useFileExportQuery__
+ *
+ * To run a query within a React component, call `useFileExportQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFileExportQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFileExportQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFileExportQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FileExportQuery, FileExportQueryVariables>) {
+        return ApolloReactHooks.useQuery<FileExportQuery, FileExportQueryVariables>(FileExportDocument, baseOptions);
+      }
+export function useFileExportLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FileExportQuery, FileExportQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<FileExportQuery, FileExportQueryVariables>(FileExportDocument, baseOptions);
+        }
+export type FileExportQueryHookResult = ReturnType<typeof useFileExportQuery>;
+export type FileExportLazyQueryHookResult = ReturnType<typeof useFileExportLazyQuery>;
+export type FileExportQueryResult = ApolloReactCommon.QueryResult<FileExportQuery, FileExportQueryVariables>;
 export const CreateFileDocument = gql`
     mutation CreateFile($data: FileCreateUpdateInput!) {
   createFile(data: $data) {
