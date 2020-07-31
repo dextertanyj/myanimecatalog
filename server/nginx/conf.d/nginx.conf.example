@@ -5,7 +5,7 @@ upstream app {
 server {
   listen 80;
   listen [::]:80;
-  server_name api.staging.dextertanyj.com;
+  server_name example.com;
 
   location /.well-known/acme-challenge/ {
     root /var/www/certbot;
@@ -20,14 +20,14 @@ server {
 server {
   listen 443 ssl;
   listen [::]:443;
-  server_name api.staging.dextertanyj.com;
+  server_name exmaple.com;
 
   location /.well-known/acme-challenge/ {
     root /var/www/certbot;
   }
 
-  ssl_certificate /etc/letsencrypt/live/api.staging.dextertanyj.com/fullchain.pem;
-	ssl_certificate_key /etc/letsencrypt/live/api.staging.dextertanyj.com/privkey.pem;
+  ssl_certificate /etc/letsencrypt/live/example.com/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem;
   ssl_session_timeout 1d;
 	ssl_session_cache shared:MozSSL:10m;  # about 40000 sessions
 	ssl_session_tickets off;

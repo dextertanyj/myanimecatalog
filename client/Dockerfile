@@ -14,4 +14,4 @@ COPY --from=build ./build /usr/share/nginx/html
 
 EXPOSE 80 443
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["/bin/sh", "-c", "while :; do sleep 6h; nginx -s reload; done & nginx -g \"daemon off;\""]
