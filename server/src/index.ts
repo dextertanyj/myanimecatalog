@@ -34,7 +34,8 @@ export const server = new ApolloServer({
   playground: process.env.NODE_ENV === 'development',
   debug: process.env.NODE_ENV === 'development',
   cors: {
-    origin: '*',
+    origin:
+      process.env.NODE_ENV === 'development' ? '*' : process.env.CLIENT_URL,
     allowedHeaders:
       'Origin, X-Requested-With, Content-Type, Accept, apollographql-client-version, batch, apollographql-client-name, authorization',
   },
