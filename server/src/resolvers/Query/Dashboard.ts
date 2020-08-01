@@ -14,7 +14,16 @@ export const Dashboard = {
     if (ctx.userId) {
       const topTenRatings = await ctx.prisma.userProgress.findMany({
         where: {
-          userId: ctx.userId,
+          AND: [
+            {
+              userId: ctx.userId,
+            },
+            {
+              overall: {
+                not: null,
+              },
+            },
+          ],
         },
         orderBy: {
           overall: 'desc',
