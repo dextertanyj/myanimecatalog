@@ -56,7 +56,7 @@ const create = (
   return new ApolloClient({
     link: ApolloLink.from([authLink, errorLink, persistentHttpLink]),
     cache: cache.restore(initialState || {}),
-    name: 'Anime Database',
+    name: 'MyAnimeCatalog',
     version: '1',
   });
 };

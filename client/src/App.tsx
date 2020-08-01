@@ -28,7 +28,7 @@ const apolloClient = initApollo(
   {},
   {
     getToken: () => {
-      return cookies.get('anime_database_token') ?? '';
+      return cookies.get('MACLOGINID') ?? '';
     },
   }
 );

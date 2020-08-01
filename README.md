@@ -1,4 +1,4 @@
-# Anime-Database
+# MyAnimeCatalog
 
 ## Contents
 
@@ -15,7 +15,7 @@
 ## Project Structure
 
 ```
-anime-database
+myanimecatalog
 ├─client/
 └─server/
 ```

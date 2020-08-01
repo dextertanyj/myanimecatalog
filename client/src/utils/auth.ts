@@ -1,7 +1,7 @@
 import cookies from 'browser-cookies';
 import { Role } from '../gql/documents';
 
-const tokenName = 'anime_database_token';
+const tokenName = 'MACLOGINID';
 
 export const setLoginToken = (token: string): void => {
   cookies.set(tokenName, token, {

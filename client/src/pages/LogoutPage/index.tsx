@@ -30,7 +30,7 @@ export const LogoutPage = () => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   useEffect(() => {
-    cookies.erase('anime_database_token');
+    cookies.erase('MACLOGINID');
     closeSnackbar();
     enqueueSnackbar(`Successfully logged out`);
     history.push('/login');
