@@ -6,6 +6,7 @@ node_modules
 */nginx/certbot/conf/live/
 */nginx/certbot/conf/archive/
 */nginx/certbot/conf/renewal/
+
 nginx.conf
 
 # dependencies
