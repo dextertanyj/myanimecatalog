@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Navigation from '../Navigation';
+import CatalogPage from '../pages/CatalogPage';
 import EpisodePage from '../pages/EpisodePage';
 import HomePage from '../pages/HomePage';
 import { LoginPage } from '../pages/LoginPage';
 import { LogoutPage } from '../pages/LogoutPage';
-import ManagePage from '../pages/ManagePage';
 import ProfilePage from '../pages/ProfilePage';
 import SearchPage from '../pages/SearchPage';
 import SeriesPage from '../pages/SeriesPage';
@@ -33,8 +33,8 @@ export default function ReactRouter() {
             <Route exact strict path="/profile">
               <ProfilePage />
             </Route>
-            <Route exact strict path="/manage">
-              <ManagePage />
+            <Route exact strict path="/catalog">
+              <CatalogPage />
             </Route>
             <Route
               exact
