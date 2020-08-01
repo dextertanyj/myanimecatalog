@@ -1,3 +1,4 @@
+import { ApolloError } from '@apollo/client';
 import {
   Button,
   Dialog,
@@ -11,7 +12,6 @@ import {
   Theme,
 } from '@material-ui/core';
 import RemoveIcon from '@material-ui/icons/Remove';
-import { ApolloError } from 'apollo-client';
 import {
   FieldArray,
   Formik,

@@ -1,3 +1,4 @@
+import { ApolloError } from '@apollo/client';
 import {
   Button,
   Dialog,
@@ -14,7 +15,6 @@ import {
 import RemoveIcon from '@material-ui/icons/Remove';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
-import { ApolloError } from 'apollo-client';
 import {
   FieldArray,
   Formik,

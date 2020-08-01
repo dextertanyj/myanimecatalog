@@ -1,9 +1,9 @@
 import gql from 'graphql-tag';
 import * as React from 'react';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactComponents from '@apollo/react-components';
-import * as ApolloReactHoc from '@apollo/react-hoc';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as ApolloReactCommon from '@apollo/client';
+import * as ApolloReactComponents from '@apollo/client/react/components';
+import * as ApolloReactHoc from '@apollo/client/react/hoc';
+import * as ApolloReactHooks from '@apollo/client';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
@@ -14,58 +14,78 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** Long (64-bit) custom scalar type */
-  Long: number;
   /** DateTime custom scalar type */
   DateTime: string;
+  /** Long (64-bit) custom scalar type */
+  Long: number;
 };
 
-export type AlternativeTitle = {
-  readonly __typename?: 'AlternativeTitle';
-  readonly id: Scalars['String'];
-  readonly title: Scalars['String'];
-};
 
-export type AlternativeTitleCreateUpdateInput = {
+
+export enum Status {
+  Downloaded = 'DOWNLOADED',
+  Missing = 'MISSING',
+  Unreleased = 'UNRELEASED'
+}
+
+export enum WatchStatus {
+  Completed = 'COMPLETED',
+  Watching = 'WATCHING',
+  Onhold = 'ONHOLD',
+  Pending = 'PENDING',
+  Dropped = 'DROPPED'
+}
+
+export enum Season {
+  Winter = 'WINTER',
+  Fall = 'FALL',
+  Summer = 'SUMMER',
+  Spring = 'SPRING'
+}
+
+export enum Source {
+  Bluray = 'BLURAY',
+  Dvd = 'DVD',
+  Cd = 'CD',
+  Web = 'WEB',
+  Tv = 'TV'
+}
+
+export enum Type {
+  Movie = 'MOVIE',
+  Series = 'SERIES',
+  Musicvideo = 'MUSICVIDEO',
+  Ova = 'OVA',
+  Special = 'SPECIAL'
+}
+
+export enum Role {
+  Readonly = 'READONLY',
+  Write = 'WRITE',
+  Admin = 'ADMIN'
+}
+
+export type UserWhereUniqueInput = {
   readonly id?: Maybe<Scalars['String']>;
-  readonly title?: Maybe<Scalars['String']>;
-  readonly episode?: Maybe<EpisodeRelationInput>;
-  readonly series?: Maybe<SeriesRelationInput>;
+  readonly username?: Maybe<Scalars['String']>;
 };
 
-export type AlternativeTitleRelationInput = {
-  readonly create?: Maybe<ReadonlyArray<Maybe<AlternativeTitleCreateUpdateInput>>>;
-  readonly delete?: Maybe<ReadonlyArray<Maybe<AlternativeTitleWhereUniqueInput>>>;
-  readonly update?: Maybe<ReadonlyArray<Maybe<AlternativeTitleUpdateWhereUniqueInput>>>;
-};
-
-export type AlternativeTitleUpdateWhereUniqueInput = {
-  readonly where?: Maybe<AlternativeTitleWhereUniqueInput>;
-  readonly data?: Maybe<AlternativeTitleCreateUpdateInput>;
-};
-
-export type AlternativeTitleWhereUniqueInput = {
-  readonly id: Scalars['String'];
-};
-
-export type AuthPayload = {
-  readonly __typename?: 'AuthPayload';
-  readonly token?: Maybe<Scalars['String']>;
-  readonly user?: Maybe<User>;
-};
-
-
-export type Episode = {
-  readonly __typename?: 'Episode';
+export type UserCreateUpdateInput = {
   readonly id?: Maybe<Scalars['String']>;
-  readonly title?: Maybe<Scalars['String']>;
-  readonly alternativeTitles?: Maybe<ReadonlyArray<Maybe<AlternativeTitle>>>;
-  readonly series?: Maybe<Series>;
-  readonly episodeNumber?: Maybe<Scalars['Int']>;
-  readonly files?: Maybe<ReadonlyArray<Maybe<File>>>;
-  readonly remarks?: Maybe<Scalars['String']>;
-  readonly createdAt?: Maybe<Scalars['DateTime']>;
-  readonly updatedAt?: Maybe<Scalars['DateTime']>;
+  readonly username?: Maybe<Scalars['String']>;
+  readonly name?: Maybe<Scalars['String']>;
+  readonly password?: Maybe<Scalars['String']>;
+  readonly passwordAttempts?: Maybe<Scalars['Int']>;
+  readonly role?: Maybe<Role>;
+};
+
+export type UserRelationInput = {
+  readonly connect?: Maybe<UserWhereUniqueInput>;
+  readonly disconnect?: Maybe<UserWhereUniqueInput>;
+};
+
+export type EpisodeWhereUniqueInput = {
+  readonly id: Scalars['String'];
 };
 
 export type EpisodeCreateUpdateInput = {
@@ -90,24 +110,69 @@ export type EpisodeRelationInput = {
   readonly connect?: Maybe<EpisodeWhereUniqueInput>;
 };
 
-export type EpisodeWhereUniqueInput = {
+export type SeriesWhereUniqueInput = {
   readonly id: Scalars['String'];
 };
 
-export type File = {
-  readonly __typename?: 'File';
+export type SeriesCreateUpdateInput = {
   readonly id?: Maybe<Scalars['String']>;
-  readonly path?: Maybe<Scalars['String']>;
-  readonly checksum?: Maybe<Scalars['String']>;
-  readonly fileSize?: Maybe<Scalars['Long']>;
-  readonly duration?: Maybe<Scalars['Int']>;
-  readonly resolution?: Maybe<Scalars['String']>;
-  readonly source?: Maybe<Source>;
-  readonly codec?: Maybe<Scalars['String']>;
+  readonly title?: Maybe<Scalars['String']>;
+  readonly alternativeTitles?: Maybe<AlternativeTitleRelationInput>;
+  readonly seasonNumber?: Maybe<Scalars['Int']>;
+  readonly episodes?: Maybe<EpisodeManyRelationInput>;
+  readonly episodeCount?: Maybe<Scalars['Int']>;
+  readonly status?: Maybe<Status>;
+  readonly type?: Maybe<Type>;
+  readonly releaseSeason?: Maybe<Season>;
+  readonly releaseYear?: Maybe<Scalars['DateTime']>;
   readonly remarks?: Maybe<Scalars['String']>;
+  readonly prequels?: Maybe<SeriesManyRelationInput>;
+  readonly sequels?: Maybe<SeriesManyRelationInput>;
+  readonly sideStories?: Maybe<SeriesManyRelationInput>;
+  readonly mainStories?: Maybe<SeriesManyRelationInput>;
+  readonly relatedSeries?: Maybe<SeriesManyRelationInput>;
+  readonly relatedAlternatives?: Maybe<SeriesManyRelationInput>;
+  readonly references?: Maybe<ReferenceRelationInput>;
+  readonly progress?: Maybe<UserProgressRelationInput>;
   readonly createdAt?: Maybe<Scalars['DateTime']>;
   readonly updatedAt?: Maybe<Scalars['DateTime']>;
-  readonly episode?: Maybe<Episode>;
+};
+
+export type SeriesManyRelationInput = {
+  readonly connect?: Maybe<ReadonlyArray<Maybe<SeriesWhereUniqueInput>>>;
+  readonly disconnect?: Maybe<ReadonlyArray<Maybe<SeriesWhereUniqueInput>>>;
+};
+
+export type SeriesRelationInput = {
+  readonly create?: Maybe<SeriesCreateUpdateInput>;
+  readonly connect?: Maybe<SeriesWhereUniqueInput>;
+  readonly disconnect?: Maybe<SeriesWhereUniqueInput>;
+};
+
+export type AlternativeTitleWhereUniqueInput = {
+  readonly id: Scalars['String'];
+};
+
+export type AlternativeTitleCreateUpdateInput = {
+  readonly id?: Maybe<Scalars['String']>;
+  readonly title?: Maybe<Scalars['String']>;
+  readonly episode?: Maybe<EpisodeRelationInput>;
+  readonly series?: Maybe<SeriesRelationInput>;
+};
+
+export type AlternativeTitleRelationInput = {
+  readonly create?: Maybe<ReadonlyArray<Maybe<AlternativeTitleCreateUpdateInput>>>;
+  readonly delete?: Maybe<ReadonlyArray<Maybe<AlternativeTitleWhereUniqueInput>>>;
+  readonly update?: Maybe<ReadonlyArray<Maybe<AlternativeTitleUpdateWhereUniqueInput>>>;
+};
+
+export type AlternativeTitleUpdateWhereUniqueInput = {
+  readonly where?: Maybe<AlternativeTitleWhereUniqueInput>;
+  readonly data?: Maybe<AlternativeTitleCreateUpdateInput>;
+};
+
+export type FileWhereUniqueInput = {
+  readonly id: Scalars['String'];
 };
 
 export type FileCreateUpdateInput = {
@@ -130,10 +195,142 @@ export type FileRelationInput = {
   readonly delete?: Maybe<ReadonlyArray<Maybe<FileWhereUniqueInput>>>;
 };
 
-export type FileWhereUniqueInput = {
+export type UserProgressWhereUniqueInput = {
+  readonly id?: Maybe<Scalars['String']>;
+  readonly seriesId_userId?: Maybe<SeriesUserCompoundInput>;
+};
+
+export type SeriesUserCompoundInput = {
+  readonly seriesId: Scalars['String'];
+  readonly userId: Scalars['String'];
+};
+
+export type UserProgressCreateUpdateInput = {
+  readonly id?: Maybe<Scalars['String']>;
+  readonly series?: Maybe<SeriesRelationInput>;
+  readonly user?: Maybe<UserRelationInput>;
+  readonly status?: Maybe<WatchStatus>;
+  readonly completed?: Maybe<Scalars['Int']>;
+  readonly overall?: Maybe<Scalars['Int']>;
+  readonly execution?: Maybe<Scalars['Int']>;
+  readonly story?: Maybe<Scalars['Int']>;
+  readonly sound?: Maybe<Scalars['Int']>;
+  readonly art?: Maybe<Scalars['Int']>;
+  readonly character?: Maybe<Scalars['Int']>;
+  readonly appeal?: Maybe<Scalars['Int']>;
+  readonly remarks?: Maybe<Scalars['String']>;
+  readonly createdAt?: Maybe<Scalars['DateTime']>;
+  readonly updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type UserProgressRelationInput = {
+  readonly create?: Maybe<ReadonlyArray<Maybe<UserProgressCreateUpdateInput>>>;
+  readonly delete?: Maybe<ReadonlyArray<Maybe<UserProgressWhereUniqueInput>>>;
+  readonly update?: Maybe<ReadonlyArray<Maybe<UserProgressUpdateWhereUniqueInput>>>;
+};
+
+export type UserProgressUpdateWhereUniqueInput = {
+  readonly where?: Maybe<UserProgressWhereUniqueInput>;
+  readonly data?: Maybe<UserProgressCreateUpdateInput>;
+};
+
+export type ReferenceWhereUniqueInput = {
   readonly id: Scalars['String'];
 };
 
+export type ReferenceCreateUpdateInput = {
+  readonly id?: Maybe<Scalars['String']>;
+  readonly link?: Maybe<Scalars['String']>;
+  readonly source?: Maybe<Scalars['String']>;
+  readonly series?: Maybe<SeriesRelationInput>;
+};
+
+export type ReferenceRelationInput = {
+  readonly create?: Maybe<ReadonlyArray<Maybe<ReferenceCreateUpdateInput>>>;
+  readonly update?: Maybe<ReadonlyArray<Maybe<ReferenceUpdateWhereUniqueInput>>>;
+  readonly delete?: Maybe<ReadonlyArray<Maybe<ReferenceWhereUniqueInput>>>;
+};
+
+export type ReferenceUpdateWhereUniqueInput = {
+  readonly where?: Maybe<ReferenceWhereUniqueInput>;
+  readonly data?: Maybe<ReferenceCreateUpdateInput>;
+};
+
+export type Query = {
+  readonly __typename?: 'Query';
+  readonly loggedIn?: Maybe<User>;
+  readonly user?: Maybe<User>;
+  readonly users?: Maybe<ReadonlyArray<Maybe<User>>>;
+  readonly isInitialized?: Maybe<Scalars['Boolean']>;
+  readonly series?: Maybe<Series>;
+  readonly allSeries?: Maybe<ReadonlyArray<Maybe<Series>>>;
+  readonly totalSeriesCount?: Maybe<Scalars['Int']>;
+  readonly episode?: Maybe<Episode>;
+  readonly episodes?: Maybe<ReadonlyArray<Maybe<Episode>>>;
+  readonly episodesInSeries?: Maybe<ReadonlyArray<Maybe<Episode>>>;
+  readonly file?: Maybe<File>;
+  readonly filesForEpisode?: Maybe<ReadonlyArray<Maybe<File>>>;
+  readonly files?: Maybe<ReadonlyArray<Maybe<File>>>;
+  readonly myProgress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
+  readonly mySeriesProgress?: Maybe<UserProgress>;
+  readonly userProgress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
+  readonly allUserProgress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
+  readonly reference?: Maybe<Reference>;
+  readonly references?: Maybe<ReadonlyArray<Maybe<Reference>>>;
+  readonly quickSearch?: Maybe<SearchPayload>;
+  readonly myTopTenSeries?: Maybe<ReadonlyArray<Maybe<Series>>>;
+  readonly myCurrentlyWatching?: Maybe<ReadonlyArray<Maybe<Series>>>;
+};
+
+
+export type QueryUserArgs = {
+  where: UserWhereUniqueInput;
+};
+
+
+export type QuerySeriesArgs = {
+  where: SeriesWhereUniqueInput;
+};
+
+
+export type QueryEpisodeArgs = {
+  where: EpisodeWhereUniqueInput;
+};
+
+
+export type QueryEpisodesInSeriesArgs = {
+  where: SeriesWhereUniqueInput;
+};
+
+
+export type QueryFileArgs = {
+  where?: Maybe<FileWhereUniqueInput>;
+};
+
+
+export type QueryFilesForEpisodeArgs = {
+  where: EpisodeWhereUniqueInput;
+};
+
+
+export type QueryMySeriesProgressArgs = {
+  where: SeriesWhereUniqueInput;
+};
+
+
+export type QueryUserProgressArgs = {
+  where: UserProgressWhereUniqueInput;
+};
+
+
+export type QueryReferenceArgs = {
+  where?: Maybe<ReferenceCreateUpdateInput>;
+};
+
+
+export type QueryQuickSearchArgs = {
+  where: Scalars['String'];
+};
 
 export type Mutation = {
   readonly __typename?: 'Mutation';
@@ -258,129 +455,35 @@ export type MutationDeleteUserProgressArgs = {
   where: UserProgressWhereUniqueInput;
 };
 
-export type Query = {
-  readonly __typename?: 'Query';
-  readonly loggedIn?: Maybe<User>;
+export type AuthPayload = {
+  readonly __typename?: 'AuthPayload';
+  readonly token?: Maybe<Scalars['String']>;
   readonly user?: Maybe<User>;
-  readonly users?: Maybe<ReadonlyArray<Maybe<User>>>;
-  readonly isInitialized?: Maybe<Scalars['Boolean']>;
+};
+
+export type User = {
+  readonly __typename?: 'User';
+  readonly id?: Maybe<Scalars['String']>;
+  readonly username?: Maybe<Scalars['String']>;
+  readonly name?: Maybe<Scalars['String']>;
+  readonly password?: Maybe<Scalars['String']>;
+  readonly passwordAttempts?: Maybe<Scalars['Int']>;
+  readonly role?: Maybe<Role>;
+  readonly progress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
+};
+
+export type Episode = {
+  readonly __typename?: 'Episode';
+  readonly id?: Maybe<Scalars['String']>;
+  readonly title?: Maybe<Scalars['String']>;
+  readonly alternativeTitles?: Maybe<ReadonlyArray<Maybe<AlternativeTitle>>>;
   readonly series?: Maybe<Series>;
-  readonly allSeries?: Maybe<ReadonlyArray<Maybe<Series>>>;
-  readonly totalSeriesCount?: Maybe<Scalars['Int']>;
-  readonly episode?: Maybe<Episode>;
-  readonly episodes?: Maybe<ReadonlyArray<Maybe<Episode>>>;
-  readonly episodesInSeries?: Maybe<ReadonlyArray<Maybe<Episode>>>;
-  readonly file?: Maybe<File>;
-  readonly filesForEpisode?: Maybe<ReadonlyArray<Maybe<File>>>;
+  readonly episodeNumber?: Maybe<Scalars['Int']>;
   readonly files?: Maybe<ReadonlyArray<Maybe<File>>>;
-  readonly myProgress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
-  readonly mySeriesProgress?: Maybe<UserProgress>;
-  readonly userProgress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
-  readonly allUserProgress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
-  readonly reference?: Maybe<Reference>;
-  readonly references?: Maybe<ReadonlyArray<Maybe<Reference>>>;
-  readonly quickSearch?: Maybe<SearchPayload>;
-  readonly myTopTenSeries?: Maybe<ReadonlyArray<Maybe<Series>>>;
-  readonly myCurrentlyWatching?: Maybe<ReadonlyArray<Maybe<Series>>>;
+  readonly remarks?: Maybe<Scalars['String']>;
+  readonly createdAt?: Maybe<Scalars['DateTime']>;
+  readonly updatedAt?: Maybe<Scalars['DateTime']>;
 };
-
-
-export type QueryUserArgs = {
-  where: UserWhereUniqueInput;
-};
-
-
-export type QuerySeriesArgs = {
-  where: SeriesWhereUniqueInput;
-};
-
-
-export type QueryEpisodeArgs = {
-  where: EpisodeWhereUniqueInput;
-};
-
-
-export type QueryEpisodesInSeriesArgs = {
-  where: SeriesWhereUniqueInput;
-};
-
-
-export type QueryFileArgs = {
-  where?: Maybe<FileWhereUniqueInput>;
-};
-
-
-export type QueryFilesForEpisodeArgs = {
-  where: EpisodeWhereUniqueInput;
-};
-
-
-export type QueryMySeriesProgressArgs = {
-  where: SeriesWhereUniqueInput;
-};
-
-
-export type QueryUserProgressArgs = {
-  where: UserProgressWhereUniqueInput;
-};
-
-
-export type QueryReferenceArgs = {
-  where?: Maybe<ReferenceCreateUpdateInput>;
-};
-
-
-export type QueryQuickSearchArgs = {
-  where: Scalars['String'];
-};
-
-export type Reference = {
-  readonly __typename?: 'Reference';
-  readonly id?: Maybe<Scalars['String']>;
-  readonly link?: Maybe<Scalars['String']>;
-  readonly source?: Maybe<Scalars['String']>;
-};
-
-export type ReferenceCreateUpdateInput = {
-  readonly id?: Maybe<Scalars['String']>;
-  readonly link?: Maybe<Scalars['String']>;
-  readonly source?: Maybe<Scalars['String']>;
-  readonly series?: Maybe<SeriesRelationInput>;
-};
-
-export type ReferenceRelationInput = {
-  readonly create?: Maybe<ReadonlyArray<Maybe<ReferenceCreateUpdateInput>>>;
-  readonly update?: Maybe<ReadonlyArray<Maybe<ReferenceUpdateWhereUniqueInput>>>;
-  readonly delete?: Maybe<ReadonlyArray<Maybe<ReferenceWhereUniqueInput>>>;
-};
-
-export type ReferenceUpdateWhereUniqueInput = {
-  readonly where?: Maybe<ReferenceWhereUniqueInput>;
-  readonly data?: Maybe<ReferenceCreateUpdateInput>;
-};
-
-export type ReferenceWhereUniqueInput = {
-  readonly id: Scalars['String'];
-};
-
-export enum Role {
-  Readonly = 'READONLY',
-  Write = 'WRITE',
-  Admin = 'ADMIN'
-}
-
-export type SearchPayload = {
-  readonly __typename?: 'SearchPayload';
-  readonly series: ReadonlyArray<Maybe<Series>>;
-  readonly episodes: ReadonlyArray<Maybe<Episode>>;
-};
-
-export enum Season {
-  Winter = 'WINTER',
-  Fall = 'FALL',
-  Summer = 'SUMMER',
-  Spring = 'SPRING'
-}
 
 export type Series = {
   readonly __typename?: 'Series';
@@ -408,90 +511,26 @@ export type Series = {
   readonly updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
-export type SeriesCreateUpdateInput = {
+export type AlternativeTitle = {
+  readonly __typename?: 'AlternativeTitle';
+  readonly id: Scalars['String'];
+  readonly title: Scalars['String'];
+};
+
+export type File = {
+  readonly __typename?: 'File';
   readonly id?: Maybe<Scalars['String']>;
-  readonly title?: Maybe<Scalars['String']>;
-  readonly alternativeTitles?: Maybe<AlternativeTitleRelationInput>;
-  readonly seasonNumber?: Maybe<Scalars['Int']>;
-  readonly episodes?: Maybe<EpisodeManyRelationInput>;
-  readonly episodeCount?: Maybe<Scalars['Int']>;
-  readonly status?: Maybe<Status>;
-  readonly type?: Maybe<Type>;
-  readonly releaseSeason?: Maybe<Season>;
-  readonly releaseYear?: Maybe<Scalars['DateTime']>;
+  readonly path?: Maybe<Scalars['String']>;
+  readonly checksum?: Maybe<Scalars['String']>;
+  readonly fileSize?: Maybe<Scalars['Long']>;
+  readonly duration?: Maybe<Scalars['Int']>;
+  readonly resolution?: Maybe<Scalars['String']>;
+  readonly source?: Maybe<Source>;
+  readonly codec?: Maybe<Scalars['String']>;
   readonly remarks?: Maybe<Scalars['String']>;
-  readonly prequels?: Maybe<SeriesManyRelationInput>;
-  readonly sequels?: Maybe<SeriesManyRelationInput>;
-  readonly sideStories?: Maybe<SeriesManyRelationInput>;
-  readonly mainStories?: Maybe<SeriesManyRelationInput>;
-  readonly relatedSeries?: Maybe<SeriesManyRelationInput>;
-  readonly relatedAlternatives?: Maybe<SeriesManyRelationInput>;
-  readonly references?: Maybe<ReferenceRelationInput>;
-  readonly progress?: Maybe<UserProgressRelationInput>;
   readonly createdAt?: Maybe<Scalars['DateTime']>;
   readonly updatedAt?: Maybe<Scalars['DateTime']>;
-};
-
-export type SeriesManyRelationInput = {
-  readonly connect?: Maybe<ReadonlyArray<Maybe<SeriesWhereUniqueInput>>>;
-  readonly disconnect?: Maybe<ReadonlyArray<Maybe<SeriesWhereUniqueInput>>>;
-};
-
-export type SeriesRelationInput = {
-  readonly create?: Maybe<SeriesCreateUpdateInput>;
-  readonly connect?: Maybe<SeriesWhereUniqueInput>;
-  readonly disconnect?: Maybe<SeriesWhereUniqueInput>;
-};
-
-export type SeriesUserCompoundInput = {
-  readonly seriesId: Scalars['String'];
-  readonly userId: Scalars['String'];
-};
-
-export type SeriesWhereUniqueInput = {
-  readonly id: Scalars['String'];
-};
-
-export enum Source {
-  Bluray = 'BLURAY',
-  Dvd = 'DVD',
-  Cd = 'CD',
-  Web = 'WEB',
-  Tv = 'TV'
-}
-
-export enum Status {
-  Downloaded = 'DOWNLOADED',
-  Missing = 'MISSING',
-  Unreleased = 'UNRELEASED'
-}
-
-export enum Type {
-  Movie = 'MOVIE',
-  Series = 'SERIES',
-  Musicvideo = 'MUSICVIDEO',
-  Ova = 'OVA',
-  Special = 'SPECIAL'
-}
-
-export type User = {
-  readonly __typename?: 'User';
-  readonly id?: Maybe<Scalars['String']>;
-  readonly username?: Maybe<Scalars['String']>;
-  readonly name?: Maybe<Scalars['String']>;
-  readonly password?: Maybe<Scalars['String']>;
-  readonly passwordAttempts?: Maybe<Scalars['Int']>;
-  readonly role?: Maybe<Role>;
-  readonly progress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
-};
-
-export type UserCreateUpdateInput = {
-  readonly id?: Maybe<Scalars['String']>;
-  readonly username?: Maybe<Scalars['String']>;
-  readonly name?: Maybe<Scalars['String']>;
-  readonly password?: Maybe<Scalars['String']>;
-  readonly passwordAttempts?: Maybe<Scalars['Int']>;
-  readonly role?: Maybe<Role>;
+  readonly episode?: Maybe<Episode>;
 };
 
 export type UserProgress = {
@@ -513,57 +552,18 @@ export type UserProgress = {
   readonly updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
-export type UserProgressCreateUpdateInput = {
+export type Reference = {
+  readonly __typename?: 'Reference';
   readonly id?: Maybe<Scalars['String']>;
-  readonly series?: Maybe<SeriesRelationInput>;
-  readonly user?: Maybe<UserRelationInput>;
-  readonly status?: Maybe<WatchStatus>;
-  readonly completed?: Maybe<Scalars['Int']>;
-  readonly overall?: Maybe<Scalars['Int']>;
-  readonly execution?: Maybe<Scalars['Int']>;
-  readonly story?: Maybe<Scalars['Int']>;
-  readonly sound?: Maybe<Scalars['Int']>;
-  readonly art?: Maybe<Scalars['Int']>;
-  readonly character?: Maybe<Scalars['Int']>;
-  readonly appeal?: Maybe<Scalars['Int']>;
-  readonly remarks?: Maybe<Scalars['String']>;
-  readonly createdAt?: Maybe<Scalars['DateTime']>;
-  readonly updatedAt?: Maybe<Scalars['DateTime']>;
+  readonly link?: Maybe<Scalars['String']>;
+  readonly source?: Maybe<Scalars['String']>;
 };
 
-export type UserProgressRelationInput = {
-  readonly create?: Maybe<ReadonlyArray<Maybe<UserProgressCreateUpdateInput>>>;
-  readonly delete?: Maybe<ReadonlyArray<Maybe<UserProgressWhereUniqueInput>>>;
-  readonly update?: Maybe<ReadonlyArray<Maybe<UserProgressUpdateWhereUniqueInput>>>;
+export type SearchPayload = {
+  readonly __typename?: 'SearchPayload';
+  readonly series: ReadonlyArray<Maybe<Series>>;
+  readonly episodes: ReadonlyArray<Maybe<Episode>>;
 };
-
-export type UserProgressUpdateWhereUniqueInput = {
-  readonly where?: Maybe<UserProgressWhereUniqueInput>;
-  readonly data?: Maybe<UserProgressCreateUpdateInput>;
-};
-
-export type UserProgressWhereUniqueInput = {
-  readonly id?: Maybe<Scalars['String']>;
-  readonly seriesId_userId?: Maybe<SeriesUserCompoundInput>;
-};
-
-export type UserRelationInput = {
-  readonly connect?: Maybe<UserWhereUniqueInput>;
-  readonly disconnect?: Maybe<UserWhereUniqueInput>;
-};
-
-export type UserWhereUniqueInput = {
-  readonly id?: Maybe<Scalars['String']>;
-  readonly username?: Maybe<Scalars['String']>;
-};
-
-export enum WatchStatus {
-  Completed = 'COMPLETED',
-  Watching = 'WATCHING',
-  Onhold = 'ONHOLD',
-  Pending = 'PENDING',
-  Dropped = 'DROPPED'
-}
 
 export type LoggedInQueryVariables = Exact<{ [key: string]: never; }>;
 

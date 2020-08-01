@@ -1,3 +1,4 @@
+import { ApolloError } from '@apollo/client';
 import {
   Avatar,
   Button,
@@ -9,7 +10,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import SupervisorAccountOutlinedIcon from '@material-ui/icons/SupervisorAccountOutlined';
-import { ApolloError } from 'apollo-client';
 import { Formik } from 'formik';
 import { useSnackbar } from 'notistack';
 import React from 'react';

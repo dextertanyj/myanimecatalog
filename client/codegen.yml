@@ -1,8 +1,8 @@
 overwrite: true
 
-schema: "http://server:4000/graphql"
+schema: 'http://server:4000/graphql'
 
-documents: "./src/gql/*.gql"
+documents: './src/gql/*.gql'
 
 generates:
   ./src/gql/queries.tsx:
@@ -13,17 +13,17 @@ generates:
       # Adds readonly to types
       immutableTypes: true
       withHooks: true
-      apolloReactCommonImportFrom: "@apollo/react-common"
-      apolloReactComponentsImportFrom: "@apollo/react-components"
-      apolloReactHocImportFrom: "@apollo/react-hoc"
-      apolloReactHooksImportFrom: "@apollo/react-hooks"
+      apolloReactCommonImportFrom: '@apollo/client'
+      apolloReactComponentsImportFrom: '@apollo/client/react/components'
+      apolloReactHocImportFrom: '@apollo/client/react/hoc'
+      apolloReactHooksImportFrom: '@apollo/client'
       scalars:
         DateTime: string
         Long: number
     plugins:
-      - "typescript"
-      - "typescript-operations"
-      - "typescript-react-apollo"
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-react-apollo'
   ./src/gql/documents.ts:
     config:
       # As we are using Babel to transpile Typescript, namespaces are not enabled
@@ -32,10 +32,10 @@ generates:
       # Adds readonly to types
       immutableTypes: true
       withHooks: true
-      apolloReactCommonImportFrom: "@apollo/react-common"
-      apolloReactComponentsImportFrom: "@apollo/react-components"
-      apolloReactHocImportFrom: "@apollo/react-hoc"
-      apolloReactHooksImportFrom: "@apollo/react-hooks"
+      apolloReactCommonImportFrom: '@apollo/client'
+      apolloReactComponentsImportFrom: '@apollo/client/react/components'
+      apolloReactHocImportFrom: '@apollo/client/react/hoc'
+      apolloReactHooksImportFrom: '@apollo/client'
       scalars:
         DateTime: string
         Long: number

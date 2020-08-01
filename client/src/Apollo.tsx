@@ -1,9 +1,8 @@
-import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
-import { ApolloClient } from 'apollo-client';
-import { ApolloLink } from 'apollo-link';
-import { setContext } from 'apollo-link-context';
-import { onError } from 'apollo-link-error';
-import { createHttpLink } from 'apollo-link-http';
+import { ApolloClient, ApolloLink } from '@apollo/client';
+import { InMemoryCache, NormalizedCacheObject } from '@apollo/client/cache';
+import { setContext } from '@apollo/client/link/context';
+import { onError } from '@apollo/client/link/error';
+import { createHttpLink } from '@apollo/client/link/http';
 
 type CreateOptions = {
   getToken: () => string;
@@ -20,9 +19,7 @@ const persistentHttpLink = createHttpLink({
   uri: persistentUri,
 });
 
-const cache: InMemoryCache = new InMemoryCache({
-  cacheRedirects: {},
-});
+const cache: InMemoryCache = new InMemoryCache();
 
 const errorLink = onError(
   ({ graphQLErrors, networkError, response, operation }) => {

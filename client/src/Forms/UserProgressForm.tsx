@@ -1,3 +1,4 @@
+import { ApolloError } from '@apollo/client';
 import {
   Button,
   Dialog,
@@ -13,7 +14,6 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
-import { ApolloError } from 'apollo-client';
 import { Formik, FormikProps, FormikValues } from 'formik';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useMemo, useState } from 'react';
