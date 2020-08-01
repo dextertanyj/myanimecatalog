@@ -2,8 +2,36 @@
 
 ## Contents
 
+- [Project Structure](#project-structure)
+- [Database Migration](#database-migration)
 - [Deployment Guide](#deployment-guide)
-- More coming soon...
+
+## Project Structure
+
+```
+server
+├─nginx/
+├─prisma/
+└─src/
+```
+
+### `nginx/` directory
+
+Contains the files and folder structure required for nginx and certbot configurations in production.
+
+### `prisma/` directory
+
+Contains the database schema and migration folders.
+
+### `src/` directory
+
+Contains the GraphQL schema definitions and resolvers.
+
+## Database Migration
+
+- Generating the files required for a migration: `yarn generate:migration`
+- Applying all migrations to the connected database: `yarn migrate`
+- Regenerating `@prisma/client` definitions: `yarn prisma generate`
 
 ## Deployment Guide
 
