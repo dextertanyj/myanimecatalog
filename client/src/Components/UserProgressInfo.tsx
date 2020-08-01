@@ -9,6 +9,7 @@ import {
   Typography,
   withStyles,
 } from '@material-ui/core';
+import { blueGrey } from '@material-ui/core/colors';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import moment from 'moment';
 import React, { useState } from 'react';
@@ -44,9 +45,9 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: theme.spacing(3),
       textAlign: 'center',
-      color: theme.palette.text.secondary,
     },
     tableHeader: {
+      'color': blueGrey[700],
       'textAlign': 'left',
       '& div': {
         '& div': {

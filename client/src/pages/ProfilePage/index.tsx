@@ -7,6 +7,7 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
+import { blueGrey } from '@material-ui/core/colors';
 import React, { useState } from 'react';
 import { ChangePasswordForm } from '../../Forms/ChangePasswordForm';
 import { ProfileForm } from '../../Forms/ProfileForm';
@@ -21,15 +22,15 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     paper: {
       padding: theme.spacing(3),
-      color: theme.palette.text.secondary,
+    },
+    gridTitle: {
+      color: blueGrey[700],
+      textAlign: 'left',
     },
     gridItem: {
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
-    },
-    gridTitle: {
-      textAlign: 'left',
     },
     gridButton: {
       textAlign: 'right',
@@ -44,7 +45,7 @@ const ProfilePage = () => {
     false
   );
 
-  const { data, loading, refetch } = useLoggedInQuery({
+  const { data, refetch } = useLoggedInQuery({
     fetchPolicy: 'cache-and-network',
   });
 

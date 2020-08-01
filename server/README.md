@@ -1,4 +1,4 @@
-# MyAnimeManager Server
+# MyAnimeCatalog Server
 
 ## Contents
 

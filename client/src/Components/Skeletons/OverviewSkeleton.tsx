@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
     cardHeader: {
       padding: theme.spacing(3),
       paddingBottom: theme.spacing(1),
+      color: blueGrey[700],
     },
     cardContent: {
       display: 'flex',

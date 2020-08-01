@@ -12,6 +12,7 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
+import { blueGrey } from '@material-ui/core/colors';
 import { Skeleton } from '@material-ui/lab';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -25,6 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
     cardHeader: {
       padding: theme.spacing(3),
       paddingBottom: theme.spacing(1),
+      color: blueGrey[700],
     },
     cardContent: {
       paddingLeft: theme.spacing(3),

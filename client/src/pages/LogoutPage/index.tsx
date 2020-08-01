@@ -16,7 +16,6 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: theme.spacing(2),
       textAlign: 'center',
-      color: theme.palette.text.secondary,
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
@@ -30,7 +29,7 @@ export const LogoutPage = () => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   useEffect(() => {
-    cookies.erase('anime_database_token');
+    cookies.erase('MACLOGINID');
     closeSnackbar();
     enqueueSnackbar(`Successfully logged out`);
     history.push('/login');
