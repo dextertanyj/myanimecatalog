@@ -10,6 +10,7 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
+import { blueGrey } from '@material-ui/core/colors';
 import AddOutlinedIcon from '@material-ui/icons/AddOutlined';
 import React, { useState } from 'react';
 import { FileForm } from '../Forms/FileForm';
@@ -29,9 +30,9 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: theme.spacing(3),
       textAlign: 'center',
-      color: theme.palette.text.secondary,
     },
     tableHeader: {
+      'color': blueGrey[700],
       'textAlign': 'left',
       '& div': {
         '& div': {

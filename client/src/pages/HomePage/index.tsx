@@ -19,7 +19,7 @@ import { withAuth } from '../../HOC/withAuth';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     title: {
-      color: blueGrey[600],
+      color: blueGrey[700],
     },
   })
 );

@@ -1,7 +1,7 @@
 import { ApolloProvider } from '@apollo/client';
 import MomentUtils from '@date-io/moment';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core';
-import { teal } from '@material-ui/core/colors';
+import { blueGrey, teal } from '@material-ui/core/colors';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import cookies from 'browser-cookies';
 import 'fontsource-roboto';
@@ -16,7 +16,12 @@ defaults.global.defaultFontFamily = 'Roboto';
 const theme = createMuiTheme({
   palette: {
     primary: {
+      light: teal[200],
       main: teal[400],
+      dark: teal[600],
+    },
+    text: {
+      primary: blueGrey[900],
     },
   },
   typography: {

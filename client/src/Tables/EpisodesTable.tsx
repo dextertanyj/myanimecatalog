@@ -8,6 +8,7 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
+import { blueGrey } from '@material-ui/core/colors';
 import AddIcon from '@material-ui/icons/Add';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
@@ -34,11 +35,11 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: theme.spacing(3),
       textAlign: 'center',
-      color: theme.palette.text.secondary,
     },
     tableHeader: {
       marginBottom: '10px',
       textAlign: 'left',
+      color: blueGrey[700],
     },
     tableHeaderItems: {
       display: 'flex',

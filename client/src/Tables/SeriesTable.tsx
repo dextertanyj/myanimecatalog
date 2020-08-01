@@ -7,6 +7,7 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
+import { blueGrey } from '@material-ui/core/colors';
 import AddOutlinedIcon from '@material-ui/icons/AddOutlined';
 import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
 import { ColumnApi, GridApi } from 'ag-grid-community';
@@ -28,9 +29,9 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: theme.spacing(3),
       textAlign: 'center',
-      color: theme.palette.text.secondary,
     },
     tableHeader: {
+      'color': blueGrey[700],
       'marginBottom': '10px',
       'textAlign': 'left',
       '& div': {

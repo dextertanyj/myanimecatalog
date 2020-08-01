@@ -6,6 +6,7 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
+import { blueGrey } from '@material-ui/core/colors';
 import Skeleton from '@material-ui/lab/Skeleton';
 import React from 'react';
 
@@ -14,9 +15,9 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: theme.spacing(3),
       textAlign: 'center',
-      color: theme.palette.text.secondary,
     },
     tableHeader: {
+      'color': blueGrey[700],
       'marginBottom': '10px',
       'textAlign': 'left',
       '& div': {

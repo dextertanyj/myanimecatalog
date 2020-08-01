@@ -7,6 +7,7 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
+import { blueGrey } from '@material-ui/core/colors';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import moment from 'moment';
@@ -29,6 +30,7 @@ type Props = {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     tableHeader: {
+      'color': blueGrey[700],
       'textAlign': 'left',
       '& div': {
         '& div': {

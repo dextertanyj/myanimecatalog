@@ -7,6 +7,7 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
+import { blueGrey } from '@material-ui/core/colors';
 import React from 'react';
 import { HorizontalBar } from 'react-chartjs-2';
 
@@ -18,6 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
     cardHeader: {
       padding: theme.spacing(3),
       paddingBottom: theme.spacing(1),
+      color: blueGrey[700],
     },
     cardContent: {
       display: 'flex',
