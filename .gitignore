@@ -3,6 +3,11 @@
 node_modules
 .env
 
+*/nginx/certbot/conf/live/
+*/nginx/certbot/conf/archive/
+*/nginx/certbot/conf/renewal/
+nginx.conf
+
 # dependencies
 /.pnp
 .pnp.js
