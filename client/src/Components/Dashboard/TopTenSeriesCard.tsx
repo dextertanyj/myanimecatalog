@@ -12,7 +12,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import { blueGrey } from '@material-ui/core/colors';
-import Skeleton from '@material-ui/lab/Skeleton';
 import React from 'react';
 import { useMyTopTenSeriesQuery } from '../../gql/queries';
 
@@ -56,13 +55,7 @@ export const TopTenSeriesCard = () => {
       />
       <CardContent className={classes.cardContent}>
         {loading ? (
-          <>
-            <Skeleton key={`TopTen-Skeleton-1`} />
-            <Skeleton key={`TopTen-Skeleton-2`} width={'85%'} />
-            <Skeleton key={`TopTen-Skeleton-3`} width={'75%'} />
-            <Skeleton key={`TopTen-Skeleton-4`} width={'50%'} />
-            <Skeleton key={`TopTen-Skeleton-5`} width={'50%'} />
-          </>
+          <></>
         ) : data?.myTopTenSeries?.length && data?.myTopTenSeries?.length > 0 ? (
           <List>
             {data?.myTopTenSeries?.map((item, index) => {
@@ -70,9 +63,11 @@ export const TopTenSeriesCard = () => {
                 <>
                   <ListItem key={`topten-${index}`}>
                     <Grid container spacing={3} className={classes.gridList}>
-                      <Grid item>
-                        <Typography>{index + 1}</Typography>
-                      </Grid>
+                      {window.innerWidth > 960 && (
+                        <Grid item>
+                          <Typography>{index + 1}</Typography>
+                        </Grid>
+                      )}
                       <Grid item xs>
                         <Typography noWrap>{item?.title}</Typography>
                       </Grid>

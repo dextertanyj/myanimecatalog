@@ -13,7 +13,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import { blueGrey } from '@material-ui/core/colors';
-import { Skeleton } from '@material-ui/lab';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useMyCurrentlyWatchingQuery } from '../../gql/queries';
@@ -58,13 +57,7 @@ export const CurrentlyWatching = () => {
       />
       <CardContent className={classes.cardContent}>
         {loading ? (
-          <>
-            <Skeleton key={`CurrentlyWatching-Skeleton-1`} />
-            <Skeleton key={`CurrentlyWatching-Skeleton-2`} width={'85%'} />
-            <Skeleton key={`CurrentlyWatching-Skeleton-3`} width={'75%'} />
-            <Skeleton key={`CurrentlyWatching-Skeleton-4`} width={'50%'} />
-            <Skeleton key={`CurrentlyWatching-Skeleton-5`} width={'50%'} />
-          </>
+          <></>
         ) : data?.myCurrentlyWatching?.length &&
           data?.myCurrentlyWatching.length > 0 ? (
           <List>
@@ -76,22 +69,28 @@ export const CurrentlyWatching = () => {
                       <Grid item xs>
                         <Typography noWrap>{item?.title}</Typography>
                       </Grid>
-                      <Grid item>
-                        <Typography>
-                          {`${item?.progress?.completed} / ${item?.episodeCount}`}
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={() => history.push(`/series/${item?.id}`)}
-                          >
-                            View
-                          </Button>
-                        </Typography>
-                      </Grid>
+                      {window.innerWidth > 960 && (
+                        <>
+                          <Grid item>
+                            <Typography>
+                              {`${item?.progress?.completed} / ${item?.episodeCount}`}
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography>
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() =>
+                                  history.push(`/series/${item?.id}`)
+                                }
+                              >
+                                View
+                              </Button>
+                            </Typography>
+                          </Grid>
+                        </>
+                      )}
                     </Grid>
                   </ListItem>
                   <Divider />
