@@ -25,6 +25,7 @@ import {
 } from '../gql/queries';
 import { ActionType } from '../utils/constants';
 import { renderSource } from '../utils/enumRender';
+import { convertDuration, numberOrUndefined } from '../utils/form';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -77,30 +78,6 @@ type FormValues = {
   codec: string | undefined;
   checksum: string | undefined;
 };
-
-function convertDuration(
-  duration: number | undefined | null
-): [number | undefined, number | undefined, number | undefined] {
-  if (!duration) {
-    return [undefined, undefined, undefined];
-  }
-  const hours = Math.floor(duration / 3600);
-  const minutes = Math.floor((duration - hours * 3600) / 60);
-  const seconds = duration - hours * 3600 - minutes * 60;
-  return [hours, minutes, seconds];
-}
-
-function numberOrUndefined(
-  duration: number | undefined | boolean
-): number | undefined {
-  if (!!duration && duration !== true) {
-    return duration;
-  } else if (duration === 0) {
-    return 0;
-  } else {
-    return undefined;
-  }
-}
 
 export const FileForm = (props: Props) => {
   const { action: actionType } = props;

@@ -30,6 +30,7 @@ import {
   useUpdateEpisodeMutation,
 } from '../gql/queries';
 import { ActionType } from '../utils/constants';
+import { arrayOrUndefined } from '../utils/form';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -80,14 +81,6 @@ type FormValues = {
   remarks: string | undefined;
   alternativeTitles: AlternativeTitle[];
 };
-
-function arrayOrUndefined<T>(array: T[] | null | undefined): T[] | undefined {
-  if (Array.isArray(array) && array.length > 0) {
-    return array;
-  } else {
-    return undefined;
-  }
-}
 
 export const EpisodeForm = (props: Props) => {
   const { action: actionType } = props;

@@ -9,7 +9,7 @@ import {
   makeStyles,
   MenuItem,
   TextField,
-  Theme,
+  Theme
 } from '@material-ui/core';
 import RemoveIcon from '@material-ui/icons/Remove';
 import { KeyboardDatePicker } from '@material-ui/pickers';
@@ -20,7 +20,7 @@ import {
   Formik,
   FormikErrors,
   FormikProps,
-  FormikValues,
+  FormikValues
 } from 'formik';
 import moment, { Moment } from 'moment';
 import { useSnackbar } from 'notistack';
@@ -36,14 +36,15 @@ import {
   useAllSeriesQuery,
   useCreateSeriesMutation,
   useSeriesLazyQuery,
-  useUpdateSeriesMutation,
+  useUpdateSeriesMutation
 } from '../gql/queries';
 import { ActionType } from '../utils/constants';
 import {
   renderSeasonInfo,
   renderStatus,
-  renderType,
+  renderType
 } from '../utils/enumRender';
+import { arrayOrUndefined } from '../utils/form';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -115,14 +116,6 @@ type FormValues = {
   mainStories: SeriesRelation[];
   related: SeriesRelation[];
 };
-
-function arrayOrUndefined<T>(array: T[] | null | undefined): T[] | undefined {
-  if (Array.isArray(array) && array.length > 0) {
-    return array;
-  } else {
-    return undefined;
-  }
-}
 
 function updateSeriesRelations(
   originalArray: SeriesRelation[] | undefined | null,

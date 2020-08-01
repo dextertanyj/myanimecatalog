@@ -16,6 +16,7 @@ import { UserProgressForm } from '../Forms/UserProgressForm';
 import { useMySeriesProgressQuery } from '../gql/queries';
 import { ActionType } from '../utils/constants';
 import { renderWatchStatus } from '../utils/enumRender';
+import { isNumberOrElse } from '../utils/form';
 import { UserProgressInfoSkeleton } from './Skeletons/UserProgressInfoSkeleton';
 
 type Props = {
@@ -182,7 +183,11 @@ export const UserProgressInfo = (props: Props) => {
                   </Grid>
                   <Grid item xs={1}>
                     <Typography>
-                      {progress?.mySeriesProgress?.overall || 0} / 100
+                      {`${isNumberOrElse(
+                        progress?.mySeriesProgress?.overall,
+                        '-'
+                      )} /
+                      100`}
                     </Typography>
                   </Grid>
                   <Grid item xs={2}>
@@ -200,7 +205,11 @@ export const UserProgressInfo = (props: Props) => {
                   </Grid>
                   <Grid item xs={1}>
                     <Typography>
-                      {progress?.mySeriesProgress?.story || 0} / 100
+                      {`${isNumberOrElse(
+                        progress?.mySeriesProgress?.story,
+                        '-'
+                      )} /
+                        100`}
                     </Typography>
                   </Grid>
                   <Grid item xs={2}>
@@ -218,7 +227,11 @@ export const UserProgressInfo = (props: Props) => {
                   </Grid>
                   <Grid item xs={1}>
                     <Typography>
-                      {progress?.mySeriesProgress?.execution || 0} / 100
+                      {`${isNumberOrElse(
+                        progress?.mySeriesProgress?.execution,
+                        '-'
+                      )} /
+                        100`}
                     </Typography>
                   </Grid>
                   <Grid item xs={2}>
@@ -236,7 +249,11 @@ export const UserProgressInfo = (props: Props) => {
                   </Grid>
                   <Grid item xs={1}>
                     <Typography>
-                      {progress?.mySeriesProgress?.appeal || 0} / 100
+                      {`${isNumberOrElse(
+                        progress?.mySeriesProgress?.appeal,
+                        '-'
+                      )} /
+                        100`}
                     </Typography>
                   </Grid>
                   <Grid item xs={2}>
@@ -254,7 +271,11 @@ export const UserProgressInfo = (props: Props) => {
                   </Grid>
                   <Grid item xs={1}>
                     <Typography>
-                      {progress?.mySeriesProgress?.character || 0} / 100
+                      {`${isNumberOrElse(
+                        progress?.mySeriesProgress?.character,
+                        '-'
+                      )} /
+                        100`}
                     </Typography>
                   </Grid>
                   <Grid item xs={2}>
@@ -272,7 +293,11 @@ export const UserProgressInfo = (props: Props) => {
                   </Grid>
                   <Grid item xs={1}>
                     <Typography>
-                      {progress?.mySeriesProgress?.art || 0} / 100
+                      {`${isNumberOrElse(
+                        progress?.mySeriesProgress?.art,
+                        '-'
+                      )} /
+                        100`}
                     </Typography>
                   </Grid>
                   <Grid item xs={2}>
@@ -290,20 +315,20 @@ export const UserProgressInfo = (props: Props) => {
                   </Grid>
                   <Grid item xs={1}>
                     <Typography>
-                      {progress?.mySeriesProgress?.sound || 0} / 100
+                      {`${isNumberOrElse(
+                        progress?.mySeriesProgress?.sound,
+                        '-'
+                      )} /
+                        100`}
                     </Typography>
                   </Grid>
                   <Grid item xs={2}>
                     <Typography>Comments</Typography>
                   </Grid>
                   <Grid item xs={10}>
-                    <Grid container spacing={3} wrap={'nowrap'}>
-                      <Grid item xs={12}>
-                        <Typography>
-                          {progress?.mySeriesProgress?.remarks || ''}
-                        </Typography>
-                      </Grid>
-                    </Grid>
+                    <Typography>
+                      {progress?.mySeriesProgress?.remarks || '–'}
+                    </Typography>
                   </Grid>
                 </Grid>
               </Grid>
