@@ -10,7 +10,7 @@ import {
   makeStyles,
   MenuItem,
   TextField,
-  Theme
+  Theme,
 } from '@material-ui/core';
 import RemoveIcon from '@material-ui/icons/Remove';
 import { KeyboardDatePicker } from '@material-ui/pickers';
@@ -20,7 +20,7 @@ import {
   Formik,
   FormikErrors,
   FormikProps,
-  FormikValues
+  FormikValues,
 } from 'formik';
 import moment, { Moment } from 'moment';
 import { useSnackbar } from 'notistack';
@@ -36,15 +36,15 @@ import {
   useAllSeriesQuery,
   useCreateSeriesMutation,
   useSeriesLazyQuery,
-  useUpdateSeriesMutation
+  useUpdateSeriesMutation,
 } from '../gql/queries';
 import { ActionType } from '../utils/constants';
 import {
   renderSeasonInfo,
   renderStatus,
-  renderType
+  renderType,
 } from '../utils/enumRender';
-import { arrayOrUndefined } from '../utils/form';
+import { arrayOrUndefined, seasonComparator } from '../utils/form';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -747,13 +747,15 @@ export const SeriesForm = (props: Props): ReactElement => {
                         onBlur={handleBlur}
                         className={classes.formItem}
                       >
-                        {Object.values(Season).map((value: Season) => {
-                          return (
-                            <MenuItem key={value} value={value}>
-                              {renderSeasonInfo(value)}
-                            </MenuItem>
-                          );
-                        })}
+                        {Object.values(Season)
+                          .sort(seasonComparator)
+                          .map((value: Season) => {
+                            return (
+                              <MenuItem key={value} value={value}>
+                                {renderSeasonInfo(value)}
+                              </MenuItem>
+                            );
+                          })}
                       </TextField>
                     </Grid>
                     <Grid item xs={3}>

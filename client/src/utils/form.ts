@@ -1,3 +1,5 @@
+import { Season } from '../gql/documents';
+
 export const calculateOverall = (
   execution: number[] | number | undefined | null,
   story: number[] | number | undefined | null,
@@ -74,3 +76,13 @@ export function isNumberOrElse<T>(
     return other;
   }
 }
+
+export const seasonComparator = (season1: Season, season2: Season): number => {
+  const seasonOrder = [
+    Season.Winter,
+    Season.Spring,
+    Season.Summer,
+    Season.Fall,
+  ];
+  return seasonOrder.indexOf(season1) - seasonOrder.indexOf(season2);
+};
