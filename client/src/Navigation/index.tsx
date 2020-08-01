@@ -18,6 +18,7 @@ import ChevronRightOutlinedIcon from '@material-ui/icons/ChevronRightOutlined';
 import ExitToAppOutlinedIcon from '@material-ui/icons/ExitToAppOutlined';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import LibraryBooksOutlinedIcon from '@material-ui/icons/LibraryBooksOutlined';
+import MenuOutlinedIcon from '@material-ui/icons/MenuOutlined';
 import PermIdentityOutlinedIcon from '@material-ui/icons/PermIdentityOutlined';
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 import clsx from 'clsx';
@@ -62,6 +63,10 @@ const useStyles = makeStyles((theme: Theme) =>
       height: 'calc(100% - 64px)',
       overflowX: 'hidden',
     },
+    drawerPaperMobile: {
+      justifyContent: 'space-between',
+      overflowX: 'hidden',
+    },
     drawerPaperOpen: {
       width: drawerWidth,
       transition: theme.transitions.create('width', {
@@ -97,7 +102,8 @@ const useStyles = makeStyles((theme: Theme) =>
 const Navigation = (props: any) => {
   const classes = useStyles();
   const history = useHistory();
-  const [expanded, setExpanded] = useState<boolean>(true);
+  const [mobileOpen, setMobileOpen] = useState<boolean>(false);
+  const [expanded, setExpanded] = useState<boolean>(window.innerWidth > 1366);
 
   const { data: AuthData } = useLoggedInQuery({
     fetchPolicy: 'cache-and-network',
@@ -107,6 +113,16 @@ const Navigation = (props: any) => {
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
         <Grid container spacing={0}>
+          {window.innerWidth <= 960 && (
+            <Grid item className={classes.grid}>
+              <IconButton
+                onClick={() => setMobileOpen(true)}
+                className={classes.button}
+              >
+                <MenuOutlinedIcon />
+              </IconButton>
+            </Grid>
+          )}
           <Grid item>
             <Toolbar>
               <Typography variant="h3" style={{ fontSize: '1.5em' }}>
@@ -114,33 +130,41 @@ const Navigation = (props: any) => {
               </Typography>
             </Toolbar>
           </Grid>
-          <Grid item xs />
-          <Grid item className={classes.grid}>
-            <IconButton
-              onClick={() => history.push('/profile')}
-              className={classes.button}
-            >
-              <AccountCircleOutlinedIcon />
-            </IconButton>
-          </Grid>
-          <Grid item className={classes.grid}>
-            <IconButton
-              onClick={() => history.push('/logout')}
-              className={classes.button}
-            >
-              <ExitToAppOutlinedIcon />
-            </IconButton>
-          </Grid>
+          {window.innerWidth > 960 && (
+            <>
+              <Grid item xs />
+              <Grid item className={classes.grid}>
+                <IconButton
+                  onClick={() => history.push('/profile')}
+                  className={classes.button}
+                >
+                  <AccountCircleOutlinedIcon />
+                </IconButton>
+              </Grid>
+              <Grid item className={classes.grid}>
+                <IconButton
+                  onClick={() => history.push('/logout')}
+                  className={classes.button}
+                >
+                  <ExitToAppOutlinedIcon />
+                </IconButton>
+              </Grid>
+            </>
+          )}
         </Grid>
       </AppBar>
       <Drawer
-        variant="permanent"
+        variant={window.innerWidth > 960 ? 'permanent' : 'temporary'}
+        open={window.innerWidth > 960 || mobileOpen}
+        onClose={() => setMobileOpen(false)}
         className={clsx(classes.drawer, {
           [classes.drawerOpen]: expanded,
           [classes.drawerClose]: !expanded,
         })}
         classes={{
-          paper: clsx(classes.drawerPaper, {
+          paper: clsx({
+            [classes.drawerPaper]: window.innerWidth > 960,
+            [classes.drawerPaperMobile]: window.innerWidth <= 960,
             [classes.drawerPaperOpen]: expanded,
             [classes.drawerPaperClose]: !expanded,
           }),
@@ -148,7 +172,14 @@ const Navigation = (props: any) => {
         anchor="left"
       >
         <List>
-          <ListItem button key={'/'} onClick={() => history.push('/')}>
+          <ListItem
+            button
+            key={'/'}
+            onClick={() => {
+              history.push('/');
+              setMobileOpen(false);
+            }}
+          >
             <ListItemIcon>
               <HomeOutlinedIcon />
             </ListItemIcon>
@@ -157,7 +188,10 @@ const Navigation = (props: any) => {
           <ListItem
             button
             key={'catalog'}
-            onClick={() => history.push('/catalog')}
+            onClick={() => {
+              history.push('/catalog');
+              setMobileOpen(false);
+            }}
           >
             <ListItemIcon>
               <LibraryBooksOutlinedIcon />
@@ -167,7 +201,10 @@ const Navigation = (props: any) => {
           <ListItem
             button
             key={'search'}
-            onClick={() => history.push('/search')}
+            onClick={() => {
+              history.push('/search');
+              setMobileOpen(false);
+            }}
           >
             <ListItemIcon>
               <SearchOutlinedIcon />
@@ -178,13 +215,46 @@ const Navigation = (props: any) => {
             <ListItem
               button
               key={'users'}
-              onClick={() => history.push('/users')}
+              onClick={() => {
+                history.push('/users');
+                setMobileOpen(false);
+              }}
             >
               <ListItemIcon>
                 <PermIdentityOutlinedIcon />
               </ListItemIcon>
               <ListItemText primary={'Users'} />
             </ListItem>
+          )}
+          {window.innerWidth <= 960 && (
+            <>
+              <ListItem
+                button
+                key={'profileMobile'}
+                onClick={() => {
+                  history.push('/profile');
+                  setMobileOpen(false);
+                }}
+              >
+                <ListItemIcon>
+                  <AccountCircleOutlinedIcon />
+                </ListItemIcon>
+                <ListItemText primary={'Profile'} />
+              </ListItem>
+              <ListItem
+                button
+                key={'logoutMobile'}
+                onClick={() => {
+                  history.push('/logout');
+                  setMobileOpen(false);
+                }}
+              >
+                <ListItemIcon>
+                  <ExitToAppOutlinedIcon />
+                </ListItemIcon>
+                <ListItemText primary={'Logout'} />
+              </ListItem>
+            </>
           )}
         </List>
         <ListItem
