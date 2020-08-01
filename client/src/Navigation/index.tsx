@@ -27,7 +27,7 @@ import { Role } from '../gql/documents';
 import { useLoggedInQuery } from '../gql/queries';
 import { withAuth } from '../HOC/withAuth';
 
-const drawerWidth = 240;
+const drawerWidth = 220;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -152,17 +152,17 @@ const Navigation = (props: any) => {
             <ListItemIcon>
               <HomeOutlinedIcon />
             </ListItemIcon>
-            <ListItemText primary={'Home'} />
+            <ListItemText primary={'Dashboard'} />
           </ListItem>
           <ListItem
             button
-            key={'manage'}
-            onClick={() => history.push('/manage')}
+            key={'catalog'}
+            onClick={() => history.push('/catalog')}
           >
             <ListItemIcon>
               <LibraryBooksOutlinedIcon />
             </ListItemIcon>
-            <ListItemText primary={'Manage'} />
+            <ListItemText primary={'View Catalog'} />
           </ListItem>
           <ListItem
             button
@@ -191,6 +191,7 @@ const Navigation = (props: any) => {
           button
           style={{
             position: 'sticky',
+            width: drawerWidth,
             bottom: 0,
             backgroundColor: grey[100],
             borderTopColor: grey[400],

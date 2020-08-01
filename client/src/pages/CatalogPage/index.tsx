@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const ManagePage = () => {
+const CatalogPage = () => {
   const classes = useStyles();
 
   return (
@@ -25,4 +25,4 @@ const ManagePage = () => {
   );
 };
 
-export default (props: any, key: any) => withAuth()(ManagePage)(props);
+export default (props: any, key: any) => withAuth()(CatalogPage)(props);
