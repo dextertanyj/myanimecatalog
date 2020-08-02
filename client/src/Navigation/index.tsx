@@ -119,7 +119,7 @@ const Navigation = (props: any) => {
   useEffect(() => {
     const handleResize = () => {
       setInnerWidth(window.innerWidth);
-      setExpanded(window.innerWidth > 1366);
+      setExpanded(window.innerWidth >= 1366);
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -129,7 +129,7 @@ const Navigation = (props: any) => {
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
         <Grid container spacing={0}>
-          {innerWidth <= 960 && (
+          {innerWidth < 960 && (
             <Grid item className={classes.grid}>
               <IconButton
                 onClick={() => setMobileOpen(true)}
@@ -146,7 +146,7 @@ const Navigation = (props: any) => {
               </Typography>
             </Toolbar>
           </Grid>
-          {innerWidth > 960 && (
+          {innerWidth >= 960 && (
             <>
               <Grid item xs />
               <Grid item className={classes.grid}>
@@ -170,8 +170,8 @@ const Navigation = (props: any) => {
         </Grid>
       </AppBar>
       <Drawer
-        variant={innerWidth > 960 ? 'permanent' : 'temporary'}
-        open={innerWidth > 960 || mobileOpen}
+        variant={innerWidth >= 960 ? 'permanent' : 'temporary'}
+        open={innerWidth >= 960 || mobileOpen}
         onClose={() => setMobileOpen(false)}
         className={clsx(classes.drawer, {
           [classes.drawerOpen]: expanded,
@@ -179,8 +179,8 @@ const Navigation = (props: any) => {
         })}
         classes={{
           paper: clsx({
-            [classes.drawerPaper]: innerWidth > 960,
-            [classes.drawerPaperMobile]: innerWidth <= 960,
+            [classes.drawerPaper]: innerWidth >= 960,
+            [classes.drawerPaperMobile]: innerWidth < 960,
             [classes.drawerPaperOpen]: expanded,
             [classes.drawerPaperClose]: !expanded,
           }),
@@ -242,7 +242,7 @@ const Navigation = (props: any) => {
               <ListItemText primary={'Users'} />
             </ListItem>
           )}
-          {innerWidth <= 960 && (
+          {innerWidth < 960 && (
             <>
               <Divider />
               <ListItem

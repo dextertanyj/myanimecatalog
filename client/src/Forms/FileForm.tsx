@@ -347,7 +347,7 @@ export const FileForm = (props: Props) => {
                         margin="normal"
                         fullWidth
                         name="hours"
-                        label={innerWidth > 600 ? 'Hours' : 'Hr'}
+                        label={innerWidth >= 600 ? 'Hours' : 'Hr'}
                         id="hours"
                         type="number"
                         value={values.hours || (values.hours === 0 ? 0 : '')}
@@ -364,7 +364,7 @@ export const FileForm = (props: Props) => {
                         margin="normal"
                         fullWidth
                         name="minutes"
-                        label={innerWidth > 600 ? 'Minutes' : 'Min'}
+                        label={innerWidth >= 600 ? 'Minutes' : 'Min'}
                         id="minutes"
                         type="number"
                         value={
@@ -383,7 +383,7 @@ export const FileForm = (props: Props) => {
                         margin="normal"
                         fullWidth
                         name="seconds"
-                        label={innerWidth > 600 ? 'Seconds' : 'Sec'}
+                        label={innerWidth >= 600 ? 'Seconds' : 'Sec'}
                         id="seconds"
                         type="number"
                         value={

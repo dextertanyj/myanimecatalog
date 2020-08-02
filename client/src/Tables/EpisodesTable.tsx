@@ -104,9 +104,9 @@ export const EpisodesTable = (props: Props) => {
 
   const hideColumnsMobile = useCallback(() => {
     if (gridApi?.columnApi) {
-      if (window.innerWidth > 960) {
+      if (window.innerWidth >= 960) {
         gridApi.columnApi.setColumnsVisible(['remarks', 'episodeNumber'], true);
-      } else if (window.innerWidth > 600) {
+      } else if (window.innerWidth >= 600) {
         gridApi.columnApi.setColumnsVisible(['remarks'], false);
         gridApi.columnApi.setColumnsVisible(['episodeNumber'], true);
       } else {
@@ -130,8 +130,8 @@ export const EpisodesTable = (props: Props) => {
   const onGridReady = useCallback((params: any) => {
     const { api, columnApi } = params;
     setGridApi({ api, columnApi });
-    if (window.innerWidth > 960) {
-    } else if (window.innerWidth > 600) {
+    if (window.innerWidth >= 960) {
+    } else if (window.innerWidth >= 600) {
       columnApi.setColumnsVisible(['remarks'], false);
     } else {
       columnApi.setColumnsVisible(['remarks', 'episodeNumber'], false);

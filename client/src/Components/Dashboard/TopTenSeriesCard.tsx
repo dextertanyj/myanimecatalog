@@ -63,7 +63,7 @@ export const TopTenSeriesCard = () => {
                 <>
                   <ListItem key={`topten-${index}`}>
                     <Grid container spacing={3} className={classes.gridList}>
-                      {window.innerWidth > 960 && (
+                      {window.innerWidth >= 960 && (
                         <Grid item>
                           <Typography>{index + 1}</Typography>
                         </Grid>

@@ -69,7 +69,7 @@ export const CurrentlyWatching = () => {
                       <Grid item xs>
                         <Typography noWrap>{item?.title}</Typography>
                       </Grid>
-                      {window.innerWidth > 960 && (
+                      {window.innerWidth >= 960 && (
                         <>
                           <Grid item>
                             <Typography>
