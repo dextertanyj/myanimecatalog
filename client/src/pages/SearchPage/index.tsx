@@ -33,15 +33,14 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'center',
     },
     tableHeader: {
-      'color': blueGrey[700],
-      'textAlign': 'left',
-      '& div': {
-        '& div': {
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        },
-      },
+      marginBottom: '5px',
+    },
+    tableTitle: {
+      color: blueGrey[700],
+      textAlign: 'left',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
     },
   })
 );
@@ -106,6 +105,21 @@ const SearchPage = () => {
     });
   }, 500);
 
+  const hideColumnsMobile = useCallback(() => {
+    if (gridApi?.columnApi) {
+      if (window.innerWidth >= 600) {
+        gridApi.columnApi.setColumnWidth('type', 180);
+      } else {
+        gridApi.columnApi.setColumnWidth('type', 90);
+      }
+    }
+  }, [gridApi]);
+
+  useEffect(() => {
+    window.addEventListener('resize', hideColumnsMobile);
+    return () => window.removeEventListener('resize', hideColumnsMobile);
+  }, [hideColumnsMobile]);
+
   useEffect(() => {
     if (contains.length > 2) {
       search(contains);
@@ -117,6 +131,11 @@ const SearchPage = () => {
   const onGridReady = useCallback((params: any) => {
     const { api, columnApi } = params;
     setGridApi({ api, columnApi });
+    if (window.innerWidth >= 600) {
+      columnApi.setColumnWidth('type', 180);
+    } else {
+      columnApi.setColumnWidth('type', 90);
+    }
   }, []);
 
   const onSelectionChanged = () => {
@@ -139,19 +158,15 @@ const SearchPage = () => {
   return (
     <div>
       <Paper elevation={3} className={classes.paper}>
-        <Grid container spacing={3}>
-          <Grid
-            item
-            xs={12}
-            className={classes.tableHeader}
-            style={{ paddingBottom: '5px' }}
-          >
-            <Grid container>
-              <Grid item xs style={{ textAlign: 'left' }}>
+        <Grid container spacing={3} className={classes.tableHeader}>
+          <Grid item xs={12}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm className={classes.tableTitle}>
                 <Typography variant="h5">Quick Search</Typography>
               </Grid>
-              <Grid item>
+              <Grid item xs={12} sm={'auto'}>
                 <Button
+                  fullWidth
                   startIcon={<PageviewOutlinedIcon />}
                   disabled={selectedRows.length !== 1}
                   variant="contained"
@@ -164,7 +179,13 @@ const SearchPage = () => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={4} style={{ textAlign: 'left', marginBottom: '10px' }}>
+          <Grid
+            item
+            xs={12}
+            sm={8}
+            md={4}
+            style={{ textAlign: 'left', marginBottom: '10px' }}
+          >
             <TextField
               variant="outlined"
               value={contains}
