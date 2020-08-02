@@ -65,8 +65,8 @@ export const TopTenSeriesCard = () => {
                       <Grid item>
                         <Typography>{index + 1}</Typography>
                       </Grid>
-                      <Grid item xs>
-                        <Typography noWrap>{item?.title}</Typography>
+                      <Grid item xs zeroMinWidth>
+                        <Typography>{item?.title}</Typography>
                       </Grid>
                     </Grid>
                   </ListItem>

@@ -75,8 +75,8 @@ export const CurrentlyWatching = () => {
                 <>
                   <ListItem key={`currentlyWatching-${index}`}>
                     <Grid container spacing={3} className={classes.gridList}>
-                      <Grid item xs>
-                        <Typography noWrap>{item?.title}</Typography>
+                      <Grid item xs zeroMinWidth>
+                        <Typography>{item?.title}</Typography>
                       </Grid>
                       {innerWidth >= 960 && (
                         <>
