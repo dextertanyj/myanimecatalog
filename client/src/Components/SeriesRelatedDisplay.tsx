@@ -38,10 +38,10 @@ export const SeriesRelatedDisplay = (props: Props): ReactElement => {
 
   return !!props.seriesArray && props.seriesArray.length > 0 ? (
     <>
-      <Grid item xs={2} className={classes.title}>
+      <Grid item xs={4} sm={2} className={classes.title}>
         <Typography>{props.title}</Typography>
       </Grid>
-      <Grid item xs={10}>
+      <Grid item xs={8} sm={10}>
         {props.seriesArray.map((series) => (
           <Chip
             key={series?.id}
