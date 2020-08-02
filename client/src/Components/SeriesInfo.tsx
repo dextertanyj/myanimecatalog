@@ -259,9 +259,18 @@ export const SeriesInfo = (props: Props) => {
                   seriesData?.series?.references.length > 0 && (
                     <>
                       <Grid item xs={4} sm={2}>
-                        <Typography>References</Typography>
+                        <Typography>Sources</Typography>
                       </Grid>
-                      <Grid item xs={8} sm={10}>
+                      <Grid
+                        item
+                        xs={8}
+                        sm={10}
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-around',
+                          flexWrap: 'wrap',
+                        }}
+                      >
                         {seriesData?.series?.references.map((reference) => {
                           return (
                             <Link
