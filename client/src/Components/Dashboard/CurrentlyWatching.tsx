@@ -56,7 +56,7 @@ export const CurrentlyWatching = () => {
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  });
+  }, []);
 
   return (
     <Card elevation={3} className={classes.card} style={{ height: '100%' }}>

@@ -9,12 +9,12 @@ import {
 } from '@material-ui/core';
 import { blueGrey } from '@material-ui/core/colors';
 import AddOutlinedIcon from '@material-ui/icons/AddOutlined';
-import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import { ColumnApi, GridApi } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { AgGridReact } from 'ag-grid-react';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { UserForm } from '../Forms/UserForm';
 import { User } from '../gql/documents';
 import { useUsersQuery } from '../gql/queries';
@@ -28,16 +28,14 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'center',
     },
     tableHeader: {
-      'color': blueGrey[700],
-      'marginBottom': '10px',
-      'textAlign': 'left',
-      '& div': {
-        '& div': {
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        },
-      },
+      marginBottom: '5px',
+    },
+    tableTitle: {
+      color: blueGrey[700],
+      textAlign: 'left',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
     },
   })
 );
@@ -64,13 +62,14 @@ const columnDefs = [
   },
   {
     headerName: 'Locked',
+    field: 'locked',
     valueGetter: (params: { data: User }) => {
       return !!params?.data?.passwordAttempts &&
         params.data.passwordAttempts > 10
         ? `Yes`
         : 'No';
     },
-    width: 180,
+    width: 120,
     filter: true,
     sortable: true,
     lockVisible: true,
@@ -98,10 +97,29 @@ export const UsersTable = () => {
     enableCellTextSelection: true,
   };
 
-  const onGridReady = useCallback((params: any) => {
-    const { api, columnApi } = params;
-    setGridApi({ api, columnApi });
-  }, []);
+  const onGridReady = useCallback(
+    (params: { api: GridApi; columnApi: ColumnApi }) => {
+      const { api, columnApi } = params;
+      setGridApi({ api, columnApi });
+      if (window.innerWidth >= 960) {
+        columnApi.setColumnsVisible(['username', 'role', 'locked'], true);
+        columnApi.setColumnWidths([
+          { key: 'username', newWidth: 240 },
+          { key: 'role', newWidth: 180 },
+        ]);
+      } else if (window.innerWidth >= 600) {
+        columnApi.setColumnsVisible(['locked'], false);
+        columnApi.setColumnsVisible(['username', 'role'], true);
+        columnApi.setColumnWidths([
+          { key: 'username', newWidth: 160 },
+          { key: 'role', newWidth: 140 },
+        ]);
+      } else {
+        columnApi.setColumnsVisible(['username', 'role', 'locked'], false);
+      }
+    },
+    []
+  );
 
   const onSelectionChanged = () => {
     if (gridApi !== undefined) {
@@ -109,17 +127,50 @@ export const UsersTable = () => {
     }
   };
 
+  const hideColumnsMobile = useCallback(() => {
+    if (gridApi?.columnApi) {
+      if (window.innerWidth >= 960) {
+        gridApi?.columnApi.setColumnsVisible(
+          ['username', 'role', 'locked'],
+          true
+        );
+        gridApi?.columnApi.setColumnWidths([
+          { key: 'username', newWidth: 240 },
+          { key: 'role', newWidth: 180 },
+        ]);
+      } else if (window.innerWidth >= 600) {
+        gridApi?.columnApi.setColumnsVisible(['locked'], false);
+        gridApi?.columnApi.setColumnsVisible(['username', 'role'], true);
+        gridApi?.columnApi.setColumnWidths([
+          { key: 'username', newWidth: 160 },
+          { key: 'role', newWidth: 140 },
+        ]);
+      } else {
+        gridApi?.columnApi.setColumnsVisible(
+          ['username', 'role', 'locked'],
+          false
+        );
+      }
+    }
+  }, [gridApi]);
+
+  useEffect(() => {
+    window.addEventListener('resize', hideColumnsMobile);
+    return () => window.removeEventListener('resize', hideColumnsMobile);
+  }, [hideColumnsMobile]);
+
   return (
     <div>
       <Paper elevation={3} className={classes.paper}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} className={classes.tableHeader}>
+        <Grid container spacing={3} className={classes.tableHeader}>
+          <Grid item xs={12}>
             <Grid container spacing={3}>
-              <Grid item xs>
+              <Grid item xs={12} sm className={classes.tableTitle}>
                 <Typography variant="h5">Users</Typography>
               </Grid>
-              <Grid item>
+              <Grid item xs={6} sm={'auto'}>
                 <Button
+                  fullWidth
                   startIcon={<AddOutlinedIcon />}
                   variant="contained"
                   color="primary"
@@ -128,12 +179,13 @@ export const UsersTable = () => {
                     setShowForm(true);
                   }}
                 >
-                  Add New
+                  Add
                 </Button>
               </Grid>
-              <Grid item>
+              <Grid item xs={6} sm={'auto'}>
                 <Button
-                  startIcon={<PageviewOutlinedIcon />}
+                  fullWidth
+                  startIcon={<EditOutlinedIcon />}
                   disabled={selectedRows.length !== 1}
                   variant="contained"
                   onClick={() => {
