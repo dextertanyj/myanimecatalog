@@ -49,4 +49,4 @@ Contains the GraphQL schema definitions and resolvers.
 11. Run `docker-compose up --build` in a separate screen.
 12. After the images have been built, run `docker exec -it server_db_1 bash`.
 13. Login to the mysql server using `mysql -u root -p` and key in your password previously set in `.env`.
-14. Run `CREATE DATABASE anime` and perform the relevant SQL migrations as laid out in each README.md in the `./prisma/migrations/` folder.
+14. Run `CREATE DATABASE anime` and perform the relevant SQL migrations as laid out in each README.md and the `custom_migrations.sql` in the `./prisma/` folder.
