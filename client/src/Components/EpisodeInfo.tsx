@@ -159,10 +159,10 @@ export const EpisodeInfo = (props: Props) => {
 
             <Grid item xs={12} className={classes.tableContent}>
               <Grid container spacing={3}>
-                <Grid item xs={4} md={2}>
+                <Grid item xs={4} sm={2}>
                   <Typography>Title</Typography>
                 </Grid>
-                <Grid item xs={8} md={10}>
+                <Grid item xs={8} sm={10}>
                   <Grid container spacing={3} wrap={'nowrap'}>
                     <Grid item xs={12}>
                       <Typography>{episodeData?.episode?.title}</Typography>
@@ -174,10 +174,10 @@ export const EpisodeInfo = (props: Props) => {
                     return (
                       altTitle?.title && (
                         <>
-                          <Grid item xs={4} md={2}>
+                          <Grid item xs={4} sm={2}>
                             <Typography>Alternative Title</Typography>
                           </Grid>
-                          <Grid item xs={8} md={10}>
+                          <Grid item xs={8} sm={10}>
                             <Grid container spacing={3} wrap={'nowrap'}>
                               <Grid item xs={12}>
                                 <Typography noWrap>{altTitle.title}</Typography>
@@ -189,10 +189,10 @@ export const EpisodeInfo = (props: Props) => {
                     );
                   })}
 
-                <Grid item xs={4} md={2}>
+                <Grid item xs={4} sm={2} md={2}>
                   <Typography>Series</Typography>
                 </Grid>
-                <Grid item xs={8} md={6}>
+                <Grid item xs={8} sm={10} md={6}>
                   <Grid container>
                     <Grid item xs={12} style={{ flexDirection: 'row' }}>
                       <Chip
@@ -206,18 +206,18 @@ export const EpisodeInfo = (props: Props) => {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item xs={4} md={2}>
+                <Grid item xs={4} sm={2} md={2}>
                   <Typography>Episode No.</Typography>
                 </Grid>
-                <Grid item xs={8} md={2}>
+                <Grid item xs={8} sm={10} md={2}>
                   <Typography>
                     {episodeData?.episode?.episodeNumber || '-'}
                   </Typography>
                 </Grid>
-                <Grid item xs={4} md={2}>
+                <Grid item xs={4} sm={2} md={2}>
                   <Typography>Remarks</Typography>
                 </Grid>
-                <Grid item xs={8} md={6}>
+                <Grid item xs={8} sm={10} md={6}>
                   <Grid container spacing={3} wrap={'nowrap'}>
                     <Grid item xs={12}>
                       <Typography>
@@ -226,10 +226,10 @@ export const EpisodeInfo = (props: Props) => {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item xs={4} md={2}>
+                <Grid item xs={4} sm={2} md={2}>
                   <Typography>Last Updated</Typography>
                 </Grid>
-                <Grid item xs={8} md={2}>
+                <Grid item xs={8} sm={10} md={2}>
                   <Typography>
                     {moment(
                       episodeData?.episode?.updatedAt ||
