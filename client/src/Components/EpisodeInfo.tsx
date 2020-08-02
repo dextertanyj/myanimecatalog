@@ -39,16 +39,14 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'center',
     },
     tableHeader: {
-      'color': blueGrey[700],
-      'marginBottom': '10px',
-      'textAlign': 'left',
-      '& div': {
-        '& div': {
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        },
-      },
+      marginBottom: '10px',
+    },
+    tableTitle: {
+      color: blueGrey[700],
+      textAlign: 'left',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
     },
     tableContent: {
       '& div': {
@@ -119,48 +117,52 @@ export const EpisodeInfo = (props: Props) => {
         <EpisodeInfoSkeleton />
       ) : (
         <Paper elevation={3} className={classes.paper}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} className={classes.tableHeader}>
+          <Grid container spacing={3} className={classes.tableHeader}>
+            <Grid item xs={12}>
               <Grid container spacing={3}>
-                <Grid item xs>
+                <Grid item xs={12} sm className={classes.tableTitle}>
                   <Typography variant="h5">Episode Information</Typography>
                 </Grid>
                 {AuthData?.loggedIn?.role &&
                   writeAccess.includes(AuthData.loggedIn.role) && (
-                    <>
-                      <Grid item>
-                        <Button
-                          startIcon={<EditOutlinedIcon />}
-                          color="primary"
-                          variant="contained"
-                          onClick={() => setShowForm(true)}
-                        >
-                          Edit
-                        </Button>
+                    <Grid item xs={12} sm={'auto'}>
+                      <Grid container spacing={3}>
+                        <Grid item xs={6}>
+                          <Button
+                            fullWidth
+                            startIcon={<EditOutlinedIcon />}
+                            color="primary"
+                            variant="contained"
+                            onClick={() => setShowForm(true)}
+                          >
+                            Edit
+                          </Button>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <Button
+                            fullWidth
+                            startIcon={<DeleteOutlinedIcon />}
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => {
+                              setShowDeleteDialog(true);
+                            }}
+                          >
+                            Delete
+                          </Button>
+                        </Grid>
                       </Grid>
-                      <Grid item>
-                        <Button
-                          startIcon={<DeleteOutlinedIcon />}
-                          variant="contained"
-                          color="secondary"
-                          onClick={() => {
-                            setShowDeleteDialog(true);
-                          }}
-                        >
-                          Delete
-                        </Button>
-                      </Grid>
-                    </>
+                    </Grid>
                   )}
               </Grid>
             </Grid>
 
             <Grid item xs={12} className={classes.tableContent}>
               <Grid container spacing={3}>
-                <Grid item xs={2}>
+                <Grid item xs={4} md={2}>
                   <Typography>Title</Typography>
                 </Grid>
-                <Grid item xs={10}>
+                <Grid item xs={8} md={10}>
                   <Grid container spacing={3} wrap={'nowrap'}>
                     <Grid item xs={12}>
                       <Typography>{episodeData?.episode?.title}</Typography>
@@ -172,10 +174,10 @@ export const EpisodeInfo = (props: Props) => {
                     return (
                       altTitle?.title && (
                         <>
-                          <Grid item xs={2}>
+                          <Grid item xs={4} md={2}>
                             <Typography>Alternative Title</Typography>
                           </Grid>
-                          <Grid item xs={10}>
+                          <Grid item xs={8} md={10}>
                             <Grid container spacing={3} wrap={'nowrap'}>
                               <Grid item xs={12}>
                                 <Typography noWrap>{altTitle.title}</Typography>
@@ -187,10 +189,10 @@ export const EpisodeInfo = (props: Props) => {
                     );
                   })}
 
-                <Grid item xs={2}>
+                <Grid item xs={4} md={2}>
                   <Typography>Series</Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={8} md={6}>
                   <Grid container>
                     <Grid item xs={12} style={{ flexDirection: 'row' }}>
                       <Chip
@@ -204,18 +206,18 @@ export const EpisodeInfo = (props: Props) => {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={4} md={2}>
                   <Typography>Episode No.</Typography>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={8} md={2}>
                   <Typography>
                     {episodeData?.episode?.episodeNumber || '-'}
                   </Typography>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={4} md={2}>
                   <Typography>Remarks</Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={8} md={6}>
                   <Grid container spacing={3} wrap={'nowrap'}>
                     <Grid item xs={12}>
                       <Typography>
@@ -224,10 +226,10 @@ export const EpisodeInfo = (props: Props) => {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={4} md={2}>
                   <Typography>Last Updated</Typography>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={8} md={2}>
                   <Typography>
                     {moment(
                       episodeData?.episode?.updatedAt ||
