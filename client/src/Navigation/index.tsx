@@ -1,5 +1,6 @@
 import {
   AppBar,
+  Divider,
   Drawer,
   Grid,
   IconButton,
@@ -243,6 +244,7 @@ const Navigation = (props: any) => {
           )}
           {innerWidth <= 960 && (
             <>
+              <Divider />
               <ListItem
                 button
                 key={'profileMobile'}
