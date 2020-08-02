@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import { Formik, FormikProps, FormikValues } from 'formik';
 import { useSnackbar } from 'notistack';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
 import { FormLoading } from '../Components/Skeletons/FormLoading';
@@ -83,6 +83,7 @@ export const FileForm = (props: Props) => {
   const { action: actionType } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+  const [innerWidth, setInnerWidth] = useState<number>(window.innerWidth);
 
   const [loadFile, { data: fileData, loading: loadingFile }] = useFileLazyQuery(
     {
@@ -101,6 +102,14 @@ export const FileForm = (props: Props) => {
       });
     }
   }, [props.fileId, props.open, loadFile]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setInnerWidth(window.innerWidth);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const [createFileMutation] = useCreateFileMutation({
     onError: (error: ApolloError) => {
@@ -332,13 +341,13 @@ export const FileForm = (props: Props) => {
                         className={classes.formItem}
                       />
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={4} md={2}>
                       <TextField
                         variant="outlined"
                         margin="normal"
                         fullWidth
                         name="hours"
-                        label="Hours"
+                        label={innerWidth > 600 ? 'Hours' : 'Hr'}
                         id="hours"
                         type="number"
                         value={values.hours || (values.hours === 0 ? 0 : '')}
@@ -349,13 +358,13 @@ export const FileForm = (props: Props) => {
                         className={classes.formItem}
                       />
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={4} md={2}>
                       <TextField
                         variant="outlined"
                         margin="normal"
                         fullWidth
                         name="minutes"
-                        label="Minutes"
+                        label={innerWidth > 600 ? 'Minutes' : 'Min'}
                         id="minutes"
                         type="number"
                         value={
@@ -368,13 +377,13 @@ export const FileForm = (props: Props) => {
                         className={classes.formItem}
                       />
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={4} md={2}>
                       <TextField
                         variant="outlined"
                         margin="normal"
                         fullWidth
                         name="seconds"
-                        label="Seconds"
+                        label={innerWidth > 600 ? 'Seconds' : 'Sec'}
                         id="seconds"
                         type="number"
                         value={
@@ -387,7 +396,7 @@ export const FileForm = (props: Props) => {
                         className={classes.formItem}
                       />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                       <TextField
                         variant="outlined"
                         margin="normal"
@@ -406,7 +415,7 @@ export const FileForm = (props: Props) => {
                         className={classes.formItem}
                       />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                       <TextField
                         select
                         fullWidth
@@ -432,7 +441,7 @@ export const FileForm = (props: Props) => {
                         })}
                       </TextField>
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={12} sm={6} md={3}>
                       <TextField
                         variant="outlined"
                         margin="normal"
@@ -452,7 +461,7 @@ export const FileForm = (props: Props) => {
                         className={classes.formItem}
                       />
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={12} sm={6} md={3}>
                       <TextField
                         variant="outlined"
                         margin="normal"
@@ -472,7 +481,7 @@ export const FileForm = (props: Props) => {
                         className={classes.formItem}
                       />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                       <TextField
                         variant="outlined"
                         margin="normal"
@@ -488,7 +497,7 @@ export const FileForm = (props: Props) => {
                         className={classes.formItem}
                       />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                       <TextField
                         variant="outlined"
                         margin="normal"
