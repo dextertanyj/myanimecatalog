@@ -52,7 +52,7 @@ export const SeriesRelatedDisplay = (props: Props): ReactElement => {
       <Grid item xs={4} sm={2} className={classes.title} zeroMinWidth>
         <Typography>{props.title}</Typography>
       </Grid>
-      <Grid item xs={7} sm={10} zeroMinWidth>
+      <Grid item xs={8} sm={10} zeroMinWidth>
         {props.seriesArray.map((series) =>
           innerWidth >= 960 ? (
             <Chip
