@@ -14,7 +14,7 @@ import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import moment from 'moment';
 import { useSnackbar } from 'notistack';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { SeriesForm } from '../Forms/SeriesForm';
 import {
@@ -68,6 +68,7 @@ export const SeriesInfo = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const [showForm, setShowForm] = useState<boolean>(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
+  const [innerWidth, setInnerWidth] = useState<number>(window.innerWidth);
 
   const { data: AuthData } = useLoggedInQuery({
     fetchPolicy: 'cache-and-network',
@@ -111,6 +112,14 @@ export const SeriesInfo = (props: Props) => {
         },
       },
     });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setInnerWidth(window.innerWidth);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <div>
@@ -173,10 +182,15 @@ export const SeriesInfo = (props: Props) => {
                     return (
                       altTitle?.title && (
                         <>
-                          <Grid item xs={2} sm={2}>
-                            <Typography>Alternative Title</Typography>
+                          <Grid item xs={4} sm={2}>
+                            <Typography>
+                              {' '}
+                              {innerWidth >= 960
+                                ? `Alternative Title`
+                                : `Alt. Title`}
+                            </Typography>
                           </Grid>
-                          <Grid item xs={10} sm={10}>
+                          <Grid item xs={8} sm={10}>
                             <Grid container spacing={3} wrap={'nowrap'}>
                               <Grid item xs={12}>
                                 <Typography>{altTitle.title}</Typography>
@@ -246,10 +260,10 @@ export const SeriesInfo = (props: Props) => {
                   seriesData?.series?.references.map((reference) => {
                     return (
                       <>
-                        <Grid item xs={2}>
-                          <Typography>{reference?.source}</Typography>
+                        <Grid item xs={4} sm={2}>
+                          <Typography noWrap>{reference?.source}</Typography>
                         </Grid>
-                        <Grid item xs={10}>
+                        <Grid item xs={8} sm={10}>
                           <Typography noWrap>
                             <Link
                               href={reference?.link || undefined}

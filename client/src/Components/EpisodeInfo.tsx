@@ -14,7 +14,7 @@ import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import moment from 'moment';
 import { useSnackbar } from 'notistack';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { EpisodeForm } from '../Forms/EpisodeForm';
 import {
@@ -66,6 +66,7 @@ export const EpisodeInfo = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const [showForm, setShowForm] = useState<boolean>(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
+  const [innerWidth, setInnerWidth] = useState<number>(window.innerWidth);
 
   const { data: AuthData } = useLoggedInQuery({
     fetchPolicy: 'cache-and-network',
@@ -110,6 +111,14 @@ export const EpisodeInfo = (props: Props) => {
       },
     });
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      setInnerWidth(window.innerWidth);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <div>
@@ -175,7 +184,11 @@ export const EpisodeInfo = (props: Props) => {
                       altTitle?.title && (
                         <>
                           <Grid item xs={4} sm={2}>
-                            <Typography>Alternative Title</Typography>
+                            <Typography>
+                              {innerWidth >= 960
+                                ? `Alternative Title`
+                                : `Alt. Title`}
+                            </Typography>
                           </Grid>
                           <Grid item xs={8} sm={10}>
                             <Grid container spacing={3} wrap={'nowrap'}>
