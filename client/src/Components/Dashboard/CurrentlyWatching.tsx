@@ -82,7 +82,9 @@ export const CurrentlyWatching = () => {
                         <>
                           <Grid item>
                             <Typography>
-                              {`${item?.progress?.completed} / ${item?.episodeCount}`}
+                              {`${item?.progress?.completed ?? '0'} / ${
+                                item?.episodeCount
+                              }`}
                             </Typography>
                           </Grid>
                           <Grid item>
