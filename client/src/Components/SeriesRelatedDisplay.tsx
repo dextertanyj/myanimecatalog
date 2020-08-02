@@ -45,7 +45,7 @@ export const SeriesRelatedDisplay = (props: Props): ReactElement => {
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  });
+  }, []);
 
   return !!props.seriesArray && props.seriesArray.length > 0 ? (
     <>

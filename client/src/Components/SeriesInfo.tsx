@@ -287,70 +287,6 @@ export const SeriesInfo = (props: Props) => {
                   )}
               </Grid>
             </Grid>
-            <Grid item xs={12} zeroMinWidth>
-              <Grid container spacing={3}>
-                {
-                  <SeriesRelatedDisplay
-                    key={'prequels'}
-                    title={'Prequels'}
-                    seriesArray={
-                      seriesData?.series?.prequels as {
-                        id: string;
-                        title: string;
-                      }[]
-                    }
-                  />
-                }
-                {
-                  <SeriesRelatedDisplay
-                    key={'sequels'}
-                    title={'Sequels'}
-                    seriesArray={
-                      seriesData?.series?.sequels as {
-                        id: string;
-                        title: string;
-                      }[]
-                    }
-                  />
-                }
-                {
-                  <SeriesRelatedDisplay
-                    key={'main story'}
-                    title={'Main Story'}
-                    seriesArray={
-                      seriesData?.series?.mainStories as {
-                        id: string;
-                        title: string;
-                      }[]
-                    }
-                  />
-                }
-                {
-                  <SeriesRelatedDisplay
-                    key={'side stories'}
-                    title={'Side Stories'}
-                    seriesArray={
-                      seriesData?.series?.sideStories as {
-                        id: string;
-                        title: string;
-                      }[]
-                    }
-                  />
-                }
-                {
-                  <SeriesRelatedDisplay
-                    key={'related'}
-                    title={'Related'}
-                    seriesArray={
-                      [
-                        ...(seriesData?.series?.relatedSeries || []),
-                        ...(seriesData?.series?.relatedAlternatives || []),
-                      ] as { id: string; title: string }[]
-                    }
-                  />
-                }
-              </Grid>
-            </Grid>
             <Grid item xs={4} sm={2}>
               <Typography>Remarks</Typography>
             </Grid>
@@ -361,9 +297,82 @@ export const SeriesInfo = (props: Props) => {
                 </Grid>
               </Grid>
             </Grid>
+            {(seriesData?.series?.prequels?.length || 0) +
+              (seriesData?.series?.sequels?.length || 0) +
+              (seriesData?.series?.mainStories?.length || 0) +
+              (seriesData?.series?.sideStories?.length || 0) +
+              (seriesData?.series?.relatedSeries?.length || 0) +
+              (seriesData?.series?.relatedAlternatives?.length || 0) >
+              0 && (
+              <Grid item xs={12} zeroMinWidth>
+                <Grid container spacing={3}>
+                  {
+                    <SeriesRelatedDisplay
+                      key={'prequels'}
+                      title={'Prequels'}
+                      seriesArray={
+                        seriesData?.series?.prequels as {
+                          id: string;
+                          title: string;
+                        }[]
+                      }
+                    />
+                  }
+                  {
+                    <SeriesRelatedDisplay
+                      key={'sequels'}
+                      title={'Sequels'}
+                      seriesArray={
+                        seriesData?.series?.sequels as {
+                          id: string;
+                          title: string;
+                        }[]
+                      }
+                    />
+                  }
+                  {
+                    <SeriesRelatedDisplay
+                      key={'main story'}
+                      title={'Main Story'}
+                      seriesArray={
+                        seriesData?.series?.mainStories as {
+                          id: string;
+                          title: string;
+                        }[]
+                      }
+                    />
+                  }
+                  {
+                    <SeriesRelatedDisplay
+                      key={'side stories'}
+                      title={'Side Stories'}
+                      seriesArray={
+                        seriesData?.series?.sideStories as {
+                          id: string;
+                          title: string;
+                        }[]
+                      }
+                    />
+                  }
+                  {
+                    <SeriesRelatedDisplay
+                      key={'related'}
+                      title={'Related'}
+                      seriesArray={
+                        [
+                          ...(seriesData?.series?.relatedSeries || []),
+                          ...(seriesData?.series?.relatedAlternatives || []),
+                        ] as { id: string; title: string }[]
+                      }
+                    />
+                  }
+                </Grid>
+              </Grid>
+            )}
           </Grid>
         </Paper>
       )}
+
       {showForm && (
         <SeriesForm
           seriesId={props.seriesId}
