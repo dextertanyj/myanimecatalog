@@ -5,14 +5,14 @@ import {
   Grid,
   makeStyles,
   Theme,
-  Typography,
+  Typography
 } from '@material-ui/core';
 import { blueGrey } from '@material-ui/core/colors';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import moment from 'moment';
 import { useSnackbar } from 'notistack';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FileForm } from '../Forms/FileForm';
 import { File } from '../gql/documents';
 import { useDeleteFileMutation } from '../gql/queries';
@@ -59,6 +59,7 @@ export const FileInfo = (props: Props) => {
   const classes = useStyles();
   const [showForm, setShowForm] = useState<boolean>(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
+  const [innerWidth, setInnerWidth] = useState<number>(window.innerWidth);
 
   const [deleteFileMutation] = useDeleteFileMutation({
     onError: (error: ApolloError) => {
@@ -94,6 +95,14 @@ export const FileInfo = (props: Props) => {
     }
   };
 
+  useEffect(() => {
+    const handleResize = () => {
+      setInnerWidth(window.innerWidth);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const filePath = file.path?.substring(0, file.path?.lastIndexOf('/'));
   const fileName = file.path?.substring(file.path?.lastIndexOf('/'));
 
@@ -103,9 +112,10 @@ export const FileInfo = (props: Props) => {
         {props.editable && (
           <Grid item xs={12}>
             <Grid container spacing={2}>
-              <Grid item xs />
-              <Grid item>
+              {innerWidth >= 600 && <Grid item sm />}
+              <Grid item xs={6} sm={'auto'}>
                 <Button
+                  fullWidth
                   color="primary"
                   startIcon={<EditOutlinedIcon />}
                   variant="contained"
@@ -115,8 +125,9 @@ export const FileInfo = (props: Props) => {
                   Edit
                 </Button>
               </Grid>
-              <Grid item>
+              <Grid item xs={6} sm={'auto'}>
                 <Button
+                  fullWidth
                   color="secondary"
                   startIcon={<DeleteOutlinedIcon />}
                   variant="contained"
@@ -132,10 +143,10 @@ export const FileInfo = (props: Props) => {
 
         <Grid item xs={12} className={classes.tableContent}>
           <Grid container spacing={3}>
-            <Grid item xs={2}>
+            <Grid item xs={4} sm={2} md={2}>
               <Typography>File Name</Typography>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={8} sm={10} md={4}>
               <Grid container spacing={3} wrap={'nowrap'}>
                 <Grid item xs={12}>
                   <Typography style={{ wordWrap: 'break-word' }}>
@@ -144,10 +155,10 @@ export const FileInfo = (props: Props) => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={4} sm={2} md={2}>
               <Typography>File Path</Typography>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={8} sm={10} md={4}>
               <Grid container spacing={3} wrap={'nowrap'}>
                 <Grid item xs={12}>
                   <Typography style={{ wordWrap: 'break-word' }}>
@@ -156,60 +167,60 @@ export const FileInfo = (props: Props) => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={4} sm={2} md={2}>
               <Typography>Codec</Typography>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={8} sm={4} md={2}>
               <Typography>{file.codec}</Typography>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={4} sm={2} md={2}>
               <Typography>Checksum</Typography>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={8} sm={4} md={2}>
               <Typography>{file.checksum}</Typography>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={4} sm={2} md={2}>
               <Typography>Source</Typography>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={8} sm={4} md={2}>
               <Typography>
                 {file.source && renderSource(file.source)}
               </Typography>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={4} sm={2} md={2}>
               <Typography>Size</Typography>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={8} sm={4} md={2}>
               <Typography>{file.fileSize}</Typography>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={4} sm={2} md={2}>
               <Typography>Resolution</Typography>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={8} sm={4} md={2}>
               <Typography>{file.resolution}</Typography>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={4} sm={2} md={2}>
               <Typography>Duration</Typography>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={8} sm={4} md={2}>
               <Typography>
                 {file.duration && renderDuration(file.duration)}
               </Typography>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={4} sm={2}  md={2}>
               <Typography>Remarks</Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={8} sm={10}  md={6}>
               <Grid container spacing={3} wrap={'nowrap'}>
                 <Grid item xs={12}>
                   <Typography>{file.remarks}</Typography>
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={4} sm={2} md={2}>
               <Typography>Last Updated</Typography>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={8} sm={10}  md={2}>
               <Typography>
                 {moment(file.updatedAt || file.createdAt).format(
                   'HH:mm   DD/MM/YYYY'
