@@ -22,7 +22,7 @@ import MenuOutlinedIcon from '@material-ui/icons/MenuOutlined';
 import PermIdentityOutlinedIcon from '@material-ui/icons/PermIdentityOutlined';
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 import clsx from 'clsx';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Role } from '../gql/documents';
 import { useLoggedInQuery } from '../gql/queries';
@@ -96,12 +96,18 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.background.default,
       padding: theme.spacing(3),
     },
+    mobileMenuToggle: {
+      paddingRight: 0,
+      marginRight: -4,
+      color: grey[100],
+    },
   })
 );
 
 const Navigation = (props: any) => {
   const classes = useStyles();
   const history = useHistory();
+  const [innerWidth, setInnerWidth] = useState<number>(window.innerWidth);
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
   const [expanded, setExpanded] = useState<boolean>(window.innerWidth > 1366);
 
@@ -109,15 +115,24 @@ const Navigation = (props: any) => {
     fetchPolicy: 'cache-and-network',
   });
 
+  useEffect(() => {
+    const handleResize = () => {
+      setInnerWidth(window.innerWidth);
+      setExpanded(window.innerWidth > 1366);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
         <Grid container spacing={0}>
-          {window.innerWidth <= 960 && (
+          {innerWidth <= 960 && (
             <Grid item className={classes.grid}>
               <IconButton
                 onClick={() => setMobileOpen(true)}
-                className={classes.button}
+                className={classes.mobileMenuToggle}
               >
                 <MenuOutlinedIcon />
               </IconButton>
@@ -130,7 +145,7 @@ const Navigation = (props: any) => {
               </Typography>
             </Toolbar>
           </Grid>
-          {window.innerWidth > 960 && (
+          {innerWidth > 960 && (
             <>
               <Grid item xs />
               <Grid item className={classes.grid}>
@@ -154,8 +169,8 @@ const Navigation = (props: any) => {
         </Grid>
       </AppBar>
       <Drawer
-        variant={window.innerWidth > 960 ? 'permanent' : 'temporary'}
-        open={window.innerWidth > 960 || mobileOpen}
+        variant={innerWidth > 960 ? 'permanent' : 'temporary'}
+        open={innerWidth > 960 || mobileOpen}
         onClose={() => setMobileOpen(false)}
         className={clsx(classes.drawer, {
           [classes.drawerOpen]: expanded,
@@ -163,8 +178,8 @@ const Navigation = (props: any) => {
         })}
         classes={{
           paper: clsx({
-            [classes.drawerPaper]: window.innerWidth > 960,
-            [classes.drawerPaperMobile]: window.innerWidth <= 960,
+            [classes.drawerPaper]: innerWidth > 960,
+            [classes.drawerPaperMobile]: innerWidth <= 960,
             [classes.drawerPaperOpen]: expanded,
             [classes.drawerPaperClose]: !expanded,
           }),
@@ -226,7 +241,7 @@ const Navigation = (props: any) => {
               <ListItemText primary={'Users'} />
             </ListItem>
           )}
-          {window.innerWidth <= 960 && (
+          {innerWidth <= 960 && (
             <>
               <ListItem
                 button
