@@ -17,7 +17,7 @@ import { ColumnApi, GridApi } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { AgGridReact } from 'ag-grid-react';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { BatchEpisodeForm } from '../Forms/BatchEpisodeForm';
 import { EpisodeForm } from '../Forms/EpisodeForm';
@@ -37,21 +37,14 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'center',
     },
     tableHeader: {
-      marginBottom: '10px',
-      textAlign: 'left',
-      color: blueGrey[700],
+      marginBottom: '5px',
     },
-    tableHeaderItems: {
+    tableTitle: {
+      color: blueGrey[700],
+      textAlign: 'left',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
-    },
-    buttonGroup: {
-      '& div': {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-      },
     },
   })
 );
@@ -109,6 +102,27 @@ export const EpisodesTable = (props: Props) => {
     fetchPolicy: 'cache-and-network',
   });
 
+  const hideColumnsMobile = useCallback(() => {
+    if (gridApi?.columnApi) {
+      if (window.innerWidth > 960) {
+        gridApi.columnApi.setColumnsVisible(['remarks', 'episodeNumber'], true);
+      } else if (window.innerWidth > 600) {
+        gridApi.columnApi.setColumnsVisible(['remarks'], false);
+        gridApi.columnApi.setColumnsVisible(['episodeNumber'], true);
+      } else {
+        gridApi.columnApi.setColumnsVisible(
+          ['remarks', 'episodeNumber'],
+          false
+        );
+      }
+    }
+  }, [gridApi]);
+
+  useEffect(() => {
+    window.addEventListener('resize', hideColumnsMobile);
+    return () => window.removeEventListener('resize', hideColumnsMobile);
+  }, [hideColumnsMobile]);
+
   const gridOptions = {
     enableCellTextSelection: true,
   };
@@ -116,6 +130,12 @@ export const EpisodesTable = (props: Props) => {
   const onGridReady = useCallback((params: any) => {
     const { api, columnApi } = params;
     setGridApi({ api, columnApi });
+    if (window.innerWidth > 960) {
+    } else if (window.innerWidth > 600) {
+      columnApi.setColumnsVisible(['remarks'], false);
+    } else {
+      columnApi.setColumnsVisible(['remarks', 'episodeNumber'], false);
+    }
   }, []);
 
   const onSelectionChanged = () => {
@@ -134,65 +154,81 @@ export const EpisodesTable = (props: Props) => {
   return (
     <div>
       <Paper elevation={3} className={classes.paper}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} className={classes.tableHeader}>
+        <Grid container spacing={3} className={classes.tableHeader}>
+          <Grid item xs={12}>
             <Grid container spacing={3}>
-              <Grid item xs className={classes.tableHeaderItems}>
-                <Typography variant="h5">{`Episodes`}</Typography>
+              <Grid item xs={12} sm className={classes.tableTitle}>
+                <Typography variant="h5">Episodes</Typography>
               </Grid>
               {AuthData?.loggedIn?.role &&
-                writeAccess.includes(AuthData.loggedIn.role) && (
-                  <>
-                    <Grid item className={classes.buttonGroup}>
-                      <ButtonGroup>
-                        <Button
-                          startIcon={<AddIcon />}
-                          variant="contained"
-                          color="primary"
-                          onClick={() => {
-                            setFormAction(ActionType.CREATE);
-                            setShowForm(true);
-                          }}
-                        >
-                          Add New
-                        </Button>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() => setShowBatchForm(true)}
-                        >
-                          <QueueOutlinedIcon />
-                        </Button>
-                      </ButtonGroup>
-                    </Grid>
-                    <Grid item className={classes.tableHeaderItems}>
+              writeAccess.includes(AuthData.loggedIn.role) ? (
+                <>
+                  <Grid item xs={12} sm={'auto'}>
+                    <ButtonGroup style={{ width: '100%' }}>
                       <Button
-                        startIcon={<EditOutlinedIcon />}
+                        startIcon={<AddIcon />}
                         variant="contained"
                         color="primary"
-                        disabled={selectedRows.length !== 1}
                         onClick={() => {
-                          setFormAction(ActionType.UPDATE);
+                          setFormAction(ActionType.CREATE);
                           setShowForm(true);
                         }}
+                        style={{ width: '100%' }}
                       >
-                        Edit
+                        Add
                       </Button>
-                    </Grid>
-                  </>
-                )}
-              <Grid item className={classes.tableHeaderItems}>
-                <Button
-                  startIcon={<PageviewOutlinedIcon />}
-                  disabled={selectedRows.length !== 1}
-                  variant="contained"
-                  onClick={() => {
-                    viewSelected();
-                  }}
-                >
-                  View
-                </Button>
-              </Grid>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => setShowBatchForm(true)}
+                      >
+                        <QueueOutlinedIcon />
+                      </Button>
+                    </ButtonGroup>
+                  </Grid>
+                  <Grid item xs={6} sm={'auto'}>
+                    <Button
+                      fullWidth
+                      startIcon={<EditOutlinedIcon />}
+                      variant="contained"
+                      color="primary"
+                      disabled={selectedRows.length !== 1}
+                      onClick={() => {
+                        setFormAction(ActionType.UPDATE);
+                        setShowForm(true);
+                      }}
+                    >
+                      Edit
+                    </Button>
+                  </Grid>
+                  <Grid item xs={6} sm={'auto'}>
+                    <Button
+                      fullWidth
+                      startIcon={<PageviewOutlinedIcon />}
+                      disabled={selectedRows.length !== 1}
+                      variant="contained"
+                      onClick={() => {
+                        viewSelected();
+                      }}
+                    >
+                      View
+                    </Button>
+                  </Grid>
+                </>
+              ) : (
+                <Grid item xs={12} sm={'auto'}>
+                  <Button
+                    startIcon={<PageviewOutlinedIcon />}
+                    disabled={selectedRows.length !== 1}
+                    variant="contained"
+                    onClick={() => {
+                      viewSelected();
+                    }}
+                  >
+                    View
+                  </Button>
+                </Grid>
+              )}
             </Grid>
           </Grid>
           <Grid item xs={12}>
