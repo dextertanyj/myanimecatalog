@@ -4,6 +4,7 @@ import {
   Chip,
   createStyles,
   Grid,
+  Link,
   makeStyles,
   Paper,
   Theme,
@@ -172,8 +173,8 @@ export const EpisodeInfo = (props: Props) => {
                   <Typography>Title</Typography>
                 </Grid>
                 <Grid item xs={8} sm={10}>
-                  <Grid container spacing={3} wrap={'nowrap'}>
-                    <Grid item xs={12}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} zeroMinWidth>
                       <Typography>{episodeData?.episode?.title}</Typography>
                     </Grid>
                   </Grid>
@@ -191,9 +192,9 @@ export const EpisodeInfo = (props: Props) => {
                             </Typography>
                           </Grid>
                           <Grid item xs={8} sm={10}>
-                            <Grid container spacing={3} wrap={'nowrap'}>
-                              <Grid item xs={12}>
-                                <Typography noWrap>{altTitle.title}</Typography>
+                            <Grid container spacing={3}>
+                              <Grid item xs={12} zeroMinWidth>
+                                <Typography>{altTitle.title}</Typography>
                               </Grid>
                             </Grid>
                           </Grid>
@@ -207,15 +208,34 @@ export const EpisodeInfo = (props: Props) => {
                 </Grid>
                 <Grid item xs={8} sm={10} md={6}>
                   <Grid container>
-                    <Grid item xs={12} style={{ flexDirection: 'row' }}>
-                      <Chip
-                        label={episodeData?.episode?.series?.title}
-                        onClick={() =>
-                          history.push(
-                            `/series/${episodeData?.episode?.series?.id}`
-                          )
-                        }
-                      />
+                    <Grid
+                      item
+                      xs={12}
+                      zeroMinWidth
+                      style={{ flexDirection: 'row' }}
+                    >
+                      {innerWidth >= 960 ? (
+                        <Chip
+                          label={episodeData?.episode?.series?.title}
+                          onClick={() =>
+                            history.push(
+                              `/series/${episodeData?.episode?.series?.id}`
+                            )
+                          }
+                        />
+                      ) : (
+                        <Link
+                          onClick={() =>
+                            history.push(
+                              `/series/${episodeData?.episode?.series?.id}`
+                            )
+                          }
+                        >
+                          <Typography>
+                            {episodeData?.episode?.series?.title}
+                          </Typography>
+                        </Link>
+                      )}
                     </Grid>
                   </Grid>
                 </Grid>

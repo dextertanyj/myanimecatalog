@@ -2,11 +2,12 @@ import {
   Chip,
   createStyles,
   Grid,
+  Link,
   makeStyles,
   Theme,
   Typography,
 } from '@material-ui/core';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 type SeriesBasic = {
@@ -28,6 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     chip: {
       margin: '3px',
+      maxWidth: '100%',
     },
   })
 );
@@ -35,21 +37,36 @@ const useStyles = makeStyles((theme: Theme) =>
 export const SeriesRelatedDisplay = (props: Props): ReactElement => {
   const classes = useStyles();
   const history = useHistory();
+  const [innerWidth, setInnerWidth] = useState<number>(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setInnerWidth(window.innerWidth);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  });
 
   return !!props.seriesArray && props.seriesArray.length > 0 ? (
     <>
-      <Grid item xs={4} sm={2} className={classes.title}>
+      <Grid item xs={4} sm={2} className={classes.title} zeroMinWidth>
         <Typography>{props.title}</Typography>
       </Grid>
-      <Grid item xs={8} sm={10}>
-        {props.seriesArray.map((series) => (
-          <Chip
-            key={series?.id}
-            label={series?.title}
-            className={classes.chip}
-            onClick={() => history.push(`/series/${series?.id}`)}
-          />
-        ))}
+      <Grid item xs={7} sm={10} zeroMinWidth>
+        {props.seriesArray.map((series) =>
+          innerWidth >= 960 ? (
+            <Chip
+              key={series?.id}
+              label={series?.title}
+              className={classes.chip}
+              onClick={() => history.push(`/series/${series?.id}`)}
+            />
+          ) : (
+            <Link onClick={() => history.push(`/series/${series?.id}`)}>
+              <Typography>{series.title}</Typography>
+            </Link>
+          )
+        )}
       </Grid>
     </>
   ) : (
