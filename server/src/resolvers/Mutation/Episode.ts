@@ -53,6 +53,16 @@ export const Episode = {
     ctx: Context,
     _info: unknown
   ): Promise<EpisodeType> {
-    return await ctx.prisma.episode.delete(args);
+    try {
+      return await ctx.prisma.episode.delete(args);
+    } catch (error) {
+      const message: string = error.message;
+      if (message.includes('`File`')) {
+        throw new Error(
+          `Please remove all associated files before deleting the episode.`
+        );
+      }
+      throw error;
+    }
   },
 };

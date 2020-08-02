@@ -34,15 +34,26 @@ export const User = {
     ctx: Context,
     _info: unknown
   ): Promise<UserType> {
-    const encryptPassword = await bcrypt.hash(data.password, 10);
-    const user = await ctx.prisma.user.create({
-      data: {
-        ...data,
-        password: encryptPassword,
-        username: data.username.toLowerCase().trim(),
-      },
-    });
-    return user;
+    try {
+      const encryptPassword = await bcrypt.hash(data.password, 10);
+      const user = await ctx.prisma.user.create({
+        data: {
+          ...data,
+          password: encryptPassword,
+          username: data.username.toLowerCase().trim(),
+        },
+      });
+      return user;
+    } catch (error) {
+      const message: string = error.message;
+      if (message.includes(`Unique`)) {
+        throw new Error(
+          `That username has been taken. Please choose another one.`
+        );
+      } else {
+        throw error;
+      }
+    }
   },
 
   async updateMe(
@@ -51,20 +62,31 @@ export const User = {
     ctx: Context,
     _info: unknown
   ): Promise<UserType> {
-    const encryptPassword = data.password
-      ? await bcrypt.hash(data?.password, 10)
-      : undefined;
-    const user = await ctx.prisma.user.update({
-      where: {
-        id: ctx.userId,
-      },
-      data: {
-        ...data,
-        password: encryptPassword,
-        username: data.username?.toLowerCase().trim(),
-      },
-    });
-    return user;
+    try {
+      const encryptPassword = data.password
+        ? await bcrypt.hash(data?.password, 10)
+        : undefined;
+      const user = await ctx.prisma.user.update({
+        where: {
+          id: ctx.userId,
+        },
+        data: {
+          ...data,
+          password: encryptPassword,
+          username: data.username?.toLowerCase().trim(),
+        },
+      });
+      return user;
+    } catch (error) {
+      const message: string = error.message;
+      if (message.includes(`Unique`)) {
+        throw new Error(
+          `That username has been taken. Please choose another one.`
+        );
+      } else {
+        throw error;
+      }
+    }
   },
 
   async updateUser(
@@ -73,18 +95,29 @@ export const User = {
     ctx: Context,
     _info: unknown
   ): Promise<UserType> {
-    const encryptPassword = data.password
-      ? await bcrypt.hash(data?.password, 10)
-      : undefined;
-    const user = await ctx.prisma.user.update({
-      where,
-      data: {
-        ...data,
-        username: data.username?.toLowerCase().trim(),
-        password: encryptPassword,
-      },
-    });
-    return user;
+    try {
+      const encryptPassword = data.password
+        ? await bcrypt.hash(data?.password, 10)
+        : undefined;
+      const user = await ctx.prisma.user.update({
+        where,
+        data: {
+          ...data,
+          username: data.username?.toLowerCase().trim(),
+          password: encryptPassword,
+        },
+      });
+      return user;
+    } catch (error) {
+      const message: string = error.message;
+      if (message.includes(`Unique`)) {
+        throw new Error(
+          `That username has been taken. Please choose another one.`
+        );
+      } else {
+        throw error;
+      }
+    }
   },
 
   async deleteUser(
@@ -93,7 +126,25 @@ export const User = {
     ctx: Context,
     _info: unknown
   ): Promise<UserType> {
-    const user = await ctx.prisma.user.delete(args);
-    return user;
+    try {
+      const user = await ctx.prisma.user.delete(args);
+      return user;
+    } catch (error) {
+      const message: string = error.message;
+      if (message.includes(`UserProgress`)) {
+        if (args.where.id) {
+          const user = await ctx.prisma.queryRaw<UserType>(
+            `SELECT * FROM \`User\` WHERE id = '${args.where.id}'`
+          );
+          await ctx.prisma.executeRaw(
+            `DELETE FROM \`User\` WHERE id = '${args.where.id}'`
+          );
+          return user;
+        } else {
+          throw error;
+        }
+      }
+      throw error;
+    }
   },
 };

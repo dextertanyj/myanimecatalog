@@ -121,7 +121,33 @@ export const Series = {
     ctx: Context,
     _info: unknown
   ): Promise<SeriesType> {
-    const series = await ctx.prisma.series.delete(args);
-    return series;
+    try {
+      return await ctx.prisma.series.delete(args);
+    } catch (error) {
+      const message: string = error.message;
+      if (message.includes('`Episode`')) {
+        throw new Error(
+          `Please remove all associated episodes before deleting the series.`
+        );
+      } else if (message.includes('`UserProgress`')) {
+        throw new Error(
+          `Unable to delete series as there are existing watch progress records.`
+        );
+      } else if (message.includes(`Reference`)) {
+        // Workaround while awaiting ON DELETE CASCADE fix from Prisma
+        if (args.where.id) {
+          const series = await ctx.prisma.queryRaw<SeriesType>(
+            `SELECT * FROM \`Series\` WHERE id = '${args.where.id}'`
+          );
+          await ctx.prisma.executeRaw(
+            `DELETE FROM \`Series\` WHERE id = '${args.where.id}'`
+          );
+          return series;
+        } else {
+          throw error;
+        }
+      }
+      throw error;
+    }
   },
 };
