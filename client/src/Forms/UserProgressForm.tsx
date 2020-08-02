@@ -53,6 +53,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     justifyContent: 'center',
   },
+  formSlider: {
+    [theme.breakpoints.down('sm')]: {
+      paddingLeft: '10px',
+      paddingRight: '10px',
+    },
+    [theme.breakpoints.up('sm')]: {
+      padding: 0,
+    },
+  },
   formItem: {
     marginTop: '0px',
     marginBottom: '0px',
@@ -328,7 +337,7 @@ export const UserProgressForm = (props: Props) => {
               return (
                 <form className={classes.form} onSubmit={handleSubmit}>
                   <Grid container spacing={3}>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} lg={6}>
                       <TextField
                         select
                         fullWidth
@@ -385,9 +394,9 @@ export const UserProgressForm = (props: Props) => {
                         )}
                       </TextField>
                     </Grid>
-                    <Grid item xs={6} className={classes.formArrayGrid}>
+                    <Grid item xs={12} lg={6} className={classes.formArrayGrid}>
                       <Grid container spacing={3} alignItems="center">
-                        <Grid item xs={2}>
+                        <Grid item xs={4} sm={2} lg={2}>
                           <Typography gutterBottom>Episodes: </Typography>
                         </Grid>
                         <Grid item xs>
@@ -427,9 +436,9 @@ export const UserProgressForm = (props: Props) => {
                         </Grid>
                       </Grid>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} lg={6}>
                       <Grid container spacing={3} alignItems="center">
-                        <Grid item xs={2}>
+                        <Grid item xs={4} sm={2} lg={2}>
                           <Typography gutterBottom>Story: </Typography>
                         </Grid>
                         <Grid item xs>
@@ -493,9 +502,9 @@ export const UserProgressForm = (props: Props) => {
                         </Grid>
                       </Grid>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} lg={6}>
                       <Grid container spacing={3} alignItems="center">
-                        <Grid item xs={2}>
+                        <Grid item xs={4} sm={2} lg={2}>
                           <Typography gutterBottom>Execution: </Typography>
                         </Grid>
                         <Grid item xs>
@@ -559,9 +568,9 @@ export const UserProgressForm = (props: Props) => {
                         </Grid>
                       </Grid>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} lg={6}>
                       <Grid container spacing={3} alignItems="center">
-                        <Grid item xs={2}>
+                        <Grid item xs={4} sm={2} lg={2}>
                           <Typography gutterBottom>Appeal: </Typography>
                         </Grid>
                         <Grid item xs>
@@ -625,9 +634,9 @@ export const UserProgressForm = (props: Props) => {
                         </Grid>
                       </Grid>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} lg={6}>
                       <Grid container spacing={3} alignItems="center">
-                        <Grid item xs={2}>
+                        <Grid item xs={4} sm={2} lg={2}>
                           <Typography gutterBottom>Character: </Typography>
                         </Grid>
                         <Grid item xs>
@@ -691,9 +700,9 @@ export const UserProgressForm = (props: Props) => {
                         </Grid>
                       </Grid>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} lg={6}>
                       <Grid container spacing={3} alignItems="center">
-                        <Grid item xs={2}>
+                        <Grid item xs={4} sm={2} lg={2}>
                           <Typography gutterBottom>Art: </Typography>
                         </Grid>
                         <Grid item xs>
@@ -757,9 +766,9 @@ export const UserProgressForm = (props: Props) => {
                         </Grid>
                       </Grid>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} lg={6}>
                       <Grid container spacing={3} alignItems="center">
-                        <Grid item xs={2}>
+                        <Grid item xs={4} sm={2} lg={2}>
                           <Typography gutterBottom>Music: </Typography>
                         </Grid>
                         <Grid item xs>
@@ -825,7 +834,7 @@ export const UserProgressForm = (props: Props) => {
                     </Grid>
                     <Grid item xs={12}>
                       <Grid container spacing={3} alignItems="center">
-                        <Grid item xs={1}>
+                        <Grid item xs={4} sm={2} lg={1}>
                           <Typography gutterBottom>Overall: </Typography>
                         </Grid>
                         <Grid item xs>
