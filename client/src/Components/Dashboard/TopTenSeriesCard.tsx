@@ -42,7 +42,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const TopTenSeriesCard = () => {
   const classes = useStyles();
-
   const { data, loading } = useMyTopTenSeriesQuery({
     fetchPolicy: 'cache-and-network',
   });
@@ -63,11 +62,9 @@ export const TopTenSeriesCard = () => {
                 <>
                   <ListItem key={`topten-${index}`}>
                     <Grid container spacing={3} className={classes.gridList}>
-                      {window.innerWidth >= 960 && (
-                        <Grid item>
-                          <Typography>{index + 1}</Typography>
-                        </Grid>
-                      )}
+                      <Grid item>
+                        <Typography>{index + 1}</Typography>
+                      </Grid>
                       <Grid item xs>
                         <Typography noWrap>{item?.title}</Typography>
                       </Grid>

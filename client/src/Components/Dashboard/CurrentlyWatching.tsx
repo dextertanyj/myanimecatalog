@@ -13,7 +13,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { blueGrey } from '@material-ui/core/colors';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useMyCurrentlyWatchingQuery } from '../../gql/queries';
 
@@ -45,8 +45,17 @@ const useStyles = makeStyles((theme: Theme) =>
 export const CurrentlyWatching = () => {
   const classes = useStyles();
   const history = useHistory();
+  const [innerWidth, setInnerWidth] = useState<number>(window.innerWidth);
   const { data, loading } = useMyCurrentlyWatchingQuery({
     fetchPolicy: 'cache-and-network',
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setInnerWidth(window.innerWidth);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   });
 
   return (
@@ -69,7 +78,7 @@ export const CurrentlyWatching = () => {
                       <Grid item xs>
                         <Typography noWrap>{item?.title}</Typography>
                       </Grid>
-                      {window.innerWidth >= 960 && (
+                      {innerWidth >= 960 && (
                         <>
                           <Grid item>
                             <Typography>
