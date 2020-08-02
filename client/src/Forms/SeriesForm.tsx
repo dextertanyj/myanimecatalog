@@ -61,10 +61,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
-  formArrayGrid: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
+  formArrayRemoveButtonContainer: {
+    textAlign: 'center',
+  },
+  formArrayRemoveButton: {
+    paddingTop: '16px',
   },
   formItem: {
     marginTop: '0px',
@@ -694,7 +695,7 @@ export const SeriesForm = (props: Props): ReactElement => {
                         className={classes.formItem}
                       />
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={12} sm={6} md={3}>
                       <TextField
                         variant="outlined"
                         margin="normal"
@@ -711,7 +712,7 @@ export const SeriesForm = (props: Props): ReactElement => {
                         className={classes.formItem}
                       />
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={12} sm={6} md={3}>
                       <TextField
                         variant="outlined"
                         margin="normal"
@@ -728,7 +729,7 @@ export const SeriesForm = (props: Props): ReactElement => {
                         className={classes.formItem}
                       />
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={12} sm={6} md={3}>
                       <TextField
                         select
                         fullWidth
@@ -758,7 +759,7 @@ export const SeriesForm = (props: Props): ReactElement => {
                           })}
                       </TextField>
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={12} sm={6} md={3}>
                       <KeyboardDatePicker
                         fullWidth
                         inputVariant="outlined"
@@ -776,7 +777,7 @@ export const SeriesForm = (props: Props): ReactElement => {
                         }
                       />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                       <TextField
                         select
                         fullWidth
@@ -802,7 +803,7 @@ export const SeriesForm = (props: Props): ReactElement => {
                         })}
                       </TextField>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                       <TextField
                         select
                         fullWidth
@@ -848,7 +849,8 @@ export const SeriesForm = (props: Props): ReactElement => {
                                         <Grid container spacing={3}>
                                           <Grid
                                             item
-                                            xs={11}
+                                            xs={10}
+                                            md={11}
                                             key={`${index}-title`}
                                           >
                                             <TextField
@@ -895,15 +897,21 @@ export const SeriesForm = (props: Props): ReactElement => {
                                           </Grid>
                                           <Grid
                                             item
-                                            xs={1}
-                                            className={classes.formArrayGrid}
+                                            xs={2}
+                                            md={1}
                                             alignContent="space-around"
                                             alignItems="center"
+                                            className={
+                                              classes.formArrayRemoveButtonContainer
+                                            }
                                           >
                                             <IconButton
                                               size="small"
                                               onClick={() =>
                                                 arrayHelpers.remove(index)
+                                              }
+                                              className={
+                                                classes.formArrayRemoveButton
                                               }
                                             >
                                               <RemoveIcon />
@@ -939,20 +947,26 @@ export const SeriesForm = (props: Props): ReactElement => {
                         name="references"
                         render={(arrayHelpers) => (
                           <Grid container spacing={3}>
-                            {values.references && values.references.length > 0 && (
-                              <Grid item xs={12}>
-                                {values.references.map(
-                                  (
-                                    reference: {
-                                      id: string | undefined;
-                                      link: string | undefined;
-                                      source: string | undefined;
-                                    },
-                                    index: number
-                                  ) => {
-                                    return (
+                            {values.references &&
+                              values.references.length > 0 &&
+                              values.references.map(
+                                (
+                                  reference: {
+                                    id: string | undefined;
+                                    link: string | undefined;
+                                    source: string | undefined;
+                                  },
+                                  index: number
+                                ) => {
+                                  return (
+                                    <Grid item xs={12}>
                                       <Grid container spacing={3}>
-                                        <Grid item xs={6} key={`${index}-link`}>
+                                        <Grid
+                                          item
+                                          xs={12}
+                                          md={6}
+                                          key={`${index}-link`}
+                                        >
                                           <TextField
                                             variant="outlined"
                                             margin="normal"
@@ -994,7 +1008,8 @@ export const SeriesForm = (props: Props): ReactElement => {
                                         </Grid>
                                         <Grid
                                           item
-                                          xs={5}
+                                          xs={10}
+                                          md={5}
                                           key={`${index}-source`}
                                         >
                                           <TextField
@@ -1037,26 +1052,31 @@ export const SeriesForm = (props: Props): ReactElement => {
                                         </Grid>
                                         <Grid
                                           item
-                                          xs={1}
-                                          className={classes.formArrayGrid}
+                                          xs={2}
+                                          md={1}
                                           alignContent="space-around"
                                           alignItems="center"
+                                          className={
+                                            classes.formArrayRemoveButtonContainer
+                                          }
                                         >
                                           <IconButton
                                             size="small"
                                             onClick={() =>
                                               arrayHelpers.remove(index)
                                             }
+                                            className={
+                                              classes.formArrayRemoveButton
+                                            }
                                           >
                                             <RemoveIcon />
                                           </IconButton>
                                         </Grid>
                                       </Grid>
-                                    );
-                                  }
-                                )}
-                              </Grid>
-                            )}
+                                    </Grid>
+                                  );
+                                }
+                              )}
                             <Grid item xs={12}>
                               <Button
                                 fullWidth
@@ -1093,7 +1113,7 @@ export const SeriesForm = (props: Props): ReactElement => {
                         className={classes.formItem}
                       />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} md={6}>
                       <SeriesAutocomplete
                         fieldName={'prequels'}
                         label={'Prequels'}
@@ -1105,7 +1125,7 @@ export const SeriesForm = (props: Props): ReactElement => {
                         options={autoCompleteOptions}
                       />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} md={6}>
                       <SeriesAutocomplete
                         fieldName={'sequels'}
                         label={'Sequels'}
@@ -1117,7 +1137,7 @@ export const SeriesForm = (props: Props): ReactElement => {
                         options={autoCompleteOptions}
                       />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} md={6}>
                       <SeriesAutocomplete
                         fieldName={'mainStories'}
                         label={'Main Story'}
@@ -1129,7 +1149,7 @@ export const SeriesForm = (props: Props): ReactElement => {
                         options={autoCompleteOptions}
                       />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} md={6}>
                       <SeriesAutocomplete
                         fieldName={'sideStories'}
                         label={'Side Stories'}

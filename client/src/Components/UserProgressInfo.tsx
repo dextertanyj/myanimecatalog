@@ -47,15 +47,14 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'center',
     },
     tableHeader: {
-      'color': blueGrey[700],
-      'textAlign': 'left',
-      '& div': {
-        '& div': {
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        },
-      },
+      marginBottom: '10px',
+    },
+    tableTitle: {
+      color: blueGrey[700],
+      textAlign: 'left',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
     },
     tableContent: {
       '& div': {
@@ -94,15 +93,16 @@ export const UserProgressInfo = (props: Props) => {
         <UserProgressInfoSkeleton />
       ) : (
         <Paper elevation={3} className={classes.paper}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} className={classes.tableHeader}>
+          <Grid container spacing={3} className={classes.tableHeader}>
+            <Grid item xs={12}>
               <Grid container spacing={3}>
-                <Grid item xs>
+                <Grid item xs={12} sm className={classes.tableTitle}>
                   <Typography variant="h5">Watch Progress</Typography>
                 </Grid>
                 {!progress?.mySeriesProgress ? (
-                  <Grid item>
+                  <Grid item xs={12} sm={'auto'}>
                     <Button
+                      fullWidth
                       color="primary"
                       variant="contained"
                       startIcon={<EditOutlinedIcon />}
@@ -115,8 +115,9 @@ export const UserProgressInfo = (props: Props) => {
                     </Button>
                   </Grid>
                 ) : (
-                  <Grid item>
+                  <Grid item xs={12} sm={'auto'}>
                     <Button
+                      fullWidth
                       color="primary"
                       variant="contained"
                       startIcon={<EditOutlinedIcon />}

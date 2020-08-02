@@ -14,7 +14,7 @@ import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import moment from 'moment';
 import { useSnackbar } from 'notistack';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { SeriesForm } from '../Forms/SeriesForm';
 import {
@@ -41,16 +41,14 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'center',
     },
     tableHeader: {
-      'color': blueGrey[700],
-      'marginBottom': '10px',
-      'textAlign': 'left',
-      '& div': {
-        '& div': {
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        },
-      },
+      marginBottom: '10px',
+    },
+    tableTitle: {
+      color: blueGrey[700],
+      textAlign: 'left',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
     },
     tableContent: {
       '& div': {
@@ -70,6 +68,7 @@ export const SeriesInfo = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const [showForm, setShowForm] = useState<boolean>(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
+  const [innerWidth, setInnerWidth] = useState<number>(window.innerWidth);
 
   const { data: AuthData } = useLoggedInQuery({
     fetchPolicy: 'cache-and-network',
@@ -114,52 +113,64 @@ export const SeriesInfo = (props: Props) => {
       },
     });
 
+  useEffect(() => {
+    const handleResize = () => {
+      setInnerWidth(window.innerWidth);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div>
       {loading && !seriesData?.series ? (
         <SeriesInfoSkeleton />
       ) : (
         <Paper elevation={3} className={classes.paper}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} className={classes.tableHeader}>
+          <Grid container spacing={3} className={classes.tableHeader}>
+            <Grid item xs={12}>
               <Grid container spacing={3}>
-                <Grid item xs>
+                <Grid item xs={12} sm className={classes.tableTitle}>
                   <Typography variant="h5"> Series Information</Typography>
                 </Grid>
                 {AuthData?.loggedIn?.role &&
                   writeAccess.includes(AuthData.loggedIn.role) && (
-                    <>
-                      <Grid item>
-                        <Button
-                          startIcon={<EditOutlinedIcon />}
-                          color="primary"
-                          variant="contained"
-                          onClick={() => setShowForm(true)}
-                        >
-                          Edit
-                        </Button>
+                    <Grid item xs={12} sm={'auto'}>
+                      <Grid container spacing={3}>
+                        <Grid item xs={6}>
+                          <Button
+                            fullWidth
+                            startIcon={<EditOutlinedIcon />}
+                            color="primary"
+                            variant="contained"
+                            onClick={() => setShowForm(true)}
+                          >
+                            Edit
+                          </Button>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <Button
+                            fullWidth
+                            startIcon={<DeleteOutlinedIcon />}
+                            color="secondary"
+                            variant="contained"
+                            onClick={() => setShowDeleteDialog(true)}
+                          >
+                            Delete
+                          </Button>
+                        </Grid>
                       </Grid>
-                      <Grid item>
-                        <Button
-                          startIcon={<DeleteOutlinedIcon />}
-                          color="secondary"
-                          variant="contained"
-                          onClick={() => setShowDeleteDialog(true)}
-                        >
-                          Delete
-                        </Button>
-                      </Grid>
-                    </>
+                    </Grid>
                   )}
               </Grid>
             </Grid>
 
             <Grid item xs={12} className={classes.tableContent}>
               <Grid container spacing={3}>
-                <Grid item xs={2}>
+                <Grid item xs={4} sm={2}>
                   <Typography>Title</Typography>
                 </Grid>
-                <Grid item xs={10}>
+                <Grid item xs={8} sm={10}>
                   <Grid container spacing={3} wrap={'nowrap'}>
                     <Grid item xs={12}>
                       <Typography>{seriesData?.series?.title}</Typography>
@@ -171,10 +182,15 @@ export const SeriesInfo = (props: Props) => {
                     return (
                       altTitle?.title && (
                         <>
-                          <Grid item xs={2}>
-                            <Typography>Alternative Title</Typography>
+                          <Grid item xs={4} sm={2}>
+                            <Typography>
+                              {' '}
+                              {innerWidth >= 960
+                                ? `Alternative Title`
+                                : `Alt. Title`}
+                            </Typography>
                           </Grid>
-                          <Grid item xs={10}>
+                          <Grid item xs={8} sm={10}>
                             <Grid container spacing={3} wrap={'nowrap'}>
                               <Grid item xs={12}>
                                 <Typography>{altTitle.title}</Typography>
@@ -185,42 +201,42 @@ export const SeriesInfo = (props: Props) => {
                       )
                     );
                   })}
-                <Grid item xs={2}>
+                <Grid item xs={4} sm={2} md={2}>
                   <Typography>Season No.</Typography>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={8} sm={4} md={2}>
                   <Typography>
                     {seriesData?.series?.seasonNumber || '-'}
                   </Typography>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={4} sm={2} md={2}>
                   <Typography>No. of Episodes</Typography>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={8} sm={4} md={2}>
                   <Typography>{seriesData?.series?.episodeCount}</Typography>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={4} sm={2} md={2}>
                   <Typography>Status</Typography>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={8} sm={4} md={2}>
                   <Typography>
                     {!!seriesData?.series?.status &&
                       renderStatus(seriesData?.series?.status)}
                   </Typography>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={4} sm={2} md={2}>
                   <Typography>Type</Typography>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={8} sm={4} md={2}>
                   <Typography>
                     {!!seriesData?.series?.type &&
                       renderType(seriesData?.series?.type)}
                   </Typography>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={4} sm={2} md={2}>
                   <Typography>Release Season</Typography>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={8} sm={4} md={2}>
                   <Typography>{`${
                     !!seriesData?.series?.releaseSeason &&
                     renderSeason(seriesData?.series?.releaseSeason)
@@ -228,10 +244,10 @@ export const SeriesInfo = (props: Props) => {
                     'YYYY'
                   )}`}</Typography>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={4} sm={2} md={2}>
                   <Typography>Last Updated</Typography>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={8} sm={4} md={2}>
                   <Typography>
                     {moment(
                       seriesData?.series?.updatedAt ||
@@ -244,10 +260,10 @@ export const SeriesInfo = (props: Props) => {
                   seriesData?.series?.references.map((reference) => {
                     return (
                       <>
-                        <Grid item xs={2}>
-                          <Typography>{reference?.source}</Typography>
+                        <Grid item xs={4} sm={2}>
+                          <Typography noWrap>{reference?.source}</Typography>
                         </Grid>
-                        <Grid item xs={10}>
+                        <Grid item xs={8} sm={10}>
                           <Typography noWrap>
                             <Link
                               href={reference?.link || undefined}
@@ -327,10 +343,10 @@ export const SeriesInfo = (props: Props) => {
                 }
               </Grid>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={4} sm={2}>
               <Typography>Remarks</Typography>
             </Grid>
-            <Grid item xs={10}>
+            <Grid item xs={8} sm={10}>
               <Grid container spacing={3} wrap={'nowrap'}>
                 <Grid item xs={12}>
                   <Typography>{seriesData?.series?.remarks || ''}</Typography>

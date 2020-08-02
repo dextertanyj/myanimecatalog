@@ -3,6 +3,7 @@ import {
   CardContent,
   CardHeader,
   createStyles,
+  Grid,
   makeStyles,
   Theme,
   Typography,
@@ -23,10 +24,12 @@ const useStyles = makeStyles((theme: Theme) =>
       color: blueGrey[700],
     },
     cardContent: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
       height: 'calc(100% - 102px)',
+    },
+    gridContainer: {
+      justifyContent: 'center',
+      paddingLeft: 0,
+      paddingRight: 0,
     },
   })
 );
@@ -45,7 +48,11 @@ export const RatingCard = (props: Props) => {
         title={<Typography variant="h5">Your Ratings</Typography>}
       />
       <CardContent className={classes.cardContent}>
-        <RatingChart watchProgress={props.watchProgress} />
+        <Grid container spacing={3} className={classes.gridContainer}>
+          <Grid item xs={11}>
+            <RatingChart watchProgress={props.watchProgress} />
+          </Grid>
+        </Grid>
       </CardContent>
     </Card>
   );

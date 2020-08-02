@@ -40,10 +40,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
-  formArrayGrid: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
+  formArrayRemoveButtonContainer: {
+    textAlign: 'center',
+  },
+  formArrayRemoveButton: {
+    paddingTop: '16px',
   },
   formItem: {
     marginTop: '0px',
@@ -159,15 +160,17 @@ export const BatchEpisodeForm = (props: Props) => {
                       name="episodes"
                       render={(arrayHelpers) => (
                         <Grid container spacing={3}>
-                          {values.episodes && values.episodes.length > 0 && (
-                            <Grid item xs={12}>
-                              {values.episodes.map(
-                                (episode: EpisodeSimple, index: number) => {
-                                  return (
+                          {values.episodes &&
+                            values.episodes.length > 0 &&
+                            values.episodes.map(
+                              (episode: EpisodeSimple, index: number) => {
+                                return (
+                                  <Grid item xs={12}>
                                     <Grid container spacing={2}>
                                       <Grid
                                         item
-                                        xs={9}
+                                        xs={12}
+                                        md={9}
                                         key={`${index}-episode`}
                                       >
                                         <TextField
@@ -204,7 +207,8 @@ export const BatchEpisodeForm = (props: Props) => {
                                       </Grid>
                                       <Grid
                                         item
-                                        xs={2}
+                                        xs={10}
+                                        md={2}
                                         key={`${index}-episode`}
                                       >
                                         <TextField
@@ -244,8 +248,11 @@ export const BatchEpisodeForm = (props: Props) => {
                                       </Grid>
                                       <Grid
                                         item
-                                        xs={1}
-                                        className={classes.formArrayGrid}
+                                        xs={2}
+                                        md={1}
+                                        className={
+                                          classes.formArrayRemoveButtonContainer
+                                        }
                                         alignContent="space-around"
                                         alignItems="center"
                                       >
@@ -254,16 +261,18 @@ export const BatchEpisodeForm = (props: Props) => {
                                           onClick={() =>
                                             arrayHelpers.remove(index)
                                           }
+                                          className={
+                                            classes.formArrayRemoveButton
+                                          }
                                         >
                                           <RemoveIcon />
                                         </IconButton>
                                       </Grid>
                                     </Grid>
-                                  );
-                                }
-                              )}
-                            </Grid>
-                          )}
+                                  </Grid>
+                                );
+                              }
+                            )}
                           <Grid item xs={12}>
                             <Button
                               fullWidth

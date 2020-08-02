@@ -52,10 +52,10 @@ const HomePage = () => {
           <>
             <Grid item xs={12}>
               <Grid container spacing={3}>
-                <Grid item xs={8}>
+                <Grid item xs={12} md={8}>
                   <CurrentlyWatching />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={12} md={4}>
                   {watchProgress?.myProgress && (
                     <OverviewCard
                       watchProgress={
@@ -68,7 +68,7 @@ const HomePage = () => {
             </Grid>
             <Grid item xs={12}>
               <Grid container spacing={3}>
-                <Grid item xs={6}>
+                <Grid item xs={12} md={6}>
                   {watchProgress?.myProgress && (
                     <RatingCard
                       watchProgress={
@@ -77,7 +77,7 @@ const HomePage = () => {
                     />
                   )}
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} md={6}>
                   <TopTenSeriesCard />
                 </Grid>
               </Grid>

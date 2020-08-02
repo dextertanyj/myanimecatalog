@@ -23,17 +23,20 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: theme.spacing(3),
     },
-    gridTitle: {
+    tableHeader: {
+      marginBottom: '10px',
+    },
+    tableTitle: {
       color: blueGrey[700],
       textAlign: 'left',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
     },
     gridItem: {
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
-    },
-    gridButton: {
-      textAlign: 'right',
     },
   })
 );
@@ -55,38 +58,61 @@ const ProfilePage = () => {
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <Grid container spacing={3}>
-              <Grid item xs className={classes.gridTitle}>
+              <Grid item xs={12} sm className={classes.tableTitle}>
                 <Typography variant="h5">Profile</Typography>
               </Grid>
-              <Grid item>
-                <Button variant="contained" onClick={() => refetch()}>
-                  Refresh
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => setShowProfileForm(true)}
-                >
-                  Edit
-                </Button>
+              <Grid item xs={12} sm={'auto'}>
+                <Grid container spacing={3}>
+                  <Grid item xs={6}>
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      onClick={() => refetch()}
+                    >
+                      Refresh
+                    </Button>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                      onClick={() => setShowProfileForm(true)}
+                    >
+                      Edit
+                    </Button>
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
           <Grid item xs={12} className={classes.gridItem}>
             <Typography variant="h6">{data?.loggedIn?.name}</Typography>
           </Grid>
-          <Grid item xs={1} className={classes.gridItem}>
+          <Grid item xs={12} sm={3} md={2} lg={1} className={classes.gridItem}>
             <Typography>Username</Typography>
           </Grid>
-          <Grid item xs={11} className={classes.gridItem}>
+          <Grid
+            item
+            xs={12}
+            sm={9}
+            md={10}
+            lg={11}
+            className={classes.gridItem}
+          >
             <Typography>{data?.loggedIn?.username}</Typography>
           </Grid>
-          <Grid item xs={1} className={classes.gridItem}>
+          <Grid item xs={12} sm={3} md={2} lg={1} className={classes.gridItem}>
             <Typography>Access Level</Typography>
           </Grid>
-          <Grid item xs={11} className={classes.gridItem}>
+          <Grid
+            item
+            xs={12}
+            sm={9}
+            md={10}
+            lg={11}
+            className={classes.gridItem}
+          >
             <Typography>
               {data?.loggedIn?.role && renderRole(data?.loggedIn?.role)}
             </Typography>

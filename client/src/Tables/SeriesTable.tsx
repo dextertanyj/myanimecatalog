@@ -15,7 +15,7 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { AgGridReact } from 'ag-grid-react';
 import moment from 'moment';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { SeriesForm } from '../Forms/SeriesForm';
 import { Series } from '../gql/documents';
@@ -31,16 +31,14 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'center',
     },
     tableHeader: {
-      'color': blueGrey[700],
-      'marginBottom': '10px',
-      'textAlign': 'left',
-      '& div': {
-        '& div': {
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        },
-      },
+      marginBottom: '5px',
+    },
+    tableTitle: {
+      color: blueGrey[700],
+      textAlign: 'left',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
     },
   })
 );
@@ -90,6 +88,7 @@ const columnDefs = [
   },
   {
     headerName: 'Release Season',
+    field: 'releaseSeason',
     valueGetter: (params: { data: Series }) => {
       return params.data.releaseSeason && params.data.releaseYear
         ? `${renderSeason(params.data.releaseSeason)} ${moment(
@@ -106,6 +105,7 @@ const columnDefs = [
   },
   {
     headerName: 'Status',
+    field: 'status',
     valueGetter: (params: any) => {
       return renderStatus(params.data.status);
     },
@@ -116,6 +116,7 @@ const columnDefs = [
   },
   {
     headerName: 'Type',
+    field: 'type',
     valueGetter: (params: any) => {
       return renderType(params.data.type);
     },
@@ -152,10 +153,53 @@ export const SeriesTable = () => {
     enableCellTextSelection: true,
   };
 
-  const onGridReady = useCallback((params: any) => {
-    const { api, columnApi } = params;
-    setGridApi({ api, columnApi });
-  }, []);
+  const onGridReady = useCallback(
+    (params: { api: GridApi; columnApi: ColumnApi }) => {
+      const { api, columnApi } = params;
+      setGridApi({ api, columnApi });
+      if (window.innerWidth >= 1280) {
+        columnApi.setColumnsVisible(
+          ['seasonNumber, episodeCount', 'releaseSeason', 'status', 'type'],
+          true
+        );
+        columnApi.setColumnWidths([
+          { key: 'seasonNumber', newWidth: 120 },
+          { key: 'episodeCount', newWidth: 120 },
+          { key: 'releaseSeason', newWidth: 180 },
+          { key: 'status', newWidth: 180 },
+          { key: 'type', newWidth: 180 },
+        ]);
+      } else if (window.innerWidth >= 960) {
+        columnApi.setColumnsVisible(
+          ['seasonNumber', 'episodeCount', 'status', 'type'],
+          true
+        );
+        columnApi.setColumnsVisible(['releaseSeason'], false);
+        columnApi.setColumnWidths([
+          { key: 'seasonNumber', newWidth: 100 },
+          { key: 'episodeCount', newWidth: 100 },
+          { key: 'status', newWidth: 150 },
+          { key: 'type', newWidth: 150 },
+        ]);
+      } else if (window.innerWidth >= 600) {
+        columnApi.setColumnsVisible(['status', 'type'], true);
+        columnApi.setColumnsVisible(
+          ['seasonNumber', 'episodeCount', 'releaseSeason'],
+          false
+        );
+        columnApi.setColumnWidths([
+          { key: 'status', newWidth: 150 },
+          { key: 'type', newWidth: 150 },
+        ]);
+      } else {
+        columnApi.setColumnsVisible(
+          ['seasonNumber', 'episodeCount', 'releaseSeason', 'status', 'type'],
+          false
+        );
+      }
+    },
+    []
+  );
 
   const onSelectionChanged = () => {
     if (gridApi !== undefined) {
@@ -170,19 +214,71 @@ export const SeriesTable = () => {
     }
   };
 
+  const hideColumnsMobile = useCallback(() => {
+    if (gridApi?.columnApi) {
+      if (window.innerWidth >= 1280) {
+        gridApi.columnApi.setColumnsVisible(
+          ['seasonNumber, episodeCount', 'releaseSeason', 'status', 'type'],
+          true
+        );
+        gridApi.columnApi.setColumnWidths([
+          { key: 'seasonNumber', newWidth: 120 },
+          { key: 'episodeCount', newWidth: 120 },
+          { key: 'releaseSeason', newWidth: 180 },
+          { key: 'status', newWidth: 180 },
+          { key: 'type', newWidth: 180 },
+        ]);
+      } else if (window.innerWidth >= 960) {
+        gridApi.columnApi.setColumnsVisible(
+          ['seasonNumber', 'episodeCount', 'status', 'type'],
+          true
+        );
+        gridApi.columnApi.setColumnsVisible(['releaseSeason'], false);
+        gridApi.columnApi.setColumnWidths([
+          { key: 'seasonNumber', newWidth: 100 },
+          { key: 'episodeCount', newWidth: 100 },
+          { key: 'status', newWidth: 150 },
+          { key: 'type', newWidth: 150 },
+        ]);
+      } else if (window.innerWidth >= 600) {
+        gridApi.columnApi.setColumnsVisible(['status', 'type'], true);
+        gridApi.columnApi.setColumnsVisible(
+          ['seasonNumber', 'episodeCount', 'releaseSeason'],
+          false
+        );
+        gridApi.columnApi.setColumnWidths([
+          { key: 'status', newWidth: 150 },
+          { key: 'type', newWidth: 150 },
+        ]);
+      } else {
+        gridApi.columnApi.setColumnsVisible(
+          ['seasonNumber', 'episodeCount', 'releaseSeason', 'status', 'type'],
+          false
+        );
+      }
+    }
+  }, [gridApi]);
+
+  useEffect(() => {
+    window.addEventListener('resize', hideColumnsMobile);
+    return () => window.removeEventListener('resize', hideColumnsMobile);
+  }, [hideColumnsMobile]);
+
   return (
     <div>
       <Paper elevation={3} className={classes.paper}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} className={classes.tableHeader}>
+        <Grid container spacing={3} className={classes.tableHeader}>
+          <Grid item xs={12}>
             <Grid container spacing={3}>
-              <Grid item xs>
+              <Grid item xs={12} sm className={classes.tableTitle}>
                 <Typography variant="h5">All Series</Typography>
               </Grid>
               {AuthData?.loggedIn?.role &&
-                writeAccess.includes(AuthData.loggedIn.role) && (
-                  <Grid item>
+              writeAccess.includes(AuthData.loggedIn.role) ? (
+                <>
+                  <Grid item xs={6} sm={'auto'}>
                     <Button
+                      fullWidth
                       startIcon={<AddOutlinedIcon />}
                       variant="contained"
                       color="primary"
@@ -194,19 +290,35 @@ export const SeriesTable = () => {
                       Add
                     </Button>
                   </Grid>
-                )}
-              <Grid item>
-                <Button
-                  startIcon={<PageviewOutlinedIcon />}
-                  disabled={selectedRows.length !== 1}
-                  variant="contained"
-                  onClick={() => {
-                    viewSelected();
-                  }}
-                >
-                  View
-                </Button>
-              </Grid>
+                  <Grid item xs={6} sm={'auto'}>
+                    <Button
+                      fullWidth
+                      startIcon={<PageviewOutlinedIcon />}
+                      disabled={selectedRows.length !== 1}
+                      variant="contained"
+                      onClick={() => {
+                        viewSelected();
+                      }}
+                    >
+                      View
+                    </Button>
+                  </Grid>
+                </>
+              ) : (
+                <Grid item xs={12} sm={'auto'}>
+                  <Button
+                    fullWidth
+                    startIcon={<PageviewOutlinedIcon />}
+                    disabled={selectedRows.length !== 1}
+                    variant="contained"
+                    onClick={() => {
+                      viewSelected();
+                    }}
+                  >
+                    View
+                  </Button>
+                </Grid>
+              )}
             </Grid>
           </Grid>
           <Grid item xs={12}>
