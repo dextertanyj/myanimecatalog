@@ -79,6 +79,7 @@ const hoverBackgroundColor = [
 export const RatingChart = (props: Props) => {
   const { watchProgress } = props;
   const processed = breakdownRatings(watchProgress);
+
   const data = {
     datasets: [
       {
