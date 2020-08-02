@@ -12,7 +12,7 @@ import {
 import { blueGrey } from '@material-ui/core/colors';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import moment from 'moment';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { UserProgressForm } from '../Forms/UserProgressForm';
 import { useMySeriesProgressQuery } from '../gql/queries';
 import { ActionType } from '../utils/constants';
@@ -77,6 +77,7 @@ export const UserProgressInfo = (props: Props) => {
   const [formActionType, setFormActionType] = useState<ActionType>(
     ActionType.CREATE
   );
+  const [innerWidth, setInnerWidth] = useState<number>(window.innerWidth);
 
   const { data: progress, refetch, loading } = useMySeriesProgressQuery({
     fetchPolicy: 'cache-and-network',
@@ -86,6 +87,14 @@ export const UserProgressInfo = (props: Props) => {
       },
     },
   });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setInnerWidth(window.innerWidth);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <div>
@@ -141,28 +150,28 @@ export const UserProgressInfo = (props: Props) => {
             ) : (
               <Grid item xs={12}>
                 <Grid container spacing={3} className={classes.tableContent}>
-                  <Grid item xs={2}>
+                  <Grid item xs={4} md={2} lg={2}>
                     <Typography>Watch Status</Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={8} md={10} lg={2}>
                     <Typography>
                       {progress?.mySeriesProgress?.status &&
                         renderWatchStatus(progress?.mySeriesProgress?.status)}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={4} md={2} lg={2}>
                     <Typography>Episodes</Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={8} md={10} lg={2}>
                     <Typography>
                       {progress?.mySeriesProgress?.completed || '0'} /{' '}
                       {progress?.mySeriesProgress?.series?.episodeCount}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={4} md={2} lg={2}>
                     <Typography>Last Updated</Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={8} md={10} lg={2}>
                     <Typography>
                       {moment(
                         progress?.mySeriesProgress?.updatedAt ||
@@ -170,10 +179,10 @@ export const UserProgressInfo = (props: Props) => {
                       ).format('HH:mm DD/MM/YYYY')}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={4} md={2} lg={2}>
                     <Typography>Overall</Typography>
                   </Grid>
-                  <Grid item xs={9}>
+                  <Grid item xs={6} md={8} lg={9}>
                     {progress?.mySeriesProgress?.overall ? (
                       <BorderLinearProgress
                         variant="determinate"
@@ -183,19 +192,18 @@ export const UserProgressInfo = (props: Props) => {
                       <BorderLinearProgress variant="determinate" value={0} />
                     )}
                   </Grid>
-                  <Grid item xs={1}>
+                  <Grid item xs={2} md={2} lg={1}>
                     <Typography>
                       {`${isNumberOrElse(
                         progress?.mySeriesProgress?.overall,
                         '-'
-                      )} /
-                      100`}
+                      )}${innerWidth >= 960 ? ' / 100' : ''}`}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={4} md={2} lg={2}>
                     <Typography>Story</Typography>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={6} md={8} lg={3}>
                     {progress?.mySeriesProgress?.story ? (
                       <BorderLinearProgress
                         variant="determinate"
@@ -205,19 +213,18 @@ export const UserProgressInfo = (props: Props) => {
                       <BorderLinearProgress variant="determinate" value={0} />
                     )}
                   </Grid>
-                  <Grid item xs={1}>
+                  <Grid item xs={2} md={2} lg={1}>
                     <Typography>
                       {`${isNumberOrElse(
                         progress?.mySeriesProgress?.story,
                         '-'
-                      )} /
-                        100`}
+                      )}${innerWidth >= 960 ? ' / 100' : ''}`}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={4} md={2} lg={2}>
                     <Typography>Execution</Typography>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={6} md={8} lg={3}>
                     {progress?.mySeriesProgress?.execution ? (
                       <BorderLinearProgress
                         variant="determinate"
@@ -227,19 +234,18 @@ export const UserProgressInfo = (props: Props) => {
                       <BorderLinearProgress variant="determinate" value={0} />
                     )}
                   </Grid>
-                  <Grid item xs={1}>
+                  <Grid item xs={2} md={2} lg={1}>
                     <Typography>
                       {`${isNumberOrElse(
                         progress?.mySeriesProgress?.execution,
                         '-'
-                      )} /
-                        100`}
+                      )}${innerWidth >= 960 ? ' / 100' : ''}`}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={4} md={2} lg={2}>
                     <Typography>Appeal</Typography>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={6} md={8} lg={3}>
                     {progress?.mySeriesProgress?.appeal ? (
                       <BorderLinearProgress
                         variant="determinate"
@@ -249,19 +255,18 @@ export const UserProgressInfo = (props: Props) => {
                       <BorderLinearProgress variant="determinate" value={0} />
                     )}
                   </Grid>
-                  <Grid item xs={1}>
+                  <Grid item xs={2} md={2} lg={1}>
                     <Typography>
                       {`${isNumberOrElse(
                         progress?.mySeriesProgress?.appeal,
                         '-'
-                      )} /
-                        100`}
+                      )}${innerWidth >= 960 ? ' / 100' : ''}`}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={4} md={2} lg={2}>
                     <Typography>Character</Typography>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={6} md={8} lg={3}>
                     {progress?.mySeriesProgress?.character ? (
                       <BorderLinearProgress
                         variant="determinate"
@@ -271,19 +276,18 @@ export const UserProgressInfo = (props: Props) => {
                       <BorderLinearProgress variant="determinate" value={0} />
                     )}
                   </Grid>
-                  <Grid item xs={1}>
+                  <Grid item xs={2} md={2} lg={1}>
                     <Typography>
                       {`${isNumberOrElse(
                         progress?.mySeriesProgress?.character,
                         '-'
-                      )} /
-                        100`}
+                      )}${innerWidth >= 960 ? ' / 100' : ''}`}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={4} md={2} lg={2}>
                     <Typography>Art</Typography>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={6} md={8} lg={3}>
                     {progress?.mySeriesProgress?.art ? (
                       <BorderLinearProgress
                         variant="determinate"
@@ -293,19 +297,18 @@ export const UserProgressInfo = (props: Props) => {
                       <BorderLinearProgress variant="determinate" value={0} />
                     )}
                   </Grid>
-                  <Grid item xs={1}>
+                  <Grid item xs={2} md={2} lg={1}>
                     <Typography>
                       {`${isNumberOrElse(
                         progress?.mySeriesProgress?.art,
                         '-'
-                      )} /
-                        100`}
+                      )}${innerWidth >= 960 ? ' / 100' : ''}`}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={4} md={2} lg={2}>
                     <Typography>Music</Typography>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={6} md={8} lg={3}>
                     {progress?.mySeriesProgress?.sound ? (
                       <BorderLinearProgress
                         variant="determinate"
@@ -315,19 +318,18 @@ export const UserProgressInfo = (props: Props) => {
                       <BorderLinearProgress variant="determinate" value={0} />
                     )}
                   </Grid>
-                  <Grid item xs={1}>
+                  <Grid item xs={2} md={2} lg={1}>
                     <Typography>
                       {`${isNumberOrElse(
                         progress?.mySeriesProgress?.sound,
                         '-'
-                      )} /
-                        100`}
+                      )}${innerWidth >= 960 ? ' / 100' : ''}`}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={4} md={2}>
                     <Typography>Comments</Typography>
                   </Grid>
-                  <Grid item xs={10}>
+                  <Grid item xs={8} md={10}>
                     <Typography>
                       {progress?.mySeriesProgress?.remarks || '–'}
                     </Typography>

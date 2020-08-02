@@ -256,30 +256,38 @@ export const SeriesInfo = (props: Props) => {
                   </Typography>
                 </Grid>
                 {!!seriesData?.series?.references &&
-                  seriesData?.series?.references.length > 0 &&
-                  seriesData?.series?.references.map((reference) => {
-                    return (
-                      <>
-                        <Grid item xs={4} sm={2}>
-                          <Typography noWrap>{reference?.source}</Typography>
-                        </Grid>
-                        <Grid item xs={8} sm={10}>
-                          <Typography noWrap>
+                  seriesData?.series?.references.length > 0 && (
+                    <>
+                      <Grid item xs={4} sm={2}>
+                        <Typography>Sources</Typography>
+                      </Grid>
+                      <Grid
+                        item
+                        xs={8}
+                        sm={10}
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-around',
+                          flexWrap: 'wrap',
+                        }}
+                      >
+                        {seriesData?.series?.references.map((reference) => {
+                          return (
                             <Link
                               href={reference?.link || undefined}
                               target="_blank"
                               rel="noopener"
                             >
-                              {reference?.link}
+                              <Typography>{reference?.source}</Typography>
                             </Link>
-                          </Typography>
-                        </Grid>
-                      </>
-                    );
-                  })}
+                          );
+                        })}
+                      </Grid>
+                    </>
+                  )}
               </Grid>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} zeroMinWidth>
               <Grid container spacing={3}>
                 {
                   <SeriesRelatedDisplay
