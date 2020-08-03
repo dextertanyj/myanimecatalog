@@ -25,7 +25,7 @@ export const renderStatus = (status: Status): string => {
     case Status.Missing:
       return 'Missing';
     case Status.Unreleased:
-      return 'Unreleased';
+      return 'Not Yet Aired';
   }
 };
 
