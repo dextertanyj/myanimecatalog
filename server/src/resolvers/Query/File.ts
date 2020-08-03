@@ -5,6 +5,10 @@ import {
 } from '@prisma/client';
 import { Context } from '../../utils';
 
+type Codec = {
+  codec: string;
+};
+
 export const File = {
   async file(
     _parent: unknown,
@@ -32,5 +36,15 @@ export const File = {
     ctx: Context
   ): Promise<FileType[]> {
     return await ctx.prisma.file.findMany();
+  },
+
+  async suggestedCodecs(
+    _parent: unknown,
+    _args: unknown,
+    ctx: Context
+  ): Promise<Codec[]> {
+    const SQL = `SELECT DISTINCT codec FROM \`File\``;
+    const codecs = await ctx.prisma.queryRaw<Codec[]>(SQL);
+    return codecs;
   },
 };

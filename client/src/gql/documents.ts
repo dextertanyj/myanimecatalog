@@ -274,6 +274,8 @@ export type Query = {
   readonly quickSearch?: Maybe<SearchPayload>;
   readonly myTopTenSeries?: Maybe<ReadonlyArray<Maybe<Series>>>;
   readonly myCurrentlyWatching?: Maybe<ReadonlyArray<Maybe<Series>>>;
+  readonly suggestedCodecs?: Maybe<ReadonlyArray<Maybe<Codec>>>;
+  readonly suggestedSources?: Maybe<ReadonlyArray<Maybe<ReferenceSource>>>;
 };
 
 
@@ -559,6 +561,16 @@ export type SearchPayload = {
   readonly episodes: ReadonlyArray<Maybe<Episode>>;
 };
 
+export type Codec = {
+  readonly __typename?: 'Codec';
+  readonly codec?: Maybe<Scalars['String']>;
+};
+
+export type ReferenceSource = {
+  readonly __typename?: 'ReferenceSource';
+  readonly source?: Maybe<Scalars['String']>;
+};
+
 
 export const LoggedIn = gql`
     query LoggedIn {
@@ -726,6 +738,13 @@ export const Files = gql`
   }
 }
     `;
+export const SuggestedCodecs = gql`
+    query SuggestedCodecs {
+  suggestedCodecs {
+    codec
+  }
+}
+    `;
 export const CreateFile = gql`
     mutation CreateFile($data: FileCreateUpdateInput!) {
   createFile(data: $data) {
@@ -744,6 +763,13 @@ export const DeleteFile = gql`
     mutation DeleteFile($where: FileWhereUniqueInput!) {
   deleteFile(where: $where) {
     id
+  }
+}
+    `;
+export const SuggestedSources = gql`
+    query SuggestedSources {
+  suggestedSources {
+    source
   }
 }
     `;

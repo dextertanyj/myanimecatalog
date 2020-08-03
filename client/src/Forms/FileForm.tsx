@@ -16,6 +16,7 @@ import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
+import { CodecAutoComplete } from '../Components/Inputs/CodecAutoComplete';
 import { FormLoading } from '../Components/Skeletons/FormLoading';
 import {
   Source,
@@ -321,6 +322,8 @@ export const FileForm = (props: Props) => {
                 handleChange,
                 handleBlur,
                 handleReset,
+                setFieldValue,
+                setTouched,
               } = props;
               return (
                 <form className={classes.form} onSubmit={handleSubmit}>
@@ -482,19 +485,13 @@ export const FileForm = (props: Props) => {
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        id="codec"
-                        label="Codec"
-                        name="codec"
+                      <CodecAutoComplete
+                        fieldName="codec"
                         value={values.codec || ''}
-                        error={touched.codec && !!errors.codec}
-                        helperText={touched.codec && errors.codec}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={classes.formItem}
+                        touched={touched.codec}
+                        error={errors.codec}
+                        setFieldValue={setFieldValue}
+                        setTouched={setTouched}
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>

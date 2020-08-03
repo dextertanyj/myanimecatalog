@@ -46,6 +46,12 @@ query Files {
   }
 }
 
+query SuggestedCodecs {
+  suggestedCodecs {
+    codec
+  }
+}
+
 mutation CreateFile($data: FileCreateUpdateInput!) {
   createFile(data: $data) {
     id
