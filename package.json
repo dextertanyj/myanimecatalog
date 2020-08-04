@@ -9,5 +9,8 @@
     "client:sh": "docker exec -it $(docker-compose ps -q client) bash",
     "server:sh": "docker exec -it $(docker-compose ps -q server) sh",
     "db:sh": "docker exec -it $(docker-compose ps -q db) bash"
+  },
+  "devDependencies": {
+    "lerna": "^3.22.1"
   }
 }
