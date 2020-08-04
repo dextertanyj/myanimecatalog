@@ -1,23 +1,32 @@
 import { createStyles, Grid, makeStyles, Theme } from '@material-ui/core';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { withAuth } from '../../HOC/withAuth';
 import { SeriesTable } from '../../Tables/SeriesTable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      flexGrow: 1,
+    pageGrid: {
+      height: "100%"
     },
   })
 );
 
 const CatalogPage = () => {
   const classes = useStyles();
+  const [fullHeight, setFullHeight] = useState<number>(window.innerWidth > 600 ? window.innerHeight - 100 : window.innerHeight - 92)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setFullHeight(window.innerWidth > 600 ? window.innerHeight - 100 : window.innerHeight - 92);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [])
 
   return (
-    <div className={classes.root}>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
+    <div style={{ height: fullHeight }}>
+      <Grid container spacing={3} className={classes.pageGrid}>
+        <Grid item xs={12} className={classes.pageGrid}>
           <SeriesTable />
         </Grid>
       </Grid>

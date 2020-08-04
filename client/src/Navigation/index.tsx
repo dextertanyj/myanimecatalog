@@ -9,7 +9,7 @@ import {
   ListItemIcon,
   ListItemText,
   Toolbar,
-  Typography,
+  Typography
 } from '@material-ui/core';
 import { grey } from '@material-ui/core/colors';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -92,6 +92,9 @@ const useStyles = makeStyles((theme: Theme) =>
       color: grey[100],
     },
     toolbar: theme.mixins.toolbar,
+    contentWrapper: {
+      flexGrow: 1,
+    },
     content: {
       flexGrow: 1,
       backgroundColor: theme.palette.background.default,
@@ -291,8 +294,8 @@ const Navigation = (props: any) => {
             {expanded ? (
               <ChevronLeftOutlinedIcon />
             ) : (
-              <ChevronRightOutlinedIcon />
-            )}
+                <ChevronRightOutlinedIcon />
+              )}
           </ListItemIcon>
           <ListItemText
             primary={'Collapse Sidebar'}
@@ -300,10 +303,12 @@ const Navigation = (props: any) => {
           />
         </ListItem>
       </Drawer>
-      <main className={classes.content}>
+      <div className={classes.contentWrapper}>
         <div className={classes.toolbar} />
-        {props.children}
-      </main>
+        <main className={classes.content}>
+          {props.children}
+        </main>
+      </div>
     </div>
   );
 };
