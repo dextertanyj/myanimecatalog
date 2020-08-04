@@ -58,6 +58,14 @@ mutation UpdateUserProgress(
   }
 }
 
+mutation UpdateMyProgress(
+  $where: SeriesWhereUniqueInput!
+  $data: UserProgressCreateUpdateInput!
+) {
+  updateMyProgress(where: $where, data: $data) {
+    id
+  }
+}
 mutation DeleteUserProgress($where: UserProgressWhereUniqueInput!) {
   deleteUserProgress(where: $where) {
     id

@@ -354,6 +354,7 @@ export type Mutation = {
   readonly deleteFile: File;
   readonly createUserProgress: UserProgress;
   readonly updateUserProgress: UserProgress;
+  readonly updateMyProgress: UserProgress;
   readonly deleteUserProgress: UserProgress;
 };
 
@@ -449,6 +450,12 @@ export type MutationCreateUserProgressArgs = {
 
 export type MutationUpdateUserProgressArgs = {
   where: UserProgressWhereUniqueInput;
+  data: UserProgressCreateUpdateInput;
+};
+
+
+export type MutationUpdateMyProgressArgs = {
+  where: SeriesWhereUniqueInput;
   data: UserProgressCreateUpdateInput;
 };
 
@@ -1098,6 +1105,20 @@ export type UpdateUserProgressMutationVariables = Exact<{
 export type UpdateUserProgressMutation = (
   { readonly __typename?: 'Mutation' }
   & { readonly updateUserProgress: (
+    { readonly __typename?: 'UserProgress' }
+    & Pick<UserProgress, 'id'>
+  ) }
+);
+
+export type UpdateMyProgressMutationVariables = Exact<{
+  where: SeriesWhereUniqueInput;
+  data: UserProgressCreateUpdateInput;
+}>;
+
+
+export type UpdateMyProgressMutation = (
+  { readonly __typename?: 'Mutation' }
+  & { readonly updateMyProgress: (
     { readonly __typename?: 'UserProgress' }
     & Pick<UserProgress, 'id'>
   ) }
@@ -3185,6 +3206,58 @@ export function useUpdateUserProgressMutation(baseOptions?: ApolloReactHooks.Mut
 export type UpdateUserProgressMutationHookResult = ReturnType<typeof useUpdateUserProgressMutation>;
 export type UpdateUserProgressMutationResult = ApolloReactCommon.MutationResult<UpdateUserProgressMutation>;
 export type UpdateUserProgressMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateUserProgressMutation, UpdateUserProgressMutationVariables>;
+export const UpdateMyProgressDocument = gql`
+    mutation UpdateMyProgress($where: SeriesWhereUniqueInput!, $data: UserProgressCreateUpdateInput!) {
+  updateMyProgress(where: $where, data: $data) {
+    id
+  }
+}
+    `;
+export type UpdateMyProgressMutationFn = ApolloReactCommon.MutationFunction<UpdateMyProgressMutation, UpdateMyProgressMutationVariables>;
+export type UpdateMyProgressComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateMyProgressMutation, UpdateMyProgressMutationVariables>, 'mutation'>;
+
+    export const UpdateMyProgressComponent = (props: UpdateMyProgressComponentProps) => (
+      <ApolloReactComponents.Mutation<UpdateMyProgressMutation, UpdateMyProgressMutationVariables> mutation={UpdateMyProgressDocument} {...props} />
+    );
+    
+export type UpdateMyProgressProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: ApolloReactCommon.MutationFunction<UpdateMyProgressMutation, UpdateMyProgressMutationVariables>
+    } & TChildProps;
+export function withUpdateMyProgress<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  UpdateMyProgressMutation,
+  UpdateMyProgressMutationVariables,
+  UpdateMyProgressProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, UpdateMyProgressMutation, UpdateMyProgressMutationVariables, UpdateMyProgressProps<TChildProps, TDataName>>(UpdateMyProgressDocument, {
+      alias: 'updateMyProgress',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useUpdateMyProgressMutation__
+ *
+ * To run a mutation, you first call `useUpdateMyProgressMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMyProgressMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMyProgressMutation, { data, loading, error }] = useUpdateMyProgressMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateMyProgressMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateMyProgressMutation, UpdateMyProgressMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateMyProgressMutation, UpdateMyProgressMutationVariables>(UpdateMyProgressDocument, baseOptions);
+      }
+export type UpdateMyProgressMutationHookResult = ReturnType<typeof useUpdateMyProgressMutation>;
+export type UpdateMyProgressMutationResult = ApolloReactCommon.MutationResult<UpdateMyProgressMutation>;
+export type UpdateMyProgressMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateMyProgressMutation, UpdateMyProgressMutationVariables>;
 export const DeleteUserProgressDocument = gql`
     mutation DeleteUserProgress($where: UserProgressWhereUniqueInput!) {
   deleteUserProgress(where: $where) {

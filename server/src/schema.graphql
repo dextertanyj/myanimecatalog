@@ -303,6 +303,10 @@ type Mutation {
     where: UserProgressWhereUniqueInput!
     data: UserProgressCreateUpdateInput!
   ): UserProgress!
+  updateMyProgress(
+    where: SeriesWhereUniqueInput!
+    data: UserProgressCreateUpdateInput!
+  ): UserProgress!
   deleteUserProgress(where: UserProgressWhereUniqueInput!): UserProgress!
 }
 

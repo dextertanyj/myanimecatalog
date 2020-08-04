@@ -348,6 +348,7 @@ export type Mutation = {
   readonly deleteFile: File;
   readonly createUserProgress: UserProgress;
   readonly updateUserProgress: UserProgress;
+  readonly updateMyProgress: UserProgress;
   readonly deleteUserProgress: UserProgress;
 };
 
@@ -443,6 +444,12 @@ export type MutationCreateUserProgressArgs = {
 
 export type MutationUpdateUserProgressArgs = {
   where: UserProgressWhereUniqueInput;
+  data: UserProgressCreateUpdateInput;
+};
+
+
+export type MutationUpdateMyProgressArgs = {
+  where: SeriesWhereUniqueInput;
   data: UserProgressCreateUpdateInput;
 };
 
@@ -996,6 +1003,13 @@ export const CreateUserProgress = gql`
 export const UpdateUserProgress = gql`
     mutation UpdateUserProgress($where: UserProgressWhereUniqueInput!, $data: UserProgressCreateUpdateInput!) {
   updateUserProgress(where: $where, data: $data) {
+    id
+  }
+}
+    `;
+export const UpdateMyProgress = gql`
+    mutation UpdateMyProgress($where: SeriesWhereUniqueInput!, $data: UserProgressCreateUpdateInput!) {
+  updateMyProgress(where: $where, data: $data) {
     id
   }
 }
