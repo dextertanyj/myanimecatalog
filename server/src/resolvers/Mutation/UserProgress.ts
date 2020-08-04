@@ -1,8 +1,10 @@
 import {
+  SeriesWhereUniqueInput,
   UserProgress as UserProgressType,
   UserProgressCreateArgs,
   UserProgressDeleteArgs,
   UserProgressUpdateArgs,
+  UserProgressUpdateInput,
 } from '@prisma/client';
 import { Context } from '../../utils';
 
@@ -38,6 +40,27 @@ export const UserProgress = {
     _info: unknown
   ): Promise<UserProgressType> {
     return ctx.prisma.userProgress.update(args);
+  },
+
+  async updateMyProgress(
+    _parent: unknown,
+    args: { where: SeriesWhereUniqueInput; data: UserProgressUpdateInput },
+    ctx: Context,
+    _info: unknown
+  ): Promise<UserProgressType> {
+    if (ctx.userId && args.where.id) {
+      return ctx.prisma.userProgress.update({
+        where: {
+          seriesId_userId: {
+            seriesId: args.where.id,
+            userId: ctx.userId,
+          },
+        },
+        data: args.data,
+      });
+    } else {
+      throw new Error(`Something went wrong. Please try again.`);
+    }
   },
 
   async deleteUserProgress(

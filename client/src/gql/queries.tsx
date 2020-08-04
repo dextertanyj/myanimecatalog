@@ -354,6 +354,7 @@ export type Mutation = {
   readonly deleteFile: File;
   readonly createUserProgress: UserProgress;
   readonly updateUserProgress: UserProgress;
+  readonly updateMyProgress: UserProgress;
   readonly deleteUserProgress: UserProgress;
 };
 
@@ -453,6 +454,12 @@ export type MutationUpdateUserProgressArgs = {
 };
 
 
+export type MutationUpdateMyProgressArgs = {
+  where: SeriesWhereUniqueInput;
+  data: UserProgressCreateUpdateInput;
+};
+
+
 export type MutationDeleteUserProgressArgs = {
   where: UserProgressWhereUniqueInput;
 };
@@ -508,6 +515,7 @@ export type Series = {
   readonly relatedAlternatives?: Maybe<ReadonlyArray<Maybe<Series>>>;
   readonly references?: Maybe<ReadonlyArray<Maybe<Reference>>>;
   readonly progress?: Maybe<UserProgress>;
+  readonly currentStatus?: Maybe<WatchStatus>;
   readonly allProgress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
   readonly createdAt?: Maybe<Scalars['DateTime']>;
   readonly updatedAt?: Maybe<Scalars['DateTime']>;
@@ -651,10 +659,7 @@ export type EpisodeQuery = (
     )>>>, readonly series?: Maybe<(
       { readonly __typename?: 'Series' }
       & Pick<Series, 'id' | 'title'>
-    )>, readonly files?: Maybe<ReadonlyArray<Maybe<(
-      { readonly __typename?: 'File' }
-      & Pick<File, 'id' | 'path' | 'fileSize' | 'checksum' | 'duration' | 'resolution' | 'source' | 'codec' | 'remarks'>
-    )>>> }
+    )> }
   )> }
 );
 
@@ -861,26 +866,32 @@ export type SeriesQuery = (
     )>>>, readonly episodes?: Maybe<ReadonlyArray<Maybe<(
       { readonly __typename?: 'Episode' }
       & Pick<Episode, 'id' | 'title' | 'episodeNumber'>
-    )>>>, readonly prequels?: Maybe<ReadonlyArray<Maybe<(
-      { readonly __typename?: 'Series' }
-      & Pick<Series, 'id' | 'title'>
-    )>>>, readonly sequels?: Maybe<ReadonlyArray<Maybe<(
-      { readonly __typename?: 'Series' }
-      & Pick<Series, 'id' | 'title'>
-    )>>>, readonly mainStories?: Maybe<ReadonlyArray<Maybe<(
-      { readonly __typename?: 'Series' }
-      & Pick<Series, 'id' | 'title'>
-    )>>>, readonly sideStories?: Maybe<ReadonlyArray<Maybe<(
-      { readonly __typename?: 'Series' }
-      & Pick<Series, 'id' | 'title'>
-    )>>>, readonly relatedSeries?: Maybe<ReadonlyArray<Maybe<(
-      { readonly __typename?: 'Series' }
-      & Pick<Series, 'id' | 'title'>
-    )>>>, readonly relatedAlternatives?: Maybe<ReadonlyArray<Maybe<(
-      { readonly __typename?: 'Series' }
-      & Pick<Series, 'id' | 'title'>
     )>>> }
+    & RelatedSeriesInfoFragment
   )> }
+);
+
+export type RelatedSeriesInfoFragment = (
+  { readonly __typename?: 'Series' }
+  & { readonly prequels?: Maybe<ReadonlyArray<Maybe<(
+    { readonly __typename?: 'Series' }
+    & Pick<Series, 'id' | 'title'>
+  )>>>, readonly sequels?: Maybe<ReadonlyArray<Maybe<(
+    { readonly __typename?: 'Series' }
+    & Pick<Series, 'id' | 'title'>
+  )>>>, readonly mainStories?: Maybe<ReadonlyArray<Maybe<(
+    { readonly __typename?: 'Series' }
+    & Pick<Series, 'id' | 'title'>
+  )>>>, readonly sideStories?: Maybe<ReadonlyArray<Maybe<(
+    { readonly __typename?: 'Series' }
+    & Pick<Series, 'id' | 'title'>
+  )>>>, readonly relatedSeries?: Maybe<ReadonlyArray<Maybe<(
+    { readonly __typename?: 'Series' }
+    & Pick<Series, 'id' | 'title'>
+  )>>>, readonly relatedAlternatives?: Maybe<ReadonlyArray<Maybe<(
+    { readonly __typename?: 'Series' }
+    & Pick<Series, 'id' | 'title'>
+  )>>> }
 );
 
 export type AllSeriesQueryVariables = Exact<{ [key: string]: never; }>;
@@ -890,7 +901,7 @@ export type AllSeriesQuery = (
   { readonly __typename?: 'Query' }
   & { readonly allSeries?: Maybe<ReadonlyArray<Maybe<(
     { readonly __typename?: 'Series' }
-    & Pick<Series, 'id' | 'title' | 'seasonNumber' | 'episodeCount' | 'type' | 'status' | 'releaseSeason' | 'releaseYear'>
+    & Pick<Series, 'id' | 'title' | 'seasonNumber' | 'episodeCount' | 'type' | 'status' | 'releaseSeason' | 'releaseYear' | 'currentStatus'>
   )>>> }
 );
 
@@ -1099,6 +1110,20 @@ export type UpdateUserProgressMutation = (
   ) }
 );
 
+export type UpdateMyProgressMutationVariables = Exact<{
+  where: SeriesWhereUniqueInput;
+  data: UserProgressCreateUpdateInput;
+}>;
+
+
+export type UpdateMyProgressMutation = (
+  { readonly __typename?: 'Mutation' }
+  & { readonly updateMyProgress: (
+    { readonly __typename?: 'UserProgress' }
+    & Pick<UserProgress, 'id'>
+  ) }
+);
+
 export type DeleteUserProgressMutationVariables = Exact<{
   where: UserProgressWhereUniqueInput;
 }>;
@@ -1112,7 +1137,34 @@ export type DeleteUserProgressMutation = (
   ) }
 );
 
-
+export const RelatedSeriesInfoFragmentDoc = gql`
+    fragment RelatedSeriesInfo on Series {
+  prequels {
+    id
+    title
+  }
+  sequels {
+    id
+    title
+  }
+  mainStories {
+    id
+    title
+  }
+  sideStories {
+    id
+    title
+  }
+  relatedSeries {
+    id
+    title
+  }
+  relatedAlternatives {
+    id
+    title
+  }
+}
+    `;
 export const LoggedInDocument = gql`
     query LoggedIn {
   loggedIn {
@@ -1350,17 +1402,6 @@ export const EpisodeDocument = gql`
     }
     episodeNumber
     remarks
-    files {
-      id
-      path
-      fileSize
-      checksum
-      duration
-      resolution
-      source
-      codec
-      remarks
-    }
     createdAt
     updatedAt
   }
@@ -2197,35 +2238,12 @@ export const SeriesDocument = gql`
     releaseSeason
     releaseYear
     remarks
-    prequels {
-      id
-      title
-    }
-    sequels {
-      id
-      title
-    }
-    mainStories {
-      id
-      title
-    }
-    sideStories {
-      id
-      title
-    }
-    relatedSeries {
-      id
-      title
-    }
-    relatedAlternatives {
-      id
-      title
-    }
+    ...RelatedSeriesInfo
     createdAt
     updatedAt
   }
 }
-    `;
+    ${RelatedSeriesInfoFragmentDoc}`;
 export type SeriesComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<SeriesQuery, SeriesQueryVariables>, 'query'> & ({ variables: SeriesQueryVariables; skip?: boolean; } | { skip: boolean; });
 
     export const SeriesComponent = (props: SeriesComponentProps) => (
@@ -2282,6 +2300,7 @@ export const AllSeriesDocument = gql`
     status
     releaseSeason
     releaseYear
+    currentStatus
   }
 }
     `;
@@ -3187,6 +3206,58 @@ export function useUpdateUserProgressMutation(baseOptions?: ApolloReactHooks.Mut
 export type UpdateUserProgressMutationHookResult = ReturnType<typeof useUpdateUserProgressMutation>;
 export type UpdateUserProgressMutationResult = ApolloReactCommon.MutationResult<UpdateUserProgressMutation>;
 export type UpdateUserProgressMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateUserProgressMutation, UpdateUserProgressMutationVariables>;
+export const UpdateMyProgressDocument = gql`
+    mutation UpdateMyProgress($where: SeriesWhereUniqueInput!, $data: UserProgressCreateUpdateInput!) {
+  updateMyProgress(where: $where, data: $data) {
+    id
+  }
+}
+    `;
+export type UpdateMyProgressMutationFn = ApolloReactCommon.MutationFunction<UpdateMyProgressMutation, UpdateMyProgressMutationVariables>;
+export type UpdateMyProgressComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateMyProgressMutation, UpdateMyProgressMutationVariables>, 'mutation'>;
+
+    export const UpdateMyProgressComponent = (props: UpdateMyProgressComponentProps) => (
+      <ApolloReactComponents.Mutation<UpdateMyProgressMutation, UpdateMyProgressMutationVariables> mutation={UpdateMyProgressDocument} {...props} />
+    );
+    
+export type UpdateMyProgressProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: ApolloReactCommon.MutationFunction<UpdateMyProgressMutation, UpdateMyProgressMutationVariables>
+    } & TChildProps;
+export function withUpdateMyProgress<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  UpdateMyProgressMutation,
+  UpdateMyProgressMutationVariables,
+  UpdateMyProgressProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, UpdateMyProgressMutation, UpdateMyProgressMutationVariables, UpdateMyProgressProps<TChildProps, TDataName>>(UpdateMyProgressDocument, {
+      alias: 'updateMyProgress',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useUpdateMyProgressMutation__
+ *
+ * To run a mutation, you first call `useUpdateMyProgressMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMyProgressMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMyProgressMutation, { data, loading, error }] = useUpdateMyProgressMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateMyProgressMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateMyProgressMutation, UpdateMyProgressMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateMyProgressMutation, UpdateMyProgressMutationVariables>(UpdateMyProgressDocument, baseOptions);
+      }
+export type UpdateMyProgressMutationHookResult = ReturnType<typeof useUpdateMyProgressMutation>;
+export type UpdateMyProgressMutationResult = ApolloReactCommon.MutationResult<UpdateMyProgressMutation>;
+export type UpdateMyProgressMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateMyProgressMutation, UpdateMyProgressMutationVariables>;
 export const DeleteUserProgressDocument = gql`
     mutation DeleteUserProgress($where: UserProgressWhereUniqueInput!) {
   deleteUserProgress(where: $where) {

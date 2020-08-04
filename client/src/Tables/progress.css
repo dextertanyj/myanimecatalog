@@ -1,0 +1,20 @@
+.completed {
+  background-image: linear-gradient(to right, #a5c8e4 10px, transparent 10px);
+  background-size: calc(100% + 1px) 100%;
+}
+.watching {
+  background-image: linear-gradient(to right, #c0eccc 10px, transparent 10px);
+  background-size: calc(100% + 1px) 100%;
+}
+.onhold {
+  background-image: linear-gradient(to right, #f4cda6 10px, transparent 10px);
+  background-size: calc(100% + 1px) 100%;
+}
+.plan-to-watch {
+  background-image: linear-gradient(to right, #d6d6d6 10px, transparent 10px);
+  background-size: calc(100% + 1px) 100%;
+}
+.dropped {
+  background-image: linear-gradient(to right, #f6a8a6 10px, transparent 10px);
+  background-size: calc(100% + 1px) 100%;
+}

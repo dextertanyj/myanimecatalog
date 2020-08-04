@@ -4,6 +4,7 @@ import {
   Reference,
   Series as SeriesType,
   UserProgress,
+  WatchStatus,
 } from '@prisma/client';
 import { Context } from '../../utils';
 
@@ -143,5 +144,28 @@ export const Series = {
     return ctx.prisma.userProgress.findMany({
       where: { seriesId: parent.id },
     });
+  },
+
+  async currentStatus(
+    parent: SeriesType,
+    _args: unknown,
+    ctx: Context
+  ): Promise<WatchStatus | null> {
+    const userId = ctx.userId;
+    if (!userId) {
+      return null;
+    }
+    const progress = await ctx.prisma.userProgress.findOne({
+      where: {
+        seriesId_userId: {
+          seriesId: parent.id,
+          userId,
+        },
+      },
+      select: {
+        status: true,
+      },
+    });
+    return progress?.status || null;
   },
 };

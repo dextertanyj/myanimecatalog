@@ -5,7 +5,7 @@ import {
   makeStyles,
   Paper,
   Theme,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import { blueGrey } from '@material-ui/core/colors';
 import AddOutlinedIcon from '@material-ui/icons/AddOutlined';
@@ -23,16 +23,17 @@ import { useAllSeriesQuery, useLoggedInQuery } from '../gql/queries';
 import { writeAccess } from '../utils/auth';
 import { ActionType } from '../utils/constants';
 import { renderSeason, renderStatus, renderType } from '../utils/enumRender';
+import './progress.css';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
       padding: theme.spacing(3),
       textAlign: 'center',
-      height: 'calc(100% - 36px)'
+      height: 'calc(100% - 36px)',
     },
     mainGrid: {
-      height: 'calc(100% + 24px)'
+      height: 'calc(100% + 24px)',
     },
     tableTitle: {
       color: blueGrey[700],
@@ -72,6 +73,13 @@ const columnDefs = [
     filter: true,
     sortable: true,
     lockVisible: true,
+    cellClassRules: {
+      'completed': 'data.currentStatus === "COMPLETED"',
+      'watching': 'data.currentStatus === "WATCHING"',
+      'onhold': 'data.currentStatus === "ONHOLD"',
+      'plan-to-watch': 'data.currentStatus === "PENDING"',
+      'dropped': 'data.currentStatus === "DROPPED"',
+    },
   },
   {
     headerName: 'Season',
@@ -93,8 +101,8 @@ const columnDefs = [
     valueGetter: (params: { data: Series }) => {
       return params.data.releaseSeason && params.data.releaseYear
         ? `${renderSeason(params.data.releaseSeason)} ${moment(
-          params.data.releaseYear
-        ).format('YYYY')}`
+            params.data.releaseYear
+          ).format('YYYY')}`
         : '';
     },
     width: 180,
@@ -133,9 +141,9 @@ export const SeriesTable = () => {
   const history = useHistory();
   const [gridApi, setGridApi] = useState<
     | {
-      api: GridApi;
-      columnApi: ColumnApi;
-    }
+        api: GridApi;
+        columnApi: ColumnApi;
+      }
     | undefined
   >(undefined);
   const [showForm, setShowForm] = useState<boolean>(false);
@@ -160,7 +168,13 @@ export const SeriesTable = () => {
       setGridApi({ api, columnApi });
       if (window.innerWidth >= 1280) {
         columnApi.setColumnsVisible(
-          ['seasonNumber, episodeCount', 'releaseSeason', 'status', 'type'],
+          [
+            'seasonNumber, episodeCount',
+            'releaseSeason',
+            'status',
+            'type',
+            'currentStatus',
+          ],
           true
         );
         columnApi.setColumnWidths([
@@ -194,7 +208,14 @@ export const SeriesTable = () => {
         ]);
       } else {
         columnApi.setColumnsVisible(
-          ['seasonNumber', 'episodeCount', 'releaseSeason', 'status', 'type'],
+          [
+            'seasonNumber',
+            'episodeCount',
+            'releaseSeason',
+            'status',
+            'type',
+            'currentStatus',
+          ],
           false
         );
       }
@@ -268,44 +289,34 @@ export const SeriesTable = () => {
   return (
     <div style={{ height: '100%' }}>
       <Paper elevation={3} className={classes.paper}>
-        <Grid container direction={'column'} spacing={3} className={classes.mainGrid}>
+        <Grid
+          container
+          direction={'column'}
+          spacing={3}
+          className={classes.mainGrid}
+        >
           <Grid container item spacing={3}>
             <Grid item xs={12} sm className={classes.tableTitle}>
               <Typography variant="h5">Catalog</Typography>
             </Grid>
             {AuthData?.loggedIn?.role &&
-              writeAccess.includes(AuthData.loggedIn.role) ? (
-                <>
-                  <Grid item xs={6} sm={'auto'}>
-                    <Button
-                      fullWidth
-                      startIcon={<AddOutlinedIcon />}
-                      variant="contained"
-                      color="primary"
-                      onClick={() => {
-                        setFormAction(ActionType.CREATE);
-                        setShowForm(true);
-                      }}
-                    >
-                      Add
-                    </Button>
-                  </Grid>
-                  <Grid item xs={6} sm={'auto'}>
-                    <Button
-                      fullWidth
-                      startIcon={<PageviewOutlinedIcon />}
-                      disabled={selectedRows.length !== 1}
-                      variant="contained"
-                      onClick={() => {
-                        viewSelected();
-                      }}
-                    >
-                      View
-                    </Button>
-                  </Grid>
-                </>
-              ) : (
-                <Grid item xs={12} sm={'auto'}>
+            writeAccess.includes(AuthData.loggedIn.role) ? (
+              <>
+                <Grid item xs={6} sm={'auto'}>
+                  <Button
+                    fullWidth
+                    startIcon={<AddOutlinedIcon />}
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      setFormAction(ActionType.CREATE);
+                      setShowForm(true);
+                    }}
+                  >
+                    Add
+                  </Button>
+                </Grid>
+                <Grid item xs={6} sm={'auto'}>
                   <Button
                     fullWidth
                     startIcon={<PageviewOutlinedIcon />}
@@ -318,7 +329,22 @@ export const SeriesTable = () => {
                     View
                   </Button>
                 </Grid>
-              )}
+              </>
+            ) : (
+              <Grid item xs={12} sm={'auto'}>
+                <Button
+                  fullWidth
+                  startIcon={<PageviewOutlinedIcon />}
+                  disabled={selectedRows.length !== 1}
+                  variant="contained"
+                  onClick={() => {
+                    viewSelected();
+                  }}
+                >
+                  View
+                </Button>
+              </Grid>
+            )}
           </Grid>
           <Grid item xs>
             <div className="ag-theme-material" style={{ height: '100%' }}>
@@ -331,27 +357,25 @@ export const SeriesTable = () => {
                 onSelectionChanged={onSelectionChanged}
                 gridOptions={gridOptions}
                 columnDefs={columnDefs}
-                rowData={(rowData?.allSeries as any[]) || []}
+                rowData={(rowData?.allSeries?.slice() as any[]) || []}
               />
             </div>
           </Grid>
         </Grid>
       </Paper>
-      {
-        showForm && (
-          <SeriesForm
-            open={showForm}
-            action={formAction}
-            onSubmit={() => {
-              refetch();
-              setFormAction(ActionType.CREATE);
-            }}
-            onClose={() => {
-              setShowForm(false);
-            }}
-          />
-        )
-      }
-    </div >
+      {showForm && (
+        <SeriesForm
+          open={showForm}
+          action={formAction}
+          onSubmit={() => {
+            refetch();
+            setFormAction(ActionType.CREATE);
+          }}
+          onClose={() => {
+            setShowForm(false);
+          }}
+        />
+      )}
+    </div>
   );
 };

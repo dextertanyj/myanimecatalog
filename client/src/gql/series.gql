@@ -23,32 +23,36 @@ query Series($where: SeriesWhereUniqueInput!) {
     releaseSeason
     releaseYear
     remarks
-    prequels {
-      id
-      title
-    }
-    sequels {
-      id
-      title
-    }
-    mainStories {
-      id
-      title
-    }
-    sideStories {
-      id
-      title
-    }
-    relatedSeries {
-      id
-      title
-    }
-    relatedAlternatives {
-      id
-      title
-    }
+    ...RelatedSeriesInfo
     createdAt
     updatedAt
+  }
+}
+
+fragment RelatedSeriesInfo on Series {
+  prequels {
+    id
+    title
+  }
+  sequels {
+    id
+    title
+  }
+  mainStories {
+    id
+    title
+  }
+  sideStories {
+    id
+    title
+  }
+  relatedSeries {
+    id
+    title
+  }
+  relatedAlternatives {
+    id
+    title
   }
 }
 
@@ -62,6 +66,7 @@ query AllSeries {
     status
     releaseSeason
     releaseYear
+    currentStatus
   }
 }
 
