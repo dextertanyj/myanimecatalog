@@ -9,7 +9,7 @@ import {
   ListItemIcon,
   ListItemText,
   Toolbar,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import { grey } from '@material-ui/core/colors';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -19,6 +19,7 @@ import ChevronRightOutlinedIcon from '@material-ui/icons/ChevronRightOutlined';
 import ExitToAppOutlinedIcon from '@material-ui/icons/ExitToAppOutlined';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import LibraryBooksOutlinedIcon from '@material-ui/icons/LibraryBooksOutlined';
+import ListOutlinedIcon from '@material-ui/icons/ListOutlined';
 import MenuOutlinedIcon from '@material-ui/icons/MenuOutlined';
 import PermIdentityOutlinedIcon from '@material-ui/icons/PermIdentityOutlined';
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
@@ -114,7 +115,11 @@ const Navigation = (props: any) => {
   const [innerWidth, setInnerWidth] = useState<number>(window.innerWidth);
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
   const [expanded, setExpanded] = useState<boolean>(window.innerWidth > 1366);
-  const [minHeight, setMinHeight] = useState<number>(window.innerWidth > 600 ? window.innerHeight - 112 : window.innerHeight - 104)
+  const [minHeight, setMinHeight] = useState<number>(
+    window.innerWidth > 600
+      ? window.innerHeight - 112
+      : window.innerHeight - 104
+  );
 
   const { data: AuthData } = useLoggedInQuery({
     fetchPolicy: 'cache-and-network',
@@ -123,7 +128,11 @@ const Navigation = (props: any) => {
   useEffect(() => {
     const handleResize = () => {
       setInnerWidth(window.innerWidth);
-      setMinHeight(window.innerWidth > 600 ? window.innerHeight - 112 : window.innerHeight - 104);
+      setMinHeight(
+        window.innerWidth > 600
+          ? window.innerHeight - 112
+          : window.innerHeight - 104
+      );
       setExpanded(window.innerWidth >= 1366);
     };
     window.addEventListener('resize', handleResize);
@@ -205,6 +214,19 @@ const Navigation = (props: any) => {
               <HomeOutlinedIcon />
             </ListItemIcon>
             <ListItemText primary={'Dashboard'} />
+          </ListItem>
+          <ListItem
+            button
+            key={'animelist'}
+            onClick={() => {
+              history.push('/list');
+              setMobileOpen(false);
+            }}
+          >
+            <ListItemIcon>
+              <ListOutlinedIcon />
+            </ListItemIcon>
+            <ListItemText primary={'Anime List'} />
           </ListItem>
           <ListItem
             button
@@ -296,8 +318,8 @@ const Navigation = (props: any) => {
             {expanded ? (
               <ChevronLeftOutlinedIcon />
             ) : (
-                <ChevronRightOutlinedIcon />
-              )}
+              <ChevronRightOutlinedIcon />
+            )}
           </ListItemIcon>
           <ListItemText
             primary={'Collapse Sidebar'}

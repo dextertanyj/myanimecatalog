@@ -976,6 +976,7 @@ export const MyProgress = gql`
     series {
       id
       title
+      type
       episodeCount
     }
     status

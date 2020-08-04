@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Navigation from '../Navigation';
+import AnimeListPage from '../pages/AnimeListPage';
 import CatalogPage from '../pages/CatalogPage';
 import EpisodePage from '../pages/EpisodePage';
 import HomePage from '../pages/HomePage';
@@ -35,6 +36,9 @@ export default function ReactRouter() {
             </Route>
             <Route exact strict path="/catalog">
               <CatalogPage />
+            </Route>
+            <Route exact strict path="/list">
+              <AnimeListPage />
             </Route>
             <Route
               exact
