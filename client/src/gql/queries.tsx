@@ -1078,7 +1078,7 @@ export type MyProgressQuery = (
     & Pick<UserProgress, 'id' | 'status' | 'completed' | 'overall' | 'execution' | 'story' | 'sound' | 'art' | 'character' | 'appeal' | 'remarks' | 'createdAt' | 'updatedAt'>
     & { readonly series?: Maybe<(
       { readonly __typename?: 'Series' }
-      & Pick<Series, 'id' | 'title' | 'episodeCount'>
+      & Pick<Series, 'id' | 'title' | 'type' | 'episodeCount'>
     )> }
   )>>> }
 );
@@ -3042,6 +3042,7 @@ export const MyProgressDocument = gql`
     series {
       id
       title
+      type
       episodeCount
     }
     status
