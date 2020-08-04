@@ -16,7 +16,6 @@ import {
 } from '@material-ui/core';
 import { blueGrey } from '@material-ui/core/colors';
 import AddOutlinedIcon from '@material-ui/icons/AddOutlined';
-import RemoveOutlinedIcon from '@material-ui/icons/RemoveOutlined';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -106,22 +105,6 @@ export const CurrentlyWatching = () => {
     }
   };
 
-  const decreaseCount = (
-    seriesId: string,
-    currentCount: number | null | undefined
-  ) => {
-    if (currentCount) {
-      updateUserProgressMutation({
-        variables: {
-          where: { id: seriesId },
-          data: {
-            completed: currentCount - 1,
-          },
-        },
-      });
-    }
-  };
-
   useEffect(() => {
     const handleResize = () => {
       setInnerWidth(window.innerWidth);
@@ -157,28 +140,16 @@ export const CurrentlyWatching = () => {
                                 flexDirection: 'row',
                                 flexWrap: 'nowrap',
                               }}
-                              spacing={1}
+                              spacing={0}
                             >
                               <Grid item>
-                                <IconButton
-                                  size="small"
-                                  onClick={() =>
-                                    item?.id &&
-                                    decreaseCount(
-                                      item.id,
-                                      item.progress?.completed
-                                    )
-                                  }
-                                >
-                                  <RemoveOutlinedIcon fontSize="small" />
-                                </IconButton>
-                              </Grid>
-                              <Grid item>
-                                <Typography>
-                                  {`${item?.progress?.completed ?? '0'} / ${
-                                    item?.episodeCount
-                                  }`}
-                                </Typography>
+                                <div style={{ width: 70, textAlign: 'right' }}>
+                                  <Typography>
+                                    {`${item?.progress?.completed ?? '0'} / ${
+                                      item?.episodeCount
+                                    }`}
+                                  </Typography>
+                                </div>
                               </Grid>
                               <Grid item>
                                 <IconButton
