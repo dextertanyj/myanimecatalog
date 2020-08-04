@@ -85,6 +85,8 @@ export const EpisodesTable = (props: Props) => {
   const [showBatchForm, setShowBatchForm] = useState<boolean>(false);
   const [formAction, setFormAction] = useState<ActionType>(ActionType.CREATE);
   const [selectedRows, setSelectedRows] = useState<Episode[]>([]);
+  const [innerWidth, setInnerWidth] = useState<number>(window.innerWidth)
+  const [maxGridHeight, setMaxGridHeight] = useState<number>(window.innerWidth > 600 ? window.innerHeight - 160 : window.innerHeight - 152)
 
   const { data: rowData, refetch } = useEpisodesInSeriesQuery({
     fetchPolicy: 'cache-and-network',
@@ -120,6 +122,15 @@ export const EpisodesTable = (props: Props) => {
     return () => window.removeEventListener('resize', hideColumnsMobile);
   }, [hideColumnsMobile]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setInnerWidth(window.innerWidth);
+      setMaxGridHeight(window.innerWidth > 600 ? window.innerHeight - 160 : window.innerHeight - 152);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [])
+
   const gridOptions = {
     enableCellTextSelection: true,
   };
@@ -150,9 +161,9 @@ export const EpisodesTable = (props: Props) => {
 
   return (
     <div>
-      <Paper elevation={3} className={classes.paper}>
-        <Grid container direction={'column'} spacing={3}>
-          <Grid item container spacing={3}>
+      <Paper elevation={3} className={classes.paper} style={{ height: maxGridHeight, maxHeight: innerWidth > 600 ? 560 : 676 }} >
+        <Grid container direction={'column'} spacing={3} style={{ height: maxGridHeight - 48, maxHeight: 'calc(100% + 24px)' }}>
+          <Grid container item spacing={3}>
             <Grid item xs={12} sm className={classes.tableTitle}>
               <Typography variant="h5">Episodes</Typography>
             </Grid>
@@ -226,8 +237,8 @@ export const EpisodesTable = (props: Props) => {
                 </Grid>
               )}
           </Grid>
-          <Grid item xs={12}>
-            <div className="ag-theme-material" style={{ height: '500px' }}>
+          <Grid item xs>
+            <div className="ag-theme-material" style={{ height: '100%' }}>
               <AgGridReact
                 onGridReady={onGridReady}
                 animateRows
@@ -238,7 +249,7 @@ export const EpisodesTable = (props: Props) => {
                 gridOptions={gridOptions}
                 columnDefs={columnDefs}
                 rowData={(rowData?.episodesInSeries as any[]) || []}
-              ></AgGridReact>
+              />
             </div>
           </Grid>
         </Grid>
