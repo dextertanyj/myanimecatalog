@@ -280,6 +280,8 @@ export type Query = {
   readonly quickSearch?: Maybe<SearchPayload>;
   readonly myTopTenSeries?: Maybe<ReadonlyArray<Maybe<Series>>>;
   readonly myCurrentlyWatching?: Maybe<ReadonlyArray<Maybe<Series>>>;
+  readonly suggestedCodecs?: Maybe<ReadonlyArray<Maybe<Codec>>>;
+  readonly suggestedSources?: Maybe<ReadonlyArray<Maybe<ReferenceSource>>>;
 };
 
 
@@ -565,6 +567,16 @@ export type SearchPayload = {
   readonly episodes: ReadonlyArray<Maybe<Episode>>;
 };
 
+export type Codec = {
+  readonly __typename?: 'Codec';
+  readonly codec?: Maybe<Scalars['String']>;
+};
+
+export type ReferenceSource = {
+  readonly __typename?: 'ReferenceSource';
+  readonly source?: Maybe<Scalars['String']>;
+};
+
 export type LoggedInQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -749,6 +761,17 @@ export type FilesQuery = (
   )>>> }
 );
 
+export type SuggestedCodecsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SuggestedCodecsQuery = (
+  { readonly __typename?: 'Query' }
+  & { readonly suggestedCodecs?: Maybe<ReadonlyArray<Maybe<(
+    { readonly __typename?: 'Codec' }
+    & Pick<Codec, 'codec'>
+  )>>> }
+);
+
 export type CreateFileMutationVariables = Exact<{
   data: FileCreateUpdateInput;
 }>;
@@ -787,6 +810,17 @@ export type DeleteFileMutation = (
     { readonly __typename?: 'File' }
     & Pick<File, 'id'>
   ) }
+);
+
+export type SuggestedSourcesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SuggestedSourcesQuery = (
+  { readonly __typename?: 'Query' }
+  & { readonly suggestedSources?: Maybe<ReadonlyArray<Maybe<(
+    { readonly __typename?: 'ReferenceSource' }
+    & Pick<ReferenceSource, 'source'>
+  )>>> }
 );
 
 export type QuickSearchQueryVariables = Exact<{
@@ -1822,6 +1856,57 @@ export function useFilesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOp
 export type FilesQueryHookResult = ReturnType<typeof useFilesQuery>;
 export type FilesLazyQueryHookResult = ReturnType<typeof useFilesLazyQuery>;
 export type FilesQueryResult = ApolloReactCommon.QueryResult<FilesQuery, FilesQueryVariables>;
+export const SuggestedCodecsDocument = gql`
+    query SuggestedCodecs {
+  suggestedCodecs {
+    codec
+  }
+}
+    `;
+export type SuggestedCodecsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<SuggestedCodecsQuery, SuggestedCodecsQueryVariables>, 'query'>;
+
+    export const SuggestedCodecsComponent = (props: SuggestedCodecsComponentProps) => (
+      <ApolloReactComponents.Query<SuggestedCodecsQuery, SuggestedCodecsQueryVariables> query={SuggestedCodecsDocument} {...props} />
+    );
+    
+export type SuggestedCodecsProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<SuggestedCodecsQuery, SuggestedCodecsQueryVariables>
+    } & TChildProps;
+export function withSuggestedCodecs<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  SuggestedCodecsQuery,
+  SuggestedCodecsQueryVariables,
+  SuggestedCodecsProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, SuggestedCodecsQuery, SuggestedCodecsQueryVariables, SuggestedCodecsProps<TChildProps, TDataName>>(SuggestedCodecsDocument, {
+      alias: 'suggestedCodecs',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useSuggestedCodecsQuery__
+ *
+ * To run a query within a React component, call `useSuggestedCodecsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSuggestedCodecsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSuggestedCodecsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSuggestedCodecsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SuggestedCodecsQuery, SuggestedCodecsQueryVariables>) {
+        return ApolloReactHooks.useQuery<SuggestedCodecsQuery, SuggestedCodecsQueryVariables>(SuggestedCodecsDocument, baseOptions);
+      }
+export function useSuggestedCodecsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SuggestedCodecsQuery, SuggestedCodecsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<SuggestedCodecsQuery, SuggestedCodecsQueryVariables>(SuggestedCodecsDocument, baseOptions);
+        }
+export type SuggestedCodecsQueryHookResult = ReturnType<typeof useSuggestedCodecsQuery>;
+export type SuggestedCodecsLazyQueryHookResult = ReturnType<typeof useSuggestedCodecsLazyQuery>;
+export type SuggestedCodecsQueryResult = ApolloReactCommon.QueryResult<SuggestedCodecsQuery, SuggestedCodecsQueryVariables>;
 export const CreateFileDocument = gql`
     mutation CreateFile($data: FileCreateUpdateInput!) {
   createFile(data: $data) {
@@ -1976,6 +2061,57 @@ export function useDeleteFileMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type DeleteFileMutationHookResult = ReturnType<typeof useDeleteFileMutation>;
 export type DeleteFileMutationResult = ApolloReactCommon.MutationResult<DeleteFileMutation>;
 export type DeleteFileMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteFileMutation, DeleteFileMutationVariables>;
+export const SuggestedSourcesDocument = gql`
+    query SuggestedSources {
+  suggestedSources {
+    source
+  }
+}
+    `;
+export type SuggestedSourcesComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<SuggestedSourcesQuery, SuggestedSourcesQueryVariables>, 'query'>;
+
+    export const SuggestedSourcesComponent = (props: SuggestedSourcesComponentProps) => (
+      <ApolloReactComponents.Query<SuggestedSourcesQuery, SuggestedSourcesQueryVariables> query={SuggestedSourcesDocument} {...props} />
+    );
+    
+export type SuggestedSourcesProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<SuggestedSourcesQuery, SuggestedSourcesQueryVariables>
+    } & TChildProps;
+export function withSuggestedSources<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  SuggestedSourcesQuery,
+  SuggestedSourcesQueryVariables,
+  SuggestedSourcesProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, SuggestedSourcesQuery, SuggestedSourcesQueryVariables, SuggestedSourcesProps<TChildProps, TDataName>>(SuggestedSourcesDocument, {
+      alias: 'suggestedSources',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useSuggestedSourcesQuery__
+ *
+ * To run a query within a React component, call `useSuggestedSourcesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSuggestedSourcesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSuggestedSourcesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSuggestedSourcesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SuggestedSourcesQuery, SuggestedSourcesQueryVariables>) {
+        return ApolloReactHooks.useQuery<SuggestedSourcesQuery, SuggestedSourcesQueryVariables>(SuggestedSourcesDocument, baseOptions);
+      }
+export function useSuggestedSourcesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SuggestedSourcesQuery, SuggestedSourcesQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<SuggestedSourcesQuery, SuggestedSourcesQueryVariables>(SuggestedSourcesDocument, baseOptions);
+        }
+export type SuggestedSourcesQueryHookResult = ReturnType<typeof useSuggestedSourcesQuery>;
+export type SuggestedSourcesLazyQueryHookResult = ReturnType<typeof useSuggestedSourcesLazyQuery>;
+export type SuggestedSourcesQueryResult = ApolloReactCommon.QueryResult<SuggestedSourcesQuery, SuggestedSourcesQueryVariables>;
 export const QuickSearchDocument = gql`
     query QuickSearch($where: String!) {
   quickSearch(where: $where) {

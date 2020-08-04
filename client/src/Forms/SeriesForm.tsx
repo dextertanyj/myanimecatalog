@@ -27,6 +27,7 @@ import { useSnackbar } from 'notistack';
 import React, { ReactElement, useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
+import { SourceAutoComplete } from '../Components/Inputs/SourceAutoComplete';
 import { SeriesAutocomplete } from '../Components/SeriesAutocomplete';
 import { FormLoading } from '../Components/Skeletons/FormLoading';
 import { Series, Type } from '../gql/documents';
@@ -1012,42 +1013,25 @@ export const SeriesForm = (props: Props): ReactElement => {
                                           md={5}
                                           key={`${index}-source`}
                                         >
-                                          <TextField
-                                            variant="outlined"
-                                            margin="normal"
-                                            fullWidth
-                                            key={`references.${index}.source`}
-                                            name={`references.${index}.source`}
-                                            label="Source"
-                                            id={`references.${index}.source`}
+                                          <SourceAutoComplete
+                                            fieldName={`references.${index}.source`}
+                                            value={reference.source || ''}
+                                            touched={
+                                              !!touched?.references &&
+                                              touched.references[index]?.source
+                                            }
                                             error={
-                                              !!touched?.references &&
-                                              touched?.references[index]
-                                                ?.source &&
                                               !!Array.isArray(
                                                 errors?.references
-                                              ) &&
-                                              !!(errors.references[
-                                                index
-                                              ] as FormikErrors<Reference>)
-                                                ?.source
+                                              )
+                                                ? (errors.references[
+                                                    index
+                                                  ] as FormikErrors<Reference>)
+                                                    ?.source
+                                                : undefined
                                             }
-                                            helperText={
-                                              !!touched?.references &&
-                                              touched?.references[index]
-                                                ?.source &&
-                                              !!Array.isArray(
-                                                errors?.references
-                                              ) &&
-                                              (errors.references[
-                                                index
-                                              ] as FormikErrors<Reference>)
-                                                ?.source
-                                            }
-                                            value={reference.source || null}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            className={classes.formItem}
+                                            setFieldValue={setFieldValue}
+                                            setTouched={setTouched}
                                           />
                                         </Grid>
                                         <Grid

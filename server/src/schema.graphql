@@ -265,6 +265,9 @@ type Query {
 
   myTopTenSeries: [Series]
   myCurrentlyWatching: [Series]
+
+  suggestedCodecs: [Codec]
+  suggestedSources: [ReferenceSource]
 }
 
 type Mutation {
@@ -402,4 +405,12 @@ type Reference {
 type SearchPayload {
   series: [Series]!
   episodes: [Episode]!
+}
+
+type Codec {
+  codec: String
+}
+
+type ReferenceSource {
+  source: String
 }

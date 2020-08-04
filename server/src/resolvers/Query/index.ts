@@ -1,6 +1,7 @@
 import { Dashboard } from './Dashboard';
 import { Episode } from './Episode';
 import { File } from './File';
+import { Reference } from './Reference';
 import { Search } from './Search';
 import { Series } from './Series';
 import { User } from './User';
@@ -14,4 +15,5 @@ export const Query = {
   ...User,
   ...UserProgress,
   ...Search,
+  ...Reference,
 };
