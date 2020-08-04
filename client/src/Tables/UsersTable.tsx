@@ -5,7 +5,7 @@ import {
   makeStyles,
   Paper,
   Theme,
-  Typography,
+  Typography
 } from '@material-ui/core';
 import { blueGrey } from '@material-ui/core/colors';
 import AddOutlinedIcon from '@material-ui/icons/AddOutlined';
@@ -26,9 +26,10 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: theme.spacing(3),
       textAlign: 'center',
+      height: 'calc(100% - 36px)'
     },
-    tableHeader: {
-      marginBottom: '5px',
+    mainGrid: {
+      height: 'calc(100% + 24px)'
     },
     tableTitle: {
       color: blueGrey[700],
@@ -80,9 +81,9 @@ export const UsersTable = () => {
   const classes = useStyles();
   const [gridApi, setGridApi] = useState<
     | {
-        api: GridApi;
-        columnApi: ColumnApi;
-      }
+      api: GridApi;
+      columnApi: ColumnApi;
+    }
     | undefined
   >(undefined);
   const [showForm, setShowForm] = useState<boolean>(false);
@@ -160,46 +161,44 @@ export const UsersTable = () => {
   }, [hideColumnsMobile]);
 
   return (
-    <div>
+    <div style={{ height: '100%' }}>
       <Paper elevation={3} className={classes.paper}>
-        <Grid container spacing={3} className={classes.tableHeader}>
-          <Grid item xs={12}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm className={classes.tableTitle}>
-                <Typography variant="h5">Users</Typography>
-              </Grid>
-              <Grid item xs={6} sm={'auto'}>
-                <Button
-                  fullWidth
-                  startIcon={<AddOutlinedIcon />}
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    setFormAction(ActionType.CREATE);
-                    setShowForm(true);
-                  }}
-                >
-                  Add
+        <Grid container direction={'column'} spacing={3} className={classes.mainGrid}>
+          <Grid container item spacing={3}>
+            <Grid item xs={12} sm className={classes.tableTitle}>
+              <Typography variant="h5">Users</Typography>
+            </Grid>
+            <Grid item xs={6} sm={'auto'}>
+              <Button
+                fullWidth
+                startIcon={<AddOutlinedIcon />}
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  setFormAction(ActionType.CREATE);
+                  setShowForm(true);
+                }}
+              >
+                Add
                 </Button>
-              </Grid>
-              <Grid item xs={6} sm={'auto'}>
-                <Button
-                  fullWidth
-                  startIcon={<EditOutlinedIcon />}
-                  disabled={selectedRows.length !== 1}
-                  variant="contained"
-                  onClick={() => {
-                    setFormAction(ActionType.UPDATE);
-                    setShowForm(true);
-                  }}
-                >
-                  Edit
+            </Grid>
+            <Grid item xs={6} sm={'auto'}>
+              <Button
+                fullWidth
+                startIcon={<EditOutlinedIcon />}
+                disabled={selectedRows.length !== 1}
+                variant="contained"
+                onClick={() => {
+                  setFormAction(ActionType.UPDATE);
+                  setShowForm(true);
+                }}
+              >
+                Edit
                 </Button>
-              </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <div className="ag-theme-material" style={{ height: '500px' }}>
+          <Grid item xs>
+            <div className="ag-theme-material" style={{ height: "100%" }}>
               <AgGridReact
                 onGridReady={onGridReady}
                 animateRows
@@ -210,7 +209,7 @@ export const UsersTable = () => {
                 gridOptions={gridOptions}
                 columnDefs={columnDefs}
                 rowData={(rowData?.users as any[]) || []}
-              ></AgGridReact>
+              />
             </div>
           </Grid>
         </Grid>

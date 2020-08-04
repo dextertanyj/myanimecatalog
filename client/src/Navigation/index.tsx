@@ -9,7 +9,7 @@ import {
   ListItemIcon,
   ListItemText,
   Toolbar,
-  Typography,
+  Typography
 } from '@material-ui/core';
 import { grey } from '@material-ui/core/colors';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -92,6 +92,9 @@ const useStyles = makeStyles((theme: Theme) =>
       color: grey[100],
     },
     toolbar: theme.mixins.toolbar,
+    contentWrapper: {
+      flexGrow: 1,
+    },
     content: {
       flexGrow: 1,
       backgroundColor: theme.palette.background.default,
@@ -111,6 +114,7 @@ const Navigation = (props: any) => {
   const [innerWidth, setInnerWidth] = useState<number>(window.innerWidth);
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
   const [expanded, setExpanded] = useState<boolean>(window.innerWidth > 1366);
+  const [minHeight, setMinHeight] = useState<number>(window.innerWidth > 600 ? window.innerHeight - 112 : window.innerHeight - 104)
 
   const { data: AuthData } = useLoggedInQuery({
     fetchPolicy: 'cache-and-network',
@@ -119,6 +123,7 @@ const Navigation = (props: any) => {
   useEffect(() => {
     const handleResize = () => {
       setInnerWidth(window.innerWidth);
+      setMinHeight(window.innerWidth > 600 ? window.innerHeight - 112 : window.innerHeight - 104);
       setExpanded(window.innerWidth >= 1366);
     };
     window.addEventListener('resize', handleResize);
@@ -291,8 +296,8 @@ const Navigation = (props: any) => {
             {expanded ? (
               <ChevronLeftOutlinedIcon />
             ) : (
-              <ChevronRightOutlinedIcon />
-            )}
+                <ChevronRightOutlinedIcon />
+              )}
           </ListItemIcon>
           <ListItemText
             primary={'Collapse Sidebar'}
@@ -300,10 +305,12 @@ const Navigation = (props: any) => {
           />
         </ListItem>
       </Drawer>
-      <main className={classes.content}>
+      <div className={classes.contentWrapper}>
         <div className={classes.toolbar} />
-        {props.children}
-      </main>
+        <main className={classes.content} style={{ minHeight: minHeight }}>
+          {props.children}
+        </main>
+      </div>
     </div>
   );
 };

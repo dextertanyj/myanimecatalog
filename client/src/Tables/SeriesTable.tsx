@@ -5,7 +5,7 @@ import {
   makeStyles,
   Paper,
   Theme,
-  Typography,
+  Typography
 } from '@material-ui/core';
 import { blueGrey } from '@material-ui/core/colors';
 import AddOutlinedIcon from '@material-ui/icons/AddOutlined';
@@ -29,9 +29,10 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: theme.spacing(3),
       textAlign: 'center',
+      height: 'calc(100% - 36px)'
     },
-    tableHeader: {
-      marginBottom: '5px',
+    mainGrid: {
+      height: 'calc(100% + 24px)'
     },
     tableTitle: {
       color: blueGrey[700],
@@ -92,8 +93,8 @@ const columnDefs = [
     valueGetter: (params: { data: Series }) => {
       return params.data.releaseSeason && params.data.releaseYear
         ? `${renderSeason(params.data.releaseSeason)} ${moment(
-            params.data.releaseYear
-          ).format('YYYY')}`
+          params.data.releaseYear
+        ).format('YYYY')}`
         : '';
     },
     width: 180,
@@ -132,9 +133,9 @@ export const SeriesTable = () => {
   const history = useHistory();
   const [gridApi, setGridApi] = useState<
     | {
-        api: GridApi;
-        columnApi: ColumnApi;
-      }
+      api: GridApi;
+      columnApi: ColumnApi;
+    }
     | undefined
   >(undefined);
   const [showForm, setShowForm] = useState<boolean>(false);
@@ -265,15 +266,14 @@ export const SeriesTable = () => {
   }, [hideColumnsMobile]);
 
   return (
-    <div>
+    <div style={{ height: '100%' }}>
       <Paper elevation={3} className={classes.paper}>
-        <Grid container spacing={3} className={classes.tableHeader}>
-          <Grid item xs={12}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm className={classes.tableTitle}>
-                <Typography variant="h5">All Series</Typography>
-              </Grid>
-              {AuthData?.loggedIn?.role &&
+        <Grid container direction={'column'} spacing={3} className={classes.mainGrid}>
+          <Grid container item spacing={3}>
+            <Grid item xs={12} sm className={classes.tableTitle}>
+              <Typography variant="h5">Catalog</Typography>
+            </Grid>
+            {AuthData?.loggedIn?.role &&
               writeAccess.includes(AuthData.loggedIn.role) ? (
                 <>
                   <Grid item xs={6} sm={'auto'}>
@@ -319,10 +319,9 @@ export const SeriesTable = () => {
                   </Button>
                 </Grid>
               )}
-            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <div className="ag-theme-material" style={{ height: '500px' }}>
+          <Grid item xs>
+            <div className="ag-theme-material" style={{ height: '100%' }}>
               <AgGridReact
                 onGridReady={onGridReady}
                 animateRows
@@ -333,24 +332,26 @@ export const SeriesTable = () => {
                 gridOptions={gridOptions}
                 columnDefs={columnDefs}
                 rowData={(rowData?.allSeries as any[]) || []}
-              ></AgGridReact>
+              />
             </div>
           </Grid>
         </Grid>
       </Paper>
-      {showForm && (
-        <SeriesForm
-          open={showForm}
-          action={formAction}
-          onSubmit={() => {
-            refetch();
-            setFormAction(ActionType.CREATE);
-          }}
-          onClose={() => {
-            setShowForm(false);
-          }}
-        />
-      )}
-    </div>
+      {
+        showForm && (
+          <SeriesForm
+            open={showForm}
+            action={formAction}
+            onSubmit={() => {
+              refetch();
+              setFormAction(ActionType.CREATE);
+            }}
+            onClose={() => {
+              setShowForm(false);
+            }}
+          />
+        )
+      }
+    </div >
   );
 };

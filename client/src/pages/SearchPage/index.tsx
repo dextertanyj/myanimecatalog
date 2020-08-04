@@ -6,7 +6,7 @@ import {
   Paper,
   TextField,
   Theme,
-  Typography,
+  Typography
 } from '@material-ui/core';
 import { blueGrey } from '@material-ui/core/colors';
 import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
@@ -28,12 +28,16 @@ type Result = {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    pageGrid: {
+      height: "100%"
+    },
     paper: {
       padding: theme.spacing(3),
       textAlign: 'center',
+      height: 'calc(100% - 36px)'
     },
-    tableHeader: {
-      marginBottom: '5px',
+    mainGrid: {
+      height: 'calc(100% + 24px)'
     },
     tableTitle: {
       color: blueGrey[700],
@@ -67,14 +71,15 @@ const gridOptions = {
 const SearchPage = () => {
   const classes = useStyles();
   const history = useHistory();
+  const [fullHeight, setFullHeight] = useState<number>(window.innerWidth > 600 ? window.innerHeight - 100 : window.innerHeight - 92)
   const [contains, setContains] = useState<string>('');
   const [results, setResults] = useState<Result[]>([]);
   const [selectedRows, setSelectedRows] = useState<Result[]>([]);
   const [gridApi, setGridApi] = useState<
     | {
-        api: GridApi;
-        columnApi: ColumnApi;
-      }
+      api: GridApi;
+      columnApi: ColumnApi;
+    }
     | undefined
   >(undefined);
 
@@ -114,6 +119,14 @@ const SearchPage = () => {
       }
     }
   }, [gridApi]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setFullHeight(window.innerWidth > 600 ? window.innerHeight - 112 : window.innerHeight - 104);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [])
 
   useEffect(() => {
     window.addEventListener('resize', hideColumnsMobile);
@@ -156,61 +169,65 @@ const SearchPage = () => {
   };
 
   return (
-    <div>
-      <Paper elevation={3} className={classes.paper}>
-        <Grid container spacing={3} className={classes.tableHeader}>
-          <Grid item xs={12}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm className={classes.tableTitle}>
-                <Typography variant="h5">Quick Search</Typography>
+    <div style={{ height: fullHeight }}>
+      <Grid container spacing={3} className={classes.pageGrid}>
+        <Grid item xs={12} className={classes.pageGrid}>
+          <Paper elevation={3} className={classes.paper}>
+            <Grid container direction={'column'} spacing={3} className={classes.mainGrid}>
+              <Grid container item spacing={3}>
+                <Grid item xs={12} sm className={classes.tableTitle}>
+                  <Typography variant="h5">Quick Search</Typography>
+                </Grid>
+                <Grid item xs={12} sm={'auto'}>
+                  <Button
+                    fullWidth
+                    startIcon={<PageviewOutlinedIcon />}
+                    disabled={selectedRows.length !== 1}
+                    variant="contained"
+                    onClick={() => {
+                      viewSelected();
+                    }}
+                  >
+                    View
+              </Button>
+                </Grid>
+                <Grid item xs={12} container spacing={3}>
+                  <Grid
+                    item
+                    xs={12}
+                    sm={8}
+                    md={4}
+                    style={{ textAlign: 'left' }}
+                  >
+                    <TextField
+                      variant="outlined"
+                      value={contains}
+                      placeholder={'Search'}
+                      onChange={(event) => setContains(event.target.value)}
+                      fullWidth
+                    />
+                  </Grid>
+                </Grid>
               </Grid>
-              <Grid item xs={12} sm={'auto'}>
-                <Button
-                  fullWidth
-                  startIcon={<PageviewOutlinedIcon />}
-                  disabled={selectedRows.length !== 1}
-                  variant="contained"
-                  onClick={() => {
-                    viewSelected();
-                  }}
-                >
-                  View
-                </Button>
+              <Grid item xs>
+                <div className="ag-theme-material" style={{ height: '100%' }}>
+                  <AgGridReact
+                    onGridReady={onGridReady}
+                    animateRows
+                    enableCellTextSelection
+                    rowDeselection
+                    rowSelection="single"
+                    gridOptions={gridOptions}
+                    columnDefs={columnDefs}
+                    onSelectionChanged={onSelectionChanged}
+                    rowData={(results as Result[]) || []}
+                  />
+                </div>
               </Grid>
             </Grid>
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            sm={8}
-            md={4}
-            style={{ textAlign: 'left', marginBottom: '10px' }}
-          >
-            <TextField
-              variant="outlined"
-              value={contains}
-              placeholder={'Search'}
-              onChange={(event) => setContains(event.target.value)}
-              fullWidth
-            />
-          </Grid>
+          </Paper>
         </Grid>
-        <Grid item xs={12}>
-          <div className="ag-theme-material" style={{ height: '500px' }}>
-            <AgGridReact
-              onGridReady={onGridReady}
-              animateRows
-              enableCellTextSelection
-              rowDeselection
-              rowSelection="single"
-              gridOptions={gridOptions}
-              columnDefs={columnDefs}
-              onSelectionChanged={onSelectionChanged}
-              rowData={(results as Result[]) || []}
-            ></AgGridReact>
-          </div>
-        </Grid>
-      </Paper>
+      </Grid>
     </div>
   );
 };
