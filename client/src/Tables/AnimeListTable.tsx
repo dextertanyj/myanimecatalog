@@ -243,7 +243,7 @@ export const AnimeListTable = () => {
               onChange={handleTabChange}
               indicatorColor="primary"
               textColor="primary"
-              centered={innerWidth >= 1366}
+              centered={innerWidth >= 1140}
               style={{
                 width:
                   innerWidth >= 1366
@@ -252,7 +252,7 @@ export const AnimeListTable = () => {
                     ? innerWidth - 152
                     : innerWidth - 96,
               }}
-              variant={innerWidth >= 1366 ? 'standard' : 'scrollable'}
+              variant={innerWidth >= 1140 ? 'standard' : 'scrollable'}
             >
               <Tab label="All Anime" />
               <Tab label="Currently Watching" />

@@ -153,7 +153,10 @@ export const CurrentlyWatching = () => {
                           <Grid item>
                             <Grid
                               container
-                              style={{ flexDirection: 'row' }}
+                              style={{
+                                flexDirection: 'row',
+                                flexWrap: 'nowrap',
+                              }}
                               spacing={1}
                             >
                               <Grid item>
