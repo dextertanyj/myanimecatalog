@@ -62,7 +62,10 @@ export const SeriesRelatedDisplay = (props: Props): ReactElement => {
               onClick={() => history.push(`/series/${series?.id}`)}
             />
           ) : (
-            <Link onClick={() => history.push(`/series/${series?.id}`)}>
+            <Link
+              href="#"
+              onClick={() => history.push(`/series/${series?.id}`)}
+            >
               <Typography>{series.title}</Typography>
             </Link>
           )
