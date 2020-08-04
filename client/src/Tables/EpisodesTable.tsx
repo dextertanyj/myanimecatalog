@@ -6,7 +6,7 @@ import {
   makeStyles,
   Paper,
   Theme,
-  Typography,
+  Typography
 } from '@material-ui/core';
 import { blueGrey } from '@material-ui/core/colors';
 import AddIcon from '@material-ui/icons/Add';
@@ -35,9 +35,6 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: theme.spacing(3),
       textAlign: 'center',
-    },
-    tableHeader: {
-      marginBottom: '5px',
     },
     tableTitle: {
       color: blueGrey[700],
@@ -79,9 +76,9 @@ export const EpisodesTable = (props: Props) => {
   const history = useHistory();
   const [gridApi, setGridApi] = useState<
     | {
-        api: GridApi;
-        columnApi: ColumnApi;
-      }
+      api: GridApi;
+      columnApi: ColumnApi;
+    }
     | undefined
   >(undefined);
   const [showForm, setShowForm] = useState<boolean>(false);
@@ -154,13 +151,12 @@ export const EpisodesTable = (props: Props) => {
   return (
     <div>
       <Paper elevation={3} className={classes.paper}>
-        <Grid container spacing={3} className={classes.tableHeader}>
-          <Grid item xs={12}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm className={classes.tableTitle}>
-                <Typography variant="h5">Episodes</Typography>
-              </Grid>
-              {AuthData?.loggedIn?.role &&
+        <Grid container direction={'column'} spacing={3}>
+          <Grid item container spacing={3}>
+            <Grid item xs={12} sm className={classes.tableTitle}>
+              <Typography variant="h5">Episodes</Typography>
+            </Grid>
+            {AuthData?.loggedIn?.role &&
               writeAccess.includes(AuthData.loggedIn.role) ? (
                 <>
                   <Grid item xs={12} sm={'auto'}>
@@ -229,7 +225,6 @@ export const EpisodesTable = (props: Props) => {
                   </Button>
                 </Grid>
               )}
-            </Grid>
           </Grid>
           <Grid item xs={12}>
             <div className="ag-theme-material" style={{ height: '500px' }}>

@@ -31,9 +31,6 @@ const useStyles = makeStyles((theme: Theme) =>
     mainGrid: {
       height: 'calc(100% + 24px)'
     },
-    tableHeader: {
-      marginBottom: '5px',
-    },
     tableTitle: {
       color: blueGrey[700],
       textAlign: 'left',
@@ -167,7 +164,7 @@ export const UsersTable = () => {
     <div style={{ height: '100%' }}>
       <Paper elevation={3} className={classes.paper}>
         <Grid container direction={'column'} spacing={3} className={classes.mainGrid}>
-          <Grid container item spacing={3} className={classes.tableHeader}>
+          <Grid container item spacing={3}>
             <Grid item xs={12} sm className={classes.tableTitle}>
               <Typography variant="h5">Users</Typography>
             </Grid>
