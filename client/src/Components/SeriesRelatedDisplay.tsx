@@ -7,6 +7,7 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
+import { teal } from '@material-ui/core/colors';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -62,7 +63,10 @@ export const SeriesRelatedDisplay = (props: Props): ReactElement => {
               onClick={() => history.push(`/series/${series?.id}`)}
             />
           ) : (
-            <Link onClick={() => history.push(`/series/${series?.id}`)}>
+            <Link
+              onClick={() => history.push(`/series/${series?.id}`)}
+              style={{ color: teal[400] }}
+            >
               <Typography>{series.title}</Typography>
             </Link>
           )
