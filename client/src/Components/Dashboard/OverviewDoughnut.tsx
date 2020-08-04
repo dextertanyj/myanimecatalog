@@ -1,11 +1,4 @@
-import {
-  amber,
-  blueGrey,
-  grey,
-  lightBlue,
-  lightGreen,
-  pink,
-} from '@material-ui/core/colors';
+import { blueGrey } from '@material-ui/core/colors';
 import React from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { UserProgress, WatchStatus } from '../../gql/documents';
@@ -63,20 +56,20 @@ export const OverviewDoughnut = (props: Props) => {
             : 0,
         ],
         backgroundColor: [
-          lightBlue[500],
-          lightGreen[500],
-          amber[500],
+          '#7dafd8',
+          '#99e1ac',
+          '#eeb377',
+          '#bdbdbd',
+          '#f27c78',
           blueGrey[500],
-          pink[500],
-          grey[500],
         ],
         hoverBackgroundColor: [
-          lightBlue[300],
-          lightGreen[300],
-          amber[300],
+          '#a5c8e4',
+          '#c0eccc',
+          '#f4cda6',
+          '#d6d6d6',
+          '#f6a8a6',
           blueGrey[300],
-          pink[300],
-          grey[300],
         ],
       },
     ],

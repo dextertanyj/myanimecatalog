@@ -12,17 +12,6 @@ query Episode($where: EpisodeWhereUniqueInput!) {
     }
     episodeNumber
     remarks
-    files {
-      id
-      path
-      fileSize
-      checksum
-      duration
-      resolution
-      source
-      codec
-      remarks
-    }
     createdAt
     updatedAt
   }

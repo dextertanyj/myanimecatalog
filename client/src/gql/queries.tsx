@@ -508,6 +508,7 @@ export type Series = {
   readonly relatedAlternatives?: Maybe<ReadonlyArray<Maybe<Series>>>;
   readonly references?: Maybe<ReadonlyArray<Maybe<Reference>>>;
   readonly progress?: Maybe<UserProgress>;
+  readonly currentStatus?: Maybe<WatchStatus>;
   readonly allProgress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
   readonly createdAt?: Maybe<Scalars['DateTime']>;
   readonly updatedAt?: Maybe<Scalars['DateTime']>;
@@ -651,10 +652,7 @@ export type EpisodeQuery = (
     )>>>, readonly series?: Maybe<(
       { readonly __typename?: 'Series' }
       & Pick<Series, 'id' | 'title'>
-    )>, readonly files?: Maybe<ReadonlyArray<Maybe<(
-      { readonly __typename?: 'File' }
-      & Pick<File, 'id' | 'path' | 'fileSize' | 'checksum' | 'duration' | 'resolution' | 'source' | 'codec' | 'remarks'>
-    )>>> }
+    )> }
   )> }
 );
 
@@ -861,26 +859,32 @@ export type SeriesQuery = (
     )>>>, readonly episodes?: Maybe<ReadonlyArray<Maybe<(
       { readonly __typename?: 'Episode' }
       & Pick<Episode, 'id' | 'title' | 'episodeNumber'>
-    )>>>, readonly prequels?: Maybe<ReadonlyArray<Maybe<(
-      { readonly __typename?: 'Series' }
-      & Pick<Series, 'id' | 'title'>
-    )>>>, readonly sequels?: Maybe<ReadonlyArray<Maybe<(
-      { readonly __typename?: 'Series' }
-      & Pick<Series, 'id' | 'title'>
-    )>>>, readonly mainStories?: Maybe<ReadonlyArray<Maybe<(
-      { readonly __typename?: 'Series' }
-      & Pick<Series, 'id' | 'title'>
-    )>>>, readonly sideStories?: Maybe<ReadonlyArray<Maybe<(
-      { readonly __typename?: 'Series' }
-      & Pick<Series, 'id' | 'title'>
-    )>>>, readonly relatedSeries?: Maybe<ReadonlyArray<Maybe<(
-      { readonly __typename?: 'Series' }
-      & Pick<Series, 'id' | 'title'>
-    )>>>, readonly relatedAlternatives?: Maybe<ReadonlyArray<Maybe<(
-      { readonly __typename?: 'Series' }
-      & Pick<Series, 'id' | 'title'>
     )>>> }
+    & RelatedSeriesInfoFragment
   )> }
+);
+
+export type RelatedSeriesInfoFragment = (
+  { readonly __typename?: 'Series' }
+  & { readonly prequels?: Maybe<ReadonlyArray<Maybe<(
+    { readonly __typename?: 'Series' }
+    & Pick<Series, 'id' | 'title'>
+  )>>>, readonly sequels?: Maybe<ReadonlyArray<Maybe<(
+    { readonly __typename?: 'Series' }
+    & Pick<Series, 'id' | 'title'>
+  )>>>, readonly mainStories?: Maybe<ReadonlyArray<Maybe<(
+    { readonly __typename?: 'Series' }
+    & Pick<Series, 'id' | 'title'>
+  )>>>, readonly sideStories?: Maybe<ReadonlyArray<Maybe<(
+    { readonly __typename?: 'Series' }
+    & Pick<Series, 'id' | 'title'>
+  )>>>, readonly relatedSeries?: Maybe<ReadonlyArray<Maybe<(
+    { readonly __typename?: 'Series' }
+    & Pick<Series, 'id' | 'title'>
+  )>>>, readonly relatedAlternatives?: Maybe<ReadonlyArray<Maybe<(
+    { readonly __typename?: 'Series' }
+    & Pick<Series, 'id' | 'title'>
+  )>>> }
 );
 
 export type AllSeriesQueryVariables = Exact<{ [key: string]: never; }>;
@@ -890,7 +894,7 @@ export type AllSeriesQuery = (
   { readonly __typename?: 'Query' }
   & { readonly allSeries?: Maybe<ReadonlyArray<Maybe<(
     { readonly __typename?: 'Series' }
-    & Pick<Series, 'id' | 'title' | 'seasonNumber' | 'episodeCount' | 'type' | 'status' | 'releaseSeason' | 'releaseYear'>
+    & Pick<Series, 'id' | 'title' | 'seasonNumber' | 'episodeCount' | 'type' | 'status' | 'releaseSeason' | 'releaseYear' | 'currentStatus'>
   )>>> }
 );
 
@@ -1112,7 +1116,34 @@ export type DeleteUserProgressMutation = (
   ) }
 );
 
-
+export const RelatedSeriesInfoFragmentDoc = gql`
+    fragment RelatedSeriesInfo on Series {
+  prequels {
+    id
+    title
+  }
+  sequels {
+    id
+    title
+  }
+  mainStories {
+    id
+    title
+  }
+  sideStories {
+    id
+    title
+  }
+  relatedSeries {
+    id
+    title
+  }
+  relatedAlternatives {
+    id
+    title
+  }
+}
+    `;
 export const LoggedInDocument = gql`
     query LoggedIn {
   loggedIn {
@@ -1350,17 +1381,6 @@ export const EpisodeDocument = gql`
     }
     episodeNumber
     remarks
-    files {
-      id
-      path
-      fileSize
-      checksum
-      duration
-      resolution
-      source
-      codec
-      remarks
-    }
     createdAt
     updatedAt
   }
@@ -2197,35 +2217,12 @@ export const SeriesDocument = gql`
     releaseSeason
     releaseYear
     remarks
-    prequels {
-      id
-      title
-    }
-    sequels {
-      id
-      title
-    }
-    mainStories {
-      id
-      title
-    }
-    sideStories {
-      id
-      title
-    }
-    relatedSeries {
-      id
-      title
-    }
-    relatedAlternatives {
-      id
-      title
-    }
+    ...RelatedSeriesInfo
     createdAt
     updatedAt
   }
 }
-    `;
+    ${RelatedSeriesInfoFragmentDoc}`;
 export type SeriesComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<SeriesQuery, SeriesQueryVariables>, 'query'> & ({ variables: SeriesQueryVariables; skip?: boolean; } | { skip: boolean; });
 
     export const SeriesComponent = (props: SeriesComponentProps) => (
@@ -2282,6 +2279,7 @@ export const AllSeriesDocument = gql`
     status
     releaseSeason
     releaseYear
+    currentStatus
   }
 }
     `;

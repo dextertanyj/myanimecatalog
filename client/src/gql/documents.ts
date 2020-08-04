@@ -502,6 +502,7 @@ export type Series = {
   readonly relatedAlternatives?: Maybe<ReadonlyArray<Maybe<Series>>>;
   readonly references?: Maybe<ReadonlyArray<Maybe<Reference>>>;
   readonly progress?: Maybe<UserProgress>;
+  readonly currentStatus?: Maybe<WatchStatus>;
   readonly allProgress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
   readonly createdAt?: Maybe<Scalars['DateTime']>;
   readonly updatedAt?: Maybe<Scalars['DateTime']>;
@@ -571,7 +572,34 @@ export type ReferenceSource = {
   readonly source?: Maybe<Scalars['String']>;
 };
 
-
+export const RelatedSeriesInfo = gql`
+    fragment RelatedSeriesInfo on Series {
+  prequels {
+    id
+    title
+  }
+  sequels {
+    id
+    title
+  }
+  mainStories {
+    id
+    title
+  }
+  sideStories {
+    id
+    title
+  }
+  relatedSeries {
+    id
+    title
+  }
+  relatedAlternatives {
+    id
+    title
+  }
+}
+    `;
 export const LoggedIn = gql`
     query LoggedIn {
   loggedIn {
@@ -633,17 +661,6 @@ export const Episode = gql`
     }
     episodeNumber
     remarks
-    files {
-      id
-      path
-      fileSize
-      checksum
-      duration
-      resolution
-      source
-      codec
-      remarks
-    }
     createdAt
     updatedAt
   }
@@ -813,35 +830,12 @@ export const Series = gql`
     releaseSeason
     releaseYear
     remarks
-    prequels {
-      id
-      title
-    }
-    sequels {
-      id
-      title
-    }
-    mainStories {
-      id
-      title
-    }
-    sideStories {
-      id
-      title
-    }
-    relatedSeries {
-      id
-      title
-    }
-    relatedAlternatives {
-      id
-      title
-    }
+    ...RelatedSeriesInfo
     createdAt
     updatedAt
   }
 }
-    `;
+    ${RelatedSeriesInfo}`;
 export const AllSeries = gql`
     query AllSeries {
   allSeries {
@@ -853,6 +847,7 @@ export const AllSeries = gql`
     status
     releaseSeason
     releaseYear
+    currentStatus
   }
 }
     `;

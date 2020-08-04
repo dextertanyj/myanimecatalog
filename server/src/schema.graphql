@@ -353,6 +353,7 @@ type Series {
   relatedAlternatives: [Series]
   references: [Reference]
   progress: UserProgress
+  currentStatus: WatchStatus
   allProgress: [UserProgress]
   createdAt: DateTime
   updatedAt: DateTime
