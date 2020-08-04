@@ -9,7 +9,7 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
-import { blueGrey } from '@material-ui/core/colors';
+import { blueGrey, teal } from '@material-ui/core/colors';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import moment from 'moment';
@@ -277,6 +277,7 @@ export const SeriesInfo = (props: Props) => {
                               href={reference?.link || undefined}
                               target="_blank"
                               rel="noopener"
+                              style={{ color: teal[400] }}
                             >
                               <Typography>{reference?.source}</Typography>
                             </Link>

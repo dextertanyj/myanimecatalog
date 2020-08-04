@@ -10,7 +10,7 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
-import { blueGrey } from '@material-ui/core/colors';
+import { blueGrey, teal } from '@material-ui/core/colors';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import moment from 'moment';
@@ -230,6 +230,7 @@ export const EpisodeInfo = (props: Props) => {
                               `/series/${episodeData?.episode?.series?.id}`
                             )
                           }
+                          style={{ color: teal[400] }}
                         >
                           <Typography>
                             {episodeData?.episode?.series?.title}
