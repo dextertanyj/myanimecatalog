@@ -94,7 +94,7 @@ export const renderWatchStatus = (watchStatus: WatchStatus): string => {
     case WatchStatus.Onhold:
       return 'On-Hold';
     case WatchStatus.Pending:
-      return 'Plan to Watch';
+      return 'Plan To Watch';
     case WatchStatus.Watching:
       return 'Watching';
   }
