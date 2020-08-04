@@ -114,6 +114,7 @@ const Navigation = (props: any) => {
   const [innerWidth, setInnerWidth] = useState<number>(window.innerWidth);
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
   const [expanded, setExpanded] = useState<boolean>(window.innerWidth > 1366);
+  const [minHeight, setMinHeight] = useState<number>(window.innerWidth > 600 ? window.innerHeight - 112 : window.innerHeight - 104)
 
   const { data: AuthData } = useLoggedInQuery({
     fetchPolicy: 'cache-and-network',
@@ -122,6 +123,7 @@ const Navigation = (props: any) => {
   useEffect(() => {
     const handleResize = () => {
       setInnerWidth(window.innerWidth);
+      setMinHeight(window.innerWidth > 600 ? window.innerHeight - 112 : window.innerHeight - 104);
       setExpanded(window.innerWidth >= 1366);
     };
     window.addEventListener('resize', handleResize);
@@ -305,7 +307,7 @@ const Navigation = (props: any) => {
       </Drawer>
       <div className={classes.contentWrapper}>
         <div className={classes.toolbar} />
-        <main className={classes.content}>
+        <main className={classes.content} style={{ minHeight: minHeight }}>
           {props.children}
         </main>
       </div>
