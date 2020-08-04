@@ -64,6 +64,7 @@ export const SeriesRelatedDisplay = (props: Props): ReactElement => {
             />
           ) : (
             <Link
+              href="#"
               onClick={() => history.push(`/series/${series?.id}`)}
               style={{ color: teal[400] }}
             >
