@@ -1,4 +1,5 @@
 import {
+  Role,
   User as UserType,
   UserCreateArgs,
   UserDeleteArgs,
@@ -71,7 +72,7 @@ export const User = {
           id: ctx.userId,
         },
         data: {
-          ...data,
+          name: data.name,
           password: encryptPassword,
           username: data.username?.toLowerCase().trim(),
         },
@@ -99,6 +100,13 @@ export const User = {
       const encryptPassword = data.password
         ? await bcrypt.hash(data?.password, 10)
         : undefined;
+      if (where.id === ctx.userId) {
+        if (data.role && data.role !== Role.ADMIN) {
+          throw new Error(
+            `Operation not supported: Cannot change access level of current account.`
+          );
+        }
+      }
       const user = await ctx.prisma.user.update({
         where,
         data: {
