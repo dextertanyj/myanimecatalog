@@ -19,7 +19,7 @@ html {
   --ag-selected-row-background-color: #cdffff70;
 }
 
-.ag-theme-material {
+.ag-theme-material .ag-cell {
   font-size: 0.9rem;
 }
 
