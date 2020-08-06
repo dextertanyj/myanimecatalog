@@ -30,6 +30,9 @@ export const Series = {
       where: {
         seriesId: parent.id,
       },
+      orderBy: {
+        episodeNumber: 'asc',
+      },
     });
   },
 
