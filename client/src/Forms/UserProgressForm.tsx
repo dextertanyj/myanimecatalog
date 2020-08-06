@@ -376,6 +376,13 @@ export const UserProgressForm = (props: Props) => {
                               false
                             );
                             handleChange(event);
+                          } else if (
+                            event.target.value === WatchStatus.Watching &&
+                            (!values.status ||
+                              values.status === WatchStatus.Pending)
+                          ) {
+                            setFieldValue('completed', 0, false);
+                            handleChange(event);
                           } else {
                             handleChange(event);
                           }
