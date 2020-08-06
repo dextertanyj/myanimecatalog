@@ -23,7 +23,6 @@ import ListOutlinedIcon from '@material-ui/icons/ListOutlined';
 import MenuOutlinedIcon from '@material-ui/icons/MenuOutlined';
 import PermIdentityOutlinedIcon from '@material-ui/icons/PermIdentityOutlined';
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
-import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -256,31 +255,19 @@ const Navigation = (props: any) => {
             <ListItemText primary={'Search'} />
           </ListItem>
           {AuthData?.loggedIn?.role === Role.Admin && (
-            <>
-              <ListItem
-                button
-                key={'users'}
-                onClick={() => {
-                  history.push('/users');
-                  setMobileOpen(false);
-                }}
-              >
-                <ListItemIcon>
-                  <PermIdentityOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText primary={'Users'} />
-              </ListItem>
-              <ListItem
-                button
-                key={'tools'}
-                onClick={() => { history.push('/tools'); setMobileOpen(false); }}
-              >
-                <ListItemIcon>
-                  <SettingsOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText primary={'Tools'} />
-              </ListItem>
-            </>
+            <ListItem
+              button
+              key={'users'}
+              onClick={() => {
+                history.push('/users');
+                setMobileOpen(false);
+              }}
+            >
+              <ListItemIcon>
+                <PermIdentityOutlinedIcon />
+              </ListItemIcon>
+              <ListItemText primary={'Users'} />
+            </ListItem>
           )}
           {innerWidth < 960 && (
             <>
@@ -331,8 +318,8 @@ const Navigation = (props: any) => {
             {expanded ? (
               <ChevronLeftOutlinedIcon />
             ) : (
-                <ChevronRightOutlinedIcon />
-              )}
+              <ChevronRightOutlinedIcon />
+            )}
           </ListItemIcon>
           <ListItemText
             primary={'Collapse Sidebar'}

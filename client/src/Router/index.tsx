@@ -11,7 +11,6 @@ import ProfilePage from '../pages/ProfilePage';
 import SearchPage from '../pages/SearchPage';
 import SeriesPage from '../pages/SeriesPage';
 import { SetupPage } from '../pages/SetupPage';
-import ToolsPage from '../pages/ToolsPage';
 import UsersPage from '../pages/UsersPage';
 
 export default function ReactRouter() {
@@ -59,9 +58,6 @@ export default function ReactRouter() {
             />
             <Route exact strict path="/users">
               <UsersPage />
-            </Route>
-            <Route exact strict path="/tools">
-              <ToolsPage />
             </Route>
             <Route exact strict path="/search" component={SearchPage} />
           </Navigation>
