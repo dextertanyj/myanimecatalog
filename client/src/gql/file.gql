@@ -52,6 +52,12 @@ query SuggestedCodecs {
   }
 }
 
+query FileExport {
+  files {
+    path
+  }
+}
+
 mutation CreateFile($data: FileCreateUpdateInput!) {
   createFile(data: $data) {
     id

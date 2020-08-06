@@ -1,9 +1,18 @@
 import {
+  File,
   Series as SeriesType,
   UserProgress,
   WatchStatus,
 } from '@prisma/client';
 import { Context } from '../../utils';
+
+type CatalogStatistics = {
+  totalSeriesCount: number;
+  totalEpisodeCount: number;
+  allFiles: File[];
+  totalFileSize: number;
+  totalDuration: number;
+};
 
 export const Dashboard = {
   async myTopTenSeries(
@@ -78,5 +87,28 @@ export const Dashboard = {
     } else {
       throw new Error(`Unable to retrieve user information`);
     }
+  },
+
+  async catalogStatistics(
+    _parent: unknown,
+    _args: unknown,
+    ctx: Context
+  ): Promise<CatalogStatistics> {
+    const seriesCount = await ctx.prisma.series.count();
+    const episodeCount = await ctx.prisma.episode.count();
+    const files = await ctx.prisma.file.findMany();
+    let duration = 0;
+    let fileSize = 0;
+    for (const file of files) {
+      duration += file.duration;
+      fileSize += file.fileSize;
+    }
+    return {
+      totalSeriesCount: seriesCount,
+      totalEpisodeCount: episodeCount,
+      allFiles: files,
+      totalFileSize: fileSize,
+      totalDuration: duration,
+    };
   },
 };

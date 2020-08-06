@@ -1,16 +1,4 @@
-import { fade } from '@material-ui/core';
-import {
-  blueGrey,
-  brown,
-  green,
-  grey,
-  indigo,
-  lightBlue,
-  lime,
-  purple,
-  red,
-  teal,
-} from '@material-ui/core/colors';
+import { darken, fade } from '@material-ui/core';
 import React from 'react';
 import { HorizontalBar } from 'react-chartjs-2';
 import { UserProgress } from '../../gql/documents';
@@ -37,43 +25,18 @@ const breakdownRatings = (allProgress: UserProgress[]) => {
   return [zero, one, two, three, four, five, six, seven, eight, nine, ten];
 };
 
-const borderColor = [
-  teal[600],
-  green[600],
-  lime[600],
-  lightBlue[600],
-  indigo[600],
-  purple[600],
-  red[600],
-  brown[600],
-  blueGrey[600],
-  grey[600],
-];
-
-const backgroundColor = [
-  teal[600],
-  green[600],
-  lime[600],
-  lightBlue[600],
-  indigo[600],
-  purple[600],
-  red[600],
-  brown[600],
-  blueGrey[600],
-  grey[600],
-];
-
-const hoverBackgroundColor = [
-  teal[400],
-  green[400],
-  lime[400],
-  lightBlue[400],
-  indigo[400],
-  purple[400],
-  red[400],
-  brown[400],
-  blueGrey[400],
-  grey[400],
+const barColor = [
+  '#ace9dd',
+  '#b5efce',
+  '#b7dcf4',
+  '#ddc6e7',
+  '#b9c0c9',
+  '#fbeba5',
+  '#f6d3af',
+  '#f8c3b9',
+  '#fafcfc',
+  '#dbe2e2',
+  '#added4',
 ];
 
 export const RatingChart = (props: Props) => {
@@ -98,12 +61,10 @@ export const RatingChart = (props: Props) => {
           processed[0],
         ],
         borderWidth: 1,
-        backgroundColor: backgroundColor.map((color) => fade(color, 0.6)),
-        borderColor: borderColor,
-        hoverBackgroundColor: hoverBackgroundColor.map((color) =>
-          fade(color, 0.6)
-        ),
-        hoverBorderColor: borderColor,
+        backgroundColor: barColor.map((color) => fade(color, 0.8)),
+        borderColor: barColor.map((color) => darken(color, 0.2)),
+        hoverBackgroundColor: barColor.map((color) => fade(color, 0.5)),
+        hoverBorderColor: barColor.map((color) => darken(color, 0.2)),
       },
     ],
     labels: [

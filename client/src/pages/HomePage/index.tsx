@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core';
 import { blueGrey } from '@material-ui/core/colors';
 import React from 'react';
+import { AdminCard } from '../../Components/Dashboard/AdminCard';
 import { CurrentlyWatching } from '../../Components/Dashboard/CurrentlyWatching';
 import { OverviewCard } from '../../Components/Dashboard/OverviewCard';
 import { RatingCard } from '../../Components/Dashboard/RatingCard';
@@ -15,6 +16,7 @@ import { DashboardSkeleton } from '../../Components/Skeletons/DashboardSkeleton'
 import { UserProgress } from '../../gql/documents';
 import { useLoggedInQuery, useMyProgressQuery } from '../../gql/queries';
 import { withAuth } from '../../HOC/withAuth';
+import { adminAccess } from '../../utils/auth';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -83,6 +85,11 @@ const HomePage = () => {
               </Grid>
             </Grid>
           </>
+        )}
+        {user?.loggedIn?.role && adminAccess.includes(user.loggedIn.role) && (
+          <Grid item xs={12}>
+            <AdminCard />
+          </Grid>
         )}
       </Grid>
     </div>

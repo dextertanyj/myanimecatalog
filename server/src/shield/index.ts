@@ -84,6 +84,11 @@ export const permissions = shield(
 
       myTopTenSeries: rules.isAuthenticatedUser,
       myCurrentlyWatching: rules.isAuthenticatedUser,
+
+      suggestedCodecs: rules.isAuthenticatedUser,
+      suggestedSources: rules.isAuthenticatedUser,
+
+      catalogStatistics: rules.isAdminUser,
     },
     Mutation: {
       updateMe: rules.isAuthenticatedUser,

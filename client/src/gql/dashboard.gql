@@ -20,3 +20,73 @@ query MyCurrentlyWatching {
     }
   }
 }
+
+query CatalogStatistics {
+  catalogStatistics {
+    totalSeriesCount
+    totalEpisodeCount
+    allFiles {
+      codec
+      source
+      resolution
+    }
+    totalFileSize
+    totalDuration
+  }
+}
+
+query ExportData {
+  allSeries {
+    title
+    seasonNumber
+    episodeCount
+    status
+    type
+    releaseSeason
+    releaseYear
+    remarks
+    alternativeTitles {
+      title
+    }
+    episodes {
+      title
+      episodeNumber
+      remarks
+      alternativeTitles {
+        title
+      }
+      files {
+        path
+        fileSize
+        checksum
+        duration
+        resolution
+        source
+        codec
+        remarks
+      }
+    }
+    prequels {
+      title
+    }
+    sequels {
+      title
+    }
+    sideStories {
+      title
+    }
+    mainStories {
+      title
+    }
+    relatedSeries {
+      title
+    }
+    relatedAlternatives {
+      title
+    }
+    references {
+      link
+      source
+    }
+  }
+}
