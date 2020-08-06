@@ -54,22 +54,26 @@ export const SeriesRelatedDisplay = (props: Props): ReactElement => {
         <Typography>{props.title}</Typography>
       </Grid>
       <Grid item xs={8} sm={10} zeroMinWidth>
-        {props.seriesArray.map((series) =>
+        {props.seriesArray.map((series, index) =>
           innerWidth >= 960 ? (
-            <Chip
-              key={series?.id}
-              label={series?.title}
-              className={classes.chip}
-              onClick={() => history.push(`/series/${series?.id}`)}
-            />
+            <React.Fragment key={series?.id || index}>
+              <Chip
+                key={series?.id}
+                label={series?.title}
+                className={classes.chip}
+                onClick={() => history.push(`/series/${series?.id}`)}
+              />
+            </React.Fragment>
           ) : (
-            <Link
-              href="#"
-              onClick={() => history.push(`/series/${series?.id}`)}
-              style={{ color: teal[400] }}
-            >
-              <Typography>{series.title}</Typography>
-            </Link>
+            <React.Fragment key={series?.id || index}>
+              <Link
+                href="#"
+                onClick={() => history.push(`/series/${series?.id}`)}
+                style={{ color: teal[400] }}
+              >
+                <Typography>{series.title}</Typography>
+              </Link>
+            </React.Fragment>
           )
         )}
       </Grid>

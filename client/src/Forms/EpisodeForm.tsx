@@ -358,78 +358,82 @@ export const EpisodeForm = (props: Props) => {
                                   index: number
                                 ) => {
                                   return (
-                                    <Grid item xs={12}>
-                                      <Grid container spacing={3}>
-                                        <Grid
-                                          item
-                                          xs={10}
-                                          md={11}
-                                          key={`${index}-title`}
-                                        >
-                                          <TextField
-                                            variant="outlined"
-                                            margin="normal"
-                                            fullWidth
-                                            key={`alternativeTitles.${index}.title`}
-                                            name={`alternativeTitles.${index}.title`}
-                                            label="Alternative Title"
-                                            error={
-                                              !!touched?.alternativeTitles &&
-                                              touched?.alternativeTitles[index]
-                                                ?.title &&
-                                              !!Array.isArray(
-                                                errors?.alternativeTitles
-                                              ) &&
-                                              !!(errors.alternativeTitles[
-                                                index
-                                              ] as FormikErrors<
-                                                AlternativeTitle
-                                              >)?.title
-                                            }
-                                            helperText={
-                                              !!touched?.alternativeTitles &&
-                                              touched?.alternativeTitles[index]
-                                                ?.title &&
-                                              !!Array.isArray(
-                                                errors?.alternativeTitles
-                                              ) &&
-                                              (errors.alternativeTitles[
-                                                index
-                                              ] as FormikErrors<
-                                                AlternativeTitle
-                                              >)?.title
-                                            }
-                                            id={`alternativeTitles.${index}.title`}
-                                            value={altTitle.title || ''}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            className={classes.formItem}
-                                          />
-                                        </Grid>
-                                        <Grid
-                                          item
-                                          xs={2}
-                                          md={1}
-                                          className={
-                                            classes.formArrayRemoveButtonContainer
-                                          }
-                                          alignContent="space-around"
-                                          alignItems="center"
-                                        >
-                                          <IconButton
-                                            size="small"
-                                            onClick={() =>
-                                              arrayHelpers.remove(index)
-                                            }
-                                            className={
-                                              classes.formArrayRemoveButton
-                                            }
+                                    <React.Fragment key={index}>
+                                      <Grid item xs={12}>
+                                        <Grid container spacing={3}>
+                                          <Grid
+                                            item
+                                            xs={10}
+                                            md={11}
+                                            key={`${index}-title`}
                                           >
-                                            <RemoveIcon />
-                                          </IconButton>
+                                            <TextField
+                                              variant="outlined"
+                                              margin="normal"
+                                              fullWidth
+                                              key={`alternativeTitles.${index}.title`}
+                                              name={`alternativeTitles.${index}.title`}
+                                              label="Alternative Title"
+                                              error={
+                                                !!touched?.alternativeTitles &&
+                                                touched?.alternativeTitles[
+                                                  index
+                                                ]?.title &&
+                                                !!Array.isArray(
+                                                  errors?.alternativeTitles
+                                                ) &&
+                                                !!(errors.alternativeTitles[
+                                                  index
+                                                ] as FormikErrors<
+                                                  AlternativeTitle
+                                                >)?.title
+                                              }
+                                              helperText={
+                                                !!touched?.alternativeTitles &&
+                                                touched?.alternativeTitles[
+                                                  index
+                                                ]?.title &&
+                                                !!Array.isArray(
+                                                  errors?.alternativeTitles
+                                                ) &&
+                                                (errors.alternativeTitles[
+                                                  index
+                                                ] as FormikErrors<
+                                                  AlternativeTitle
+                                                >)?.title
+                                              }
+                                              id={`alternativeTitles.${index}.title`}
+                                              value={altTitle.title || ''}
+                                              onChange={handleChange}
+                                              onBlur={handleBlur}
+                                              className={classes.formItem}
+                                            />
+                                          </Grid>
+                                          <Grid
+                                            item
+                                            xs={2}
+                                            md={1}
+                                            className={
+                                              classes.formArrayRemoveButtonContainer
+                                            }
+                                            alignContent="space-around"
+                                            alignItems="center"
+                                          >
+                                            <IconButton
+                                              size="small"
+                                              onClick={() =>
+                                                arrayHelpers.remove(index)
+                                              }
+                                              className={
+                                                classes.formArrayRemoveButton
+                                              }
+                                            >
+                                              <RemoveIcon />
+                                            </IconButton>
+                                          </Grid>
                                         </Grid>
                                       </Grid>
-                                    </Grid>
+                                    </React.Fragment>
                                   );
                                 }
                               )}

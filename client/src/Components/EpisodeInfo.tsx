@@ -187,28 +187,30 @@ export const EpisodeInfo = (props: Props) => {
                   </Grid>
                 </Grid>
                 {episodeData?.episode?.alternativeTitles &&
-                  episodeData?.episode?.alternativeTitles.map((altTitle) => {
-                    return (
-                      altTitle?.title && (
-                        <>
-                          <Grid item xs={4} sm={2}>
-                            <Typography>
-                              {innerWidth >= 960
-                                ? `Alternative Title`
-                                : `Alt. Title`}
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={8} sm={10}>
-                            <Grid container spacing={3}>
-                              <Grid item xs={12} zeroMinWidth>
-                                <Typography>{altTitle.title}</Typography>
+                  episodeData?.episode?.alternativeTitles.map(
+                    (altTitle, index) => {
+                      return (
+                        altTitle?.title && (
+                          <React.Fragment key={altTitle?.id || index}>
+                            <Grid item xs={4} sm={2}>
+                              <Typography>
+                                {innerWidth >= 960
+                                  ? `Alternative Title`
+                                  : `Alt. Title`}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={8} sm={10}>
+                              <Grid container spacing={3}>
+                                <Grid item xs={12} zeroMinWidth>
+                                  <Typography>{altTitle.title}</Typography>
+                                </Grid>
                               </Grid>
                             </Grid>
-                          </Grid>
-                        </>
-                      )
-                    );
-                  })}
+                          </React.Fragment>
+                        )
+                      );
+                    }
+                  )}
 
                 <Grid item xs={4} sm={2} md={2}>
                   <Typography>Series</Typography>

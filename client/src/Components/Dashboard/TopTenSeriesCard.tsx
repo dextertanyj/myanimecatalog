@@ -59,7 +59,7 @@ export const TopTenSeriesCard = () => {
           <List>
             {data?.myTopTenSeries?.map((item, index) => {
               return (
-                <>
+                <React.Fragment key={index}>
                   <ListItem key={`topten-${index}`}>
                     <Grid container spacing={3} className={classes.gridList}>
                       <Grid item>
@@ -71,7 +71,7 @@ export const TopTenSeriesCard = () => {
                     </Grid>
                   </ListItem>
                   <Divider />
-                </>
+                </React.Fragment>
               );
             })}
           </List>

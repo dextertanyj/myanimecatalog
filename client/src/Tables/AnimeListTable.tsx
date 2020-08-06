@@ -237,7 +237,7 @@ export const AnimeListTable = () => {
           spacing={3}
           className={classes.mainGrid}
         >
-          <Grid item spacing={0} style={{ paddingBottom: 12 }}>
+          <Grid item style={{ paddingBottom: 12 }}>
             <Tabs
               value={selectedTab}
               onChange={handleTabChange}

@@ -165,111 +165,121 @@ export const BatchEpisodeForm = (props: Props) => {
                             values.episodes.map(
                               (episode: EpisodeSimple, index: number) => {
                                 return (
-                                  <Grid item xs={12}>
-                                    <Grid container spacing={2}>
-                                      <Grid
-                                        item
-                                        xs={12}
-                                        md={9}
-                                        key={`${index}-episode`}
-                                      >
-                                        <TextField
-                                          variant="outlined"
-                                          margin="normal"
-                                          fullWidth
-                                          key={`episodes.${index}.title`}
-                                          name={`episodes.${index}.title`}
-                                          label="Title"
-                                          error={
-                                            !!touched?.episodes &&
-                                            touched?.episodes[index]?.title &&
-                                            !!Array.isArray(errors?.episodes) &&
-                                            !!(errors.episodes[
-                                              index
-                                            ] as FormikErrors<EpisodeSimple>)
-                                              ?.title
-                                          }
-                                          helperText={
-                                            !!touched?.episodes &&
-                                            touched?.episodes[index]?.title &&
-                                            !!Array.isArray(errors?.episodes) &&
-                                            (errors.episodes[
-                                              index
-                                            ] as FormikErrors<EpisodeSimple>)
-                                              ?.title
-                                          }
-                                          id={`episodes.${index}.title`}
-                                          value={episode.title || ''}
-                                          onChange={handleChange}
-                                          onBlur={handleBlur}
-                                          className={classes.formItem}
-                                        />
-                                      </Grid>
-                                      <Grid
-                                        item
-                                        xs={10}
-                                        md={2}
-                                        key={`${index}-episode`}
-                                      >
-                                        <TextField
-                                          variant="outlined"
-                                          margin="normal"
-                                          fullWidth
-                                          type="number"
-                                          key={`episodes.${index}.episodeNumber`}
-                                          name={`episodes.${index}.episodeNumber`}
-                                          label="Episode No."
-                                          error={
-                                            !!touched?.episodes &&
-                                            touched?.episodes[index]
-                                              ?.episodeNumber &&
-                                            !!Array.isArray(errors?.episodes) &&
-                                            !!(errors.episodes[
-                                              index
-                                            ] as FormikErrors<EpisodeSimple>)
-                                              ?.episodeNumber
-                                          }
-                                          helperText={
-                                            !!touched?.episodes &&
-                                            touched?.episodes[index]
-                                              ?.episodeNumber &&
-                                            !!Array.isArray(errors?.episodes) &&
-                                            (errors.episodes[
-                                              index
-                                            ] as FormikErrors<EpisodeSimple>)
-                                              ?.episodeNumber
-                                          }
-                                          id={`episodes.${index}.episodeNumber`}
-                                          value={episode.episodeNumber}
-                                          onChange={handleChange}
-                                          onBlur={handleBlur}
-                                          className={classes.formItem}
-                                        />
-                                      </Grid>
-                                      <Grid
-                                        item
-                                        xs={2}
-                                        md={1}
-                                        className={
-                                          classes.formArrayRemoveButtonContainer
-                                        }
-                                        alignContent="space-around"
-                                        alignItems="center"
-                                      >
-                                        <IconButton
-                                          size="small"
-                                          onClick={() =>
-                                            arrayHelpers.remove(index)
-                                          }
-                                          className={
-                                            classes.formArrayRemoveButton
-                                          }
+                                  <React.Fragment key={index}>
+                                    <Grid item xs={12}>
+                                      <Grid container spacing={2}>
+                                        <Grid
+                                          item
+                                          xs={12}
+                                          md={9}
+                                          key={`${index}-episode`}
                                         >
-                                          <RemoveIcon />
-                                        </IconButton>
+                                          <TextField
+                                            variant="outlined"
+                                            margin="normal"
+                                            fullWidth
+                                            key={`episodes.${index}.title`}
+                                            name={`episodes.${index}.title`}
+                                            label="Title"
+                                            error={
+                                              !!touched?.episodes &&
+                                              touched?.episodes[index]?.title &&
+                                              !!Array.isArray(
+                                                errors?.episodes
+                                              ) &&
+                                              !!(errors.episodes[
+                                                index
+                                              ] as FormikErrors<EpisodeSimple>)
+                                                ?.title
+                                            }
+                                            helperText={
+                                              !!touched?.episodes &&
+                                              touched?.episodes[index]?.title &&
+                                              !!Array.isArray(
+                                                errors?.episodes
+                                              ) &&
+                                              (errors.episodes[
+                                                index
+                                              ] as FormikErrors<EpisodeSimple>)
+                                                ?.title
+                                            }
+                                            id={`episodes.${index}.title`}
+                                            value={episode.title || ''}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            className={classes.formItem}
+                                          />
+                                        </Grid>
+                                        <Grid
+                                          item
+                                          xs={10}
+                                          md={2}
+                                          key={`${index}-episode`}
+                                        >
+                                          <TextField
+                                            variant="outlined"
+                                            margin="normal"
+                                            fullWidth
+                                            type="number"
+                                            key={`episodes.${index}.episodeNumber`}
+                                            name={`episodes.${index}.episodeNumber`}
+                                            label="Episode No."
+                                            error={
+                                              !!touched?.episodes &&
+                                              touched?.episodes[index]
+                                                ?.episodeNumber &&
+                                              !!Array.isArray(
+                                                errors?.episodes
+                                              ) &&
+                                              !!(errors.episodes[
+                                                index
+                                              ] as FormikErrors<EpisodeSimple>)
+                                                ?.episodeNumber
+                                            }
+                                            helperText={
+                                              !!touched?.episodes &&
+                                              touched?.episodes[index]
+                                                ?.episodeNumber &&
+                                              !!Array.isArray(
+                                                errors?.episodes
+                                              ) &&
+                                              (errors.episodes[
+                                                index
+                                              ] as FormikErrors<EpisodeSimple>)
+                                                ?.episodeNumber
+                                            }
+                                            id={`episodes.${index}.episodeNumber`}
+                                            value={episode.episodeNumber}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            className={classes.formItem}
+                                          />
+                                        </Grid>
+                                        <Grid
+                                          item
+                                          xs={2}
+                                          md={1}
+                                          className={
+                                            classes.formArrayRemoveButtonContainer
+                                          }
+                                          alignContent="space-around"
+                                          alignItems="center"
+                                        >
+                                          <IconButton
+                                            size="small"
+                                            onClick={() =>
+                                              arrayHelpers.remove(index)
+                                            }
+                                            className={
+                                              classes.formArrayRemoveButton
+                                            }
+                                          >
+                                            <RemoveIcon />
+                                          </IconButton>
+                                        </Grid>
                                       </Grid>
                                     </Grid>
-                                  </Grid>
+                                  </React.Fragment>
                                 );
                               }
                             )}

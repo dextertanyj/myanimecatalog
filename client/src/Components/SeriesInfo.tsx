@@ -187,29 +187,31 @@ export const SeriesInfo = (props: Props) => {
                   </Grid>
                 </Grid>
                 {seriesData?.series?.alternativeTitles &&
-                  seriesData.series?.alternativeTitles.map((altTitle) => {
-                    return (
-                      altTitle?.title && (
-                        <>
-                          <Grid item xs={4} sm={2}>
-                            <Typography>
-                              {' '}
-                              {innerWidth >= 960
-                                ? `Alternative Title`
-                                : `Alt. Title`}
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={8} sm={10}>
-                            <Grid container spacing={3} wrap={'nowrap'}>
-                              <Grid item xs={12}>
-                                <Typography>{altTitle.title}</Typography>
+                  seriesData.series?.alternativeTitles.map(
+                    (altTitle, index) => {
+                      return (
+                        altTitle?.title && (
+                          <React.Fragment key={altTitle?.id || index}>
+                            <Grid item xs={4} sm={2}>
+                              <Typography>
+                                {' '}
+                                {innerWidth >= 960
+                                  ? `Alternative Title`
+                                  : `Alt. Title`}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={8} sm={10}>
+                              <Grid container spacing={3} wrap={'nowrap'}>
+                                <Grid item xs={12}>
+                                  <Typography>{altTitle.title}</Typography>
+                                </Grid>
                               </Grid>
                             </Grid>
-                          </Grid>
-                        </>
-                      )
-                    );
-                  })}
+                          </React.Fragment>
+                        )
+                      );
+                    }
+                  )}
                 <Grid item xs={4} sm={2} md={2}>
                   <Typography>Season No.</Typography>
                 </Grid>
@@ -280,18 +282,22 @@ export const SeriesInfo = (props: Props) => {
                           flexWrap: 'wrap',
                         }}
                       >
-                        {seriesData?.series?.references.map((reference) => {
-                          return (
-                            <Link
-                              href={reference?.link || undefined}
-                              target="_blank"
-                              rel="noopener"
-                              style={{ color: teal[400] }}
-                            >
-                              <Typography>{reference?.source}</Typography>
-                            </Link>
-                          );
-                        })}
+                        {seriesData?.series?.references.map(
+                          (reference, index) => {
+                            return (
+                              <React.Fragment key={reference?.id || index}>
+                                <Link
+                                  href={reference?.link || undefined}
+                                  target="_blank"
+                                  rel="noopener"
+                                  style={{ color: teal[400] }}
+                                >
+                                  <Typography>{reference?.source}</Typography>
+                                </Link>
+                              </React.Fragment>
+                            );
+                          }
+                        )}
                       </Grid>
                     </>
                   )}

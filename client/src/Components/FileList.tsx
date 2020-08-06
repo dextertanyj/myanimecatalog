@@ -106,7 +106,7 @@ export const FileList = (props: Props) => {
             </Grid>
             <List>
               {files?.filesForEpisode?.map((file, index) => (
-                <>
+                <React.Fragment key={file?.id || index}>
                   <Divider />
                   <ListItem
                     className={classes.listItem}
@@ -122,7 +122,7 @@ export const FileList = (props: Props) => {
                       key={file?.id ?? `file-${index}`}
                     />
                   </ListItem>
-                </>
+                </React.Fragment>
               ))}
             </List>
           </Grid>
