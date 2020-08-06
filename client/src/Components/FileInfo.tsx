@@ -1,6 +1,5 @@
 import { ApolloError } from '@apollo/client';
 import {
-  Button,
   Container,
   createStyles,
   Grid,
@@ -58,6 +57,7 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       height: '100%',
       padding: 0,
+      minHeight: '36px',
     },
   })
 );
@@ -121,18 +121,18 @@ export const FileInfo = (props: Props) => {
         {props.editable && (
           <Grid item xs={12}>
             <Grid container spacing={2}>
-              {innerWidth >= 600 && <Grid item sm />}
+              <Grid item xs />
               <Grid item>
-                <Button
-                  fullWidth
-                  color="primary"
-                  startIcon={<EditOutlinedIcon />}
-                  variant="outlined"
-                  disabled={!props.file.id}
-                  onClick={() => setShowForm(true)}
-                >
-                  Edit
-                </Button>
+                <Container className={classes.iconButtonContainer}>
+                  <IconButton
+                    size="small"
+                    color="primary"
+                    disabled={!props.file.id}
+                    onClick={() => setShowForm(true)}
+                  >
+                    <EditOutlinedIcon />
+                  </IconButton>
+                </Container>
               </Grid>
               <Grid item>
                 <Container className={classes.iconButtonContainer}>

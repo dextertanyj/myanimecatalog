@@ -41,7 +41,7 @@ export const DeleteConfirmDialog = (props: Props) => {
           }}
           color="secondary"
         >
-          Confirm
+          Delete
         </Button>
       </DialogActions>
     </Dialog>

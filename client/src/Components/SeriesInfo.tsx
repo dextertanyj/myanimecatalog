@@ -1,6 +1,5 @@
 import { ApolloError } from '@apollo/client';
 import {
-  Button,
   Container,
   createStyles,
   Grid,
@@ -67,6 +66,7 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       height: '100%',
       padding: 0,
+      minHeight: '36px',
     },
   })
 );
@@ -139,23 +139,23 @@ export const SeriesInfo = (props: Props) => {
           <Grid container spacing={3} className={classes.tableHeader}>
             <Grid item xs={12}>
               <Grid container spacing={3}>
-                <Grid item xs={12} sm className={classes.tableTitle}>
+                <Grid item xs className={classes.tableTitle}>
                   <Typography variant="h5"> Series Information</Typography>
                 </Grid>
                 {AuthData?.loggedIn?.role &&
                   writeAccess.includes(AuthData.loggedIn.role) && (
-                    <Grid item xs={12} sm={'auto'}>
+                    <Grid item>
                       <Grid container spacing={2}>
-                        <Grid item xs>
-                          <Button
-                            fullWidth
-                            startIcon={<EditOutlinedIcon />}
-                            color="primary"
-                            variant="outlined"
-                            onClick={() => setShowForm(true)}
-                          >
-                            Edit
-                          </Button>
+                        <Grid item>
+                          <Container className={classes.iconButtonContainer}>
+                            <IconButton
+                              size="small"
+                              color="primary"
+                              onClick={() => setShowForm(true)}
+                            >
+                              <EditOutlinedIcon />
+                            </IconButton>
+                          </Container>
                         </Grid>
                         <Grid item>
                           <Container className={classes.iconButtonContainer}>
