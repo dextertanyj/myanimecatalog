@@ -19,7 +19,11 @@ export const Episode = {
     _args: unknown,
     ctx: Context
   ): Promise<EpisodeType[]> {
-    return await ctx.prisma.episode.findMany();
+    return await ctx.prisma.episode.findMany({
+      orderBy: {
+        episodeNumber: 'asc',
+      },
+    });
   },
 
   async episodesInSeries(
