@@ -16,7 +16,7 @@ import React, { ReactElement, useEffect } from 'react';
 import * as Yup from 'yup';
 import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
 import { FormLoading } from '../Components/Skeletons/FormLoading';
-import { useUpdateUserMutation, useUserLazyQuery } from '../gql/queries';
+import { useUpdateMeMutation, useUserLazyQuery } from '../gql/queries';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -63,7 +63,7 @@ export const ProfileForm = (props: Props): ReactElement => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [updateUserMutation] = useUpdateUserMutation({
+  const [updateMeMutation] = useUpdateMeMutation({
     onError: (error: ApolloError) => {
       if (error.networkError) {
         NetworkError();
@@ -104,9 +104,8 @@ export const ProfileForm = (props: Props): ReactElement => {
   }, [props.userId, props.open]);
 
   const onSubmit = async (values: FormikValues) => {
-    await updateUserMutation({
+    await updateMeMutation({
       variables: {
-        where: { id: props.userId },
         data: {
           name: values.name,
           username: values.username.toLowerCase().trim(),

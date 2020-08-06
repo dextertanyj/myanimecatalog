@@ -34,7 +34,7 @@ mutation CreateInitialUser($data: UserCreateUpdateInput!) {
   }
 }
 
-mutation UpdateMe($data: UserCreateUpdateInput!) {
+mutation UpdateMe($data: MeUpdateInput!) {
   updateMe(data: $data) {
     id
   }
