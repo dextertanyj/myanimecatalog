@@ -41,15 +41,17 @@ export const ExportData = (props: Props) => {
 
   const [exportDataQuery] = useExportDataLazyQuery({
     fetchPolicy: 'no-cache',
-    onCompleted: async (data) => {
-      const file = await generateExcel(data.allSeries as Series[]);
-      closeSnackbar('file-generation');
-      enqueueSnackbar(`Generated file.`, {
-        key: 'file-generation-success',
-        variant: 'success',
-      });
-      setLoading(false);
-      saveAs(file, 'Exported Data.xlsx');
+    onCompleted: (data) => {
+      const file = generateExcel(data.allSeries as Series[])
+        .then((file) => saveAs(file, 'Exported Data.xlsx'))
+        .then(() => {
+          closeSnackbar('file-generation');
+          enqueueSnackbar(`Generated file.`, {
+            key: 'file-generation-success',
+            variant: 'success',
+          });
+          setLoading(false);
+        });
     },
   });
 
