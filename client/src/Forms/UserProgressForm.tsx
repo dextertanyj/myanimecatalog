@@ -220,7 +220,6 @@ export const UserProgressForm = (props: Props) => {
   };
 
   const onSubmitUpdate = async (values: FormikValues) => {
-    console.log(values);
     let { ...data } = values;
     if (props.progressId) {
       await updateUserProgressMutation({

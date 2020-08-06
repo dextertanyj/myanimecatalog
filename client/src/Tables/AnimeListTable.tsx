@@ -163,13 +163,11 @@ export const AnimeListTable = () => {
   const hideColumnsMobile = useCallback(() => {
     if (gridApi?.columnApi) {
       if (window.innerWidth >= 960) {
-        console.log(window.innerWidth);
         gridApi.columnApi.setColumnsVisible(
           ['overall', 'completed', 'series.type'],
           true
         );
       } else {
-        console.log('test');
         gridApi.columnApi.setColumnsVisible(
           ['overall', 'completed', 'series.type'],
           false
