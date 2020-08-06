@@ -10,8 +10,14 @@ import {
 } from '@material-ui/core';
 import { blueGrey } from '@material-ui/core/colors';
 import React, { useState } from 'react';
+import { File } from '../../gql/documents';
+import { useCatalogStatisticsQuery } from '../../gql/queries';
+import { renderDuration } from '../../utils/enumRender';
 import { CatalogDataExportButton } from '../CatalogDataExportButton';
 import { FileRecordsExportButton } from '../FileRecordsExportButton';
+import { CodecChart } from './CodecChart';
+import { ResolutionChart } from './ResolutionChart';
+import { SourceChart } from './SourceChart';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,12 +41,21 @@ const useStyles = makeStyles((theme: Theme) =>
         justifyContent: 'center',
       },
     },
+    gridContainer: {
+      justifyContent: 'center',
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
   })
 );
 
 export const AdminCard = () => {
   const classes = useStyles();
   const [loading, setLoading] = useState<boolean>(false);
+
+  const { data } = useCatalogStatisticsQuery({
+    fetchPolicy: 'cache-and-network',
+  });
 
   return (
     <Card elevation={3} className={classes.card} style={{ height: '100%' }}>
@@ -50,6 +65,71 @@ export const AdminCard = () => {
       />
       <CardContent className={classes.cardContent}>
         <Grid container spacing={3}>
+          <Grid item xs={12} sm={3}>
+            <Typography>Series Entries:</Typography>
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <Typography>
+              {data?.catalogStatistics?.totalSeriesCount || ''}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <Typography>Episode Entries:</Typography>
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <Typography>
+              {data?.catalogStatistics?.totalEpisodeCount || ''}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <Typography>Total Duration:</Typography>
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <Typography>
+              {(data?.catalogStatistics?.totalDuration &&
+                renderDuration(data?.catalogStatistics?.totalDuration)) ||
+                ''}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <Typography>Total File Size:</Typography>
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <Typography>
+              {`${
+                data?.catalogStatistics?.totalFileSize &&
+                Math.round(data?.catalogStatistics?.totalFileSize / 1024 / 1024)
+              } MB` || ''}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Grid container spacing={0} item className={classes.gridContainer}>
+              {data?.catalogStatistics?.allFiles && (
+                <ResolutionChart
+                  files={data?.catalogStatistics?.allFiles as File[]}
+                />
+              )}
+            </Grid>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Grid container spacing={0} className={classes.gridContainer}>
+              {data?.catalogStatistics?.allFiles && (
+                <CodecChart
+                  files={data?.catalogStatistics?.allFiles as File[]}
+                />
+              )}
+            </Grid>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Grid container spacing={0} className={classes.gridContainer}>
+              {data?.catalogStatistics?.allFiles && (
+                <SourceChart
+                  files={data?.catalogStatistics?.allFiles as File[]}
+                />
+              )}
+            </Grid>
+          </Grid>
+
           <Grid item xs={12} sm={6}>
             <FileRecordsExportButton
               setLoading={setLoading}

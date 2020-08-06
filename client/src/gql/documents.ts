@@ -276,6 +276,7 @@ export type Query = {
   readonly myCurrentlyWatching?: Maybe<ReadonlyArray<Maybe<Series>>>;
   readonly suggestedCodecs?: Maybe<ReadonlyArray<Maybe<Codec>>>;
   readonly suggestedSources?: Maybe<ReadonlyArray<Maybe<ReferenceSource>>>;
+  readonly catalogStatistics?: Maybe<CatalogStatistics>;
 };
 
 
@@ -579,6 +580,15 @@ export type ReferenceSource = {
   readonly source?: Maybe<Scalars['String']>;
 };
 
+export type CatalogStatistics = {
+  readonly __typename?: 'CatalogStatistics';
+  readonly totalSeriesCount?: Maybe<Scalars['Int']>;
+  readonly totalEpisodeCount?: Maybe<Scalars['Int']>;
+  readonly allFiles?: Maybe<ReadonlyArray<Maybe<File>>>;
+  readonly totalFileSize?: Maybe<Scalars['Long']>;
+  readonly totalDuration?: Maybe<Scalars['Int']>;
+};
+
 export const RelatedSeriesInfo = gql`
     fragment RelatedSeriesInfo on Series {
   prequels {
@@ -650,6 +660,21 @@ export const MyCurrentlyWatching = gql`
       id
       completed
     }
+  }
+}
+    `;
+export const CatalogStatistics = gql`
+    query CatalogStatistics {
+  catalogStatistics {
+    totalSeriesCount
+    totalEpisodeCount
+    allFiles {
+      codec
+      source
+      resolution
+    }
+    totalFileSize
+    totalDuration
   }
 }
     `;

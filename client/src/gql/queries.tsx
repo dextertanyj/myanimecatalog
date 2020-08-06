@@ -282,6 +282,7 @@ export type Query = {
   readonly myCurrentlyWatching?: Maybe<ReadonlyArray<Maybe<Series>>>;
   readonly suggestedCodecs?: Maybe<ReadonlyArray<Maybe<Codec>>>;
   readonly suggestedSources?: Maybe<ReadonlyArray<Maybe<ReferenceSource>>>;
+  readonly catalogStatistics?: Maybe<CatalogStatistics>;
 };
 
 
@@ -585,6 +586,15 @@ export type ReferenceSource = {
   readonly source?: Maybe<Scalars['String']>;
 };
 
+export type CatalogStatistics = {
+  readonly __typename?: 'CatalogStatistics';
+  readonly totalSeriesCount?: Maybe<Scalars['Int']>;
+  readonly totalEpisodeCount?: Maybe<Scalars['Int']>;
+  readonly allFiles?: Maybe<ReadonlyArray<Maybe<File>>>;
+  readonly totalFileSize?: Maybe<Scalars['Long']>;
+  readonly totalDuration?: Maybe<Scalars['Int']>;
+};
+
 export type LoggedInQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -641,6 +651,21 @@ export type MyCurrentlyWatchingQuery = (
       & Pick<UserProgress, 'id' | 'completed'>
     )> }
   )>>> }
+);
+
+export type CatalogStatisticsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CatalogStatisticsQuery = (
+  { readonly __typename?: 'Query' }
+  & { readonly catalogStatistics?: Maybe<(
+    { readonly __typename?: 'CatalogStatistics' }
+    & Pick<CatalogStatistics, 'totalSeriesCount' | 'totalEpisodeCount' | 'totalFileSize' | 'totalDuration'>
+    & { readonly allFiles?: Maybe<ReadonlyArray<Maybe<(
+      { readonly __typename?: 'File' }
+      & Pick<File, 'codec' | 'source' | 'resolution'>
+    )>>> }
+  )> }
 );
 
 export type ExportDataQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1444,6 +1469,65 @@ export function useMyCurrentlyWatchingLazyQuery(baseOptions?: ApolloReactHooks.L
 export type MyCurrentlyWatchingQueryHookResult = ReturnType<typeof useMyCurrentlyWatchingQuery>;
 export type MyCurrentlyWatchingLazyQueryHookResult = ReturnType<typeof useMyCurrentlyWatchingLazyQuery>;
 export type MyCurrentlyWatchingQueryResult = ApolloReactCommon.QueryResult<MyCurrentlyWatchingQuery, MyCurrentlyWatchingQueryVariables>;
+export const CatalogStatisticsDocument = gql`
+    query CatalogStatistics {
+  catalogStatistics {
+    totalSeriesCount
+    totalEpisodeCount
+    allFiles {
+      codec
+      source
+      resolution
+    }
+    totalFileSize
+    totalDuration
+  }
+}
+    `;
+export type CatalogStatisticsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<CatalogStatisticsQuery, CatalogStatisticsQueryVariables>, 'query'>;
+
+    export const CatalogStatisticsComponent = (props: CatalogStatisticsComponentProps) => (
+      <ApolloReactComponents.Query<CatalogStatisticsQuery, CatalogStatisticsQueryVariables> query={CatalogStatisticsDocument} {...props} />
+    );
+    
+export type CatalogStatisticsProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<CatalogStatisticsQuery, CatalogStatisticsQueryVariables>
+    } & TChildProps;
+export function withCatalogStatistics<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  CatalogStatisticsQuery,
+  CatalogStatisticsQueryVariables,
+  CatalogStatisticsProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, CatalogStatisticsQuery, CatalogStatisticsQueryVariables, CatalogStatisticsProps<TChildProps, TDataName>>(CatalogStatisticsDocument, {
+      alias: 'catalogStatistics',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useCatalogStatisticsQuery__
+ *
+ * To run a query within a React component, call `useCatalogStatisticsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCatalogStatisticsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCatalogStatisticsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCatalogStatisticsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<CatalogStatisticsQuery, CatalogStatisticsQueryVariables>) {
+        return ApolloReactHooks.useQuery<CatalogStatisticsQuery, CatalogStatisticsQueryVariables>(CatalogStatisticsDocument, baseOptions);
+      }
+export function useCatalogStatisticsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CatalogStatisticsQuery, CatalogStatisticsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<CatalogStatisticsQuery, CatalogStatisticsQueryVariables>(CatalogStatisticsDocument, baseOptions);
+        }
+export type CatalogStatisticsQueryHookResult = ReturnType<typeof useCatalogStatisticsQuery>;
+export type CatalogStatisticsLazyQueryHookResult = ReturnType<typeof useCatalogStatisticsLazyQuery>;
+export type CatalogStatisticsQueryResult = ApolloReactCommon.QueryResult<CatalogStatisticsQuery, CatalogStatisticsQueryVariables>;
 export const ExportDataDocument = gql`
     query ExportData {
   allSeries {
