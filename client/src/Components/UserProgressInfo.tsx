@@ -164,8 +164,11 @@ export const UserProgressInfo = (props: Props) => {
                   </Grid>
                   <Grid item xs={8} md={10} lg={2}>
                     <Typography>
-                      {progress?.mySeriesProgress?.completed || '0'} /{' '}
-                      {progress?.mySeriesProgress?.series?.episodeCount}
+                      {`${isNumberOrElse(
+                        progress?.mySeriesProgress?.completed,
+                        '-'
+                      )}`}{' '}
+                      / {progress?.mySeriesProgress?.series?.episodeCount}
                     </Typography>
                   </Grid>
                   <Grid item xs={4} md={2} lg={2}>
