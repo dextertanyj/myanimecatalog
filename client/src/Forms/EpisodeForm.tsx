@@ -331,7 +331,7 @@ export const EpisodeForm = (props: Props) => {
                         type="number"
                         value={
                           values.episodeNumber ||
-                          (values.episodeNumber === 0 ? 0 : null)
+                          (values.episodeNumber === 0 ? 0 : '')
                         }
                         error={touched.episodeNumber && !!errors.episodeNumber}
                         helperText={
@@ -416,8 +416,6 @@ export const EpisodeForm = (props: Props) => {
                                             className={
                                               classes.formArrayRemoveButtonContainer
                                             }
-                                            alignContent="space-around"
-                                            alignItems="center"
                                           >
                                             <IconButton
                                               size="small"
@@ -445,7 +443,7 @@ export const EpisodeForm = (props: Props) => {
                                 onClick={() =>
                                   arrayHelpers.push({
                                     id: undefined,
-                                    title: undefined,
+                                    title: '',
                                   })
                                 }
                               >

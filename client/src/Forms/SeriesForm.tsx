@@ -705,7 +705,10 @@ export const SeriesForm = (props: Props): ReactElement => {
                         label="Season Number"
                         id="seasonNumber"
                         type="number"
-                        value={values.seasonNumber || null}
+                        value={
+                          values.seasonNumber ||
+                          (values.seasonNumber === 0 ? 0 : '')
+                        }
                         error={touched.seasonNumber && !!errors.seasonNumber}
                         helperText={touched.seasonNumber && errors.seasonNumber}
                         onChange={handleChange}
@@ -722,7 +725,7 @@ export const SeriesForm = (props: Props): ReactElement => {
                         label="Number of Episodes"
                         id="episodeCount"
                         type="number"
-                        value={values.episodeCount || null}
+                        value={values.episodeCount || ''}
                         error={touched.episodeCount && !!errors.episodeCount}
                         helperText={touched.episodeCount && errors.episodeCount}
                         onChange={handleChange}
@@ -739,7 +742,7 @@ export const SeriesForm = (props: Props): ReactElement => {
                         name="releaseSeason"
                         label="Release Season"
                         id="releaseSeason"
-                        value={values.releaseSeason || null}
+                        value={values.releaseSeason || ''}
                         InputLabelProps={{ shrink: !!values.releaseSeason }}
                         error={touched.releaseSeason && !!errors.releaseSeason}
                         helperText={
@@ -787,7 +790,7 @@ export const SeriesForm = (props: Props): ReactElement => {
                         name="type"
                         label="Type"
                         id="type"
-                        value={values.type || null}
+                        value={values.type || ''}
                         InputLabelProps={{ shrink: !!values.type }}
                         error={touched.type && !!errors.type}
                         helperText={touched.type && errors.type}
@@ -813,7 +816,7 @@ export const SeriesForm = (props: Props): ReactElement => {
                         name="status"
                         label="Status"
                         id="status"
-                        value={values.status || null}
+                        value={values.status || ''}
                         InputLabelProps={{ shrink: !!values.status }}
                         error={touched.status && !!errors.status}
                         helperText={touched.status && errors.status}
@@ -901,8 +904,6 @@ export const SeriesForm = (props: Props): ReactElement => {
                                               item
                                               xs={2}
                                               md={1}
-                                              alignContent="space-around"
-                                              alignItems="center"
                                               className={
                                                 classes.formArrayRemoveButtonContainer
                                               }
@@ -934,7 +935,7 @@ export const SeriesForm = (props: Props): ReactElement => {
                                 onClick={() =>
                                   arrayHelpers.push({
                                     id: undefined,
-                                    title: undefined,
+                                    title: '',
                                   })
                                 }
                               >
@@ -1004,7 +1005,7 @@ export const SeriesForm = (props: Props): ReactElement => {
                                                 ] as FormikErrors<Reference>)
                                                   ?.link
                                               }
-                                              value={reference.link || null}
+                                              value={reference.link || ''}
                                               onChange={handleChange}
                                               onBlur={handleBlur}
                                               className={classes.formItem}
@@ -1043,8 +1044,6 @@ export const SeriesForm = (props: Props): ReactElement => {
                                             item
                                             xs={2}
                                             md={1}
-                                            alignContent="space-around"
-                                            alignItems="center"
                                             className={
                                               classes.formArrayRemoveButtonContainer
                                             }
@@ -1075,7 +1074,8 @@ export const SeriesForm = (props: Props): ReactElement => {
                                 onClick={() =>
                                   arrayHelpers.push({
                                     id: undefined,
-                                    title: undefined,
+                                    link: '',
+                                    source: '',
                                   })
                                 }
                               >

@@ -168,12 +168,7 @@ export const BatchEpisodeForm = (props: Props) => {
                                   <React.Fragment key={index}>
                                     <Grid item xs={12}>
                                       <Grid container spacing={2}>
-                                        <Grid
-                                          item
-                                          xs={12}
-                                          md={9}
-                                          key={`${index}-episode`}
-                                        >
+                                        <Grid item xs={12} md={9}>
                                           <TextField
                                             variant="outlined"
                                             margin="normal"
@@ -210,12 +205,7 @@ export const BatchEpisodeForm = (props: Props) => {
                                             className={classes.formItem}
                                           />
                                         </Grid>
-                                        <Grid
-                                          item
-                                          xs={10}
-                                          md={2}
-                                          key={`${index}-episode`}
-                                        >
+                                        <Grid item xs={10} md={2}>
                                           <TextField
                                             variant="outlined"
                                             margin="normal"
@@ -262,8 +252,6 @@ export const BatchEpisodeForm = (props: Props) => {
                                           className={
                                             classes.formArrayRemoveButtonContainer
                                           }
-                                          alignContent="space-around"
-                                          alignItems="center"
                                         >
                                           <IconButton
                                             size="small"
