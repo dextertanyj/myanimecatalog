@@ -25,7 +25,11 @@ import {
 } from '../gql/queries';
 import { writeAccess } from '../utils/auth';
 import { ActionType } from '../utils/constants';
-import { renderSeason, renderStatus, renderType } from '../utils/enumRender';
+import {
+  renderReleaseInfo,
+  renderStatus,
+  renderType,
+} from '../utils/enumRender';
 import { DeleteConfirmDialog } from './DeleteConfirmDialog';
 import { GenericError, NetworkError } from './ErrorSnackbars';
 import { SeriesRelatedDisplay } from './SeriesRelatedDisplay';
@@ -217,14 +221,16 @@ export const SeriesInfo = (props: Props) => {
                 </Grid>
                 <Grid item xs={8} sm={4} md={2}>
                   <Typography>
-                    {seriesData?.series?.seasonNumber || '-'}
+                    {seriesData?.series?.seasonNumber || '⁠–'}
                   </Typography>
                 </Grid>
                 <Grid item xs={4} sm={2} md={2}>
                   <Typography>No. of Episodes</Typography>
                 </Grid>
                 <Grid item xs={8} sm={4} md={2}>
-                  <Typography>{seriesData?.series?.episodeCount}</Typography>
+                  <Typography>
+                    {seriesData?.series?.episodeCount || '⁠–'}
+                  </Typography>
                 </Grid>
                 <Grid item xs={4} sm={2} md={2}>
                   <Typography>Status</Typography>
@@ -248,12 +254,12 @@ export const SeriesInfo = (props: Props) => {
                   <Typography>Release Season</Typography>
                 </Grid>
                 <Grid item xs={8} sm={4} md={2}>
-                  <Typography>{`${
-                    !!seriesData?.series?.releaseSeason &&
-                    renderSeason(seriesData?.series?.releaseSeason)
-                  } ${moment(seriesData?.series?.releaseYear).format(
-                    'YYYY'
-                  )}`}</Typography>
+                  <Typography>
+                    {renderReleaseInfo(
+                      seriesData?.series?.releaseSeason,
+                      seriesData?.series?.releaseYear
+                    )}
+                  </Typography>
                 </Grid>
                 <Grid item xs={4} sm={2} md={2}>
                   <Typography>Last Updated</Typography>

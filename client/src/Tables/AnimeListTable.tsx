@@ -118,10 +118,10 @@ export const AnimeListTable = () => {
       width: 120,
       cellRenderer: (params: { data: UserProgress }) => {
         if (params.data.completed === params.data.series?.episodeCount) {
-          return `${params.data.completed}`;
+          return `${params.data.completed || '⁠–'}`;
         } else {
-          return `${params.data.completed || '-'} / ${
-            params.data.series?.episodeCount
+          return `${params.data.completed || '⁠–'} / ${
+            params.data.series?.episodeCount || '⁠–'
           }`;
         }
       },

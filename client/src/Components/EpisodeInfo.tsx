@@ -254,7 +254,7 @@ export const EpisodeInfo = (props: Props) => {
                 </Grid>
                 <Grid item xs={8} sm={10} md={2}>
                   <Typography>
-                    {episodeData?.episode?.episodeNumber || '-'}
+                    {episodeData?.episode?.episodeNumber || '⁠–'}
                   </Typography>
                 </Grid>
                 <Grid item xs={4} sm={2} md={2}>

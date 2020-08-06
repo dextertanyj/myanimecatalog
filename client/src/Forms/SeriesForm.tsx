@@ -331,6 +331,7 @@ export const SeriesForm = (props: Props): ReactElement => {
       mainStories,
       sideStories,
       related,
+      releaseSeason,
       ...rest
     } = values;
     alternativeTitles =
@@ -406,6 +407,7 @@ export const SeriesForm = (props: Props): ReactElement => {
           relatedSeries: related,
           episodeCount: episodeCount === '' ? undefined : episodeCount,
           seasonNumber: seasonNumber === '' ? undefined : seasonNumber,
+          releaseSeason: releaseSeason === '' ? null : releaseSeason,
           ...rest,
         },
       },
@@ -423,6 +425,7 @@ export const SeriesForm = (props: Props): ReactElement => {
       mainStories,
       sideStories,
       related,
+      releaseSeason,
       ...rest
     } = values;
     alternativeTitles = {
@@ -534,8 +537,9 @@ export const SeriesForm = (props: Props): ReactElement => {
           sideStories,
           relatedSeries,
           relatedAlternatives,
-          episodeCount: episodeCount === '' ? undefined : episodeCount,
-          seasonNumber: seasonNumber === '' ? undefined : seasonNumber,
+          episodeCount: episodeCount === '' ? null : episodeCount,
+          seasonNumber: seasonNumber === '' ? null : seasonNumber,
+          releaseSeason: releaseSeason === '' ? null : releaseSeason,
           ...rest,
         },
       },
@@ -635,19 +639,16 @@ export const SeriesForm = (props: Props): ReactElement => {
             }
             validationSchema={Yup.object({
               title: Yup.string().required(`Please enter a title`),
-              releaseSeason: Yup.string().required(
-                `Please select the release season`
-              ),
-              releaseYear: Yup.date().required(
-                `Please select the release year`
-              ),
+              releaseSeason: Yup.string(),
+              releaseYear: Yup.date(),
               seasonNumber: Yup.number().min(
                 0,
                 `Season number should be positive`
               ),
-              episodeCount: Yup.number()
-                .required(`Please input the number of episodes`)
-                .min(0, `Number of episodes should be positive`),
+              episodeCount: Yup.number().min(
+                0,
+                `Number of episodes should be positive`
+              ),
               status: Yup.string().required(`Please select a status`),
               type: Yup.string().required(`Please select a type`),
               alternativeTitles: Yup.array().of(
@@ -752,6 +753,9 @@ export const SeriesForm = (props: Props): ReactElement => {
                         onBlur={handleBlur}
                         className={classes.formItem}
                       >
+                        <MenuItem key={''} value={''}>
+                          {<a>&nbsp;</a>}
+                        </MenuItem>
                         {Object.values(Season)
                           .sort(seasonComparator)
                           .map((value: Season) => {

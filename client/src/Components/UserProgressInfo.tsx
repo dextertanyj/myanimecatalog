@@ -166,9 +166,10 @@ export const UserProgressInfo = (props: Props) => {
                     <Typography>
                       {`${isNumberOrElse(
                         progress?.mySeriesProgress?.completed,
-                        '-'
+                        '⁠–'
                       )}`}{' '}
-                      / {progress?.mySeriesProgress?.series?.episodeCount}
+                      /{' '}
+                      {progress?.mySeriesProgress?.series?.episodeCount || '⁠–'}
                     </Typography>
                   </Grid>
                   <Grid item xs={4} md={2} lg={2}>
@@ -199,7 +200,7 @@ export const UserProgressInfo = (props: Props) => {
                     <Typography>
                       {`${isNumberOrElse(
                         progress?.mySeriesProgress?.overall,
-                        '-'
+                        '⁠–'
                       )}${innerWidth >= 960 ? ' / 100' : ''}`}
                     </Typography>
                   </Grid>
@@ -220,7 +221,7 @@ export const UserProgressInfo = (props: Props) => {
                     <Typography>
                       {`${isNumberOrElse(
                         progress?.mySeriesProgress?.story,
-                        '-'
+                        '⁠–'
                       )}${innerWidth >= 960 ? ' / 100' : ''}`}
                     </Typography>
                   </Grid>
@@ -241,7 +242,7 @@ export const UserProgressInfo = (props: Props) => {
                     <Typography>
                       {`${isNumberOrElse(
                         progress?.mySeriesProgress?.execution,
-                        '-'
+                        '⁠–'
                       )}${innerWidth >= 960 ? ' / 100' : ''}`}
                     </Typography>
                   </Grid>
@@ -262,7 +263,7 @@ export const UserProgressInfo = (props: Props) => {
                     <Typography>
                       {`${isNumberOrElse(
                         progress?.mySeriesProgress?.appeal,
-                        '-'
+                        '⁠–'
                       )}${innerWidth >= 960 ? ' / 100' : ''}`}
                     </Typography>
                   </Grid>
@@ -283,7 +284,7 @@ export const UserProgressInfo = (props: Props) => {
                     <Typography>
                       {`${isNumberOrElse(
                         progress?.mySeriesProgress?.character,
-                        '-'
+                        '⁠–'
                       )}${innerWidth >= 960 ? ' / 100' : ''}`}
                     </Typography>
                   </Grid>
@@ -304,7 +305,7 @@ export const UserProgressInfo = (props: Props) => {
                     <Typography>
                       {`${isNumberOrElse(
                         progress?.mySeriesProgress?.art,
-                        '-'
+                        '⁠–'
                       )}${innerWidth >= 960 ? ' / 100' : ''}`}
                     </Typography>
                   </Grid>
@@ -325,7 +326,7 @@ export const UserProgressInfo = (props: Props) => {
                     <Typography>
                       {`${isNumberOrElse(
                         progress?.mySeriesProgress?.sound,
-                        '-'
+                        '⁠–'
                       )}${innerWidth >= 960 ? ' / 100' : ''}`}
                     </Typography>
                   </Grid>
