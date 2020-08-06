@@ -1,8 +1,9 @@
 import { ApolloError } from '@apollo/client';
 import {
-  Button,
+  Container,
   createStyles,
   Grid,
+  IconButton,
   Link,
   makeStyles,
   Paper,
@@ -58,6 +59,14 @@ const useStyles = makeStyles((theme: Theme) =>
           justifyContent: 'center',
         },
       },
+    },
+    iconButtonContainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      height: '100%',
+      padding: 0,
+      minHeight: '36px',
     },
   })
 );
@@ -130,34 +139,34 @@ export const SeriesInfo = (props: Props) => {
           <Grid container spacing={3} className={classes.tableHeader}>
             <Grid item xs={12}>
               <Grid container spacing={3}>
-                <Grid item xs={12} sm className={classes.tableTitle}>
+                <Grid item xs className={classes.tableTitle}>
                   <Typography variant="h5"> Series Information</Typography>
                 </Grid>
                 {AuthData?.loggedIn?.role &&
                   writeAccess.includes(AuthData.loggedIn.role) && (
-                    <Grid item xs={12} sm={'auto'}>
-                      <Grid container spacing={3}>
-                        <Grid item xs={6}>
-                          <Button
-                            fullWidth
-                            startIcon={<EditOutlinedIcon />}
-                            color="primary"
-                            variant="contained"
-                            onClick={() => setShowForm(true)}
-                          >
-                            Edit
-                          </Button>
+                    <Grid item>
+                      <Grid container spacing={2}>
+                        <Grid item>
+                          <Container className={classes.iconButtonContainer}>
+                            <IconButton
+                              size="small"
+                              color="primary"
+                              onClick={() => setShowForm(true)}
+                            >
+                              <EditOutlinedIcon />
+                            </IconButton>
+                          </Container>
                         </Grid>
-                        <Grid item xs={6}>
-                          <Button
-                            fullWidth
-                            startIcon={<DeleteOutlinedIcon />}
-                            color="secondary"
-                            variant="contained"
-                            onClick={() => setShowDeleteDialog(true)}
-                          >
-                            Delete
-                          </Button>
+                        <Grid item>
+                          <Container className={classes.iconButtonContainer}>
+                            <IconButton
+                              size="small"
+                              color="secondary"
+                              onClick={() => setShowDeleteDialog(true)}
+                            >
+                              <DeleteOutlinedIcon />
+                            </IconButton>
+                          </Container>
                         </Grid>
                       </Grid>
                     </Grid>

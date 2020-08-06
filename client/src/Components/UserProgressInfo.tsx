@@ -10,7 +10,7 @@ import {
   withStyles,
 } from '@material-ui/core';
 import { blueGrey } from '@material-ui/core/colors';
-import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
+import UpdateOutlinedIcon from '@material-ui/icons/UpdateOutlined';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { UserProgressForm } from '../Forms/UserProgressForm';
@@ -114,7 +114,7 @@ export const UserProgressInfo = (props: Props) => {
                       fullWidth
                       color="primary"
                       variant="contained"
-                      startIcon={<EditOutlinedIcon />}
+                      startIcon={<UpdateOutlinedIcon />}
                       onClick={() => {
                         setFormActionType(ActionType.CREATE);
                         setShowForm(true);
@@ -129,7 +129,7 @@ export const UserProgressInfo = (props: Props) => {
                       fullWidth
                       color="primary"
                       variant="contained"
-                      startIcon={<EditOutlinedIcon />}
+                      startIcon={<UpdateOutlinedIcon />}
                       onClick={() => {
                         setFormActionType(ActionType.UPDATE);
                         setShowForm(true);

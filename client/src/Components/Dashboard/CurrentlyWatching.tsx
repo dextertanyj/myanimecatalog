@@ -1,6 +1,5 @@
 import { ApolloError } from '@apollo/client';
 import {
-  Button,
   Card,
   CardContent,
   CardHeader,
@@ -8,13 +7,14 @@ import {
   Divider,
   Grid,
   IconButton,
+  Link,
   List,
   ListItem,
   makeStyles,
   Theme,
   Typography,
 } from '@material-ui/core';
-import { blueGrey } from '@material-ui/core/colors';
+import { blueGrey, teal } from '@material-ui/core/colors';
 import AddOutlinedIcon from '@material-ui/icons/AddOutlined';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
@@ -129,59 +129,50 @@ export const CurrentlyWatching = () => {
                   <ListItem key={`currentlyWatching-${item?.id}`}>
                     <Grid container spacing={3} className={classes.gridList}>
                       <Grid item xs zeroMinWidth>
-                        <Typography>{item?.title}</Typography>
+                        <Link
+                          href="#"
+                          onClick={() => history.push(`/series/${item?.id}`)}
+                          style={{ color: teal[400] }}
+                        >
+                          <Typography>{item?.title}</Typography>
+                        </Link>
                       </Grid>
                       {innerWidth >= 960 && (
-                        <>
-                          <Grid item>
-                            <Grid
-                              container
-                              style={{
-                                flexDirection: 'row',
-                                flexWrap: 'nowrap',
-                              }}
-                              spacing={0}
-                            >
-                              <Grid item>
-                                <div style={{ width: 70, textAlign: 'right' }}>
-                                  <Typography>
-                                    {`${item?.progress?.completed ?? '0'} / ${
-                                      item?.episodeCount
-                                    }`}
-                                  </Typography>
-                                </div>
-                              </Grid>
-                              <Grid item>
-                                <IconButton
-                                  size="small"
-                                  onClick={() =>
-                                    item?.id &&
-                                    increaseCount(
-                                      item.id,
-                                      item.progress?.completed,
-                                      item.episodeCount
-                                    )
-                                  }
-                                >
-                                  <AddOutlinedIcon fontSize="small" />
-                                </IconButton>
-                              </Grid>
+                        <Grid item>
+                          <Grid
+                            container
+                            style={{
+                              flexDirection: 'row',
+                              flexWrap: 'nowrap',
+                            }}
+                            spacing={0}
+                          >
+                            <Grid item>
+                              <div style={{ width: 70, textAlign: 'right' }}>
+                                <Typography>
+                                  {`${item?.progress?.completed ?? '0'} / ${
+                                    item?.episodeCount
+                                  }`}
+                                </Typography>
+                              </div>
                             </Grid>
-                          </Grid>
-                          <Grid item>
-                            <Typography>
-                              <Button
-                                variant="contained"
-                                color="primary"
+                            <Grid item>
+                              <IconButton
+                                size="small"
                                 onClick={() =>
-                                  history.push(`/series/${item?.id}`)
+                                  item?.id &&
+                                  increaseCount(
+                                    item.id,
+                                    item.progress?.completed,
+                                    item.episodeCount
+                                  )
                                 }
                               >
-                                View
-                              </Button>
-                            </Typography>
+                                <AddOutlinedIcon fontSize="small" />
+                              </IconButton>
+                            </Grid>
                           </Grid>
-                        </>
+                        </Grid>
                       )}
                     </Grid>
                   </ListItem>

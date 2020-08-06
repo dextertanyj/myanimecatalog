@@ -1,15 +1,14 @@
 import {
-  Button,
   createStyles,
   Grid,
+  Link,
   makeStyles,
   Paper,
   TextField,
   Theme,
-  Typography
+  Typography,
 } from '@material-ui/core';
-import { blueGrey } from '@material-ui/core/colors';
-import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
+import { blueGrey, teal } from '@material-ui/core/colors';
 import { ColumnApi, GridApi } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
@@ -29,15 +28,15 @@ type Result = {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     pageGrid: {
-      height: "100%"
+      height: '100%',
     },
     paper: {
       padding: theme.spacing(3),
       textAlign: 'center',
-      height: 'calc(100% - 36px)'
+      height: 'calc(100% - 36px)',
     },
     mainGrid: {
-      height: 'calc(100% + 24px)'
+      height: 'calc(100% + 24px)',
     },
     tableTitle: {
       color: blueGrey[700],
@@ -49,21 +48,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const columnDefs = [
-  {
-    headerName: 'Title',
-    field: 'title',
-    flex: 1,
-    sortable: true,
-  },
-  {
-    headerName: 'Type',
-    field: 'type',
-    width: 180,
-    sortable: true,
-  },
-];
-
 const gridOptions = {
   enableCellTextSelection: true,
 };
@@ -71,15 +55,17 @@ const gridOptions = {
 const SearchPage = () => {
   const classes = useStyles();
   const history = useHistory();
-  const [fullHeight, setFullHeight] = useState<number>(window.innerWidth > 600 ? window.innerHeight - 100 : window.innerHeight - 92)
+  const [fullHeight, setFullHeight] = useState<number>(
+    window.innerWidth > 600 ? window.innerHeight - 100 : window.innerHeight - 92
+  );
   const [contains, setContains] = useState<string>('');
   const [results, setResults] = useState<Result[]>([]);
   const [selectedRows, setSelectedRows] = useState<Result[]>([]);
   const [gridApi, setGridApi] = useState<
     | {
-      api: GridApi;
-      columnApi: ColumnApi;
-    }
+        api: GridApi;
+        columnApi: ColumnApi;
+      }
     | undefined
   >(undefined);
 
@@ -122,11 +108,15 @@ const SearchPage = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      setFullHeight(window.innerWidth > 600 ? window.innerHeight - 112 : window.innerHeight - 104);
+      setFullHeight(
+        window.innerWidth > 600
+          ? window.innerHeight - 112
+          : window.innerHeight - 104
+      );
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [])
+  }, []);
 
   useEffect(() => {
     window.addEventListener('resize', hideColumnsMobile);
@@ -140,6 +130,42 @@ const SearchPage = () => {
       setResults([]);
     }
   }, [contains]);
+
+  const linkRenderer = (params: {
+    data: { title: string; id: string; type: 'Series' | 'Episode' };
+  }) => {
+    return (
+      <Link
+        href="#"
+        onClick={() =>
+          history.push(
+            `/${params.data.type === 'Series' ? 'series' : 'episode'}/${
+              params.data.id
+            }`
+          )
+        }
+        style={{ color: teal[600] }}
+      >
+        {params.data.title}
+      </Link>
+    );
+  };
+
+  const columnDefs = [
+    {
+      headerName: 'Title',
+      field: 'title',
+      flex: 1,
+      sortable: true,
+      cellRendererFramework: linkRenderer,
+    },
+    {
+      headerName: 'Type',
+      field: 'type',
+      width: 180,
+      sortable: true,
+    },
+  ];
 
   const onGridReady = useCallback((params: any) => {
     const { api, columnApi } = params;
@@ -173,23 +199,15 @@ const SearchPage = () => {
       <Grid container spacing={3} className={classes.pageGrid}>
         <Grid item xs={12} className={classes.pageGrid}>
           <Paper elevation={3} className={classes.paper}>
-            <Grid container direction={'column'} spacing={3} className={classes.mainGrid}>
+            <Grid
+              container
+              direction={'column'}
+              spacing={3}
+              className={classes.mainGrid}
+            >
               <Grid container item spacing={3}>
-                <Grid item xs={12} sm className={classes.tableTitle}>
+                <Grid item xs={12} className={classes.tableTitle}>
                   <Typography variant="h5">Quick Search</Typography>
-                </Grid>
-                <Grid item xs={12} sm={'auto'}>
-                  <Button
-                    fullWidth
-                    startIcon={<PageviewOutlinedIcon />}
-                    disabled={selectedRows.length !== 1}
-                    variant="contained"
-                    onClick={() => {
-                      viewSelected();
-                    }}
-                  >
-                    View
-              </Button>
                 </Grid>
                 <Grid item xs={12} container spacing={3}>
                   <Grid
@@ -197,7 +215,7 @@ const SearchPage = () => {
                     xs={12}
                     sm={8}
                     md={4}
-                    style={{ textAlign: 'left' }}
+                    style={{ textAlign: 'left', paddingBottom: 0 }}
                   >
                     <TextField
                       variant="outlined"

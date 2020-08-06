@@ -1,11 +1,12 @@
 import { ApolloError } from '@apollo/client';
 import {
-  Button,
+  Container,
   createStyles,
   Grid,
+  IconButton,
   makeStyles,
   Theme,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import { blueGrey } from '@material-ui/core/colors';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
@@ -49,6 +50,14 @@ const useStyles = makeStyles((theme: Theme) =>
           justifyContent: 'center',
         },
       },
+    },
+    iconButtonContainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      height: '100%',
+      padding: 0,
+      minHeight: '36px',
     },
   })
 );
@@ -112,30 +121,30 @@ export const FileInfo = (props: Props) => {
         {props.editable && (
           <Grid item xs={12}>
             <Grid container spacing={2}>
-              {innerWidth >= 600 && <Grid item sm />}
-              <Grid item xs={6} sm={'auto'}>
-                <Button
-                  fullWidth
-                  color="primary"
-                  startIcon={<EditOutlinedIcon />}
-                  variant="contained"
-                  disabled={!props.file.id}
-                  onClick={() => setShowForm(true)}
-                >
-                  Edit
-                </Button>
+              <Grid item xs />
+              <Grid item>
+                <Container className={classes.iconButtonContainer}>
+                  <IconButton
+                    size="small"
+                    color="primary"
+                    disabled={!props.file.id}
+                    onClick={() => setShowForm(true)}
+                  >
+                    <EditOutlinedIcon />
+                  </IconButton>
+                </Container>
               </Grid>
-              <Grid item xs={6} sm={'auto'}>
-                <Button
-                  fullWidth
-                  color="secondary"
-                  startIcon={<DeleteOutlinedIcon />}
-                  variant="contained"
-                  disabled={!props.file.id}
-                  onClick={() => setShowDeleteDialog(true)}
-                >
-                  Delete
-                </Button>
+              <Grid item>
+                <Container className={classes.iconButtonContainer}>
+                  <IconButton
+                    size="small"
+                    color="secondary"
+                    disabled={!props.file.id}
+                    onClick={() => setShowDeleteDialog(true)}
+                  >
+                    <DeleteOutlinedIcon />
+                  </IconButton>
+                </Container>
               </Grid>
             </Grid>
           </Grid>
@@ -207,10 +216,10 @@ export const FileInfo = (props: Props) => {
                 {file.duration && renderDuration(file.duration)}
               </Typography>
             </Grid>
-            <Grid item xs={4} sm={2}  md={2}>
+            <Grid item xs={4} sm={2} md={2}>
               <Typography>Remarks</Typography>
             </Grid>
-            <Grid item xs={8} sm={10}  md={6}>
+            <Grid item xs={8} sm={10} md={6}>
               <Grid container spacing={3} wrap={'nowrap'}>
                 <Grid item xs={12}>
                   <Typography>{file.remarks}</Typography>
@@ -220,7 +229,7 @@ export const FileInfo = (props: Props) => {
             <Grid item xs={4} sm={2} md={2}>
               <Typography>Last Updated</Typography>
             </Grid>
-            <Grid item xs={8} sm={10}  md={2}>
+            <Grid item xs={8} sm={10} md={2}>
               <Typography>
                 {moment(file.updatedAt || file.createdAt).format(
                   'HH:mm   DD/MM/YYYY'

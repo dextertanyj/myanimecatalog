@@ -2,14 +2,14 @@ import {
   Button,
   createStyles,
   Grid,
+  Link,
   makeStyles,
   Paper,
   Theme,
   Typography,
 } from '@material-ui/core';
-import { blueGrey } from '@material-ui/core/colors';
+import { blueGrey, teal } from '@material-ui/core/colors';
 import AddOutlinedIcon from '@material-ui/icons/AddOutlined';
-import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
 import { ColumnApi, GridApi } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
@@ -65,77 +65,6 @@ const seasonComparator = (date1: string, date2: string): number => {
   }
 };
 
-const columnDefs = [
-  {
-    headerName: 'Title',
-    field: 'title',
-    flex: 1,
-    filter: true,
-    sortable: true,
-    lockVisible: true,
-    cellClassRules: {
-      'completed': 'data.currentStatus === "COMPLETED"',
-      'watching': 'data.currentStatus === "WATCHING"',
-      'onhold': 'data.currentStatus === "ONHOLD"',
-      'plan-to-watch': 'data.currentStatus === "PENDING"',
-      'dropped': 'data.currentStatus === "DROPPED"',
-    },
-  },
-  {
-    headerName: 'Season',
-    field: 'seasonNumber',
-    width: 120,
-    sortable: true,
-    lockVisible: true,
-  },
-  {
-    headerName: 'Episodes',
-    field: 'episodeCount',
-    width: 120,
-    sortable: true,
-    lockVisible: true,
-  },
-  {
-    headerName: 'Release Season',
-    field: 'releaseSeason',
-    valueGetter: (params: { data: Series }) => {
-      return params.data.releaseSeason && params.data.releaseYear
-        ? `${renderSeason(params.data.releaseSeason)} ${moment(
-            params.data.releaseYear
-          ).format('YYYY')}`
-        : '';
-    },
-    width: 180,
-    filter: true,
-    sortable: true,
-    comparator: seasonComparator,
-    sortingOrder: ['asc', 'desc'],
-    lockVisible: true,
-  },
-  {
-    headerName: 'Status',
-    field: 'status',
-    valueGetter: (params: any) => {
-      return renderStatus(params.data.status);
-    },
-    width: 180,
-    filter: true,
-    sortable: true,
-    lockVisible: true,
-  },
-  {
-    headerName: 'Type',
-    field: 'type',
-    valueGetter: (params: any) => {
-      return renderType(params.data.type);
-    },
-    width: 180,
-    filter: true,
-    sortable: true,
-    lockVisible: true,
-  },
-];
-
 export const SeriesTable = () => {
   const classes = useStyles();
   const history = useHistory();
@@ -147,8 +76,6 @@ export const SeriesTable = () => {
     | undefined
   >(undefined);
   const [showForm, setShowForm] = useState<boolean>(false);
-  const [formAction, setFormAction] = useState<ActionType>(ActionType.CREATE);
-  const [selectedRows, setSelectedRows] = useState<Series[]>([]);
 
   const { data: rowData, refetch } = useAllSeriesQuery({
     fetchPolicy: 'cache-and-network',
@@ -161,6 +88,90 @@ export const SeriesTable = () => {
   const gridOptions = {
     enableCellTextSelection: true,
   };
+
+  const linkRenderer = (params: { data: Series }) => {
+    return (
+      <Link
+        href="#"
+        onClick={() => history.push(`/series/${params.data.id}`)}
+        style={{ color: teal[600] }}
+      >
+        {params.data.title}
+      </Link>
+    );
+  };
+
+  const columnDefs = [
+    {
+      headerName: 'Title',
+      field: 'title',
+      flex: 1,
+      filter: true,
+      sortable: true,
+      lockVisible: true,
+      cellRendererFramework: linkRenderer,
+      cellClassRules: {
+        'completed': 'data.currentStatus === "COMPLETED"',
+        'watching': 'data.currentStatus === "WATCHING"',
+        'onhold': 'data.currentStatus === "ONHOLD"',
+        'plan-to-watch': 'data.currentStatus === "PENDING"',
+        'dropped': 'data.currentStatus === "DROPPED"',
+      },
+    },
+    {
+      headerName: 'Season',
+      field: 'seasonNumber',
+      width: 120,
+      sortable: true,
+      lockVisible: true,
+    },
+    {
+      headerName: 'Episodes',
+      field: 'episodeCount',
+      width: 120,
+      sortable: true,
+      lockVisible: true,
+    },
+    {
+      headerName: 'Release Season',
+      field: 'releaseSeason',
+      valueGetter: (params: { data: Series }) => {
+        return params.data.releaseSeason && params.data.releaseYear
+          ? `${renderSeason(params.data.releaseSeason)} ${moment(
+              params.data.releaseYear
+            ).format('YYYY')}`
+          : '';
+      },
+      width: 180,
+      filter: true,
+      sortable: true,
+      comparator: seasonComparator,
+      sortingOrder: ['asc', 'desc'],
+      lockVisible: true,
+    },
+    {
+      headerName: 'Status',
+      field: 'status',
+      valueGetter: (params: any) => {
+        return renderStatus(params.data.status);
+      },
+      width: 180,
+      filter: true,
+      sortable: true,
+      lockVisible: true,
+    },
+    {
+      headerName: 'Type',
+      field: 'type',
+      valueGetter: (params: any) => {
+        return renderType(params.data.type);
+      },
+      width: 180,
+      filter: true,
+      sortable: true,
+      lockVisible: true,
+    },
+  ];
 
   const onGridReady = useCallback(
     (params: { api: GridApi; columnApi: ColumnApi }) => {
@@ -222,19 +233,6 @@ export const SeriesTable = () => {
     },
     []
   );
-
-  const onSelectionChanged = () => {
-    if (gridApi !== undefined) {
-      setSelectedRows(gridApi?.api?.getSelectedRows());
-    }
-  };
-
-  const viewSelected = () => {
-    if (selectedRows.length === 1 && selectedRows[0].id) {
-      const seriesId = selectedRows[0].id;
-      history.push(`/series/${seriesId}`);
-    }
-  };
 
   const hideColumnsMobile = useCallback(() => {
     if (gridApi?.columnApi) {
@@ -300,51 +298,21 @@ export const SeriesTable = () => {
               <Typography variant="h5">Catalog</Typography>
             </Grid>
             {AuthData?.loggedIn?.role &&
-            writeAccess.includes(AuthData.loggedIn.role) ? (
-              <>
-                <Grid item xs={6} sm={'auto'}>
+              writeAccess.includes(AuthData.loggedIn.role) && (
+                <Grid item xs={12} sm={'auto'}>
                   <Button
                     fullWidth
                     startIcon={<AddOutlinedIcon />}
                     variant="contained"
                     color="primary"
                     onClick={() => {
-                      setFormAction(ActionType.CREATE);
                       setShowForm(true);
                     }}
                   >
                     Add
                   </Button>
                 </Grid>
-                <Grid item xs={6} sm={'auto'}>
-                  <Button
-                    fullWidth
-                    startIcon={<PageviewOutlinedIcon />}
-                    disabled={selectedRows.length !== 1}
-                    variant="contained"
-                    onClick={() => {
-                      viewSelected();
-                    }}
-                  >
-                    View
-                  </Button>
-                </Grid>
-              </>
-            ) : (
-              <Grid item xs={12} sm={'auto'}>
-                <Button
-                  fullWidth
-                  startIcon={<PageviewOutlinedIcon />}
-                  disabled={selectedRows.length !== 1}
-                  variant="contained"
-                  onClick={() => {
-                    viewSelected();
-                  }}
-                >
-                  View
-                </Button>
-              </Grid>
-            )}
+              )}
           </Grid>
           <Grid item xs>
             <div className="ag-theme-material" style={{ height: '100%' }}>
@@ -352,9 +320,6 @@ export const SeriesTable = () => {
                 onGridReady={onGridReady}
                 animateRows
                 enableCellTextSelection
-                rowDeselection
-                rowSelection="single"
-                onSelectionChanged={onSelectionChanged}
                 gridOptions={gridOptions}
                 columnDefs={columnDefs}
                 rowData={(rowData?.allSeries?.slice() as any[]) || []}
@@ -366,10 +331,9 @@ export const SeriesTable = () => {
       {showForm && (
         <SeriesForm
           open={showForm}
-          action={formAction}
+          action={ActionType.CREATE}
           onSubmit={() => {
             refetch();
-            setFormAction(ActionType.CREATE);
           }}
           onClose={() => {
             setShowForm(false);

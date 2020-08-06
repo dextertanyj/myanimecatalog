@@ -5,7 +5,7 @@ import {
   makeStyles,
   Paper,
   Theme,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import { blueGrey } from '@material-ui/core/colors';
 import AddOutlinedIcon from '@material-ui/icons/AddOutlined';
@@ -26,10 +26,10 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: theme.spacing(3),
       textAlign: 'center',
-      height: 'calc(100% - 36px)'
+      height: 'calc(100% - 36px)',
     },
     mainGrid: {
-      height: 'calc(100% + 24px)'
+      height: 'calc(100% + 24px)',
     },
     tableTitle: {
       color: blueGrey[700],
@@ -81,9 +81,9 @@ export const UsersTable = () => {
   const classes = useStyles();
   const [gridApi, setGridApi] = useState<
     | {
-      api: GridApi;
-      columnApi: ColumnApi;
-    }
+        api: GridApi;
+        columnApi: ColumnApi;
+      }
     | undefined
   >(undefined);
   const [showForm, setShowForm] = useState<boolean>(false);
@@ -163,7 +163,12 @@ export const UsersTable = () => {
   return (
     <div style={{ height: '100%' }}>
       <Paper elevation={3} className={classes.paper}>
-        <Grid container direction={'column'} spacing={3} className={classes.mainGrid}>
+        <Grid
+          container
+          direction={'column'}
+          spacing={3}
+          className={classes.mainGrid}
+        >
           <Grid container item spacing={3}>
             <Grid item xs={12} sm className={classes.tableTitle}>
               <Typography variant="h5">Users</Typography>
@@ -180,25 +185,26 @@ export const UsersTable = () => {
                 }}
               >
                 Add
-                </Button>
+              </Button>
             </Grid>
             <Grid item xs={6} sm={'auto'}>
               <Button
                 fullWidth
                 startIcon={<EditOutlinedIcon />}
                 disabled={selectedRows.length !== 1}
-                variant="contained"
+                variant="outlined"
+                color="primary"
                 onClick={() => {
                   setFormAction(ActionType.UPDATE);
                   setShowForm(true);
                 }}
               >
                 Edit
-                </Button>
+              </Button>
             </Grid>
           </Grid>
           <Grid item xs>
-            <div className="ag-theme-material" style={{ height: "100%" }}>
+            <div className="ag-theme-material" style={{ height: '100%' }}>
               <AgGridReact
                 onGridReady={onGridReady}
                 animateRows
