@@ -1,3 +1,4 @@
+import moment from 'moment';
 import {
   Role,
   Season,
@@ -105,4 +106,19 @@ export const renderDuration = (duration: number): string => {
   const minutes = Math.floor((duration - hours * 3600) / 60);
   const seconds = duration - hours * 3600 - minutes * 60;
   return `${hours}:${minutes}.${seconds}`;
+};
+
+export const renderReleaseInfo = (
+  season: Season | undefined | null,
+  year: string | undefined | null
+): string => {
+  if (season && year) {
+    return `${renderSeason(season)} ${moment(year).format('YYYY')}`;
+  } else if (season) {
+    return renderSeason(season);
+  } else if (year) {
+    return moment(year).format('YYYY');
+  } else {
+    return '⁠–';
+  }
 };

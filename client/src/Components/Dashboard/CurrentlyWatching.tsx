@@ -151,7 +151,7 @@ export const CurrentlyWatching = () => {
                               <div style={{ width: 70, textAlign: 'right' }}>
                                 <Typography>
                                   {`${item?.progress?.completed ?? '0'} / ${
-                                    item?.episodeCount
+                                    item?.episodeCount || '⁠–'
                                   }`}
                                 </Typography>
                               </div>

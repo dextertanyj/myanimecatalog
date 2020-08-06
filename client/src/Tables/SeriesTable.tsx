@@ -14,7 +14,6 @@ import { ColumnApi, GridApi } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { AgGridReact } from 'ag-grid-react';
-import moment from 'moment';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { SeriesForm } from '../Forms/SeriesForm';
@@ -22,7 +21,11 @@ import { Series } from '../gql/documents';
 import { useAllSeriesQuery, useLoggedInQuery } from '../gql/queries';
 import { writeAccess } from '../utils/auth';
 import { ActionType } from '../utils/constants';
-import { renderSeason, renderStatus, renderType } from '../utils/enumRender';
+import {
+  renderReleaseInfo,
+  renderStatus,
+  renderType,
+} from '../utils/enumRender';
 import './progress.css';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -121,6 +124,9 @@ export const SeriesTable = () => {
     {
       headerName: 'Season',
       field: 'seasonNumber',
+      cellRenderer: (params: { data: Series }) => {
+        return `${params.data.seasonNumber || '⁠–'}`;
+      },
       width: 120,
       sortable: true,
       lockVisible: true,
@@ -128,6 +134,9 @@ export const SeriesTable = () => {
     {
       headerName: 'Episodes',
       field: 'episodeCount',
+      cellRenderer: (params: { data: Series }) => {
+        return `${params.data.episodeCount || '⁠–'}`;
+      },
       width: 120,
       sortable: true,
       lockVisible: true,
@@ -136,11 +145,10 @@ export const SeriesTable = () => {
       headerName: 'Release Season',
       field: 'releaseSeason',
       valueGetter: (params: { data: Series }) => {
-        return params.data.releaseSeason && params.data.releaseYear
-          ? `${renderSeason(params.data.releaseSeason)} ${moment(
-              params.data.releaseYear
-            ).format('YYYY')}`
-          : '';
+        return renderReleaseInfo(
+          params.data.releaseSeason,
+          params.data.releaseYear
+        );
       },
       width: 180,
       filter: true,
