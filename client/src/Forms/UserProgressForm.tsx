@@ -220,7 +220,6 @@ export const UserProgressForm = (props: Props) => {
   };
 
   const onSubmitUpdate = async (values: FormikValues) => {
-    console.log(values);
     let { ...data } = values;
     if (props.progressId) {
       await updateUserProgressMutation({
@@ -346,7 +345,7 @@ export const UserProgressForm = (props: Props) => {
                         name="status"
                         label="Watch Status"
                         id="status"
-                        value={values.status || null}
+                        value={values.status || ''}
                         InputLabelProps={{ shrink: !!values.status }}
                         error={touched.status && !!errors.status}
                         helperText={touched.status && errors.status}

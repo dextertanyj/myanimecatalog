@@ -705,7 +705,10 @@ export const SeriesForm = (props: Props): ReactElement => {
                         label="Season Number"
                         id="seasonNumber"
                         type="number"
-                        value={values.seasonNumber || null}
+                        value={
+                          values.seasonNumber ||
+                          (values.seasonNumber === 0 ? 0 : '')
+                        }
                         error={touched.seasonNumber && !!errors.seasonNumber}
                         helperText={touched.seasonNumber && errors.seasonNumber}
                         onChange={handleChange}
@@ -722,7 +725,7 @@ export const SeriesForm = (props: Props): ReactElement => {
                         label="Number of Episodes"
                         id="episodeCount"
                         type="number"
-                        value={values.episodeCount || null}
+                        value={values.episodeCount || ''}
                         error={touched.episodeCount && !!errors.episodeCount}
                         helperText={touched.episodeCount && errors.episodeCount}
                         onChange={handleChange}
@@ -739,7 +742,7 @@ export const SeriesForm = (props: Props): ReactElement => {
                         name="releaseSeason"
                         label="Release Season"
                         id="releaseSeason"
-                        value={values.releaseSeason || null}
+                        value={values.releaseSeason || ''}
                         InputLabelProps={{ shrink: !!values.releaseSeason }}
                         error={touched.releaseSeason && !!errors.releaseSeason}
                         helperText={
@@ -787,7 +790,7 @@ export const SeriesForm = (props: Props): ReactElement => {
                         name="type"
                         label="Type"
                         id="type"
-                        value={values.type || null}
+                        value={values.type || ''}
                         InputLabelProps={{ shrink: !!values.type }}
                         error={touched.type && !!errors.type}
                         helperText={touched.type && errors.type}
@@ -813,7 +816,7 @@ export const SeriesForm = (props: Props): ReactElement => {
                         name="status"
                         label="Status"
                         id="status"
-                        value={values.status || null}
+                        value={values.status || ''}
                         InputLabelProps={{ shrink: !!values.status }}
                         error={touched.status && !!errors.status}
                         helperText={touched.status && errors.status}
@@ -847,78 +850,78 @@ export const SeriesForm = (props: Props): ReactElement => {
                                       index: number
                                     ) => {
                                       return (
-                                        <Grid container spacing={3}>
-                                          <Grid
-                                            item
-                                            xs={10}
-                                            md={11}
-                                            key={`${index}-title`}
-                                          >
-                                            <TextField
-                                              variant="outlined"
-                                              margin="normal"
-                                              fullWidth
-                                              key={`alternativeTitles.${index}.title`}
-                                              name={`alternativeTitles.${index}.title`}
-                                              label="Alternative Title"
-                                              error={
-                                                !!touched?.alternativeTitles &&
-                                                touched?.alternativeTitles[
-                                                  index
-                                                ]?.title &&
-                                                !!Array.isArray(
-                                                  errors?.alternativeTitles
-                                                ) &&
-                                                !!(errors.alternativeTitles[
-                                                  index
-                                                ] as FormikErrors<
-                                                  AlternativeTitle
-                                                >)?.title
-                                              }
-                                              helperText={
-                                                !!touched?.alternativeTitles &&
-                                                touched?.alternativeTitles[
-                                                  index
-                                                ]?.title &&
-                                                !!Array.isArray(
-                                                  errors?.alternativeTitles
-                                                ) &&
-                                                (errors.alternativeTitles[
-                                                  index
-                                                ] as FormikErrors<
-                                                  AlternativeTitle
-                                                >)?.title
-                                              }
-                                              id={`alternativeTitles.${index}.title`}
-                                              value={altTitle.title || ''}
-                                              onChange={handleChange}
-                                              onBlur={handleBlur}
-                                              className={classes.formItem}
-                                            />
-                                          </Grid>
-                                          <Grid
-                                            item
-                                            xs={2}
-                                            md={1}
-                                            alignContent="space-around"
-                                            alignItems="center"
-                                            className={
-                                              classes.formArrayRemoveButtonContainer
-                                            }
-                                          >
-                                            <IconButton
-                                              size="small"
-                                              onClick={() =>
-                                                arrayHelpers.remove(index)
-                                              }
+                                        <React.Fragment key={index}>
+                                          <Grid container spacing={3}>
+                                            <Grid
+                                              item
+                                              xs={10}
+                                              md={11}
+                                              key={`${index}-title`}
+                                            >
+                                              <TextField
+                                                variant="outlined"
+                                                margin="normal"
+                                                fullWidth
+                                                key={`alternativeTitles.${index}.title`}
+                                                name={`alternativeTitles.${index}.title`}
+                                                label="Alternative Title"
+                                                error={
+                                                  !!touched?.alternativeTitles &&
+                                                  touched?.alternativeTitles[
+                                                    index
+                                                  ]?.title &&
+                                                  !!Array.isArray(
+                                                    errors?.alternativeTitles
+                                                  ) &&
+                                                  !!(errors.alternativeTitles[
+                                                    index
+                                                  ] as FormikErrors<
+                                                    AlternativeTitle
+                                                  >)?.title
+                                                }
+                                                helperText={
+                                                  !!touched?.alternativeTitles &&
+                                                  touched?.alternativeTitles[
+                                                    index
+                                                  ]?.title &&
+                                                  !!Array.isArray(
+                                                    errors?.alternativeTitles
+                                                  ) &&
+                                                  (errors.alternativeTitles[
+                                                    index
+                                                  ] as FormikErrors<
+                                                    AlternativeTitle
+                                                  >)?.title
+                                                }
+                                                id={`alternativeTitles.${index}.title`}
+                                                value={altTitle.title || ''}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                className={classes.formItem}
+                                              />
+                                            </Grid>
+                                            <Grid
+                                              item
+                                              xs={2}
+                                              md={1}
                                               className={
-                                                classes.formArrayRemoveButton
+                                                classes.formArrayRemoveButtonContainer
                                               }
                                             >
-                                              <RemoveIcon />
-                                            </IconButton>
+                                              <IconButton
+                                                size="small"
+                                                onClick={() =>
+                                                  arrayHelpers.remove(index)
+                                                }
+                                                className={
+                                                  classes.formArrayRemoveButton
+                                                }
+                                              >
+                                                <RemoveIcon />
+                                              </IconButton>
+                                            </Grid>
                                           </Grid>
-                                        </Grid>
+                                        </React.Fragment>
                                       );
                                     }
                                   )}
@@ -932,7 +935,7 @@ export const SeriesForm = (props: Props): ReactElement => {
                                 onClick={() =>
                                   arrayHelpers.push({
                                     id: undefined,
-                                    title: undefined,
+                                    title: '',
                                   })
                                 }
                               >
@@ -960,104 +963,106 @@ export const SeriesForm = (props: Props): ReactElement => {
                                   index: number
                                 ) => {
                                   return (
-                                    <Grid item xs={12}>
-                                      <Grid container spacing={3}>
-                                        <Grid
-                                          item
-                                          xs={12}
-                                          md={6}
-                                          key={`${index}-link`}
-                                        >
-                                          <TextField
-                                            variant="outlined"
-                                            margin="normal"
-                                            fullWidth
-                                            key={`references.${index}.link`}
-                                            name={`references.${index}.link`}
-                                            label="Link"
-                                            type="url"
-                                            id={`references.${index}.link`}
-                                            error={
-                                              !!touched?.references &&
-                                              touched?.references[index]
-                                                ?.link &&
-                                              !!Array.isArray(
-                                                errors?.references
-                                              ) &&
-                                              !!(errors.references[
-                                                index
-                                              ] as FormikErrors<Reference>)
-                                                ?.link
-                                            }
-                                            helperText={
-                                              !!touched?.references &&
-                                              touched?.references[index]
-                                                ?.link &&
-                                              !!Array.isArray(
-                                                errors?.references
-                                              ) &&
-                                              (errors.references[
-                                                index
-                                              ] as FormikErrors<Reference>)
-                                                ?.link
-                                            }
-                                            value={reference.link || null}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            className={classes.formItem}
-                                          />
-                                        </Grid>
-                                        <Grid
-                                          item
-                                          xs={10}
-                                          md={5}
-                                          key={`${index}-source`}
-                                        >
-                                          <SourceAutoComplete
-                                            fieldName={`references.${index}.source`}
-                                            value={reference.source || ''}
-                                            touched={
-                                              !!touched?.references &&
-                                              touched.references[index]?.source
-                                            }
-                                            error={
-                                              !!Array.isArray(
-                                                errors?.references
-                                              )
-                                                ? (errors.references[
-                                                    index
-                                                  ] as FormikErrors<Reference>)
-                                                    ?.source
-                                                : undefined
-                                            }
-                                            setFieldValue={setFieldValue}
-                                            setTouched={setTouched}
-                                          />
-                                        </Grid>
-                                        <Grid
-                                          item
-                                          xs={2}
-                                          md={1}
-                                          alignContent="space-around"
-                                          alignItems="center"
-                                          className={
-                                            classes.formArrayRemoveButtonContainer
-                                          }
-                                        >
-                                          <IconButton
-                                            size="small"
-                                            onClick={() =>
-                                              arrayHelpers.remove(index)
-                                            }
+                                    <React.Fragment key={index}>
+                                      <Grid item xs={12}>
+                                        <Grid container spacing={3}>
+                                          <Grid
+                                            item
+                                            xs={12}
+                                            md={6}
+                                            key={`${index}-link`}
+                                          >
+                                            <TextField
+                                              variant="outlined"
+                                              margin="normal"
+                                              fullWidth
+                                              key={`references.${index}.link`}
+                                              name={`references.${index}.link`}
+                                              label="Link"
+                                              type="url"
+                                              id={`references.${index}.link`}
+                                              error={
+                                                !!touched?.references &&
+                                                touched?.references[index]
+                                                  ?.link &&
+                                                !!Array.isArray(
+                                                  errors?.references
+                                                ) &&
+                                                !!(errors.references[
+                                                  index
+                                                ] as FormikErrors<Reference>)
+                                                  ?.link
+                                              }
+                                              helperText={
+                                                !!touched?.references &&
+                                                touched?.references[index]
+                                                  ?.link &&
+                                                !!Array.isArray(
+                                                  errors?.references
+                                                ) &&
+                                                (errors.references[
+                                                  index
+                                                ] as FormikErrors<Reference>)
+                                                  ?.link
+                                              }
+                                              value={reference.link || ''}
+                                              onChange={handleChange}
+                                              onBlur={handleBlur}
+                                              className={classes.formItem}
+                                            />
+                                          </Grid>
+                                          <Grid
+                                            item
+                                            xs={10}
+                                            md={5}
+                                            key={`${index}-source`}
+                                          >
+                                            <SourceAutoComplete
+                                              fieldName={`references.${index}.source`}
+                                              value={reference.source || ''}
+                                              touched={
+                                                !!touched?.references &&
+                                                touched.references[index]
+                                                  ?.source
+                                              }
+                                              error={
+                                                !!Array.isArray(
+                                                  errors?.references
+                                                )
+                                                  ? (errors.references[
+                                                      index
+                                                    ] as FormikErrors<
+                                                      Reference
+                                                    >)?.source
+                                                  : undefined
+                                              }
+                                              setFieldValue={setFieldValue}
+                                              setTouched={setTouched}
+                                            />
+                                          </Grid>
+                                          <Grid
+                                            item
+                                            xs={2}
+                                            md={1}
                                             className={
-                                              classes.formArrayRemoveButton
+                                              classes.formArrayRemoveButtonContainer
                                             }
                                           >
-                                            <RemoveIcon />
-                                          </IconButton>
+                                            <IconButton
+                                              size="small"
+                                              onClick={() =>
+                                                arrayHelpers.remove(index)
+                                              }
+                                              className={
+                                                classes.formArrayRemoveButton
+                                              }
+                                            >
+                                              <RemoveIcon />
+                                            </IconButton>
+                                          </Grid>
                                         </Grid>
                                       </Grid>
-                                    </Grid>
+                                    </React.Fragment>
                                   );
                                 }
                               )}
@@ -1069,7 +1074,8 @@ export const SeriesForm = (props: Props): ReactElement => {
                                 onClick={() =>
                                   arrayHelpers.push({
                                     id: undefined,
-                                    title: undefined,
+                                    link: '',
+                                    source: '',
                                   })
                                 }
                               >
