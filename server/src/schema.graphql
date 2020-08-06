@@ -49,6 +49,14 @@ input UserWhereUniqueInput {
   username: String
 }
 
+input MeUpdateInput {
+  username: String
+  currentPassword: String
+  name: String
+  password: String
+  passwordAttempts: Int
+}
+
 input UserCreateUpdateInput {
   id: String
   username: String
@@ -275,7 +283,7 @@ type Query {
 type Mutation {
   login(data: UserCreateUpdateInput!): AuthPayload!
 
-  updateMe(data: UserCreateUpdateInput!): User!
+  updateMe(data: MeUpdateInput!): User!
   createInitialUser(data: UserCreateUpdateInput!): User!
   createUser(data: UserCreateUpdateInput!): User!
   updateUser(where: UserWhereUniqueInput!, data: UserCreateUpdateInput!): User!

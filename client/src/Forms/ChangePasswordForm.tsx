@@ -16,7 +16,7 @@ import React, { ReactElement } from 'react';
 import sha from 'sha.js';
 import * as Yup from 'yup';
 import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
-import { useUpdateUserMutation } from '../gql/queries';
+import { useUpdateMeMutation } from '../gql/queries';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -55,6 +55,7 @@ type Props = {
 };
 
 type FormValues = {
+  currentPassword: string;
   password: string;
   passwordConfirm: string;
 };
@@ -63,7 +64,7 @@ export const ChangePasswordForm = (props: Props): ReactElement => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [updateUserMutation] = useUpdateUserMutation({
+  const [updateMeMutation] = useUpdateMeMutation({
     onError: (error: ApolloError) => {
       if (error.networkError) {
         NetworkError();
@@ -86,11 +87,14 @@ export const ChangePasswordForm = (props: Props): ReactElement => {
   });
 
   const onSubmit = async (values: FormikValues) => {
+    const currentPassword = sha('sha256')
+      .update(values.currentPassword)
+      .digest('hex');
     const password = sha('sha256').update(values.password).digest('hex');
-    await updateUserMutation({
+    await updateMeMutation({
       variables: {
-        where: { id: props.userId },
         data: {
+          currentPassword,
           password,
           passwordAttempts: 0,
         },
@@ -99,12 +103,16 @@ export const ChangePasswordForm = (props: Props): ReactElement => {
   };
 
   const initialFormValues: FormValues = {
+    currentPassword: '',
     password: '',
     passwordConfirm: '',
   };
 
   const validationSchema = Yup.object({
-    password: Yup.string().required(`Please enter a password`),
+    currentPassword: Yup.string().required(
+      `Please enter your current password`
+    ),
+    password: Yup.string().required(`Please enter a new password`),
     passwordConfirm: Yup.string().when('password', {
       is: (password) => !!password,
       then: Yup.string()
@@ -146,8 +154,28 @@ export const ChangePasswordForm = (props: Props): ReactElement => {
                       variant="outlined"
                       margin="normal"
                       fullWidth
+                      name="currentPassword"
+                      label="Current Password"
+                      type="password"
+                      id="currentPassword"
+                      error={
+                        touched.currentPassword && !!errors.currentPassword
+                      }
+                      helperText={
+                        touched.currentPassword && errors.currentPassword
+                      }
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className={classes.formItem}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      variant="outlined"
+                      margin="normal"
+                      fullWidth
                       name="password"
-                      label="Password"
+                      label="New Password"
                       type="password"
                       id="password"
                       error={touched.password && !!errors.password}

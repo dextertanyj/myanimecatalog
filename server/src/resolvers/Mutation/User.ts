@@ -4,6 +4,7 @@ import {
   UserCreateArgs,
   UserDeleteArgs,
   UserUpdateArgs,
+  UserUpdateInput,
 } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { Context } from '../../utils';
@@ -59,7 +60,7 @@ export const User = {
 
   async updateMe(
     _parent: unknown,
-    { data }: UserUpdateArgs,
+    { data }: { data: UserUpdateInput & { currentPassword: string } },
     ctx: Context,
     _info: unknown
   ): Promise<UserType> {
@@ -67,6 +68,20 @@ export const User = {
       const encryptPassword = data.password
         ? await bcrypt.hash(data?.password, 10)
         : undefined;
+      if (encryptPassword) {
+        const user = await ctx.prisma.user.findOne({
+          where: { id: ctx.userId },
+        });
+        if (user) {
+          const valid = await bcrypt.compare(
+            data.currentPassword,
+            user?.password
+          );
+          if (!valid) {
+            throw new Error(`Current password is incorrect`);
+          }
+        }
+      }
       const user = await ctx.prisma.user.update({
         where: {
           id: ctx.userId,

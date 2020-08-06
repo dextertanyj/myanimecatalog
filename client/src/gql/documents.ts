@@ -64,6 +64,14 @@ export type UserWhereUniqueInput = {
   readonly username?: Maybe<Scalars['String']>;
 };
 
+export type MeUpdateInput = {
+  readonly username?: Maybe<Scalars['String']>;
+  readonly currentPassword?: Maybe<Scalars['String']>;
+  readonly name?: Maybe<Scalars['String']>;
+  readonly password?: Maybe<Scalars['String']>;
+  readonly passwordAttempts?: Maybe<Scalars['Int']>;
+};
+
 export type UserCreateUpdateInput = {
   readonly id?: Maybe<Scalars['String']>;
   readonly username?: Maybe<Scalars['String']>;
@@ -360,7 +368,7 @@ export type MutationLoginArgs = {
 
 
 export type MutationUpdateMeArgs = {
-  data: UserCreateUpdateInput;
+  data: MeUpdateInput;
 };
 
 
@@ -1015,7 +1023,7 @@ export const CreateInitialUser = gql`
 }
     `;
 export const UpdateMe = gql`
-    mutation UpdateMe($data: UserCreateUpdateInput!) {
+    mutation UpdateMe($data: MeUpdateInput!) {
   updateMe(data: $data) {
     id
   }
