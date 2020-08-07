@@ -22,8 +22,8 @@ import {
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import * as Yup from 'yup';
-import { GenericError, NetworkError } from '../components/ErrorSnackbars';
-import { useBatchCreateEpisodeMutation } from '../gql/queries';
+import { useBatchCreateEpisodeMutation } from '../../gql/queries';
+import { GenericError, NetworkError } from '../ErrorSnackbars';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {

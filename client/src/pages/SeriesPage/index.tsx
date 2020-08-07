@@ -2,8 +2,8 @@ import { Grid } from '@material-ui/core';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { SeriesInfo } from '../../components/SeriesInfo';
+import { EpisodesTable } from '../../components/tables/EpisodesTable';
 import { UserProgressInfo } from '../../components/UserProgressInfo';
-import { EpisodesTable } from '../../Tables/EpisodesTable';
 import { withAuth } from '../../utils/withAuth';
 
 const SeriesPage = () => {

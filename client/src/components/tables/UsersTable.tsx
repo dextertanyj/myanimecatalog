@@ -15,11 +15,11 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { AgGridReact } from 'ag-grid-react';
 import React, { useCallback, useEffect, useState } from 'react';
-import { UserForm } from '../Forms/UserForm';
-import { User } from '../gql/documents';
-import { useUsersQuery } from '../gql/queries';
-import { ActionType } from '../utils/constants';
-import { renderRole } from '../utils/enumRender';
+import { User } from '../../gql/documents';
+import { useUsersQuery } from '../../gql/queries';
+import { ActionType } from '../../utils/constants';
+import { renderRole } from '../../utils/enumRender';
+import { UserForm } from '../dialogs/UserForm';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

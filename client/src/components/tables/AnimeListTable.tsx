@@ -15,9 +15,9 @@ import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { AgGridReact } from 'ag-grid-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { UserProgress, WatchStatus } from '../gql/documents';
-import { useMyProgressQuery } from '../gql/queries';
-import { renderType } from '../utils/enumRender';
+import { UserProgress, WatchStatus } from '../../gql/documents';
+import { useMyProgressQuery } from '../../gql/queries';
+import { renderType } from '../../utils/enumRender';
 import './progress.css';
 
 const useStyles = makeStyles((theme: Theme) =>

@@ -22,15 +22,15 @@ import {
 import { useSnackbar } from 'notistack';
 import React, { useEffect } from 'react';
 import * as Yup from 'yup';
-import { GenericError, NetworkError } from '../components/ErrorSnackbars';
-import { FormLoading } from '../components/Skeletons/FormLoading';
 import {
   useCreateEpisodeMutation,
   useEpisodeLazyQuery,
   useUpdateEpisodeMutation,
-} from '../gql/queries';
-import { ActionType } from '../utils/constants';
-import { arrayOrUndefined } from '../utils/form';
+} from '../../gql/queries';
+import { ActionType } from '../../utils/constants';
+import { arrayOrUndefined } from '../../utils/form';
+import { GenericError, NetworkError } from '../ErrorSnackbars';
+import { FormLoading } from '../skeletons/FormLoading';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {

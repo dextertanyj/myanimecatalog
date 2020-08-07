@@ -7,12 +7,12 @@ import {
 } from '@material-ui/core';
 import { blueGrey } from '@material-ui/core/colors';
 import React from 'react';
-import { AdminCard } from '../../components/Dashboard/AdminCard';
-import { CurrentlyWatching } from '../../components/Dashboard/CurrentlyWatching';
-import { OverviewCard } from '../../components/Dashboard/OverviewCard';
-import { RatingCard } from '../../components/Dashboard/RatingCard';
-import { TopTenSeriesCard } from '../../components/Dashboard/TopTenSeriesCard';
-import { DashboardSkeleton } from '../../components/Skeletons/DashboardSkeleton';
+import { AdminCard } from '../../components/dashboard/AdminCard';
+import { CurrentlyWatching } from '../../components/dashboard/CurrentlyWatching';
+import { OverviewCard } from '../../components/dashboard/OverviewCard';
+import { RatingCard } from '../../components/dashboard/RatingCard';
+import { TopTenSeriesCard } from '../../components/dashboard/TopTenSeriesCard';
+import { DashboardSkeleton } from '../../components/skeletons/DashboardSkeleton';
 import { UserProgress } from '../../gql/documents';
 import { useLoggedInQuery, useMyProgressQuery } from '../../gql/queries';
 import { adminAccess } from '../../utils/auth';

@@ -14,9 +14,9 @@ import { Formik, FormikProps, FormikValues } from 'formik';
 import { useSnackbar } from 'notistack';
 import React, { ReactElement, useEffect } from 'react';
 import * as Yup from 'yup';
-import { GenericError, NetworkError } from '../components/ErrorSnackbars';
-import { FormLoading } from '../components/Skeletons/FormLoading';
-import { useUpdateMeMutation, useUserLazyQuery } from '../gql/queries';
+import { useUpdateMeMutation, useUserLazyQuery } from '../../gql/queries';
+import { GenericError, NetworkError } from '../ErrorSnackbars';
+import { FormLoading } from '../skeletons/FormLoading';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {

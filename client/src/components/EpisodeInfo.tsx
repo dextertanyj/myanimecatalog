@@ -18,7 +18,6 @@ import moment from 'moment';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { EpisodeForm } from '../Forms/EpisodeForm';
 import {
   useDeleteEpisodeMutation,
   useEpisodeQuery,
@@ -26,9 +25,10 @@ import {
 } from '../gql/queries';
 import { writeAccess } from '../utils/auth';
 import { ActionType } from '../utils/constants';
-import { DeleteConfirmDialog } from './DeleteConfirmDialog';
+import { DeleteConfirmDialog } from './dialogs/DeleteConfirmDialog';
+import { EpisodeForm } from './dialogs/EpisodeForm';
 import { GenericError, NetworkError } from './ErrorSnackbars';
-import { EpisodeInfoSkeleton } from './Skeletons/EpisodeInfoSkeleton';
+import { EpisodeInfoSkeleton } from './skeletons/EpisodeInfoSkeleton';
 
 type Props = {
   episodeId: string;

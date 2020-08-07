@@ -14,12 +14,12 @@ import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import moment from 'moment';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
-import { FileForm } from '../Forms/FileForm';
 import { File } from '../gql/documents';
 import { useDeleteFileMutation } from '../gql/queries';
 import { ActionType } from '../utils/constants';
 import { renderDuration, renderSource } from '../utils/enumRender';
-import { DeleteConfirmDialog } from './DeleteConfirmDialog';
+import { DeleteConfirmDialog } from './dialogs/DeleteConfirmDialog';
+import { FileForm } from './dialogs/FileForm';
 import { GenericError, NetworkError } from './ErrorSnackbars';
 
 type Props = {

@@ -13,13 +13,13 @@ import {
 import { blueGrey } from '@material-ui/core/colors';
 import AddOutlinedIcon from '@material-ui/icons/AddOutlined';
 import React, { useState } from 'react';
-import { FileForm } from '../Forms/FileForm';
 import { File } from '../gql/documents';
 import { useFilesForEpisodeQuery, useLoggedInQuery } from '../gql/queries';
 import { writeAccess } from '../utils/auth';
 import { ActionType } from '../utils/constants';
+import { FileForm } from './dialogs/FileForm';
 import { FileInfo } from './FileInfo';
-import { FileListSkeleton } from './Skeletons/FileListSkeleton';
+import { FileListSkeleton } from './skeletons/FileListSkeleton';
 
 type Props = {
   episodeId: string;

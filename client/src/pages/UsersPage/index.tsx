@@ -1,7 +1,7 @@
 import { createStyles, Grid, makeStyles, Theme } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
+import { UsersTable } from '../../components/tables/UsersTable';
 import { Role } from '../../gql/documents';
-import { UsersTable } from '../../Tables/UsersTable';
 import { withAuth } from '../../utils/withAuth';
 
 const useStyles = makeStyles((theme: Theme) =>

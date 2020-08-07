@@ -10,8 +10,6 @@ import {
 } from '@material-ui/core';
 import { blueGrey, teal } from '@material-ui/core/colors';
 import { ColumnApi, GridApi } from 'ag-grid-community';
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { AgGridReact } from 'ag-grid-react';
 import { debounce } from 'debounce';
 import React, { useCallback, useEffect, useState } from 'react';

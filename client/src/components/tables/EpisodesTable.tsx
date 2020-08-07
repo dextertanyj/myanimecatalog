@@ -18,15 +18,15 @@ import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { AgGridReact } from 'ag-grid-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { BatchEpisodeForm } from '../Forms/BatchEpisodeForm';
-import { EpisodeForm } from '../Forms/EpisodeForm';
 import {
   Episode,
   useEpisodesInSeriesQuery,
   useLoggedInQuery,
-} from '../gql/queries';
-import { writeAccess } from '../utils/auth';
-import { ActionType } from '../utils/constants';
+} from '../../gql/queries';
+import { writeAccess } from '../../utils/auth';
+import { ActionType } from '../../utils/constants';
+import { BatchEpisodeForm } from '../dialogs/BatchEpisodeForm';
+import { EpisodeForm } from '../dialogs/EpisodeForm';
 
 type Props = {
   seriesId: string;

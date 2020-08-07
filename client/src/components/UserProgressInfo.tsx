@@ -13,12 +13,12 @@ import { blueGrey } from '@material-ui/core/colors';
 import UpdateOutlinedIcon from '@material-ui/icons/UpdateOutlined';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { UserProgressForm } from '../Forms/UserProgressForm';
 import { useMySeriesProgressQuery } from '../gql/queries';
 import { ActionType } from '../utils/constants';
 import { renderWatchStatus } from '../utils/enumRender';
 import { isNumberOrElse } from '../utils/form';
-import { UserProgressInfoSkeleton } from './Skeletons/UserProgressInfoSkeleton';
+import { UserProgressForm } from './dialogs/UserProgressForm';
+import { UserProgressInfoSkeleton } from './skeletons/UserProgressInfoSkeleton';
 
 type Props = {
   seriesId: string;

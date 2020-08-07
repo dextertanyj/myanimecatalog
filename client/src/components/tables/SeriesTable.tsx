@@ -16,16 +16,16 @@ import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { AgGridReact } from 'ag-grid-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { SeriesForm } from '../Forms/SeriesForm';
-import { Series } from '../gql/documents';
-import { useAllSeriesQuery, useLoggedInQuery } from '../gql/queries';
-import { writeAccess } from '../utils/auth';
-import { ActionType } from '../utils/constants';
+import { Series } from '../../gql/documents';
+import { useAllSeriesQuery, useLoggedInQuery } from '../../gql/queries';
+import { writeAccess } from '../../utils/auth';
+import { ActionType } from '../../utils/constants';
 import {
   renderReleaseInfo,
   renderStatus,
   renderType,
-} from '../utils/enumRender';
+} from '../../utils/enumRender';
+import { SeriesForm } from '../dialogs/SeriesForm';
 import './progress.css';
 
 const useStyles = makeStyles((theme: Theme) =>

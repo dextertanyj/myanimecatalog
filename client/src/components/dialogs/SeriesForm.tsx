@@ -26,11 +26,7 @@ import moment, { Moment } from 'moment';
 import { useSnackbar } from 'notistack';
 import React, { ReactElement, useEffect, useState } from 'react';
 import * as Yup from 'yup';
-import { GenericError, NetworkError } from '../components/ErrorSnackbars';
-import { SeriesAutocomplete } from '../components/Inputs/SeriesAutocomplete';
-import { SourceAutoComplete } from '../components/Inputs/SourceAutoComplete';
-import { FormLoading } from '../components/Skeletons/FormLoading';
-import { Series, Type } from '../gql/documents';
+import { Series, Type } from '../../gql/documents';
 import {
   Season,
   Status,
@@ -38,14 +34,18 @@ import {
   useCreateSeriesMutation,
   useSeriesLazyQuery,
   useUpdateSeriesMutation,
-} from '../gql/queries';
-import { ActionType } from '../utils/constants';
+} from '../../gql/queries';
+import { ActionType } from '../../utils/constants';
 import {
   renderSeasonInfo,
   renderStatus,
   renderType,
-} from '../utils/enumRender';
-import { arrayOrUndefined, seasonComparator } from '../utils/form';
+} from '../../utils/enumRender';
+import { arrayOrUndefined, seasonComparator } from '../../utils/form';
+import { GenericError, NetworkError } from '../ErrorSnackbars';
+import { SeriesAutocomplete } from '../inputs/SeriesAutocomplete';
+import { SourceAutoComplete } from '../inputs/SourceAutoComplete';
+import { FormLoading } from '../skeletons/FormLoading';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {

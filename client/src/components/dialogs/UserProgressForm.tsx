@@ -12,26 +12,26 @@ import {
   Slider,
   TextField,
   Theme,
-  Typography,
+  Typography
 } from '@material-ui/core';
 import { Formik, FormikProps, FormikValues } from 'formik';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useMemo, useState } from 'react';
 import * as Yup from 'yup';
-import { DeleteConfirmDialog } from '../components/DeleteConfirmDialog';
-import { GenericError, NetworkError } from '../components/ErrorSnackbars';
-import { FormLoading } from '../components/Skeletons/FormLoading';
-import { WatchStatus } from '../gql/documents';
+import { WatchStatus } from '../../gql/documents';
 import {
   useCreateUserProgressMutation,
   useDeleteUserProgressMutation,
   useMySeriesProgressLazyQuery,
   useSeriesLazyQuery,
-  useUpdateUserProgressMutation,
-} from '../gql/queries';
-import { ActionType } from '../utils/constants';
-import { renderWatchStatus } from '../utils/enumRender';
-import { calculateOverall, isNumberOrElse } from '../utils/form';
+  useUpdateUserProgressMutation
+} from '../../gql/queries';
+import { ActionType } from '../../utils/constants';
+import { renderWatchStatus } from '../../utils/enumRender';
+import { calculateOverall, isNumberOrElse } from '../../utils/form';
+import { GenericError, NetworkError } from '../ErrorSnackbars';
+import { FormLoading } from '../skeletons/FormLoading';
+import { DeleteConfirmDialog } from './DeleteConfirmDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {

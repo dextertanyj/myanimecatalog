@@ -17,7 +17,6 @@ import moment from 'moment';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { SeriesForm } from '../Forms/SeriesForm';
 import {
   useDeleteSeriesMutation,
   useLoggedInQuery,
@@ -30,10 +29,11 @@ import {
   renderStatus,
   renderType,
 } from '../utils/enumRender';
-import { DeleteConfirmDialog } from './DeleteConfirmDialog';
+import { DeleteConfirmDialog } from './dialogs/DeleteConfirmDialog';
+import { SeriesForm } from './dialogs/SeriesForm';
 import { GenericError, NetworkError } from './ErrorSnackbars';
 import { SeriesRelatedDisplay } from './SeriesRelatedDisplay';
-import { SeriesInfoSkeleton } from './Skeletons/SeriesInfoSkeleton';
+import { SeriesInfoSkeleton } from './skeletons/SeriesInfoSkeleton';
 
 type Props = {
   seriesId: string;

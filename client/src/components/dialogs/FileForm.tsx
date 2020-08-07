@@ -15,18 +15,18 @@ import { Formik, FormikProps, FormikValues } from 'formik';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
-import { GenericError, NetworkError } from '../components/ErrorSnackbars';
-import { CodecAutoComplete } from '../components/Inputs/CodecAutoComplete';
-import { FormLoading } from '../components/Skeletons/FormLoading';
 import {
   Source,
   useCreateFileMutation,
   useFileLazyQuery,
   useUpdateFileMutation,
-} from '../gql/queries';
-import { ActionType } from '../utils/constants';
-import { renderSource } from '../utils/enumRender';
-import { convertDuration, numberOrUndefined } from '../utils/form';
+} from '../../gql/queries';
+import { ActionType } from '../../utils/constants';
+import { renderSource } from '../../utils/enumRender';
+import { convertDuration, numberOrUndefined } from '../../utils/form';
+import { GenericError, NetworkError } from '../ErrorSnackbars';
+import { CodecAutoComplete } from '../inputs/CodecAutoComplete';
+import { FormLoading } from '../skeletons/FormLoading';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
