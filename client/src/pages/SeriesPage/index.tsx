@@ -1,10 +1,10 @@
 import { Grid } from '@material-ui/core';
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { SeriesInfo } from '../../Components/SeriesInfo';
-import { UserProgressInfo } from '../../Components/UserProgressInfo';
-import { withAuth } from '../../HOC/withAuth';
-import { EpisodesTable } from '../../Tables/EpisodesTable';
+import { EpisodesTable } from '../../components/tables/EpisodesTable';
+import { SeriesInfoTable } from '../../components/tables/SeriesInfoTable';
+import { UserProgressInfoTable } from '../../components/tables/UserProgressInfoTable';
+import { withAuth } from '../../utils/withAuth';
 
 const SeriesPage = () => {
   const { seriesId } = useParams();
@@ -13,10 +13,13 @@ const SeriesPage = () => {
     <div>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <SeriesInfo seriesId={seriesId} key={`${seriesId}-info`} />
+          <SeriesInfoTable seriesId={seriesId} key={`${seriesId}-info`} />
         </Grid>
         <Grid item xs={12}>
-          <UserProgressInfo seriesId={seriesId} key={`${seriesId}-progress`} />
+          <UserProgressInfoTable
+            seriesId={seriesId}
+            key={`${seriesId}-progress`}
+          />
         </Grid>
         <Grid item xs={12}>
           <EpisodesTable seriesId={seriesId} key={`${seriesId}-table`} />

@@ -10,14 +10,12 @@ import {
 } from '@material-ui/core';
 import { blueGrey, teal } from '@material-ui/core/colors';
 import { ColumnApi, GridApi } from 'ag-grid-community';
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { AgGridReact } from 'ag-grid-react';
 import { debounce } from 'debounce';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useQuickSearchLazyQuery } from '../../gql/queries';
-import { withAuth } from '../../HOC/withAuth';
+import { withAuth } from '../../utils/withAuth';
 
 type Result = {
   title: string;

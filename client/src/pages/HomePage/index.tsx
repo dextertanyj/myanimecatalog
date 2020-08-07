@@ -7,16 +7,16 @@ import {
 } from '@material-ui/core';
 import { blueGrey } from '@material-ui/core/colors';
 import React from 'react';
-import { AdminCard } from '../../Components/Dashboard/AdminCard';
-import { CurrentlyWatching } from '../../Components/Dashboard/CurrentlyWatching';
-import { OverviewCard } from '../../Components/Dashboard/OverviewCard';
-import { RatingCard } from '../../Components/Dashboard/RatingCard';
-import { TopTenSeriesCard } from '../../Components/Dashboard/TopTenSeriesCard';
-import { DashboardSkeleton } from '../../Components/Skeletons/DashboardSkeleton';
+import { AdminCard } from '../../components/dashboard/AdminCard';
+import { CurrentlyWatching } from '../../components/dashboard/CurrentlyWatching';
+import { OverviewCard } from '../../components/dashboard/OverviewCard';
+import { RatingCard } from '../../components/dashboard/RatingCard';
+import { TopTenSeriesCard } from '../../components/dashboard/TopTenSeriesCard';
+import { DashboardSkeleton } from '../../components/skeletons/DashboardSkeleton';
 import { UserProgress } from '../../gql/documents';
 import { useLoggedInQuery, useMyProgressQuery } from '../../gql/queries';
-import { withAuth } from '../../HOC/withAuth';
 import { adminAccess } from '../../utils/auth';
+import { withAuth } from '../../utils/withAuth';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
