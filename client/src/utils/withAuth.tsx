@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Role } from '../gql/documents';
 import { useLoggedInQuery } from '../gql/queries';
-import Unauthorised from '../Templates/403';
+import Unauthorised from '../templates/403';
 
 export const withAuth = (roles?: Role[]) => (Component: any) => (
   props?: any

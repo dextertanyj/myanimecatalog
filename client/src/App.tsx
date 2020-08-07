@@ -9,7 +9,7 @@ import { SnackbarProvider } from 'notistack';
 import React from 'react';
 import { defaults } from 'react-chartjs-2';
 import initApollo from './Apollo';
-import ReactRouter from './Router';
+import ReactRouter from './router';
 
 defaults.global.defaultFontFamily = 'Roboto';
 
