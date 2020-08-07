@@ -18,9 +18,9 @@ import { Formik, FormikProps, FormikValues } from 'formik';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useMemo, useState } from 'react';
 import * as Yup from 'yup';
-import { DeleteConfirmDialog } from '../Components/DeleteConfirmDialog';
-import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
-import { FormLoading } from '../Components/Skeletons/FormLoading';
+import { DeleteConfirmDialog } from '../components/DeleteConfirmDialog';
+import { GenericError, NetworkError } from '../components/ErrorSnackbars';
+import { FormLoading } from '../components/Skeletons/FormLoading';
 import { WatchStatus } from '../gql/documents';
 import {
   useCreateUserProgressMutation,

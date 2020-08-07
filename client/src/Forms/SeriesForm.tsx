@@ -26,10 +26,10 @@ import moment, { Moment } from 'moment';
 import { useSnackbar } from 'notistack';
 import React, { ReactElement, useEffect, useState } from 'react';
 import * as Yup from 'yup';
-import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
-import { SourceAutoComplete } from '../Components/Inputs/SourceAutoComplete';
-import { SeriesAutocomplete } from '../Components/SeriesAutocomplete';
-import { FormLoading } from '../Components/Skeletons/FormLoading';
+import { GenericError, NetworkError } from '../components/ErrorSnackbars';
+import { SourceAutoComplete } from '../components/Inputs/SourceAutoComplete';
+import { SeriesAutocomplete } from '../components/SeriesAutocomplete';
+import { FormLoading } from '../components/Skeletons/FormLoading';
 import { Series, Type } from '../gql/documents';
 import {
   Season,

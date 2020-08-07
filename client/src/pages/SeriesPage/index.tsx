@@ -1,8 +1,8 @@
 import { Grid } from '@material-ui/core';
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { SeriesInfo } from '../../Components/SeriesInfo';
-import { UserProgressInfo } from '../../Components/UserProgressInfo';
+import { SeriesInfo } from '../../components/SeriesInfo';
+import { UserProgressInfo } from '../../components/UserProgressInfo';
 import { withAuth } from '../../HOC/withAuth';
 import { EpisodesTable } from '../../Tables/EpisodesTable';
 

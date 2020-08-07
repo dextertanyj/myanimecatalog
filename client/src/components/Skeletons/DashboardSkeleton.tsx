@@ -1,8 +1,8 @@
 import { createStyles, Grid, makeStyles, Theme } from '@material-ui/core';
 import { blueGrey } from '@material-ui/core/colors';
 import React from 'react';
-import { CurrentlyWatching } from '../../Components/Dashboard/CurrentlyWatching';
-import { TopTenSeriesCard } from '../../Components/Dashboard/TopTenSeriesCard';
+import { CurrentlyWatching } from '../Dashboard/CurrentlyWatching';
+import { TopTenSeriesCard } from '../Dashboard/TopTenSeriesCard';
 import { OverviewSkeleton } from './OverviewSkeleton';
 import { RatingSkeleton } from './RatingSkeleton';
 

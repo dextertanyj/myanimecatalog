@@ -1,8 +1,8 @@
 import { Grid } from '@material-ui/core';
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { EpisodeInfo } from '../../Components/EpisodeInfo';
-import { FileList } from '../../Components/FileList';
+import { EpisodeInfo } from '../../components/EpisodeInfo';
+import { FileList } from '../../components/FileList';
 import { withAuth } from '../../HOC/withAuth';
 
 const EpisodePage = () => {

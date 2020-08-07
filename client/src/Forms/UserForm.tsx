@@ -9,22 +9,22 @@ import {
   makeStyles,
   MenuItem,
   TextField,
-  Theme,
+  Theme
 } from '@material-ui/core';
 import { Formik, FormikProps, FormikValues } from 'formik';
 import { useSnackbar } from 'notistack';
 import React, { ReactElement, useEffect, useState } from 'react';
 import sha from 'sha.js';
 import * as Yup from 'yup';
-import { DeleteConfirmDialog } from '../Components/DeleteConfirmDialog';
-import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
-import { FormLoading } from '../Components/Skeletons/FormLoading';
+import { DeleteConfirmDialog } from '../components/DeleteConfirmDialog';
+import { GenericError, NetworkError } from '../components/ErrorSnackbars';
+import { FormLoading } from '../components/Skeletons/FormLoading';
 import { Role } from '../gql/documents';
 import {
   useCreateUserMutation,
   useDeleteUserMutation,
   useUpdateUserMutation,
-  useUserLazyQuery,
+  useUserLazyQuery
 } from '../gql/queries';
 import { ActionType } from '../utils/constants';
 import { renderRole } from '../utils/enumRender';

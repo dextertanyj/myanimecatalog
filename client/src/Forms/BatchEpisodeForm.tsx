@@ -22,7 +22,7 @@ import {
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import * as Yup from 'yup';
-import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
+import { GenericError, NetworkError } from '../components/ErrorSnackbars';
 import { useBatchCreateEpisodeMutation } from '../gql/queries';
 
 const useStyles = makeStyles((theme: Theme) => ({

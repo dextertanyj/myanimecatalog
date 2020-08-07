@@ -15,9 +15,9 @@ import { Formik, FormikProps, FormikValues } from 'formik';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
-import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
-import { CodecAutoComplete } from '../Components/Inputs/CodecAutoComplete';
-import { FormLoading } from '../Components/Skeletons/FormLoading';
+import { GenericError, NetworkError } from '../components/ErrorSnackbars';
+import { CodecAutoComplete } from '../components/Inputs/CodecAutoComplete';
+import { FormLoading } from '../components/Skeletons/FormLoading';
 import {
   Source,
   useCreateFileMutation,

@@ -16,7 +16,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import sha from 'sha.js';
 import * as Yup from 'yup';
-import { GenericError, NetworkError } from '../../Components/ErrorSnackbars';
+import { GenericError, NetworkError } from '../../components/ErrorSnackbars';
 import {
   Role,
   useCreateInitialUserMutation,

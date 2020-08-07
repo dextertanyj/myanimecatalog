@@ -22,8 +22,8 @@ import {
 import { useSnackbar } from 'notistack';
 import React, { useEffect } from 'react';
 import * as Yup from 'yup';
-import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
-import { FormLoading } from '../Components/Skeletons/FormLoading';
+import { GenericError, NetworkError } from '../components/ErrorSnackbars';
+import { FormLoading } from '../components/Skeletons/FormLoading';
 import {
   useCreateEpisodeMutation,
   useEpisodeLazyQuery,

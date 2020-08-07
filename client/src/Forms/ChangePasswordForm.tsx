@@ -15,7 +15,7 @@ import { useSnackbar } from 'notistack';
 import React, { ReactElement } from 'react';
 import sha from 'sha.js';
 import * as Yup from 'yup';
-import { GenericError, NetworkError } from '../Components/ErrorSnackbars';
+import { GenericError, NetworkError } from '../components/ErrorSnackbars';
 import { useUpdateMeMutation } from '../gql/queries';
 
 const useStyles = makeStyles((theme: Theme) => ({
