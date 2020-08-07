@@ -62,7 +62,7 @@ export const generateExcel = async (data: Series[]): Promise<Blob> => {
           worksheet.getRow(currentRow).getCell(1).value = 'Source';
           worksheet.getRow(currentRow).getCell(2).value =
             reference?.source ?? '';
-          worksheet.getRow(currentRow).getCell(3).value = 'Source';
+          worksheet.getRow(currentRow).getCell(3).value = 'Link';
           worksheet.mergeCells(currentRow, 4, currentRow, 10);
           worksheet.getRow(currentRow).getCell(4).value = reference.link ?? '';
           currentRow++;
