@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Navigation from '../Navigation';
+import Layout from '../layout';
 import AnimeListPage from '../pages/AnimeListPage';
 import CatalogPage from '../pages/CatalogPage';
 import EpisodePage from '../pages/EpisodePage';
@@ -24,7 +24,7 @@ export default function ReactRouter() {
           <Route exact strict path="/setup">
             <SetupPage />
           </Route>
-          <Navigation>
+          <Layout>
             <Route exact strict path="/logout">
               <LogoutPage />
             </Route>
@@ -60,7 +60,7 @@ export default function ReactRouter() {
               <UsersPage />
             </Route>
             <Route exact strict path="/search" component={SearchPage} />
-          </Navigation>
+          </Layout>
         </Switch>
       </div>
     </Router>

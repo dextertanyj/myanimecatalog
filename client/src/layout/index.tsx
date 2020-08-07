@@ -109,7 +109,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const Navigation = (props: any) => {
+const Layout = (props: any) => {
   const classes = useStyles();
   const history = useHistory();
   const [innerWidth, setInnerWidth] = useState<number>(window.innerWidth);
@@ -337,4 +337,4 @@ const Navigation = (props: any) => {
   );
 };
 
-export default (props: any) => withAuth()(Navigation)(props);
+export default (props: any) => withAuth()(Layout)(props);
