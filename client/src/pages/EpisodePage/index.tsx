@@ -3,7 +3,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { EpisodeInfo } from '../../components/EpisodeInfo';
 import { FileList } from '../../components/FileList';
-import { withAuth } from '../../HOC/withAuth';
+import { withAuth } from '../../utils/withAuth';
 
 const EpisodePage = () => {
   const { episodeId } = useParams();

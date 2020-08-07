@@ -3,8 +3,8 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { SeriesInfo } from '../../components/SeriesInfo';
 import { UserProgressInfo } from '../../components/UserProgressInfo';
-import { withAuth } from '../../HOC/withAuth';
 import { EpisodesTable } from '../../Tables/EpisodesTable';
+import { withAuth } from '../../utils/withAuth';
 
 const SeriesPage = () => {
   const { seriesId } = useParams();

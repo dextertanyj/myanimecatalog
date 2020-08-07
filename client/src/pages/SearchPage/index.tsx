@@ -17,7 +17,7 @@ import { debounce } from 'debounce';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useQuickSearchLazyQuery } from '../../gql/queries';
-import { withAuth } from '../../HOC/withAuth';
+import { withAuth } from '../../utils/withAuth';
 
 type Result = {
   title: string;

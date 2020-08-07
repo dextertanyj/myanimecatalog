@@ -12,8 +12,8 @@ import React, { useState } from 'react';
 import { ChangePasswordForm } from '../../Forms/ChangePasswordForm';
 import { ProfileForm } from '../../Forms/ProfileForm';
 import { useLoggedInQuery } from '../../gql/queries';
-import { withAuth } from '../../HOC/withAuth';
 import { renderRole } from '../../utils/enumRender';
+import { withAuth } from '../../utils/withAuth';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

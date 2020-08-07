@@ -15,8 +15,8 @@ import { TopTenSeriesCard } from '../../components/Dashboard/TopTenSeriesCard';
 import { DashboardSkeleton } from '../../components/Skeletons/DashboardSkeleton';
 import { UserProgress } from '../../gql/documents';
 import { useLoggedInQuery, useMyProgressQuery } from '../../gql/queries';
-import { withAuth } from '../../HOC/withAuth';
 import { adminAccess } from '../../utils/auth';
+import { withAuth } from '../../utils/withAuth';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

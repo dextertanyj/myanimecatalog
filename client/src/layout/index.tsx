@@ -28,7 +28,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Role } from '../gql/documents';
 import { useLoggedInQuery } from '../gql/queries';
-import { withAuth } from '../HOC/withAuth';
+import { withAuth } from '../utils/withAuth';
 
 const drawerWidth = 220;
 

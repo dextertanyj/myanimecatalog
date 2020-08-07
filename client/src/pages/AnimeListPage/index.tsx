@@ -1,7 +1,7 @@
 import { createStyles, Grid, makeStyles, Theme } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import { withAuth } from '../../HOC/withAuth';
 import { AnimeListTable } from '../../Tables/AnimeListTable';
+import { withAuth } from '../../utils/withAuth';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
