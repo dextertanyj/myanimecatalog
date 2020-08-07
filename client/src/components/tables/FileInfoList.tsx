@@ -13,13 +13,13 @@ import {
 import { blueGrey } from '@material-ui/core/colors';
 import AddOutlinedIcon from '@material-ui/icons/AddOutlined';
 import React, { useState } from 'react';
-import { File } from '../gql/documents';
-import { useFilesForEpisodeQuery, useLoggedInQuery } from '../gql/queries';
-import { writeAccess } from '../utils/auth';
-import { ActionType } from '../utils/constants';
-import { FileForm } from './dialogs/FileForm';
-import { FileInfo } from './FileInfo';
-import { FileListSkeleton } from './skeletons/FileListSkeleton';
+import { File } from '../../gql/documents';
+import { useFilesForEpisodeQuery, useLoggedInQuery } from '../../gql/queries';
+import { writeAccess } from '../../utils/auth';
+import { ActionType } from '../../utils/constants';
+import { FileForm } from '../dialogs/FileForm';
+import { FileInfoListSkeleton } from '../skeletons/FileInfoListSkeleton';
+import { FileInfo } from './FileInfoTable';
 
 type Props = {
   episodeId: string;
@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const FileList = (props: Props) => {
+export const FileInfoList = (props: Props) => {
   const classes = useStyles();
   const [showForm, setShowForm] = useState<boolean>(false);
 
@@ -80,7 +80,7 @@ export const FileList = (props: Props) => {
   return (
     <div>
       {loading && !files?.filesForEpisode ? (
-        <FileListSkeleton />
+        <FileInfoListSkeleton />
       ) : (
         <Paper elevation={3} className={classes.paper}>
           <Grid container spacing={3}>

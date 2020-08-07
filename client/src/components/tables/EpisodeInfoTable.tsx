@@ -22,13 +22,13 @@ import {
   useDeleteEpisodeMutation,
   useEpisodeQuery,
   useLoggedInQuery,
-} from '../gql/queries';
-import { writeAccess } from '../utils/auth';
-import { ActionType } from '../utils/constants';
-import { DeleteConfirmDialog } from './dialogs/DeleteConfirmDialog';
-import { EpisodeForm } from './dialogs/EpisodeForm';
-import { GenericError, NetworkError } from './ErrorSnackbars';
-import { EpisodeInfoSkeleton } from './skeletons/EpisodeInfoSkeleton';
+} from '../../gql/queries';
+import { writeAccess } from '../../utils/auth';
+import { ActionType } from '../../utils/constants';
+import { DeleteConfirmDialog } from '../dialogs/DeleteConfirmDialog';
+import { EpisodeForm } from '../dialogs/EpisodeForm';
+import { GenericError, NetworkError } from '../ErrorSnackbars';
+import { EpisodeInfoTableSkeleton } from '../skeletons/EpisodeInfoTableSkeleton';
 
 type Props = {
   episodeId: string;
@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const EpisodeInfo = (props: Props) => {
+export const EpisodeInfoTable = (props: Props) => {
   const classes = useStyles();
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
@@ -133,7 +133,7 @@ export const EpisodeInfo = (props: Props) => {
   return (
     <div>
       {!episodeData?.episode && loading ? (
-        <EpisodeInfoSkeleton />
+        <EpisodeInfoTableSkeleton />
       ) : (
         <Paper elevation={3} className={classes.paper}>
           <Grid container spacing={3} className={classes.tableHeader}>

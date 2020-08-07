@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const SeriesInfoSkeleton = () => {
+export const SeriesInfoTableSkeleton = () => {
   const classes = useStyles();
   return (
     <Paper elevation={3} className={classes.paper}>

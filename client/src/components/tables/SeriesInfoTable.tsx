@@ -21,19 +21,19 @@ import {
   useDeleteSeriesMutation,
   useLoggedInQuery,
   useSeriesQuery,
-} from '../gql/queries';
-import { writeAccess } from '../utils/auth';
-import { ActionType } from '../utils/constants';
+} from '../../gql/queries';
+import { writeAccess } from '../../utils/auth';
+import { ActionType } from '../../utils/constants';
 import {
   renderReleaseInfo,
   renderStatus,
   renderType,
-} from '../utils/enumRender';
-import { DeleteConfirmDialog } from './dialogs/DeleteConfirmDialog';
-import { SeriesForm } from './dialogs/SeriesForm';
-import { GenericError, NetworkError } from './ErrorSnackbars';
+} from '../../utils/enumRender';
+import { DeleteConfirmDialog } from '../dialogs/DeleteConfirmDialog';
+import { SeriesForm } from '../dialogs/SeriesForm';
+import { GenericError, NetworkError } from '../ErrorSnackbars';
+import { SeriesInfoTableSkeleton } from '../skeletons/SeriesInfoTableSkeleton';
 import { SeriesRelatedDisplay } from './SeriesRelatedDisplay';
-import { SeriesInfoSkeleton } from './skeletons/SeriesInfoSkeleton';
 
 type Props = {
   seriesId: string;
@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const SeriesInfo = (props: Props) => {
+export const SeriesInfoTable = (props: Props) => {
   const classes = useStyles();
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
@@ -137,7 +137,7 @@ export const SeriesInfo = (props: Props) => {
   return (
     <div>
       {loading && !seriesData?.series ? (
-        <SeriesInfoSkeleton />
+        <SeriesInfoTableSkeleton />
       ) : (
         <Paper elevation={3} className={classes.paper}>
           <Grid container spacing={3} className={classes.tableHeader}>

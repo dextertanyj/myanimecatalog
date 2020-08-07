@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const FileListSkeleton = () => {
+export const FileInfoListSkeleton = () => {
   const classes = useStyles();
   return (
     <Paper elevation={3} className={classes.paper}>

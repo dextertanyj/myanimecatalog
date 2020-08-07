@@ -13,12 +13,12 @@ import { blueGrey } from '@material-ui/core/colors';
 import UpdateOutlinedIcon from '@material-ui/icons/UpdateOutlined';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { useMySeriesProgressQuery } from '../gql/queries';
-import { ActionType } from '../utils/constants';
-import { renderWatchStatus } from '../utils/enumRender';
-import { isNumberOrElse } from '../utils/form';
-import { UserProgressForm } from './dialogs/UserProgressForm';
-import { UserProgressInfoSkeleton } from './skeletons/UserProgressInfoSkeleton';
+import { useMySeriesProgressQuery } from '../../gql/queries';
+import { ActionType } from '../../utils/constants';
+import { renderWatchStatus } from '../../utils/enumRender';
+import { isNumberOrElse } from '../../utils/form';
+import { UserProgressForm } from '../dialogs/UserProgressForm';
+import { UserProgressInfoTableSkeleton } from '../skeletons/UserProgressInfoTableSkeleton';
 
 type Props = {
   seriesId: string;
@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const UserProgressInfo = (props: Props) => {
+export const UserProgressInfoTable = (props: Props) => {
   const classes = useStyles();
   const [showForm, setShowForm] = useState<boolean>(false);
   const [formActionType, setFormActionType] = useState<ActionType>(
@@ -99,7 +99,7 @@ export const UserProgressInfo = (props: Props) => {
   return (
     <div>
       {loading && !progress?.mySeriesProgress ? (
-        <UserProgressInfoSkeleton />
+        <UserProgressInfoTableSkeleton />
       ) : (
         <Paper elevation={3} className={classes.paper}>
           <Grid container spacing={3} className={classes.tableHeader}>

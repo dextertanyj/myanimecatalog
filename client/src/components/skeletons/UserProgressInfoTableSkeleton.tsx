@@ -6,6 +6,7 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
+import { blueGrey } from '@material-ui/core/colors';
 import Skeleton from '@material-ui/lab/Skeleton';
 import React from 'react';
 
@@ -14,9 +15,9 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: theme.spacing(3),
       textAlign: 'center',
-      color: theme.palette.text.secondary,
     },
     tableHeader: {
+      'color': blueGrey[700],
       'marginBottom': '10px',
       'textAlign': 'left',
       '& div': {
@@ -30,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const EpisodeInfoSkeleton = () => {
+export const UserProgressInfoTableSkeleton = () => {
   const classes = useStyles();
   return (
     <Paper elevation={3} className={classes.paper}>
@@ -38,41 +39,76 @@ export const EpisodeInfoSkeleton = () => {
         <Grid item xs={12} className={classes.tableHeader}>
           <Grid container spacing={3}>
             <Grid item xs>
-              <Typography variant="h5">Episode Information</Typography>
+              <Typography variant="h5">Watch Progress</Typography>
             </Grid>
           </Grid>
         </Grid>
-
         <Grid item xs={12}>
           <Grid container spacing={3}>
             <Grid item xs={2}>
-              <Typography>Title</Typography>
-            </Grid>
-            <Grid item xs={10}>
-              <Skeleton />
-            </Grid>
-            <Grid item xs={2}>
-              <Typography>Series</Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Skeleton />
-            </Grid>
-            <Grid item xs={2}>
-              <Typography>Episode No.</Typography>
+              <Typography>Watch Status</Typography>
             </Grid>
             <Grid item xs={2}>
               <Skeleton />
             </Grid>
             <Grid item xs={2}>
-              <Typography>Remarks</Typography>
+              <Typography>Episodes</Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={2}>
               <Skeleton />
             </Grid>
             <Grid item xs={2}>
               <Typography>Last Updated</Typography>
             </Grid>
             <Grid item xs={2}>
+              <Skeleton />
+            </Grid>
+            <Grid item xs={2}>
+              <Typography>Overall</Typography>
+            </Grid>
+            <Grid item xs={10}>
+              <Skeleton />
+            </Grid>
+            <Grid item xs={2}>
+              <Typography>Story</Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Skeleton />
+            </Grid>
+            <Grid item xs={2}>
+              <Typography>Execution</Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Skeleton />
+            </Grid>
+            <Grid item xs={2}>
+              <Typography>Appeal</Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Skeleton />
+            </Grid>
+            <Grid item xs={2}>
+              <Typography>Character</Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Skeleton />
+            </Grid>
+            <Grid item xs={2}>
+              <Typography>Art</Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Skeleton />
+            </Grid>
+            <Grid item xs={2}>
+              <Typography>Music</Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Skeleton />
+            </Grid>
+            <Grid item xs={2}>
+              <Typography>Comments</Typography>
+            </Grid>
+            <Grid item xs={10}>
               <Skeleton />
             </Grid>
           </Grid>
