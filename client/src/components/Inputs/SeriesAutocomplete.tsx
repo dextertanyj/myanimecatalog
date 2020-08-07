@@ -1,7 +1,7 @@
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import React from 'react';
-import { Series } from '../gql/documents';
+import { Series } from '../../gql/documents';
 
 type Props<FormValues> = {
   fieldName: string;
