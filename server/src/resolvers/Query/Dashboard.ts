@@ -94,7 +94,24 @@ export const Dashboard = {
     _args: unknown,
     ctx: Context
   ): Promise<CatalogStatistics> {
-    const seriesCount = await ctx.prisma.series.count();
+    const seriesCount = await ctx.prisma.series.count({
+      where: {
+        prequels: {
+          none: {
+            title: {
+              contains: '',
+            },
+          },
+        },
+        mainStories: {
+          none: {
+            title: {
+              contains: '',
+            },
+          },
+        },
+      },
+    });
     const episodeCount = await ctx.prisma.episode.count();
     const files = await ctx.prisma.file.findMany();
     let duration = 0;
