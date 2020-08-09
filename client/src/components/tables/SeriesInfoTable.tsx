@@ -113,7 +113,7 @@ export const SeriesInfoTable = (props: Props) => {
       enqueueSnackbar(`Successfully deleted series`, {
         key: `delete-series-message`,
       });
-      history.goBack();
+      history.push(`/catalog`);
     },
   });
 
