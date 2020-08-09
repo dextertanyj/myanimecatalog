@@ -14,7 +14,6 @@ import {
 } from '@material-ui/core';
 import RemoveIcon from '@material-ui/icons/Remove';
 import { KeyboardDatePicker } from '@material-ui/pickers';
-import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import {
   FieldArray,
   Formik,
@@ -567,6 +566,7 @@ export const SeriesForm = (props: Props): ReactElement => {
       undefined,
     releaseYear:
       (actionType === ActionType.UPDATE &&
+        moment(seriesData?.series?.releaseYear).isValid() &&
         moment(seriesData?.series?.releaseYear)) ||
       undefined,
     remarks:
@@ -640,7 +640,9 @@ export const SeriesForm = (props: Props): ReactElement => {
             validationSchema={Yup.object({
               title: Yup.string().required(`Please enter a title`),
               releaseSeason: Yup.string(),
-              releaseYear: Yup.date(),
+              releaseYear: Yup.date()
+                .typeError(`Please enter a valid year`)
+                .nullable(),
               seasonNumber: Yup.number().min(
                 0,
                 `Season number should be positive`
@@ -777,12 +779,16 @@ export const SeriesForm = (props: Props): ReactElement => {
                         value={values?.releaseYear || null}
                         error={touched.releaseYear && !!errors.releaseYear}
                         helperText={touched.releaseYear && errors.releaseYear}
-                        onChange={(date: MaterialUiPickersDate) =>
-                          setFieldValue(
-                            'releaseYear',
-                            date?.startOf('year') as Moment
-                          )
-                        }
+                        onChange={(date: Moment | null) => {
+                          if (date === null) {
+                            setFieldValue('releaseYear', null);
+                          } else {
+                            setFieldValue(
+                              'releaseYear',
+                              date?.startOf('year') as Moment
+                            );
+                          }
+                        }}
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
