@@ -108,7 +108,7 @@ export const EpisodeInfoTable = (props: Props) => {
       enqueueSnackbar(`Successfully deleted episode`, {
         key: 'delete-episode-message',
       });
-      history.goBack();
+      history.push(`/series/${episodeData?.episode?.series?.id}`);
     },
   });
 
