@@ -70,7 +70,7 @@ export const AdminCard = () => {
           </Grid>
           <Grid item xs={12} sm={3}>
             <Typography>
-              {data?.catalogStatistics?.totalSeriesCount || ''}
+              {data?.catalogStatistics?.totalSeriesCount || '0'}
             </Typography>
           </Grid>
           <Grid item xs={12} sm={3}>
@@ -78,7 +78,7 @@ export const AdminCard = () => {
           </Grid>
           <Grid item xs={12} sm={3}>
             <Typography>
-              {data?.catalogStatistics?.totalEpisodeCount || ''}
+              {data?.catalogStatistics?.totalEpisodeCount || '0'}
             </Typography>
           </Grid>
           <Grid item xs={12} sm={3}>
@@ -88,7 +88,7 @@ export const AdminCard = () => {
             <Typography>
               {(data?.catalogStatistics?.totalDuration &&
                 renderDuration(data?.catalogStatistics?.totalDuration)) ||
-                ''}
+                '0:00.00'}
             </Typography>
           </Grid>
           <Grid item xs={12} sm={3}>
@@ -99,7 +99,7 @@ export const AdminCard = () => {
               {`${
                 data?.catalogStatistics?.totalFileSize &&
                 Math.round(data?.catalogStatistics?.totalFileSize / 1024 / 1024)
-              } MB` || ''}
+              } MB` || '0 MB'}
             </Typography>
           </Grid>
           <Grid item xs={12} md={4}>
