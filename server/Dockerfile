@@ -3,7 +3,7 @@ FROM keymetrics/pm2:latest-alpine	AS build
 WORKDIR /app
 
 RUN yarn global add @zeit/ncc
-RUN yarn global add @prisma/cli
+RUN yarn global add prisma
 COPY . /app
 
 RUN yarn install --silent 
