@@ -8,7 +8,7 @@
   "scripts": {
     "start": "nodemon -e ts,graphql -x \"eslint --ext .ts . && ts-node --files src/index.ts\"",
     "manualStart": "nodemon -r dotenv/config ./src/index.ts",
-    "gen:migrate": "prisma migrate dev --create-only --create-db --experimental",
+    "gen:migrate": "prisma migrate dev --create-only",
     "migrate": "prisma migrate dev",
     "deploy": "prisma migrate deploy",
     "lint": "eslint --fix \"src/**/*.ts\""

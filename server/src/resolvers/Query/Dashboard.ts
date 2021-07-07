@@ -118,7 +118,7 @@ export const Dashboard = {
     let fileSize = 0;
     for (const file of files) {
       duration += file.duration;
-      fileSize += file.fileSize;
+      fileSize += Number(file.fileSize);
     }
     return {
       totalSeriesCount: seriesCount,
