@@ -7,7 +7,7 @@ export const UserProgress = {
     _args: unknown,
     ctx: Context
   ): Promise<Series | null> {
-    return await ctx.prisma.series.findOne({
+    return await ctx.prisma.series.findUnique({
       where: {
         id: parent.seriesId,
       },

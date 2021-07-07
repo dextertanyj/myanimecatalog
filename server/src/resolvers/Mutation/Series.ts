@@ -1,15 +1,10 @@
-import {
-  Series as SeriesType,
-  SeriesCreateArgs,
-  SeriesDeleteArgs,
-  SeriesUpdateArgs,
-} from '@prisma/client';
+import { Prisma, Series as SeriesType } from '@prisma/client';
 import { Context } from '../../utils';
 
 export const Series = {
   async createSeries(
     _parent: unknown,
-    { data }: SeriesCreateArgs,
+    { data }: Prisma.SeriesCreateArgs,
     ctx: Context,
     _info: unknown
   ): Promise<SeriesType> {
@@ -17,7 +12,7 @@ export const Series = {
       const currentUserId = ctx.userId;
       const { progress, ...rest } = data;
       if (currentUserId && progress.create && !Array.isArray(progress.create)) {
-        const { user, ...others } = progress.create;
+        const { ...others } = progress.create;
         const formatProgress = {
           create: {
             user: { connect: { id: currentUserId } },
@@ -47,7 +42,7 @@ export const Series = {
 
   async updateSeries(
     _parent: unknown,
-    { where, data }: SeriesUpdateArgs,
+    { where, data }: Prisma.SeriesUpdateArgs,
     ctx: Context,
     _info: unknown
   ): Promise<SeriesType> {
@@ -59,7 +54,7 @@ export const Series = {
         !Array.isArray(progress.create) &&
         !progress.update
       ) {
-        const { user, ...others } = progress.create;
+        const { ...others } = progress.create;
         const formatProgress = {
           create: {
             user: { connect: { id: currentUserId } },
@@ -83,10 +78,12 @@ export const Series = {
         !Array.isArray(progress.update) &&
         !progress.create
       ) {
-        const { user, ...others } = progress.update.data;
+        const { user, userId, ...others } = progress.update.data;
         const formatProgress = {
           update: {
-            where: progress.update.where,
+            where: {
+              ...progress.update.where,
+            },
             data: {
               user: { connect: { id: currentUserId } },
               ...others,
@@ -117,7 +114,7 @@ export const Series = {
 
   async deleteSeries(
     _parent: unknown,
-    args: SeriesDeleteArgs,
+    args: Prisma.SeriesDeleteArgs,
     ctx: Context,
     _info: unknown
   ): Promise<SeriesType> {
@@ -136,10 +133,10 @@ export const Series = {
       } else if (message.includes(`Reference`)) {
         // Workaround while awaiting ON DELETE CASCADE fix from Prisma
         if (args.where.id) {
-          const series = await ctx.prisma.queryRaw<SeriesType>(
+          const series = await ctx.prisma.$queryRaw<SeriesType>(
             `SELECT * FROM \`Series\` WHERE id = '${args.where.id}'`
           );
-          await ctx.prisma.executeRaw(
+          await ctx.prisma.$executeRaw(
             `DELETE FROM \`Series\` WHERE id = '${args.where.id}'`
           );
           return series;

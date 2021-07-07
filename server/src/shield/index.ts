@@ -16,7 +16,7 @@ const rules = {
       if (!ctx.userId) {
         return false;
       }
-      const user = await ctx.prisma.user.findOne({
+      const user = await ctx.prisma.user.findUnique({
         where: { id: ctx.userId },
         select: { role: true },
       });
@@ -29,7 +29,7 @@ const rules = {
       if (!ctx.userId) {
         return false;
       }
-      const user = await ctx.prisma.user.findOne({
+      const user = await ctx.prisma.user.findUnique({
         where: { id: ctx.userId },
         select: { role: true },
       });
@@ -42,7 +42,7 @@ const rules = {
       if (!ctx.userId) {
         return false;
       }
-      const user = await ctx.prisma.user.findOne({
+      const user = await ctx.prisma.user.findUnique({
         where: { id: ctx.userId },
         select: { role: true },
       });

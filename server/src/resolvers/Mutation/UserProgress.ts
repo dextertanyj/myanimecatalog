@@ -1,29 +1,21 @@
-import {
-  SeriesWhereUniqueInput,
-  UserProgress as UserProgressType,
-  UserProgressCreateArgs,
-  UserProgressDeleteArgs,
-  UserProgressUpdateArgs,
-  UserProgressUpdateInput,
-} from '@prisma/client';
+import { Prisma, UserProgress as UserProgressType } from '@prisma/client';
 import { Context } from '../../utils';
 
 export const UserProgress = {
   async createUserProgress(
     _parent: unknown,
-    args: UserProgressCreateArgs,
+    args: { data: Prisma.UserProgressCreateInput },
     ctx: Context,
     _info: unknown
   ): Promise<UserProgressType> {
-    const userId = ctx.userId;
     const { data } = args;
-    if (userId) {
+    if (ctx.userId) {
       return ctx.prisma.userProgress.create({
         data: {
           ...data,
           user: {
             connect: {
-              id: userId,
+              id: ctx.userId,
             },
           },
         },
@@ -35,7 +27,7 @@ export const UserProgress = {
 
   async updateUserProgress(
     _parent: unknown,
-    args: UserProgressUpdateArgs,
+    args: Prisma.UserProgressUpdateArgs,
     ctx: Context,
     _info: unknown
   ): Promise<UserProgressType> {
@@ -44,7 +36,10 @@ export const UserProgress = {
 
   async updateMyProgress(
     _parent: unknown,
-    args: { where: SeriesWhereUniqueInput; data: UserProgressUpdateInput },
+    args: {
+      where: Prisma.SeriesWhereUniqueInput;
+      data: Prisma.UserProgressUpdateInput;
+    },
     ctx: Context,
     _info: unknown
   ): Promise<UserProgressType> {
@@ -65,7 +60,7 @@ export const UserProgress = {
 
   async deleteUserProgress(
     _parent: unknown,
-    args: UserProgressDeleteArgs,
+    args: Prisma.UserProgressDeleteArgs,
     ctx: Context,
     _info: unknown
   ): Promise<UserProgressType> {

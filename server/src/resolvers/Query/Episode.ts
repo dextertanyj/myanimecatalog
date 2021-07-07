@@ -1,17 +1,13 @@
-import {
-  Episode as EpisodeType,
-  FindOneEpisodeArgs,
-  FindOneSeriesArgs,
-} from '@prisma/client';
+import { Episode as EpisodeType, Prisma } from '@prisma/client';
 import { Context } from '../../utils';
 
 export const Episode = {
   async episode(
     _parent: unknown,
-    args: FindOneEpisodeArgs,
+    args: Prisma.EpisodeFindUniqueArgs,
     ctx: Context
   ): Promise<EpisodeType | null> {
-    return await ctx.prisma.episode.findOne(args);
+    return await ctx.prisma.episode.findUnique(args);
   },
 
   async episodes(
@@ -28,7 +24,7 @@ export const Episode = {
 
   async episodesInSeries(
     _parent: unknown,
-    args: FindOneSeriesArgs,
+    args: Prisma.SeriesFindUniqueArgs,
     ctx: Context
   ): Promise<EpisodeType[]> {
     if (args.where.id) {

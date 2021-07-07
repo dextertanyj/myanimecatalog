@@ -1,8 +1,4 @@
-import {
-  File as FileType,
-  FindOneEpisodeArgs,
-  FindOneFileArgs,
-} from '@prisma/client';
+import { File as FileType, Prisma } from '@prisma/client';
 import { Context } from '../../utils';
 
 type Codec = {
@@ -12,15 +8,15 @@ type Codec = {
 export const File = {
   async file(
     _parent: unknown,
-    args: FindOneFileArgs,
+    args: Prisma.FileFindUniqueArgs,
     ctx: Context
   ): Promise<FileType | null> {
-    return await ctx.prisma.file.findOne(args);
+    return await ctx.prisma.file.findUnique(args);
   },
 
   async filesForEpisode(
     _parent: unknown,
-    args: FindOneEpisodeArgs,
+    args: Prisma.EpisodeFindUniqueArgs,
     ctx: Context
   ): Promise<FileType[]> {
     return await ctx.prisma.file.findMany({
@@ -44,7 +40,7 @@ export const File = {
     ctx: Context
   ): Promise<Codec[]> {
     const SQL = `SELECT DISTINCT codec FROM \`File\``;
-    const codecs = await ctx.prisma.queryRaw<Codec[]>(SQL);
+    const codecs = await ctx.prisma.$queryRaw<Codec[]>(SQL);
     return codecs;
   },
 };

@@ -1,18 +1,15 @@
-import {
-  FindOneSeriesArgs,
-  UserProgress as UserProgressType,
-} from '@prisma/client';
+import { Prisma, UserProgress as UserProgressType } from '@prisma/client';
 import { Context } from '../../utils';
 
 export const UserProgress = {
   async mySeriesProgress(
     _parent: unknown,
-    args: FindOneSeriesArgs,
+    args: Prisma.SeriesFindUniqueArgs,
     ctx: Context,
     _info: unknown
   ): Promise<UserProgressType | null> {
     if (args.where.id && ctx.userId) {
-      const data = await ctx.prisma.userProgress.findOne({
+      const data = await ctx.prisma.userProgress.findUnique({
         where: {
           seriesId_userId: {
             seriesId: args.where.id,
