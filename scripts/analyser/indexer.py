@@ -29,6 +29,3 @@ def indexer(directory_path, excluded_folders):
 				continue
 			filepaths.append(os.path.join(dirpath,filename))
 	return filepaths
-
-
-
