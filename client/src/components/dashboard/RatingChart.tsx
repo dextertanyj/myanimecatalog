@@ -1,6 +1,6 @@
-import { darken, fade } from '@material-ui/core';
+import { darken, alpha } from '@material-ui/core';
 import React from 'react';
-import { HorizontalBar } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import { UserProgress } from '../../gql/documents';
 
 type Props = {
@@ -61,9 +61,9 @@ export const RatingChart = (props: Props) => {
           processed[0],
         ],
         borderWidth: 1,
-        backgroundColor: barColor.map((color) => fade(color, 0.8)),
+        backgroundColor: barColor.map((color) => alpha(color, 0.8)),
         borderColor: barColor.map((color) => darken(color, 0.2)),
-        hoverBackgroundColor: barColor.map((color) => fade(color, 0.5)),
+        hoverBackgroundColor: barColor.map((color) => alpha(color, 0.5)),
         hoverBorderColor: barColor.map((color) => darken(color, 0.2)),
       },
     ],
@@ -83,21 +83,24 @@ export const RatingChart = (props: Props) => {
   };
 
   const options = {
-    legend: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+    indexAxis: 'y',
     scales: {
-      xAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-            precision: 0,
-          },
+      x: {
+        ticks: {
+          beginAtZero: true,
+          precision: 0,
         },
-      ],
+      },
     },
   };
   return (
     <div>
-      <HorizontalBar data={data} options={options} />
+      <Bar type="bar" data={data} options={options} />
     </div>
   );
 };

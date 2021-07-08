@@ -250,7 +250,7 @@ export const SeriesForm = (props: Props): ReactElement => {
   });
 
   useEffect(() => {
-    if (!!seriesList?.allSeries) {
+    if (seriesList?.allSeries) {
       if (props.seriesId) {
         setAutoCompleteOptions(
           (seriesList.allSeries.filter(
@@ -1036,7 +1036,7 @@ export const SeriesForm = (props: Props): ReactElement => {
                                                   ?.source
                                               }
                                               error={
-                                                !!Array.isArray(
+                                                Array.isArray(
                                                   errors?.references
                                                 )
                                                   ? (errors.references[

@@ -51,6 +51,8 @@
             "warn",
             2
         ],
+        "prefer-const": "warn",
+        "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/no-extra-parens": "warn",
         "@typescript-eslint/no-unused-expressions": "warn",
         "@typescript-eslint/no-unused-vars": "off",

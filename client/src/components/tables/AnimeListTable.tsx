@@ -189,7 +189,10 @@ export const AnimeListTable = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const handleTabChange = (_event: React.ChangeEvent<{}>, value: number) => {
+  const handleTabChange = (
+    _event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
     setSelectedTab(value);
   };
 

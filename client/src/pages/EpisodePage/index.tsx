@@ -6,7 +6,7 @@ import { FileInfoList } from '../../components/tables/FileInfoList';
 import { withAuth } from '../../utils/withAuth';
 
 const EpisodePage = () => {
-  const { episodeId } = useParams();
+  const { episodeId } = useParams<{ episodeId: string }>();
   return (
     <div>
       <Grid container spacing={3}>

@@ -16,6 +16,8 @@ export const renderRole = (role: Role): string => {
       return 'Read Only';
     case Role.Write:
       return 'Read & Write';
+    default:
+      return '';
   }
 };
 
@@ -27,6 +29,8 @@ export const renderStatus = (status: Status): string => {
       return 'Missing';
     case Status.Unreleased:
       return 'Not Yet Aired';
+    default:
+      return '';
   }
 };
 
@@ -42,6 +46,8 @@ export const renderType = (type: Type): string => {
       return 'TV Series';
     case Type.Special:
       return 'Special';
+    default:
+      return '';
   }
 };
 
@@ -55,6 +61,8 @@ export const renderSeason = (season: Season): string => {
       return 'Summer';
     case Season.Spring:
       return 'Spring';
+    default:
+      return '';
   }
 };
 
@@ -68,6 +76,8 @@ export const renderSeasonInfo = (season: Season): string => {
       return 'Summer (Jun - Aug)';
     case Season.Spring:
       return 'Spring (Mar - May)';
+    default:
+      return '';
   }
 };
 
@@ -83,6 +93,8 @@ export const renderSource = (source: Source): string => {
       return 'TV';
     case Source.Web:
       return 'Web';
+    default:
+      return '';
   }
 };
 
@@ -98,6 +110,8 @@ export const renderWatchStatus = (watchStatus: WatchStatus): string => {
       return 'Plan To Watch';
     case WatchStatus.Watching:
       return 'Watching';
+    default:
+      return '';
   }
 };
 
