@@ -44,7 +44,7 @@ export const FileFormValidationSchema = Yup.object({
   seconds: secondsFormat.required(`Please input the duration`),
   size: sizeFormat.required(`Please enter the file size`),
   source: sourceFormat.required(`Please choose a source type`),
-  width: widthFormat.required(`Please enter the resolution`),
-  height: heightFormat.required(`Please enter the resolution`),
+  width: widthFormat.required(`Please enter the width`),
+  height: heightFormat.required(`Please enter the height`),
   checksum: checksumFormat.required(`Please enter the checksum`),
 });
