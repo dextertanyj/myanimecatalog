@@ -206,7 +206,9 @@ export const FileInfo = (props: Props) => {
               <Typography>Resolution</Typography>
             </Grid>
             <Grid item xs={8} sm={4} md={2}>
-              <Typography>{file.resolution}</Typography>
+              <Typography>
+                {file.resolutionWidth + ' × ' + file.resolutionHeight}
+              </Typography>
             </Grid>
             <Grid item xs={4} sm={2} md={2}>
               <Typography>Duration</Typography>

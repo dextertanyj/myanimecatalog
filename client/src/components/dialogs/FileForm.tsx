@@ -74,8 +74,8 @@ type FormValues = {
   seconds: number | undefined;
   fileSize: number | undefined;
   source: Source | undefined;
-  x_resolution: number | undefined;
-  y_resolution: number | undefined;
+  resolutionWidth: number | undefined;
+  resolutionHeight: number | undefined;
   codec: string | undefined;
   checksum: string | undefined;
 };
@@ -158,24 +158,14 @@ export const FileForm = (props: Props) => {
 
   const onSubmitCreate = async (values: FormikValues) => {
     if (props.episodeId) {
-      let {
-        path,
-        hours,
-        minutes,
-        seconds,
-        x_resolution,
-        y_resolution,
-        ...rest
-      } = values;
+      let { path, hours, minutes, seconds, ...rest } = values;
       path = path.replace(/\\/g, '/');
       const duration = hours * 3600 + minutes * 60 + seconds;
-      const resolution = `${x_resolution.toString()} × ${y_resolution.toString()}`;
       await createFileMutation({
         variables: {
           data: {
             path,
             duration,
-            resolution,
             ...rest,
             episode: {
               connect: {
@@ -194,25 +184,15 @@ export const FileForm = (props: Props) => {
 
   const onSubmitUpdate = async (values: FormikValues) => {
     if (props.fileId) {
-      let {
-        path,
-        hours,
-        minutes,
-        seconds,
-        x_resolution,
-        y_resolution,
-        ...rest
-      } = values;
+      let { path, hours, minutes, seconds, ...rest } = values;
       path = path.replace(/\\/g, '/');
       const duration = hours * 3600 + minutes * 60 + seconds;
-      const resolution = `${x_resolution.toString()} × ${y_resolution.toString()}`;
       await updateFileMutation({
         variables: {
           where: { id: props.fileId },
           data: {
             path,
             duration,
-            resolution,
             ...rest,
           },
         },
@@ -242,16 +222,12 @@ export const FileForm = (props: Props) => {
       actionType === ActionType.UPDATE &&
         convertDuration(fileData?.file?.duration)[2]
     ),
-    x_resolution:
-      (actionType === ActionType.UPDATE &&
-        fileData?.file?.resolution &&
-        Number.parseInt(fileData.file.resolution.split(' × ')[1])) ||
-      undefined,
-    y_resolution:
-      (actionType === ActionType.UPDATE &&
-        fileData?.file?.resolution &&
-        Number.parseInt(fileData.file.resolution.split(' × ')[0])) ||
-      undefined,
+    resolutionWidth: numberOrUndefined(
+      actionType === ActionType.UPDATE && fileData?.file?.resolutionWidth
+    ),
+    resolutionHeight: numberOrUndefined(
+      actionType === ActionType.UPDATE && fileData?.file?.resolutionHeight
+    ),
     codec:
       (actionType === ActionType.UPDATE && fileData?.file?.codec) || undefined,
     checksum:
@@ -304,10 +280,10 @@ export const FileForm = (props: Props) => {
                 .required(`Please enter the file size`)
                 .min(1, `Invalid file size`),
               source: Yup.string().required(`Please choose a source type`),
-              x_resolution: Yup.number()
+              resolutionWidth: Yup.number()
                 .required(`Please enter the resolution`)
                 .min(1, `Invalid resolution`),
-              y_resolution: Yup.number()
+              resolutionHeight: Yup.number()
                 .required(`Please enter the resolution`)
                 .min(1, `Invalid resolution`),
               checksum: Yup.string().required(`Please enter the checksum`),
@@ -449,16 +425,20 @@ export const FileForm = (props: Props) => {
                         variant="outlined"
                         margin="normal"
                         fullWidth
-                        name="x_resolution"
+                        name="resolutionWidth"
                         label="Resolution (Width)"
-                        id="x_resolution"
+                        id="resolutionWidth"
                         type="number"
                         value={
-                          values.x_resolution ||
-                          (values.x_resolution === 0 ? 0 : '')
+                          values.resolutionWidth ||
+                          (values.resolutionWidth === 0 ? 0 : '')
                         }
-                        error={touched.x_resolution && !!errors.x_resolution}
-                        helperText={touched.x_resolution && errors.x_resolution}
+                        error={
+                          touched.resolutionWidth && !!errors.resolutionWidth
+                        }
+                        helperText={
+                          touched.resolutionWidth && errors.resolutionWidth
+                        }
                         onChange={handleChange}
                         onBlur={handleBlur}
                         className={classes.formItem}
@@ -469,16 +449,20 @@ export const FileForm = (props: Props) => {
                         variant="outlined"
                         margin="normal"
                         fullWidth
-                        name="y_resolution"
+                        name="resolutionHeight"
                         label="Resolution (Height)"
-                        id="y_resolution"
+                        id="resolutionHeight"
                         type="number"
                         value={
-                          values.y_resolution ||
-                          (values.y_resolution === 0 ? 0 : '')
+                          values.resolutionHeight ||
+                          (values.resolutionHeight === 0 ? 0 : '')
                         }
-                        error={touched.y_resolution && !!errors.y_resolution}
-                        helperText={touched.y_resolution && errors.y_resolution}
+                        error={
+                          touched.resolutionHeight && !!errors.resolutionHeight
+                        }
+                        helperText={
+                          touched.resolutionHeight && errors.resolutionHeight
+                        }
                         onChange={handleChange}
                         onBlur={handleBlur}
                         className={classes.formItem}

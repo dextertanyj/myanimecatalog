@@ -33,36 +33,47 @@ const barColor = [
 const processResolution = (
   files: File[]
 ): { value: number; label: string }[] => {
-  const resolutionMap = new Map<string, number>();
+  const resolutionMap = new Map<number, Map<number, number>>();
   files.forEach((file) => {
-    if (file.resolution) {
-      const existing = resolutionMap.get(file.resolution);
+    if (file.resolutionHeight && file.resolutionWidth) {
+      const existing = resolutionMap.get(file.resolutionWidth)?.get(file.resolutionHeight);
       if (existing) {
-        resolutionMap.set(file.resolution, existing + 1);
+        resolutionMap.get(file.resolutionWidth)?.set(file.resolutionHeight, existing + 1);
+      } else if (resolutionMap.has(file.resolutionWidth)) {
+        const map = resolutionMap.get(file.resolutionWidth);
+        map?.set(file.resolutionHeight, 1);
       } else {
-        resolutionMap.set(file.resolution, 1);
+        resolutionMap.set(
+          file.resolutionWidth,
+          new Map<number, number>([[file.resolutionHeight, 1]])
+        );
       }
     }
   });
   const intermediateArray: {
-    key: { x: number; y: number };
+    key: { width: number; height: number };
     count: number;
   }[] = [];
-  for (const keyvalue of resolutionMap.entries()) {
-    const key = keyvalue[0];
-    const x_resolution = Number.parseInt(key.split(' × ')[0]);
-    const y_resolution = Number.parseInt(key.split(' × ')[1]);
-    const value = keyvalue[1];
-    intermediateArray.push({
-      key: { x: x_resolution, y: y_resolution },
-      count: value,
-    });
+  for (const keyvalueWidth of resolutionMap.entries()) {
+    const width = keyvalueWidth[0];
+    const map = keyvalueWidth[1];
+    for (const keyvalueHeight of map.entries()) {
+      const height = keyvalueHeight[0];
+      const count = keyvalueHeight[1];
+      intermediateArray.push({
+        key: { width: width, height: height },
+        count: count,
+      });
+    }
   }
   const sortedArray = intermediateArray.sort(
-    (a, b) => a.key.x * a.key.y - b.key.x * b.key.y
+    (a, b) => a.key.width * a.key.height - b.key.width * b.key.height
   );
   return sortedArray.map((item) => {
-    return { value: item.count, label: `${item.key.x} × ${item.key.y}` };
+    return {
+      value: item.count,
+      label: `${item.key.width} × ${item.key.height}`,
+    };
   });
 };
 
