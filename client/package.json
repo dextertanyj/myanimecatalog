@@ -64,20 +64,20 @@
     ]
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^1.17.6",
-    "@graphql-codegen/typescript": "^1.17.0",
-    "@graphql-codegen/typescript-document-nodes": "^1.17.0",
-    "@graphql-codegen/typescript-operations": "^1.17.0",
-    "@graphql-codegen/typescript-react-apollo": "^1.17.0",
+    "@graphql-codegen/cli": "^1.21.6",
+    "@graphql-codegen/typescript": "^1.22.4",
+    "@graphql-codegen/typescript-document-nodes": "^1.17.5",
+    "@graphql-codegen/typescript-operations": "^1.18.3",
+    "@graphql-codegen/typescript-react-apollo": "^2.3.0",
     "@typescript-eslint/eslint-plugin": "^3.6.1",
     "@typescript-eslint/parser": "^3.6.1",
-    "concurrently": "^5.2.0",
+    "concurrently": "^6.2.0",
     "eslint": "~7.18.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.20.3",
-    "graphql": "^15.0.0",
-    "graphql-tag": "^2.0.0",
+    "graphql": "^15.5.0",
+    "graphql-tag": "^2.12.5",
     "prettier": "^2.0.5"
   }
 }
