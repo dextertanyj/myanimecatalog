@@ -7,7 +7,7 @@ export const File = {
     _args: unknown,
     ctx: Context
   ): Promise<Episode> {
-    const episode = await ctx.prisma.episode.findOne({
+    const episode = await ctx.prisma.episode.findUnique({
       where: { id: parent.episodeId },
     });
     if (episode) {

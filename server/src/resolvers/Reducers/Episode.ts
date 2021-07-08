@@ -24,7 +24,7 @@ export const Episode = {
     _args: unknown,
     ctx: Context
   ): Promise<Series | null> {
-    return ctx.prisma.series.findOne({
+    return ctx.prisma.series.findUnique({
       where: { id: parent.seriesId },
     });
   },
@@ -35,7 +35,7 @@ export const Episode = {
     ctx: Context
   ): Promise<File[]> {
     return ctx.prisma.episode
-      .findOne({
+      .findUnique({
         where: { id: parent.id },
       })
       .files();

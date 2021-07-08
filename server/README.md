@@ -29,7 +29,7 @@ Contains the GraphQL schema definitions and resolvers.
 
 ## Database Migration
 
-- Generating the files required for a migration: `yarn generate:migration`
+- Generating the files required for a migration: `yarn gen:migrate`
 - Applying all migrations to the connected database: `yarn migrate`
 - Regenerating `@prisma/client` definitions: `yarn prisma generate`
 
@@ -47,6 +47,15 @@ Contains the GraphQL schema definitions and resolvers.
 9. Create a copy of `./example.env` in the root folder and rename it as `./env`.
 10. Fill in the details in the `.env` file.
 11. Run `docker-compose up --build` in a separate screen.
-12. After the images have been built, run `docker exec -it server_db_1 bash`.
-13. Login to the mysql server using `mysql -u root -p` and key in your password previously set in `.env`.
-14. Run `CREATE DATABASE anime` and perform the relevant SQL migrations as laid out in each README.md and the `custom_migrations.sql` in the `./prisma/` folder.
+12. After the images have been built, run `yarn server:sh`.
+13. Run `yarn deploy`.
+
+### Prisma Migrate Upgrade Guide
+
+If upgrading from v1.0.0, follow the steps listed below: 
+1. Pull the updated repository.
+2. With the database docker container running, SSH into the docker container using `yarn server:sh`.
+3. Backup your database and run the following commands to baseline the existing database. 
+   - `npx prisma migrate resolve --applied 20210707040816_init`
+   - `npx prisma migrate resolve --applied 20210707063345_update_mappings`
+4. Continue with the regular databse migration steps using `yarn deploy`. 

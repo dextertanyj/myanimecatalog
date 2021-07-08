@@ -1,21 +1,15 @@
-import {
-  Role,
-  User as UserType,
-  UserCreateArgs,
-  UserDeleteArgs,
-  UserUpdateArgs,
-  UserUpdateInput,
-} from '@prisma/client';
+import { Prisma, Role, User as UserType } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { Context } from '../../utils';
 
 export const User = {
   async createInitialUser(
     _parent: unknown,
-    { data }: UserCreateArgs,
+    { data }: Prisma.UserCreateArgs,
     ctx: Context,
     _info: unknown
   ): Promise<UserType> {
+    // eslint-disable-next-line @typescript-eslint/no-extra-parens
     if ((await ctx.prisma.user.count()) !== 0) {
       throw new Error(`There is an existing account.`);
     }
@@ -32,7 +26,7 @@ export const User = {
 
   async createUser(
     _parent: unknown,
-    { data }: UserCreateArgs,
+    { data }: Prisma.UserCreateArgs,
     ctx: Context,
     _info: unknown
   ): Promise<UserType> {
@@ -60,7 +54,7 @@ export const User = {
 
   async updateMe(
     _parent: unknown,
-    { data }: { data: UserUpdateInput & { currentPassword: string } },
+    { data }: { data: Prisma.UserCreateInput & { currentPassword: string } },
     ctx: Context,
     _info: unknown
   ): Promise<UserType> {
@@ -69,7 +63,7 @@ export const User = {
         ? await bcrypt.hash(data?.password, 10)
         : undefined;
       if (encryptPassword) {
-        const user = await ctx.prisma.user.findOne({
+        const user = await ctx.prisma.user.findUnique({
           where: { id: ctx.userId },
         });
         if (user) {
@@ -107,7 +101,10 @@ export const User = {
 
   async updateUser(
     _parent: unknown,
-    { where, data }: UserUpdateArgs,
+    {
+      where,
+      data,
+    }: { where: Prisma.UserWhereUniqueInput; data: Prisma.UserCreateInput },
     ctx: Context,
     _info: unknown
   ): Promise<UserType> {
@@ -145,7 +142,7 @@ export const User = {
 
   async deleteUser(
     _parent: unknown,
-    args: UserDeleteArgs,
+    args: Prisma.UserDeleteArgs,
     ctx: Context,
     _info: unknown
   ): Promise<UserType> {
@@ -156,10 +153,10 @@ export const User = {
       const message: string = error.message;
       if (message.includes(`UserProgress`)) {
         if (args.where.id) {
-          const user = await ctx.prisma.queryRaw<UserType>(
+          const user = await ctx.prisma.$queryRaw<UserType>(
             `SELECT * FROM \`User\` WHERE id = '${args.where.id}'`
           );
-          await ctx.prisma.executeRaw(
+          await ctx.prisma.$executeRaw(
             `DELETE FROM \`User\` WHERE id = '${args.where.id}'`
           );
           return user;

@@ -1,20 +1,14 @@
-import {
-  Episode as EpisodeType,
-  EpisodeCreateArgs,
-  EpisodeCreateInput,
-  EpisodeDeleteArgs,
-  EpisodeUpdateArgs,
-} from '@prisma/client';
+import { Episode as EpisodeType, Prisma } from '@prisma/client';
 import { Context } from '../../utils';
 
 type BatchCreateEpisodeArgs = {
-  data: [EpisodeCreateInput];
+  data: [Prisma.EpisodeCreateInput];
 };
 
 export const Episode = {
   async createEpisode(
     _parent: unknown,
-    args: EpisodeCreateArgs,
+    args: Prisma.EpisodeCreateArgs,
     ctx: Context,
     _info: unknown
   ): Promise<EpisodeType> {
@@ -27,11 +21,13 @@ export const Episode = {
     ctx: Context,
     _info: unknown
   ): Promise<EpisodeType[]> {
-    const createOperation = args.data.map(async (input: EpisodeCreateInput) => {
-      return await ctx.prisma.episode.create({
-        data: input,
-      });
-    });
+    const createOperation = args.data.map(
+      async (input: Prisma.EpisodeCreateInput) => {
+        return await ctx.prisma.episode.create({
+          data: input,
+        });
+      }
+    );
 
     const created = await Promise.all(createOperation);
 
@@ -40,7 +36,7 @@ export const Episode = {
 
   async updateEpisode(
     _parent: unknown,
-    args: EpisodeUpdateArgs,
+    args: Prisma.EpisodeUpdateArgs,
     ctx: Context,
     _info: unknown
   ): Promise<EpisodeType> {
@@ -49,7 +45,7 @@ export const Episode = {
 
   async deleteEpisode(
     _parent: unknown,
-    args: EpisodeDeleteArgs,
+    args: Prisma.EpisodeDeleteArgs,
     ctx: Context,
     _info: unknown
   ): Promise<EpisodeType> {

@@ -1,4 +1,4 @@
-import { User, UserUpdateArgs } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
 import { Context } from '../../utils';
@@ -11,14 +11,14 @@ type AuthPayload = {
 export const Auth = {
   async login(
     _parent: unknown,
-    { data }: UserUpdateArgs,
+    { data }: Prisma.UserCreateArgs,
     ctx: Context
   ): Promise<AuthPayload> {
     if (!data?.username || !data?.password) {
       throw new Error('Login failed.');
     }
 
-    const user = await ctx.prisma.user.findOne({
+    const user = await ctx.prisma.user.findUnique({
       where: { username: data.username.toLowerCase().trim() },
     });
 

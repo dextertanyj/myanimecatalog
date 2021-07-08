@@ -42,7 +42,7 @@ export const Series = {
     ctx: Context
   ): Promise<SeriesType[]> {
     return ctx.prisma.series
-      .findOne({
+      .findUnique({
         where: { id: parent.id },
       })
       .prequels();
@@ -54,7 +54,7 @@ export const Series = {
     ctx: Context
   ): Promise<SeriesType[]> {
     return ctx.prisma.series
-      .findOne({
+      .findUnique({
         where: { id: parent.id },
       })
       .sequels();
@@ -66,7 +66,7 @@ export const Series = {
     ctx: Context
   ): Promise<SeriesType[]> {
     return ctx.prisma.series
-      .findOne({
+      .findUnique({
         where: { id: parent.id },
       })
       .sideStories();
@@ -78,7 +78,7 @@ export const Series = {
     ctx: Context
   ): Promise<SeriesType[]> {
     return ctx.prisma.series
-      .findOne({
+      .findUnique({
         where: { id: parent.id },
       })
       .mainStories();
@@ -90,7 +90,7 @@ export const Series = {
     ctx: Context
   ): Promise<SeriesType[]> {
     return ctx.prisma.series
-      .findOne({
+      .findUnique({
         where: { id: parent.id },
       })
       .relatedSeries();
@@ -102,7 +102,7 @@ export const Series = {
     ctx: Context
   ): Promise<SeriesType[]> {
     return ctx.prisma.series
-      .findOne({
+      .findUnique({
         where: { id: parent.id },
       })
       .relatedAlternatives();
@@ -129,7 +129,7 @@ export const Series = {
     if (!userId) {
       return null;
     }
-    return ctx.prisma.userProgress.findOne({
+    return ctx.prisma.userProgress.findUnique({
       where: {
         seriesId_userId: {
           seriesId: parent.id,
@@ -158,7 +158,7 @@ export const Series = {
     if (!userId) {
       return null;
     }
-    const progress = await ctx.prisma.userProgress.findOne({
+    const progress = await ctx.prisma.userProgress.findUnique({
       where: {
         seriesId_userId: {
           seriesId: parent.id,

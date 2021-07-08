@@ -22,6 +22,10 @@
             "error",
             "always"
         ],
+        "comma-dangle": [
+            "warn",
+            "only-multiline"
+        ],
         "no-unused-vars": "off",
         "array-bracket-newline": "warn",
         "consistent-return": "error",

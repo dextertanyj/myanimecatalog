@@ -1,13 +1,13 @@
-import { FindOneSeriesArgs, Series as SeriesType } from '@prisma/client';
+import { Prisma, Series as SeriesType } from '@prisma/client';
 import { Context } from '../../utils';
 
 export const Series = {
   async series(
     _parent: unknown,
-    args: FindOneSeriesArgs,
+    args: Prisma.SeriesFindUniqueArgs,
     ctx: Context
   ): Promise<SeriesType | null> {
-    return await ctx.prisma.series.findOne(args);
+    return await ctx.prisma.series.findUnique(args);
   },
 
   async allSeries(

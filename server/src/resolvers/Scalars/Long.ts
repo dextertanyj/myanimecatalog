@@ -1,10 +1,14 @@
 import { GraphQLScalarType, Kind, ValueNode } from 'graphql';
 
 function isNumber(value: unknown) {
-  if (Number.isSafeInteger(value)) {
-    return value;
-  } else {
-    return null;
+  try {
+    if (Number.isSafeInteger(Number(value))) {
+      return Number(value);
+    } else {
+      return null;
+    }
+  } catch {
+    throw new Error(`Invalid value provided.`);
   }
 }
 

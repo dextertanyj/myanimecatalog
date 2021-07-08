@@ -1,15 +1,10 @@
-import {
-  File as FileType,
-  FileCreateArgs,
-  FileDeleteArgs,
-  FileUpdateArgs,
-} from '@prisma/client';
+import { File as FileType, Prisma } from '@prisma/client';
 import { Context } from '../../utils';
 
 export const File = {
   async createFile(
     _parent: unknown,
-    args: FileCreateArgs,
+    args: Prisma.FileCreateArgs,
     ctx: Context
   ): Promise<FileType | null> {
     return ctx.prisma.file.create(args);
@@ -17,7 +12,7 @@ export const File = {
 
   async updateFile(
     _parent: unknown,
-    args: FileUpdateArgs,
+    args: Prisma.FileUpdateArgs,
     ctx: Context
   ): Promise<FileType> {
     return ctx.prisma.file.update(args);
@@ -25,7 +20,7 @@ export const File = {
 
   async deleteFile(
     _parent: unknown,
-    args: FileDeleteArgs,
+    args: Prisma.FileDeleteArgs,
     ctx: Context
   ): Promise<FileType> {
     return ctx.prisma.file.delete(args);

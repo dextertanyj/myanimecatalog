@@ -1,4 +1,4 @@
-import { FindOneUserArgs, User as UserType } from '@prisma/client';
+import { Prisma, User as UserType } from '@prisma/client';
 import { Context } from '../../utils';
 
 export const User = {
@@ -7,7 +7,7 @@ export const User = {
     _args: unknown,
     ctx: Context
   ): Promise<UserType | null> {
-    const user = await ctx.prisma.user.findOne({
+    const user = await ctx.prisma.user.findUnique({
       where: { id: ctx.userId },
     });
     return user;
@@ -15,10 +15,10 @@ export const User = {
 
   async user(
     _parent: unknown,
-    args: FindOneUserArgs,
+    args: Prisma.UserFindUniqueArgs,
     ctx: Context
   ): Promise<UserType | null> {
-    const user = await ctx.prisma.user.findOne(args);
+    const user = await ctx.prisma.user.findUnique(args);
     return user;
   },
 
