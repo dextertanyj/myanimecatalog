@@ -44,7 +44,7 @@ export const FileRecordsExportButton = (props: Props) => {
         ?.map((file) => file?.path)
         .filter(Boolean)
         .reduce((previous, current) => {
-          return previous + `"${current}",\r\n`;
+          return previous + `"${current}"\r\n`;
         }, '');
       closeSnackbar('file-generation');
       if (content) {
