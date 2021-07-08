@@ -5,27 +5,32 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControlLabel,
   Grid,
+  Hidden,
   makeStyles,
   MenuItem,
+  Switch,
   TextField,
   Theme,
+  Typography
 } from '@material-ui/core';
 import { Formik, FormikProps, FormikValues } from 'formik';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
-import * as Yup from 'yup';
 import {
   Source,
   useCreateFileMutation,
   useFileLazyQuery,
-  useUpdateFileMutation,
+  useUpdateFileMutation
 } from '../../gql/queries';
 import { ActionType } from '../../utils/constants';
 import { renderSource } from '../../utils/enumRender';
 import { convertDuration, numberOrUndefined } from '../../utils/form';
+import { FileFormValidationSchema } from '../../utils/validation';
 import { GenericError, NetworkError } from '../ErrorSnackbars';
 import { CodecAutoComplete } from '../inputs/CodecAutoComplete';
+import { FileInfoPopulateField } from '../inputs/FileInfoPopulateFieldButton';
 import { FormLoading } from '../skeletons/FormLoading';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -66,16 +71,16 @@ type Props = {
   onClose: () => void;
 };
 
-type FormValues = {
+export type FormValues = {
   path: string | undefined;
   remarks: string | undefined;
   hours: number | undefined;
   minutes: number | undefined;
   seconds: number | undefined;
-  fileSize: number | undefined;
+  size: number | undefined;
   source: Source | undefined;
-  resolutionWidth: number | undefined;
-  resolutionHeight: number | undefined;
+  width: number | undefined;
+  height: number | undefined;
   codec: string | undefined;
   checksum: string | undefined;
 };
@@ -85,6 +90,7 @@ export const FileForm = (props: Props) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const [innerWidth, setInnerWidth] = useState<number>(window.innerWidth);
+  const [advancedTools, setAdvancedTools] = useState<boolean>(false);
 
   const [loadFile, { data: fileData, loading: loadingFile }] = useFileLazyQuery(
     {
@@ -111,6 +117,10 @@ export const FileForm = (props: Props) => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  const toggleAdvancedTools = () => {
+    setAdvancedTools(!advancedTools);
+  };
 
   const [createFileMutation] = useCreateFileMutation({
     onError: (error: ApolloError) => {
@@ -158,14 +168,29 @@ export const FileForm = (props: Props) => {
 
   const onSubmitCreate = async (values: FormikValues) => {
     if (props.episodeId) {
-      let { path, hours, minutes, seconds, ...rest } = values;
+      let {
+        path,
+        hours,
+        minutes,
+        seconds,
+        width,
+        height,
+        size,
+        ...rest
+      } = values;
       path = path.replace(/\\/g, '/');
+      const fileSize = size;
       const duration = hours * 3600 + minutes * 60 + seconds;
+      const resolutionWidth = width;
+      const resolutionHeight = height;
       await createFileMutation({
         variables: {
           data: {
             path,
             duration,
+            resolutionWidth,
+            resolutionHeight,
+            fileSize,
             ...rest,
             episode: {
               connect: {
@@ -184,15 +209,30 @@ export const FileForm = (props: Props) => {
 
   const onSubmitUpdate = async (values: FormikValues) => {
     if (props.fileId) {
-      let { path, hours, minutes, seconds, ...rest } = values;
+      let {
+        path,
+        hours,
+        minutes,
+        seconds,
+        width,
+        height,
+        size,
+        ...rest
+      } = values;
       path = path.replace(/\\/g, '/');
+      const fileSize = size;
       const duration = hours * 3600 + minutes * 60 + seconds;
+      const resolutionWidth = width;
+      const resolutionHeight = height;
       await updateFileMutation({
         variables: {
           where: { id: props.fileId },
           data: {
             path,
             duration,
+            resolutionWidth,
+            resolutionHeight,
+            fileSize,
             ...rest,
           },
         },
@@ -207,7 +247,7 @@ export const FileForm = (props: Props) => {
   const initialFormValues: FormValues = {
     path:
       (actionType === ActionType.UPDATE && fileData?.file?.path) || undefined,
-    fileSize:
+    size:
       (actionType === ActionType.UPDATE && fileData?.file?.fileSize) ||
       undefined,
     hours: numberOrUndefined(
@@ -222,10 +262,10 @@ export const FileForm = (props: Props) => {
       actionType === ActionType.UPDATE &&
         convertDuration(fileData?.file?.duration)[2]
     ),
-    resolutionWidth: numberOrUndefined(
+    width: numberOrUndefined(
       actionType === ActionType.UPDATE && fileData?.file?.resolutionWidth
     ),
-    resolutionHeight: numberOrUndefined(
+    height: numberOrUndefined(
       actionType === ActionType.UPDATE && fileData?.file?.resolutionHeight
     ),
     codec:
@@ -247,10 +287,32 @@ export const FileForm = (props: Props) => {
       fullWidth={true}
       maxWidth={'lg'}
     >
-      <DialogTitle key="DialogTitle">
-        {props.action === ActionType.CREATE
-          ? `Add A New File`
-          : `Editing ${fileData?.file?.path?.split('/').pop()}`}
+      <DialogTitle disableTypography key="DialogTitle">
+        <Grid container>
+          <Grid item xs={12} sm={6}>
+            <Typography variant="h6">
+              {props.action === ActionType.CREATE
+                ? `Add A New File`
+                : `Editing ${fileData?.file?.path?.split('/').pop()}`}
+            </Typography>
+          </Grid>
+          <Hidden smDown>
+            <Grid item container sm={6} justify="flex-end">
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={advancedTools}
+                    onChange={toggleAdvancedTools}
+                    name="advancedToolToggle"
+                    color="primary"
+                  />
+                }
+                label="Advanced Tools"
+                labelPlacement="start"
+              />
+            </Grid>
+          </Hidden>
+        </Grid>
       </DialogTitle>
       <DialogContent>
         {loadingFile ? (
@@ -264,30 +326,7 @@ export const FileForm = (props: Props) => {
                 ? onSubmitCreate
                 : onSubmitUpdate
             }
-            validationSchema={Yup.object({
-              path: Yup.string().required(`Please enter the file path`),
-              codec: Yup.string().required(`Please enter the video codec`),
-              hours: Yup.number()
-                .required(`Please input the duration`)
-                .min(0, `Invalid duration`),
-              minutes: Yup.number()
-                .required(`Please input the duration`)
-                .min(0, `Invalid duration`),
-              seconds: Yup.number()
-                .required(`Please input the duration`)
-                .min(0, `Invalid duration`),
-              fileSize: Yup.number()
-                .required(`Please enter the file size`)
-                .min(1, `Invalid file size`),
-              source: Yup.string().required(`Please choose a source type`),
-              resolutionWidth: Yup.number()
-                .required(`Please enter the resolution`)
-                .min(1, `Invalid resolution`),
-              resolutionHeight: Yup.number()
-                .required(`Please enter the resolution`)
-                .min(1, `Invalid resolution`),
-              checksum: Yup.string().required(`Please enter the checksum`),
-            })}
+            validationSchema={FileFormValidationSchema}
           >
             {(props: FormikProps<FormValues>) => {
               const {
@@ -380,15 +419,13 @@ export const FileForm = (props: Props) => {
                         variant="outlined"
                         margin="normal"
                         fullWidth
-                        name="fileSize"
+                        name="size"
                         label="Size (Bytes)"
-                        id="fileSize"
+                        id="size"
                         type="number"
-                        value={
-                          values.fileSize || (values.fileSize === 0 ? 0 : '')
-                        }
-                        error={touched.fileSize && !!errors.fileSize}
-                        helperText={touched.fileSize && errors.fileSize}
+                        value={values.size || (values.size === 0 ? 0 : '')}
+                        error={touched.size && !!errors.size}
+                        helperText={touched.size && errors.size}
                         onChange={handleChange}
                         onBlur={handleBlur}
                         className={classes.formItem}
@@ -425,20 +462,13 @@ export const FileForm = (props: Props) => {
                         variant="outlined"
                         margin="normal"
                         fullWidth
-                        name="resolutionWidth"
+                        name="width"
                         label="Resolution (Width)"
-                        id="resolutionWidth"
+                        id="width"
                         type="number"
-                        value={
-                          values.resolutionWidth ||
-                          (values.resolutionWidth === 0 ? 0 : '')
-                        }
-                        error={
-                          touched.resolutionWidth && !!errors.resolutionWidth
-                        }
-                        helperText={
-                          touched.resolutionWidth && errors.resolutionWidth
-                        }
+                        value={values.width || (values.width === 0 ? 0 : '')}
+                        error={touched.width && !!errors.width}
+                        helperText={touched.width && errors.width}
                         onChange={handleChange}
                         onBlur={handleBlur}
                         className={classes.formItem}
@@ -449,20 +479,13 @@ export const FileForm = (props: Props) => {
                         variant="outlined"
                         margin="normal"
                         fullWidth
-                        name="resolutionHeight"
+                        name="height"
                         label="Resolution (Height)"
-                        id="resolutionHeight"
+                        id="height"
                         type="number"
-                        value={
-                          values.resolutionHeight ||
-                          (values.resolutionHeight === 0 ? 0 : '')
-                        }
-                        error={
-                          touched.resolutionHeight && !!errors.resolutionHeight
-                        }
-                        helperText={
-                          touched.resolutionHeight && errors.resolutionHeight
-                        }
+                        value={values.height || (values.height === 0 ? 0 : '')}
+                        error={touched.height && !!errors.height}
+                        helperText={touched.height && errors.height}
                         onChange={handleChange}
                         onBlur={handleBlur}
                         className={classes.formItem}
@@ -511,6 +534,24 @@ export const FileForm = (props: Props) => {
                         className={classes.formItem}
                       />
                     </Grid>
+                    {advancedTools && (
+                      <FileInfoPopulateField
+                        fields={[
+                          'path',
+                          'size',
+                          'hours',
+                          'minutes',
+                          'seconds',
+                          'width',
+                          'height',
+                          'codec',
+                          'checksum',
+                        ]}
+                        setFieldValue={setFieldValue}
+                        setTouched={setTouched}
+                        values={values}
+                      />
+                    )}
                   </Grid>
                   <DialogActions className={classes.dialogButtons}>
                     <Button onClick={handleReset}>Reset</Button>
