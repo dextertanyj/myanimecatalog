@@ -6,7 +6,7 @@ import {
   IconButton,
   makeStyles,
   Theme,
-  Typography,
+  Typography
 } from '@material-ui/core';
 import { blueGrey } from '@material-ui/core/colors';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
@@ -113,7 +113,7 @@ export const FileInfo = (props: Props) => {
   }, []);
 
   const filePath = file.path?.substring(0, file.path?.lastIndexOf('/'));
-  const fileName = file.path?.substring(file.path?.lastIndexOf('/'));
+  const fileName = file.path?.substring(file.path?.lastIndexOf('/') + 1);
 
   return (
     <>
