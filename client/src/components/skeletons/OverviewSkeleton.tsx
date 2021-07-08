@@ -89,7 +89,7 @@ export const OverviewSkeleton = () => {
         title={<Typography variant="h5">Overview</Typography>}
       />
       <CardContent className={classes.cardContent}>
-        <Doughnut data={data} options={options} />
+        <Doughnut type="doughnut" data={data} options={options} />
       </CardContent>
     </Card>
   );

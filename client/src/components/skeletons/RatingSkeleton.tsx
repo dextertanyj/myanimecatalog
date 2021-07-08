@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import { blueGrey } from '@material-ui/core/colors';
 import React from 'react';
-import { HorizontalBar } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -56,16 +56,19 @@ export const RatingSkeleton = () => {
   };
 
   const options = {
-    legend: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+    indexAxis: 'y',
     scales: {
-      xAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-            precision: 0,
-          },
+      x: {
+        ticks: {
+          beginAtZero: true,
+          precision: 0,
         },
-      ],
+      },
     },
   };
 
@@ -76,7 +79,7 @@ export const RatingSkeleton = () => {
         title={<Typography variant="h5">Your Ratings</Typography>}
       />
       <CardContent className={classes.cardContent} style={{ height: '336px' }}>
-        <HorizontalBar data={data} options={options} />
+        <Bar type="bar" data={data} options={options} />
       </CardContent>
     </Card>
   );

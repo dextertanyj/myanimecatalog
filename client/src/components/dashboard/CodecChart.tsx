@@ -1,4 +1,4 @@
-import { darken, fade, Grid } from '@material-ui/core';
+import { darken, alpha, Grid } from '@material-ui/core';
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import { File } from '../../gql/documents';
@@ -72,9 +72,9 @@ export const CodecChart = (props: Props) => {
         barPercentage: 0.85,
         data: processed.map((valueLabel) => valueLabel.value),
         borderWidth: 1,
-        backgroundColor: barColor.map((color) => fade(color, 0.8)),
+        backgroundColor: barColor.map((color) => alpha(color, 0.8)),
         borderColor: barColor.map((color) => darken(color, 0.2)),
-        hoverBackgroundColor: barColor.map((color) => fade(color, 0.5)),
+        hoverBackgroundColor: barColor.map((color) => alpha(color, 0.5)),
         hoverBorderColor: barColor.map((color) => darken(color, 0.2)),
       },
     ],
@@ -82,21 +82,23 @@ export const CodecChart = (props: Props) => {
   };
 
   const options = {
-    legend: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
     scales: {
-      yAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-            precision: 0,
-          },
+      y: {
+        ticks: {
+          beginAtZero: true,
+          precision: 0,
         },
-      ],
+      },
     },
   };
   return (
     <Grid item xs={11}>
-      <Bar data={data} options={options} />
+      <Bar type="bar" data={data} options={options} />
     </Grid>
   );
 };

@@ -93,7 +93,7 @@ export const OverviewDoughnut = (props: Props) => {
   };
   return (
     <div>
-      <Doughnut data={data} options={options} />
+      <Doughnut type="doughnut" data={data} options={options} />
     </div>
   );
 };
