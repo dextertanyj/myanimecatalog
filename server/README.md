@@ -55,7 +55,9 @@ Contains the GraphQL schema definitions and resolvers.
 If upgrading from v1.0.0, follow the steps listed below: 
 1. Pull the updated repository.
 2. With the database docker container running, SSH into the docker container using `yarn server:sh`.
-3. Backup your database and run the following commands to baseline the existing database. 
+3. If necessary, run the SQL commands listed in `prisma/resolution_migration.sql`.
+4. Backup your database and run the following commands to baseline the existing database.
    - `npx prisma migrate resolve --applied 20210707040816_init`
    - `npx prisma migrate resolve --applied 20210707063345_update_mappings`
-4. Continue with the regular databse migration steps using `yarn deploy`. 
+   - `npx prisma migrate resolve --applied 20210708064711_convert_resolution`
+5. Continue with the regular databse migration steps using `yarn deploy`. 
