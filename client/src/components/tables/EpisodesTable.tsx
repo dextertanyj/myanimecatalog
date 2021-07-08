@@ -159,10 +159,9 @@ export const EpisodesTable = (props: Props) => {
   const onGridReady = useCallback((params: any) => {
     const { api, columnApi } = params;
     setGridApi({ api, columnApi });
-    if (window.innerWidth >= 960) {
-    } else if (window.innerWidth >= 600) {
+    if (window.innerWidth < 960 && window.innerWidth >= 600) {
       columnApi.setColumnsVisible(['remarks'], false);
-    } else {
+    } else if (window.innerWidth < 600) {
       columnApi.setColumnsVisible(['remarks', 'episodeNumber'], false);
     }
   }, []);

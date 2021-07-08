@@ -7,7 +7,7 @@ import { UserProgressInfoTable } from '../../components/tables/UserProgressInfoT
 import { withAuth } from '../../utils/withAuth';
 
 const SeriesPage = () => {
-  const { seriesId } = useParams();
+  const { seriesId } = useParams<{ seriesId: string }>();
 
   return (
     <div>

@@ -12,7 +12,7 @@ import {
   Slider,
   TextField,
   Theme,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import { Formik, FormikProps, FormikValues } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -24,7 +24,7 @@ import {
   useDeleteUserProgressMutation,
   useMySeriesProgressLazyQuery,
   useSeriesLazyQuery,
-  useUpdateUserProgressMutation
+  useUpdateUserProgressMutation,
 } from '../../gql/queries';
 import { ActionType } from '../../utils/constants';
 import { renderWatchStatus } from '../../utils/enumRender';

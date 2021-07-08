@@ -229,7 +229,7 @@ export const UserForm = (props: Props): ReactElement => {
     name: Yup.string().required(`Please enter a name`),
     password: Yup.string().required(`Please enter a password`),
     passwordConfirm: Yup.string().when('password', {
-      is: (password) => !!password,
+      is: (password: string) => !!password,
       then: Yup.string()
         .required(`Passwords do no match`)
         .oneOf([Yup.ref('password')], `Passwords do not match`),
@@ -242,7 +242,7 @@ export const UserForm = (props: Props): ReactElement => {
     name: Yup.string().required(`Please enter a name`),
     password: Yup.string(),
     passwordConfirm: Yup.string().when('password', {
-      is: (password) => !!password,
+      is: (password: string) => !!password,
       then: Yup.string()
         .required(`Passwords do no match`)
         .oneOf([Yup.ref('password')], `Passwords do not match`),

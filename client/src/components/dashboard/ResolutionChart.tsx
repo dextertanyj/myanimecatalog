@@ -36,9 +36,13 @@ const processResolution = (
   const resolutionMap = new Map<number, Map<number, number>>();
   files.forEach((file) => {
     if (file.resolutionHeight && file.resolutionWidth) {
-      const existing = resolutionMap.get(file.resolutionWidth)?.get(file.resolutionHeight);
+      const existing = resolutionMap
+        .get(file.resolutionWidth)
+        ?.get(file.resolutionHeight);
       if (existing) {
-        resolutionMap.get(file.resolutionWidth)?.set(file.resolutionHeight, existing + 1);
+        resolutionMap
+          .get(file.resolutionWidth)
+          ?.set(file.resolutionHeight, existing + 1);
       } else if (resolutionMap.has(file.resolutionWidth)) {
         const map = resolutionMap.get(file.resolutionWidth);
         map?.set(file.resolutionHeight, 1);

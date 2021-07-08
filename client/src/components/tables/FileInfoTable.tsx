@@ -6,7 +6,7 @@ import {
   IconButton,
   makeStyles,
   Theme,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import { blueGrey } from '@material-ui/core/colors';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
@@ -100,7 +100,6 @@ export const FileInfo = (props: Props) => {
           },
         },
       });
-    } else {
     }
   };
 

@@ -114,7 +114,7 @@ export const ChangePasswordForm = (props: Props): ReactElement => {
     ),
     password: Yup.string().required(`Please enter a new password`),
     passwordConfirm: Yup.string().when('password', {
-      is: (password) => !!password,
+      is: (password: string) => !!password,
       then: Yup.string()
         .required(`Passwords do no match`)
         .oneOf([Yup.ref('password')], `Passwords do not match`),
