@@ -11,6 +11,7 @@
     "gen:migrate": "prisma migrate dev --create-only",
     "migrate": "prisma migrate dev",
     "deploy": "prisma migrate deploy",
+    "server:sh": "docker exec -it $(docker-compose ps -q server) sh",
     "lint": "eslint --fix \"src/**/*.ts\""
   },
   "dependencies": {
