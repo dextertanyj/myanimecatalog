@@ -110,19 +110,20 @@ model AlternativeTitle {
 }
 
 model File {
-  id         String   @id @default(cuid())
-  path       String   @db.Text
-  checksum   String
-  fileSize   BigInt   @db.BigInt
-  duration   Int
-  resolution String
-  source     Source
-  codec      String
-  remarks    String?  @db.Text
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  episode    Episode  @relation(fields: [episodeId], references: [id])
-  episodeId  String
+  id               String   @id @default(cuid())
+  path             String   @db.Text
+  checksum         String
+  fileSize         BigInt   @db.BigInt
+  duration         Int
+  resolutionHeight Int
+  resolutionWidth  Int
+  source           Source
+  codec            String
+  remarks          String?  @db.Text
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  episode          Episode  @relation(fields: [episodeId], references: [id])
+  episodeId        String
 }
 
 model UserProgress {
@@ -143,6 +144,7 @@ model UserProgress {
   remarks   String?
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
+
   @@unique([seriesId, userId])
 }
 
