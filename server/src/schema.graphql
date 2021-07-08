@@ -168,7 +168,8 @@ input FileCreateUpdateInput {
   checksum: String
   fileSize: Long
   duration: Int
-  resolution: String
+  resolutionHeight: Int
+  resolutionWidth: Int
   source: Source
   codec: String
   remarks: String
@@ -384,7 +385,8 @@ type File {
   checksum: String
   fileSize: Long
   duration: Int
-  resolution: String
+  resolutionHeight: Int
+  resolutionWidth: Int
   source: Source
   codec: String
   remarks: String

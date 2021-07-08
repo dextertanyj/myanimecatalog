@@ -28,7 +28,8 @@ query CatalogStatistics {
     allFiles {
       codec
       source
-      resolution
+      resolutionHeight
+      resolutionWidth
     }
     totalFileSize
     totalDuration
@@ -60,7 +61,8 @@ query ExportData {
         fileSize
         checksum
         duration
-        resolution
+        resolutionHeight
+        resolutionWidth
         source
         codec
         remarks

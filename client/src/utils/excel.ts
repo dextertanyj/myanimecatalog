@@ -197,7 +197,7 @@ export const generateExcel = async (data: Series[]): Promise<Blob> => {
                 currentRow++;
                 worksheet.getRow(currentRow).getCell(1).value = 'Resolution';
                 worksheet.getRow(currentRow).getCell(2).value =
-                  file.resolution ?? '';
+                  file.resolutionWidth + ' × ' + file.resolutionHeight ?? '';
                 worksheet.getRow(currentRow).getCell(5).value = 'Source';
                 worksheet.getRow(currentRow).getCell(6).value =
                   (file.source && renderSource(file.source)) ?? '';

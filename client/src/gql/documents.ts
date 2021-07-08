@@ -183,7 +183,8 @@ export type FileCreateUpdateInput = {
   readonly checksum?: Maybe<Scalars['String']>;
   readonly fileSize?: Maybe<Scalars['Long']>;
   readonly duration?: Maybe<Scalars['Int']>;
-  readonly resolution?: Maybe<Scalars['String']>;
+  readonly resolutionHeight?: Maybe<Scalars['Int']>;
+  readonly resolutionWidth?: Maybe<Scalars['Int']>;
   readonly source?: Maybe<Source>;
   readonly codec?: Maybe<Scalars['String']>;
   readonly remarks?: Maybe<Scalars['String']>;
@@ -537,7 +538,8 @@ export type File = {
   readonly checksum?: Maybe<Scalars['String']>;
   readonly fileSize?: Maybe<Scalars['Long']>;
   readonly duration?: Maybe<Scalars['Int']>;
-  readonly resolution?: Maybe<Scalars['String']>;
+  readonly resolutionHeight?: Maybe<Scalars['Int']>;
+  readonly resolutionWidth?: Maybe<Scalars['Int']>;
   readonly source?: Maybe<Source>;
   readonly codec?: Maybe<Scalars['String']>;
   readonly remarks?: Maybe<Scalars['String']>;
@@ -679,7 +681,8 @@ export const CatalogStatistics = gql`
     allFiles {
       codec
       source
-      resolution
+      resolutionHeight
+      resolutionWidth
     }
     totalFileSize
     totalDuration
@@ -712,7 +715,8 @@ export const ExportData = gql`
         fileSize
         checksum
         duration
-        resolution
+        resolutionHeight
+        resolutionWidth
         source
         codec
         remarks
@@ -809,7 +813,8 @@ export const FilesForEpisode = gql`
     duration
     fileSize
     source
-    resolution
+    resolutionHeight
+    resolutionWidth
     codec
     checksum
     remarks
@@ -826,7 +831,8 @@ export const File = gql`
     duration
     fileSize
     source
-    resolution
+    resolutionHeight
+    resolutionWidth
     codec
     checksum
     remarks
@@ -843,7 +849,8 @@ export const Files = gql`
     duration
     fileSize
     source
-    resolution
+    resolutionHeight
+    resolutionWidth
     codec
     checksum
     remarks
