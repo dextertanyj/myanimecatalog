@@ -5,7 +5,8 @@ query FilesForEpisode($where: EpisodeWhereUniqueInput!) {
     duration
     fileSize
     source
-    resolution
+    resolutionHeight
+    resolutionWidth
     codec
     checksum
     remarks
@@ -21,7 +22,8 @@ query File($where: FileWhereUniqueInput!) {
     duration
     fileSize
     source
-    resolution
+    resolutionHeight
+    resolutionWidth
     codec
     checksum
     remarks
@@ -37,7 +39,8 @@ query Files {
     duration
     fileSize
     source
-    resolution
+    resolutionHeight
+    resolutionWidth
     codec
     checksum
     remarks

@@ -189,7 +189,8 @@ export type FileCreateUpdateInput = {
   readonly checksum?: Maybe<Scalars['String']>;
   readonly fileSize?: Maybe<Scalars['Long']>;
   readonly duration?: Maybe<Scalars['Int']>;
-  readonly resolution?: Maybe<Scalars['String']>;
+  readonly resolutionHeight?: Maybe<Scalars['Int']>;
+  readonly resolutionWidth?: Maybe<Scalars['Int']>;
   readonly source?: Maybe<Source>;
   readonly codec?: Maybe<Scalars['String']>;
   readonly remarks?: Maybe<Scalars['String']>;
@@ -543,7 +544,8 @@ export type File = {
   readonly checksum?: Maybe<Scalars['String']>;
   readonly fileSize?: Maybe<Scalars['Long']>;
   readonly duration?: Maybe<Scalars['Int']>;
-  readonly resolution?: Maybe<Scalars['String']>;
+  readonly resolutionHeight?: Maybe<Scalars['Int']>;
+  readonly resolutionWidth?: Maybe<Scalars['Int']>;
   readonly source?: Maybe<Source>;
   readonly codec?: Maybe<Scalars['String']>;
   readonly remarks?: Maybe<Scalars['String']>;
@@ -671,7 +673,7 @@ export type CatalogStatisticsQuery = (
     & Pick<CatalogStatistics, 'totalSeriesCount' | 'totalEpisodeCount' | 'totalFileSize' | 'totalDuration'>
     & { readonly allFiles?: Maybe<ReadonlyArray<Maybe<(
       { readonly __typename?: 'File' }
-      & Pick<File, 'codec' | 'source' | 'resolution'>
+      & Pick<File, 'codec' | 'source' | 'resolutionHeight' | 'resolutionWidth'>
     )>>> }
   )> }
 );
@@ -695,7 +697,7 @@ export type ExportDataQuery = (
         & Pick<AlternativeTitle, 'title'>
       )>>>, readonly files?: Maybe<ReadonlyArray<Maybe<(
         { readonly __typename?: 'File' }
-        & Pick<File, 'path' | 'fileSize' | 'checksum' | 'duration' | 'resolution' | 'source' | 'codec' | 'remarks'>
+        & Pick<File, 'path' | 'fileSize' | 'checksum' | 'duration' | 'resolutionHeight' | 'resolutionWidth' | 'source' | 'codec' | 'remarks'>
       )>>> }
     )>>>, readonly prequels?: Maybe<ReadonlyArray<Maybe<(
       { readonly __typename?: 'Series' }
@@ -817,7 +819,7 @@ export type FilesForEpisodeQuery = (
   { readonly __typename?: 'Query' }
   & { readonly filesForEpisode?: Maybe<ReadonlyArray<Maybe<(
     { readonly __typename?: 'File' }
-    & Pick<File, 'id' | 'path' | 'duration' | 'fileSize' | 'source' | 'resolution' | 'codec' | 'checksum' | 'remarks' | 'createdAt' | 'updatedAt'>
+    & Pick<File, 'id' | 'path' | 'duration' | 'fileSize' | 'source' | 'resolutionHeight' | 'resolutionWidth' | 'codec' | 'checksum' | 'remarks' | 'createdAt' | 'updatedAt'>
   )>>> }
 );
 
@@ -830,7 +832,7 @@ export type FileQuery = (
   { readonly __typename?: 'Query' }
   & { readonly file?: Maybe<(
     { readonly __typename?: 'File' }
-    & Pick<File, 'id' | 'path' | 'duration' | 'fileSize' | 'source' | 'resolution' | 'codec' | 'checksum' | 'remarks' | 'createdAt' | 'updatedAt'>
+    & Pick<File, 'id' | 'path' | 'duration' | 'fileSize' | 'source' | 'resolutionHeight' | 'resolutionWidth' | 'codec' | 'checksum' | 'remarks' | 'createdAt' | 'updatedAt'>
   )> }
 );
 
@@ -841,7 +843,7 @@ export type FilesQuery = (
   { readonly __typename?: 'Query' }
   & { readonly files?: Maybe<ReadonlyArray<Maybe<(
     { readonly __typename?: 'File' }
-    & Pick<File, 'id' | 'path' | 'duration' | 'fileSize' | 'source' | 'resolution' | 'codec' | 'checksum' | 'remarks' | 'createdAt' | 'updatedAt'>
+    & Pick<File, 'id' | 'path' | 'duration' | 'fileSize' | 'source' | 'resolutionHeight' | 'resolutionWidth' | 'codec' | 'checksum' | 'remarks' | 'createdAt' | 'updatedAt'>
   )>>> }
 );
 
@@ -1485,7 +1487,8 @@ export const CatalogStatisticsDocument = gql`
     allFiles {
       codec
       source
-      resolution
+      resolutionHeight
+      resolutionWidth
     }
     totalFileSize
     totalDuration
@@ -1562,7 +1565,8 @@ export const ExportDataDocument = gql`
         fileSize
         checksum
         duration
-        resolution
+        resolutionHeight
+        resolutionWidth
         source
         codec
         remarks
@@ -1970,7 +1974,8 @@ export const FilesForEpisodeDocument = gql`
     duration
     fileSize
     source
-    resolution
+    resolutionHeight
+    resolutionWidth
     codec
     checksum
     remarks
@@ -2032,7 +2037,8 @@ export const FileDocument = gql`
     duration
     fileSize
     source
-    resolution
+    resolutionHeight
+    resolutionWidth
     codec
     checksum
     remarks
@@ -2094,7 +2100,8 @@ export const FilesDocument = gql`
     duration
     fileSize
     source
-    resolution
+    resolutionHeight
+    resolutionWidth
     codec
     checksum
     remarks
