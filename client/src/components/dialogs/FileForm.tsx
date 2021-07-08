@@ -13,7 +13,7 @@ import {
   Switch,
   TextField,
   Theme,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import { Formik, FormikProps, FormikValues } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -22,7 +22,7 @@ import {
   Source,
   useCreateFileMutation,
   useFileLazyQuery,
-  useUpdateFileMutation
+  useUpdateFileMutation,
 } from '../../gql/queries';
 import { ActionType } from '../../utils/constants';
 import { renderSource } from '../../utils/enumRender';
