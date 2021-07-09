@@ -14,6 +14,8 @@ query Episode($where: EpisodeWhereUniqueInput!) {
     remarks
     createdAt
     updatedAt
+    previous
+    next
   }
 }
 

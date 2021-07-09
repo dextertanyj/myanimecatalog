@@ -346,6 +346,8 @@ type Episode {
   remarks: String
   createdAt: DateTime
   updatedAt: DateTime
+  previous: String
+  next: String
 }
 
 type Series {

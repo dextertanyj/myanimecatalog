@@ -40,4 +40,44 @@ export const Episode = {
       })
       .files();
   },
+
+  async previous(
+    parent: EpisodeType,
+    _args: unknown,
+    ctx: Context
+  ): Promise<string | null> {
+    return ctx.prisma.episode
+      .findFirst({
+        where: {
+          seriesId: parent.seriesId,
+          episodeNumber: {
+            lt: parent.episodeNumber,
+          },
+        },
+        orderBy: {
+          episodeNumber: 'desc',
+        },
+      })
+      .then((episode: EpisodeType | null) => episode?.id ?? null);
+  },
+
+  async next(
+    parent: EpisodeType,
+    _args: unknown,
+    ctx: Context
+  ): Promise<string | null> {
+    return ctx.prisma.episode
+      .findFirst({
+        where: {
+          seriesId: parent.seriesId,
+          episodeNumber: {
+            gt: parent.episodeNumber,
+          },
+        },
+        orderBy: {
+          episodeNumber: 'asc',
+        },
+      })
+      .then((episode: EpisodeType | null) => episode?.id ?? null);
+  },
 };
