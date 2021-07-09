@@ -1,12 +1,11 @@
-import gql from 'graphql-tag';
-import * as React from 'react';
+import { gql } from '@apollo/client';
 import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactComponents from '@apollo/client/react/components';
-import * as ApolloReactHoc from '@apollo/client/react/hoc';
 import * as ApolloReactHooks from '@apollo/client';
 export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+const defaultOptions =  {}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -20,80 +19,68 @@ export type Scalars = {
   Long: number;
 };
 
-
-
-export enum Status {
-  Downloaded = 'DOWNLOADED',
-  Missing = 'MISSING',
-  Unreleased = 'UNRELEASED'
-}
-
-export enum WatchStatus {
-  Completed = 'COMPLETED',
-  Watching = 'WATCHING',
-  Onhold = 'ONHOLD',
-  Pending = 'PENDING',
-  Dropped = 'DROPPED'
-}
-
-export enum Season {
-  Winter = 'WINTER',
-  Fall = 'FALL',
-  Summer = 'SUMMER',
-  Spring = 'SPRING'
-}
-
-export enum Source {
-  Bluray = 'BLURAY',
-  Dvd = 'DVD',
-  Cd = 'CD',
-  Web = 'WEB',
-  Tv = 'TV'
-}
-
-export enum Type {
-  Movie = 'MOVIE',
-  Series = 'SERIES',
-  Musicvideo = 'MUSICVIDEO',
-  Ova = 'OVA',
-  Special = 'SPECIAL'
-}
-
-export enum Role {
-  Readonly = 'READONLY',
-  Write = 'WRITE',
-  Admin = 'ADMIN'
-}
-
-export type UserWhereUniqueInput = {
-  readonly id?: Maybe<Scalars['String']>;
-  readonly username?: Maybe<Scalars['String']>;
-};
-
-export type MeUpdateInput = {
-  readonly username?: Maybe<Scalars['String']>;
-  readonly currentPassword?: Maybe<Scalars['String']>;
-  readonly name?: Maybe<Scalars['String']>;
-  readonly password?: Maybe<Scalars['String']>;
-  readonly passwordAttempts?: Maybe<Scalars['Int']>;
-};
-
-export type UserCreateUpdateInput = {
-  readonly id?: Maybe<Scalars['String']>;
-  readonly username?: Maybe<Scalars['String']>;
-  readonly name?: Maybe<Scalars['String']>;
-  readonly password?: Maybe<Scalars['String']>;
-  readonly passwordAttempts?: Maybe<Scalars['Int']>;
-  readonly role?: Maybe<Role>;
-};
-
-export type UserRelationInput = {
-  readonly connect?: Maybe<UserWhereUniqueInput>;
-  readonly disconnect?: Maybe<UserWhereUniqueInput>;
-};
-
-export type EpisodeWhereUniqueInput = {
+export type AlternativeTitle = {
+  readonly __typename?: 'AlternativeTitle';
   readonly id: Scalars['String'];
+  readonly title: Scalars['String'];
+};
+
+export type AlternativeTitleCreateUpdateInput = {
+  readonly id?: Maybe<Scalars['String']>;
+  readonly title?: Maybe<Scalars['String']>;
+  readonly episode?: Maybe<EpisodeRelationInput>;
+  readonly series?: Maybe<SeriesRelationInput>;
+};
+
+export type AlternativeTitleRelationInput = {
+  readonly create?: Maybe<ReadonlyArray<Maybe<AlternativeTitleCreateUpdateInput>>>;
+  readonly delete?: Maybe<ReadonlyArray<Maybe<AlternativeTitleWhereUniqueInput>>>;
+  readonly update?: Maybe<ReadonlyArray<Maybe<AlternativeTitleUpdateWhereUniqueInput>>>;
+};
+
+export type AlternativeTitleUpdateWhereUniqueInput = {
+  readonly where?: Maybe<AlternativeTitleWhereUniqueInput>;
+  readonly data?: Maybe<AlternativeTitleCreateUpdateInput>;
+};
+
+export type AlternativeTitleWhereUniqueInput = {
+  readonly id: Scalars['String'];
+};
+
+export type AuthPayload = {
+  readonly __typename?: 'AuthPayload';
+  readonly token?: Maybe<Scalars['String']>;
+  readonly user?: Maybe<User>;
+};
+
+export type CatalogStatistics = {
+  readonly __typename?: 'CatalogStatistics';
+  readonly totalSeriesCount?: Maybe<Scalars['Int']>;
+  readonly totalEpisodeCount?: Maybe<Scalars['Int']>;
+  readonly allFiles?: Maybe<ReadonlyArray<Maybe<File>>>;
+  readonly totalFileSize?: Maybe<Scalars['Long']>;
+  readonly totalDuration?: Maybe<Scalars['Int']>;
+};
+
+export type Codec = {
+  readonly __typename?: 'Codec';
+  readonly codec?: Maybe<Scalars['String']>;
+};
+
+
+export type Episode = {
+  readonly __typename?: 'Episode';
+  readonly id?: Maybe<Scalars['String']>;
+  readonly title?: Maybe<Scalars['String']>;
+  readonly alternativeTitles?: Maybe<ReadonlyArray<Maybe<AlternativeTitle>>>;
+  readonly series?: Maybe<Series>;
+  readonly episodeNumber?: Maybe<Scalars['Int']>;
+  readonly files?: Maybe<ReadonlyArray<Maybe<File>>>;
+  readonly remarks?: Maybe<Scalars['String']>;
+  readonly createdAt?: Maybe<Scalars['DateTime']>;
+  readonly updatedAt?: Maybe<Scalars['DateTime']>;
+  readonly previous?: Maybe<Scalars['String']>;
+  readonly next?: Maybe<Scalars['String']>;
 };
 
 export type EpisodeCreateUpdateInput = {
@@ -118,69 +105,25 @@ export type EpisodeRelationInput = {
   readonly connect?: Maybe<EpisodeWhereUniqueInput>;
 };
 
-export type SeriesWhereUniqueInput = {
+export type EpisodeWhereUniqueInput = {
   readonly id: Scalars['String'];
 };
 
-export type SeriesCreateUpdateInput = {
+export type File = {
+  readonly __typename?: 'File';
   readonly id?: Maybe<Scalars['String']>;
-  readonly title?: Maybe<Scalars['String']>;
-  readonly alternativeTitles?: Maybe<AlternativeTitleRelationInput>;
-  readonly seasonNumber?: Maybe<Scalars['Int']>;
-  readonly episodes?: Maybe<EpisodeManyRelationInput>;
-  readonly episodeCount?: Maybe<Scalars['Int']>;
-  readonly status?: Maybe<Status>;
-  readonly type?: Maybe<Type>;
-  readonly releaseSeason?: Maybe<Season>;
-  readonly releaseYear?: Maybe<Scalars['DateTime']>;
+  readonly path?: Maybe<Scalars['String']>;
+  readonly checksum?: Maybe<Scalars['String']>;
+  readonly fileSize?: Maybe<Scalars['Long']>;
+  readonly duration?: Maybe<Scalars['Int']>;
+  readonly resolutionHeight?: Maybe<Scalars['Int']>;
+  readonly resolutionWidth?: Maybe<Scalars['Int']>;
+  readonly source?: Maybe<Source>;
+  readonly codec?: Maybe<Scalars['String']>;
   readonly remarks?: Maybe<Scalars['String']>;
-  readonly prequels?: Maybe<SeriesManyRelationInput>;
-  readonly sequels?: Maybe<SeriesManyRelationInput>;
-  readonly sideStories?: Maybe<SeriesManyRelationInput>;
-  readonly mainStories?: Maybe<SeriesManyRelationInput>;
-  readonly relatedSeries?: Maybe<SeriesManyRelationInput>;
-  readonly relatedAlternatives?: Maybe<SeriesManyRelationInput>;
-  readonly references?: Maybe<ReferenceRelationInput>;
-  readonly progress?: Maybe<UserProgressRelationInput>;
   readonly createdAt?: Maybe<Scalars['DateTime']>;
   readonly updatedAt?: Maybe<Scalars['DateTime']>;
-};
-
-export type SeriesManyRelationInput = {
-  readonly connect?: Maybe<ReadonlyArray<Maybe<SeriesWhereUniqueInput>>>;
-  readonly disconnect?: Maybe<ReadonlyArray<Maybe<SeriesWhereUniqueInput>>>;
-};
-
-export type SeriesRelationInput = {
-  readonly create?: Maybe<SeriesCreateUpdateInput>;
-  readonly connect?: Maybe<SeriesWhereUniqueInput>;
-  readonly disconnect?: Maybe<SeriesWhereUniqueInput>;
-};
-
-export type AlternativeTitleWhereUniqueInput = {
-  readonly id: Scalars['String'];
-};
-
-export type AlternativeTitleCreateUpdateInput = {
-  readonly id?: Maybe<Scalars['String']>;
-  readonly title?: Maybe<Scalars['String']>;
-  readonly episode?: Maybe<EpisodeRelationInput>;
-  readonly series?: Maybe<SeriesRelationInput>;
-};
-
-export type AlternativeTitleRelationInput = {
-  readonly create?: Maybe<ReadonlyArray<Maybe<AlternativeTitleCreateUpdateInput>>>;
-  readonly delete?: Maybe<ReadonlyArray<Maybe<AlternativeTitleWhereUniqueInput>>>;
-  readonly update?: Maybe<ReadonlyArray<Maybe<AlternativeTitleUpdateWhereUniqueInput>>>;
-};
-
-export type AlternativeTitleUpdateWhereUniqueInput = {
-  readonly where?: Maybe<AlternativeTitleWhereUniqueInput>;
-  readonly data?: Maybe<AlternativeTitleCreateUpdateInput>;
-};
-
-export type FileWhereUniqueInput = {
-  readonly id: Scalars['String'];
+  readonly episode?: Maybe<Episode>;
 };
 
 export type FileCreateUpdateInput = {
@@ -204,144 +147,17 @@ export type FileRelationInput = {
   readonly delete?: Maybe<ReadonlyArray<Maybe<FileWhereUniqueInput>>>;
 };
 
-export type UserProgressWhereUniqueInput = {
-  readonly id?: Maybe<Scalars['String']>;
-  readonly seriesId_userId?: Maybe<SeriesUserCompoundInput>;
-};
-
-export type SeriesUserCompoundInput = {
-  readonly seriesId: Scalars['String'];
-  readonly userId: Scalars['String'];
-};
-
-export type UserProgressCreateUpdateInput = {
-  readonly id?: Maybe<Scalars['String']>;
-  readonly series?: Maybe<SeriesRelationInput>;
-  readonly user?: Maybe<UserRelationInput>;
-  readonly status?: Maybe<WatchStatus>;
-  readonly completed?: Maybe<Scalars['Int']>;
-  readonly overall?: Maybe<Scalars['Int']>;
-  readonly execution?: Maybe<Scalars['Int']>;
-  readonly story?: Maybe<Scalars['Int']>;
-  readonly sound?: Maybe<Scalars['Int']>;
-  readonly art?: Maybe<Scalars['Int']>;
-  readonly character?: Maybe<Scalars['Int']>;
-  readonly appeal?: Maybe<Scalars['Int']>;
-  readonly remarks?: Maybe<Scalars['String']>;
-  readonly createdAt?: Maybe<Scalars['DateTime']>;
-  readonly updatedAt?: Maybe<Scalars['DateTime']>;
-};
-
-export type UserProgressRelationInput = {
-  readonly create?: Maybe<ReadonlyArray<Maybe<UserProgressCreateUpdateInput>>>;
-  readonly delete?: Maybe<ReadonlyArray<Maybe<UserProgressWhereUniqueInput>>>;
-  readonly update?: Maybe<ReadonlyArray<Maybe<UserProgressUpdateWhereUniqueInput>>>;
-};
-
-export type UserProgressUpdateWhereUniqueInput = {
-  readonly where?: Maybe<UserProgressWhereUniqueInput>;
-  readonly data?: Maybe<UserProgressCreateUpdateInput>;
-};
-
-export type ReferenceWhereUniqueInput = {
+export type FileWhereUniqueInput = {
   readonly id: Scalars['String'];
 };
 
-export type ReferenceCreateUpdateInput = {
-  readonly id?: Maybe<Scalars['String']>;
-  readonly link?: Maybe<Scalars['String']>;
-  readonly source?: Maybe<Scalars['String']>;
-  readonly series?: Maybe<SeriesRelationInput>;
-};
 
-export type ReferenceRelationInput = {
-  readonly create?: Maybe<ReadonlyArray<Maybe<ReferenceCreateUpdateInput>>>;
-  readonly update?: Maybe<ReadonlyArray<Maybe<ReferenceUpdateWhereUniqueInput>>>;
-  readonly delete?: Maybe<ReadonlyArray<Maybe<ReferenceWhereUniqueInput>>>;
-};
-
-export type ReferenceUpdateWhereUniqueInput = {
-  readonly where?: Maybe<ReferenceWhereUniqueInput>;
-  readonly data?: Maybe<ReferenceCreateUpdateInput>;
-};
-
-export type Query = {
-  readonly __typename?: 'Query';
-  readonly loggedIn?: Maybe<User>;
-  readonly user?: Maybe<User>;
-  readonly users?: Maybe<ReadonlyArray<Maybe<User>>>;
-  readonly isInitialized?: Maybe<Scalars['Boolean']>;
-  readonly series?: Maybe<Series>;
-  readonly allSeries?: Maybe<ReadonlyArray<Maybe<Series>>>;
-  readonly totalSeriesCount?: Maybe<Scalars['Int']>;
-  readonly episode?: Maybe<Episode>;
-  readonly episodes?: Maybe<ReadonlyArray<Maybe<Episode>>>;
-  readonly episodesInSeries?: Maybe<ReadonlyArray<Maybe<Episode>>>;
-  readonly file?: Maybe<File>;
-  readonly filesForEpisode?: Maybe<ReadonlyArray<Maybe<File>>>;
-  readonly files?: Maybe<ReadonlyArray<Maybe<File>>>;
-  readonly myProgress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
-  readonly mySeriesProgress?: Maybe<UserProgress>;
-  readonly userProgress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
-  readonly allUserProgress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
-  readonly reference?: Maybe<Reference>;
-  readonly references?: Maybe<ReadonlyArray<Maybe<Reference>>>;
-  readonly quickSearch?: Maybe<SearchPayload>;
-  readonly myTopTenSeries?: Maybe<ReadonlyArray<Maybe<Series>>>;
-  readonly myCurrentlyWatching?: Maybe<ReadonlyArray<Maybe<Series>>>;
-  readonly suggestedCodecs?: Maybe<ReadonlyArray<Maybe<Codec>>>;
-  readonly suggestedSources?: Maybe<ReadonlyArray<Maybe<ReferenceSource>>>;
-  readonly catalogStatistics?: Maybe<CatalogStatistics>;
-};
-
-
-export type QueryUserArgs = {
-  where: UserWhereUniqueInput;
-};
-
-
-export type QuerySeriesArgs = {
-  where: SeriesWhereUniqueInput;
-};
-
-
-export type QueryEpisodeArgs = {
-  where: EpisodeWhereUniqueInput;
-};
-
-
-export type QueryEpisodesInSeriesArgs = {
-  where: SeriesWhereUniqueInput;
-};
-
-
-export type QueryFileArgs = {
-  where?: Maybe<FileWhereUniqueInput>;
-};
-
-
-export type QueryFilesForEpisodeArgs = {
-  where: EpisodeWhereUniqueInput;
-};
-
-
-export type QueryMySeriesProgressArgs = {
-  where: SeriesWhereUniqueInput;
-};
-
-
-export type QueryUserProgressArgs = {
-  where: UserProgressWhereUniqueInput;
-};
-
-
-export type QueryReferenceArgs = {
-  where?: Maybe<ReferenceCreateUpdateInput>;
-};
-
-
-export type QueryQuickSearchArgs = {
-  where: Scalars['String'];
+export type MeUpdateInput = {
+  readonly username?: Maybe<Scalars['String']>;
+  readonly currentPassword?: Maybe<Scalars['String']>;
+  readonly name?: Maybe<Scalars['String']>;
+  readonly password?: Maybe<Scalars['String']>;
+  readonly passwordAttempts?: Maybe<Scalars['Int']>;
 };
 
 export type Mutation = {
@@ -474,35 +290,137 @@ export type MutationDeleteUserProgressArgs = {
   where: UserProgressWhereUniqueInput;
 };
 
-export type AuthPayload = {
-  readonly __typename?: 'AuthPayload';
-  readonly token?: Maybe<Scalars['String']>;
+export type Query = {
+  readonly __typename?: 'Query';
+  readonly loggedIn?: Maybe<User>;
   readonly user?: Maybe<User>;
-};
-
-export type User = {
-  readonly __typename?: 'User';
-  readonly id?: Maybe<Scalars['String']>;
-  readonly username?: Maybe<Scalars['String']>;
-  readonly name?: Maybe<Scalars['String']>;
-  readonly password?: Maybe<Scalars['String']>;
-  readonly passwordAttempts?: Maybe<Scalars['Int']>;
-  readonly role?: Maybe<Role>;
-  readonly progress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
-};
-
-export type Episode = {
-  readonly __typename?: 'Episode';
-  readonly id?: Maybe<Scalars['String']>;
-  readonly title?: Maybe<Scalars['String']>;
-  readonly alternativeTitles?: Maybe<ReadonlyArray<Maybe<AlternativeTitle>>>;
+  readonly users?: Maybe<ReadonlyArray<Maybe<User>>>;
+  readonly isInitialized?: Maybe<Scalars['Boolean']>;
   readonly series?: Maybe<Series>;
-  readonly episodeNumber?: Maybe<Scalars['Int']>;
+  readonly allSeries?: Maybe<ReadonlyArray<Maybe<Series>>>;
+  readonly totalSeriesCount?: Maybe<Scalars['Int']>;
+  readonly episode?: Maybe<Episode>;
+  readonly episodes?: Maybe<ReadonlyArray<Maybe<Episode>>>;
+  readonly episodesInSeries?: Maybe<ReadonlyArray<Maybe<Episode>>>;
+  readonly file?: Maybe<File>;
+  readonly filesForEpisode?: Maybe<ReadonlyArray<Maybe<File>>>;
   readonly files?: Maybe<ReadonlyArray<Maybe<File>>>;
-  readonly remarks?: Maybe<Scalars['String']>;
-  readonly createdAt?: Maybe<Scalars['DateTime']>;
-  readonly updatedAt?: Maybe<Scalars['DateTime']>;
+  readonly myProgress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
+  readonly mySeriesProgress?: Maybe<UserProgress>;
+  readonly userProgress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
+  readonly allUserProgress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
+  readonly reference?: Maybe<Reference>;
+  readonly references?: Maybe<ReadonlyArray<Maybe<Reference>>>;
+  readonly quickSearch?: Maybe<SearchPayload>;
+  readonly myTopTenSeries?: Maybe<ReadonlyArray<Maybe<Series>>>;
+  readonly myCurrentlyWatching?: Maybe<ReadonlyArray<Maybe<Series>>>;
+  readonly suggestedCodecs?: Maybe<ReadonlyArray<Maybe<Codec>>>;
+  readonly suggestedSources?: Maybe<ReadonlyArray<Maybe<ReferenceSource>>>;
+  readonly catalogStatistics?: Maybe<CatalogStatistics>;
 };
+
+
+export type QueryUserArgs = {
+  where: UserWhereUniqueInput;
+};
+
+
+export type QuerySeriesArgs = {
+  where: SeriesWhereUniqueInput;
+};
+
+
+export type QueryEpisodeArgs = {
+  where: EpisodeWhereUniqueInput;
+};
+
+
+export type QueryEpisodesInSeriesArgs = {
+  where: SeriesWhereUniqueInput;
+};
+
+
+export type QueryFileArgs = {
+  where?: Maybe<FileWhereUniqueInput>;
+};
+
+
+export type QueryFilesForEpisodeArgs = {
+  where: EpisodeWhereUniqueInput;
+};
+
+
+export type QueryMySeriesProgressArgs = {
+  where: SeriesWhereUniqueInput;
+};
+
+
+export type QueryUserProgressArgs = {
+  where: UserProgressWhereUniqueInput;
+};
+
+
+export type QueryReferenceArgs = {
+  where?: Maybe<ReferenceCreateUpdateInput>;
+};
+
+
+export type QueryQuickSearchArgs = {
+  where: Scalars['String'];
+};
+
+export type Reference = {
+  readonly __typename?: 'Reference';
+  readonly id?: Maybe<Scalars['String']>;
+  readonly link?: Maybe<Scalars['String']>;
+  readonly source?: Maybe<Scalars['String']>;
+};
+
+export type ReferenceCreateUpdateInput = {
+  readonly id?: Maybe<Scalars['String']>;
+  readonly link?: Maybe<Scalars['String']>;
+  readonly source?: Maybe<Scalars['String']>;
+  readonly series?: Maybe<SeriesRelationInput>;
+};
+
+export type ReferenceRelationInput = {
+  readonly create?: Maybe<ReadonlyArray<Maybe<ReferenceCreateUpdateInput>>>;
+  readonly update?: Maybe<ReadonlyArray<Maybe<ReferenceUpdateWhereUniqueInput>>>;
+  readonly delete?: Maybe<ReadonlyArray<Maybe<ReferenceWhereUniqueInput>>>;
+};
+
+export type ReferenceSource = {
+  readonly __typename?: 'ReferenceSource';
+  readonly source?: Maybe<Scalars['String']>;
+};
+
+export type ReferenceUpdateWhereUniqueInput = {
+  readonly where?: Maybe<ReferenceWhereUniqueInput>;
+  readonly data?: Maybe<ReferenceCreateUpdateInput>;
+};
+
+export type ReferenceWhereUniqueInput = {
+  readonly id: Scalars['String'];
+};
+
+export enum Role {
+  Readonly = 'READONLY',
+  Write = 'WRITE',
+  Admin = 'ADMIN'
+}
+
+export type SearchPayload = {
+  readonly __typename?: 'SearchPayload';
+  readonly series: ReadonlyArray<Maybe<Series>>;
+  readonly episodes: ReadonlyArray<Maybe<Episode>>;
+};
+
+export enum Season {
+  Winter = 'WINTER',
+  Fall = 'FALL',
+  Summer = 'SUMMER',
+  Spring = 'SPRING'
+}
 
 export type Series = {
   readonly __typename?: 'Series';
@@ -531,27 +449,90 @@ export type Series = {
   readonly updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
-export type AlternativeTitle = {
-  readonly __typename?: 'AlternativeTitle';
-  readonly id: Scalars['String'];
-  readonly title: Scalars['String'];
-};
-
-export type File = {
-  readonly __typename?: 'File';
+export type SeriesCreateUpdateInput = {
   readonly id?: Maybe<Scalars['String']>;
-  readonly path?: Maybe<Scalars['String']>;
-  readonly checksum?: Maybe<Scalars['String']>;
-  readonly fileSize?: Maybe<Scalars['Long']>;
-  readonly duration?: Maybe<Scalars['Int']>;
-  readonly resolutionHeight?: Maybe<Scalars['Int']>;
-  readonly resolutionWidth?: Maybe<Scalars['Int']>;
-  readonly source?: Maybe<Source>;
-  readonly codec?: Maybe<Scalars['String']>;
+  readonly title?: Maybe<Scalars['String']>;
+  readonly alternativeTitles?: Maybe<AlternativeTitleRelationInput>;
+  readonly seasonNumber?: Maybe<Scalars['Int']>;
+  readonly episodes?: Maybe<EpisodeManyRelationInput>;
+  readonly episodeCount?: Maybe<Scalars['Int']>;
+  readonly status?: Maybe<Status>;
+  readonly type?: Maybe<Type>;
+  readonly releaseSeason?: Maybe<Season>;
+  readonly releaseYear?: Maybe<Scalars['DateTime']>;
   readonly remarks?: Maybe<Scalars['String']>;
+  readonly prequels?: Maybe<SeriesManyRelationInput>;
+  readonly sequels?: Maybe<SeriesManyRelationInput>;
+  readonly sideStories?: Maybe<SeriesManyRelationInput>;
+  readonly mainStories?: Maybe<SeriesManyRelationInput>;
+  readonly relatedSeries?: Maybe<SeriesManyRelationInput>;
+  readonly relatedAlternatives?: Maybe<SeriesManyRelationInput>;
+  readonly references?: Maybe<ReferenceRelationInput>;
+  readonly progress?: Maybe<UserProgressRelationInput>;
   readonly createdAt?: Maybe<Scalars['DateTime']>;
   readonly updatedAt?: Maybe<Scalars['DateTime']>;
-  readonly episode?: Maybe<Episode>;
+};
+
+export type SeriesManyRelationInput = {
+  readonly connect?: Maybe<ReadonlyArray<Maybe<SeriesWhereUniqueInput>>>;
+  readonly disconnect?: Maybe<ReadonlyArray<Maybe<SeriesWhereUniqueInput>>>;
+};
+
+export type SeriesRelationInput = {
+  readonly create?: Maybe<SeriesCreateUpdateInput>;
+  readonly connect?: Maybe<SeriesWhereUniqueInput>;
+  readonly disconnect?: Maybe<SeriesWhereUniqueInput>;
+};
+
+export type SeriesUserCompoundInput = {
+  readonly seriesId: Scalars['String'];
+  readonly userId: Scalars['String'];
+};
+
+export type SeriesWhereUniqueInput = {
+  readonly id: Scalars['String'];
+};
+
+export enum Source {
+  Bluray = 'BLURAY',
+  Dvd = 'DVD',
+  Cd = 'CD',
+  Web = 'WEB',
+  Tv = 'TV'
+}
+
+export enum Status {
+  Downloaded = 'DOWNLOADED',
+  Missing = 'MISSING',
+  Unreleased = 'UNRELEASED'
+}
+
+export enum Type {
+  Movie = 'MOVIE',
+  Series = 'SERIES',
+  Musicvideo = 'MUSICVIDEO',
+  Ova = 'OVA',
+  Special = 'SPECIAL'
+}
+
+export type User = {
+  readonly __typename?: 'User';
+  readonly id?: Maybe<Scalars['String']>;
+  readonly username?: Maybe<Scalars['String']>;
+  readonly name?: Maybe<Scalars['String']>;
+  readonly password?: Maybe<Scalars['String']>;
+  readonly passwordAttempts?: Maybe<Scalars['Int']>;
+  readonly role?: Maybe<Role>;
+  readonly progress?: Maybe<ReadonlyArray<Maybe<UserProgress>>>;
+};
+
+export type UserCreateUpdateInput = {
+  readonly id?: Maybe<Scalars['String']>;
+  readonly username?: Maybe<Scalars['String']>;
+  readonly name?: Maybe<Scalars['String']>;
+  readonly password?: Maybe<Scalars['String']>;
+  readonly passwordAttempts?: Maybe<Scalars['Int']>;
+  readonly role?: Maybe<Role>;
 };
 
 export type UserProgress = {
@@ -573,37 +554,57 @@ export type UserProgress = {
   readonly updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
-export type Reference = {
-  readonly __typename?: 'Reference';
+export type UserProgressCreateUpdateInput = {
   readonly id?: Maybe<Scalars['String']>;
-  readonly link?: Maybe<Scalars['String']>;
-  readonly source?: Maybe<Scalars['String']>;
+  readonly series?: Maybe<SeriesRelationInput>;
+  readonly user?: Maybe<UserRelationInput>;
+  readonly status?: Maybe<WatchStatus>;
+  readonly completed?: Maybe<Scalars['Int']>;
+  readonly overall?: Maybe<Scalars['Int']>;
+  readonly execution?: Maybe<Scalars['Int']>;
+  readonly story?: Maybe<Scalars['Int']>;
+  readonly sound?: Maybe<Scalars['Int']>;
+  readonly art?: Maybe<Scalars['Int']>;
+  readonly character?: Maybe<Scalars['Int']>;
+  readonly appeal?: Maybe<Scalars['Int']>;
+  readonly remarks?: Maybe<Scalars['String']>;
+  readonly createdAt?: Maybe<Scalars['DateTime']>;
+  readonly updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
-export type SearchPayload = {
-  readonly __typename?: 'SearchPayload';
-  readonly series: ReadonlyArray<Maybe<Series>>;
-  readonly episodes: ReadonlyArray<Maybe<Episode>>;
+export type UserProgressRelationInput = {
+  readonly create?: Maybe<ReadonlyArray<Maybe<UserProgressCreateUpdateInput>>>;
+  readonly delete?: Maybe<ReadonlyArray<Maybe<UserProgressWhereUniqueInput>>>;
+  readonly update?: Maybe<ReadonlyArray<Maybe<UserProgressUpdateWhereUniqueInput>>>;
 };
 
-export type Codec = {
-  readonly __typename?: 'Codec';
-  readonly codec?: Maybe<Scalars['String']>;
+export type UserProgressUpdateWhereUniqueInput = {
+  readonly where?: Maybe<UserProgressWhereUniqueInput>;
+  readonly data?: Maybe<UserProgressCreateUpdateInput>;
 };
 
-export type ReferenceSource = {
-  readonly __typename?: 'ReferenceSource';
-  readonly source?: Maybe<Scalars['String']>;
+export type UserProgressWhereUniqueInput = {
+  readonly id?: Maybe<Scalars['String']>;
+  readonly seriesId_userId?: Maybe<SeriesUserCompoundInput>;
 };
 
-export type CatalogStatistics = {
-  readonly __typename?: 'CatalogStatistics';
-  readonly totalSeriesCount?: Maybe<Scalars['Int']>;
-  readonly totalEpisodeCount?: Maybe<Scalars['Int']>;
-  readonly allFiles?: Maybe<ReadonlyArray<Maybe<File>>>;
-  readonly totalFileSize?: Maybe<Scalars['Long']>;
-  readonly totalDuration?: Maybe<Scalars['Int']>;
+export type UserRelationInput = {
+  readonly connect?: Maybe<UserWhereUniqueInput>;
+  readonly disconnect?: Maybe<UserWhereUniqueInput>;
 };
+
+export type UserWhereUniqueInput = {
+  readonly id?: Maybe<Scalars['String']>;
+  readonly username?: Maybe<Scalars['String']>;
+};
+
+export enum WatchStatus {
+  Completed = 'COMPLETED',
+  Watching = 'WATCHING',
+  Onhold = 'ONHOLD',
+  Pending = 'PENDING',
+  Dropped = 'DROPPED'
+}
 
 export type LoggedInQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -733,7 +734,7 @@ export type EpisodeQuery = (
   { readonly __typename?: 'Query' }
   & { readonly episode?: Maybe<(
     { readonly __typename?: 'Episode' }
-    & Pick<Episode, 'id' | 'title' | 'episodeNumber' | 'remarks' | 'createdAt' | 'updatedAt'>
+    & Pick<Episode, 'id' | 'title' | 'episodeNumber' | 'remarks' | 'createdAt' | 'updatedAt' | 'previous' | 'next'>
     & { readonly alternativeTitles?: Maybe<ReadonlyArray<Maybe<(
       { readonly __typename?: 'AlternativeTitle' }
       & Pick<AlternativeTitle, 'id' | 'title'>
@@ -771,7 +772,7 @@ export type CreateEpisodeMutation = (
 );
 
 export type BatchCreateEpisodeMutationVariables = Exact<{
-  data: ReadonlyArray<EpisodeCreateUpdateInput>;
+  data: ReadonlyArray<EpisodeCreateUpdateInput> | EpisodeCreateUpdateInput;
 }>;
 
 
@@ -1267,25 +1268,6 @@ export const LoggedInDocument = gql`
   }
 }
     `;
-export type LoggedInComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<LoggedInQuery, LoggedInQueryVariables>, 'query'>;
-
-    export const LoggedInComponent = (props: LoggedInComponentProps) => (
-      <ApolloReactComponents.Query<LoggedInQuery, LoggedInQueryVariables> query={LoggedInDocument} {...props} />
-    );
-    
-export type LoggedInProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<LoggedInQuery, LoggedInQueryVariables>
-    } & TChildProps;
-export function withLoggedIn<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  LoggedInQuery,
-  LoggedInQueryVariables,
-  LoggedInProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, LoggedInQuery, LoggedInQueryVariables, LoggedInProps<TChildProps, TDataName>>(LoggedInDocument, {
-      alias: 'loggedIn',
-      ...operationOptions
-    });
-};
 
 /**
  * __useLoggedInQuery__
@@ -1303,10 +1285,12 @@ export function withLoggedIn<TProps, TChildProps = {}, TDataName extends string 
  * });
  */
 export function useLoggedInQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<LoggedInQuery, LoggedInQueryVariables>) {
-        return ApolloReactHooks.useQuery<LoggedInQuery, LoggedInQueryVariables>(LoggedInDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<LoggedInQuery, LoggedInQueryVariables>(LoggedInDocument, options);
       }
 export function useLoggedInLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<LoggedInQuery, LoggedInQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<LoggedInQuery, LoggedInQueryVariables>(LoggedInDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<LoggedInQuery, LoggedInQueryVariables>(LoggedInDocument, options);
         }
 export type LoggedInQueryHookResult = ReturnType<typeof useLoggedInQuery>;
 export type LoggedInLazyQueryHookResult = ReturnType<typeof useLoggedInLazyQuery>;
@@ -1323,25 +1307,6 @@ export const LoginDocument = gql`
 }
     `;
 export type LoginMutationFn = ApolloReactCommon.MutationFunction<LoginMutation, LoginMutationVariables>;
-export type LoginComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<LoginMutation, LoginMutationVariables>, 'mutation'>;
-
-    export const LoginComponent = (props: LoginComponentProps) => (
-      <ApolloReactComponents.Mutation<LoginMutation, LoginMutationVariables> mutation={LoginDocument} {...props} />
-    );
-    
-export type LoginProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-      [key in TDataName]: ApolloReactCommon.MutationFunction<LoginMutation, LoginMutationVariables>
-    } & TChildProps;
-export function withLogin<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  LoginMutation,
-  LoginMutationVariables,
-  LoginProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withMutation<TProps, LoginMutation, LoginMutationVariables, LoginProps<TChildProps, TDataName>>(LoginDocument, {
-      alias: 'login',
-      ...operationOptions
-    });
-};
 
 /**
  * __useLoginMutation__
@@ -1361,7 +1326,8 @@ export function withLogin<TProps, TChildProps = {}, TDataName extends string = '
  * });
  */
 export function useLoginMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
-        return ApolloReactHooks.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
       }
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = ApolloReactCommon.MutationResult<LoginMutation>;
@@ -1378,25 +1344,6 @@ export const MyTopTenSeriesDocument = gql`
   }
 }
     `;
-export type MyTopTenSeriesComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<MyTopTenSeriesQuery, MyTopTenSeriesQueryVariables>, 'query'>;
-
-    export const MyTopTenSeriesComponent = (props: MyTopTenSeriesComponentProps) => (
-      <ApolloReactComponents.Query<MyTopTenSeriesQuery, MyTopTenSeriesQueryVariables> query={MyTopTenSeriesDocument} {...props} />
-    );
-    
-export type MyTopTenSeriesProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<MyTopTenSeriesQuery, MyTopTenSeriesQueryVariables>
-    } & TChildProps;
-export function withMyTopTenSeries<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  MyTopTenSeriesQuery,
-  MyTopTenSeriesQueryVariables,
-  MyTopTenSeriesProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, MyTopTenSeriesQuery, MyTopTenSeriesQueryVariables, MyTopTenSeriesProps<TChildProps, TDataName>>(MyTopTenSeriesDocument, {
-      alias: 'myTopTenSeries',
-      ...operationOptions
-    });
-};
 
 /**
  * __useMyTopTenSeriesQuery__
@@ -1414,10 +1361,12 @@ export function withMyTopTenSeries<TProps, TChildProps = {}, TDataName extends s
  * });
  */
 export function useMyTopTenSeriesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MyTopTenSeriesQuery, MyTopTenSeriesQueryVariables>) {
-        return ApolloReactHooks.useQuery<MyTopTenSeriesQuery, MyTopTenSeriesQueryVariables>(MyTopTenSeriesDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<MyTopTenSeriesQuery, MyTopTenSeriesQueryVariables>(MyTopTenSeriesDocument, options);
       }
 export function useMyTopTenSeriesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MyTopTenSeriesQuery, MyTopTenSeriesQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<MyTopTenSeriesQuery, MyTopTenSeriesQueryVariables>(MyTopTenSeriesDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<MyTopTenSeriesQuery, MyTopTenSeriesQueryVariables>(MyTopTenSeriesDocument, options);
         }
 export type MyTopTenSeriesQueryHookResult = ReturnType<typeof useMyTopTenSeriesQuery>;
 export type MyTopTenSeriesLazyQueryHookResult = ReturnType<typeof useMyTopTenSeriesLazyQuery>;
@@ -1435,25 +1384,6 @@ export const MyCurrentlyWatchingDocument = gql`
   }
 }
     `;
-export type MyCurrentlyWatchingComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<MyCurrentlyWatchingQuery, MyCurrentlyWatchingQueryVariables>, 'query'>;
-
-    export const MyCurrentlyWatchingComponent = (props: MyCurrentlyWatchingComponentProps) => (
-      <ApolloReactComponents.Query<MyCurrentlyWatchingQuery, MyCurrentlyWatchingQueryVariables> query={MyCurrentlyWatchingDocument} {...props} />
-    );
-    
-export type MyCurrentlyWatchingProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<MyCurrentlyWatchingQuery, MyCurrentlyWatchingQueryVariables>
-    } & TChildProps;
-export function withMyCurrentlyWatching<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  MyCurrentlyWatchingQuery,
-  MyCurrentlyWatchingQueryVariables,
-  MyCurrentlyWatchingProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, MyCurrentlyWatchingQuery, MyCurrentlyWatchingQueryVariables, MyCurrentlyWatchingProps<TChildProps, TDataName>>(MyCurrentlyWatchingDocument, {
-      alias: 'myCurrentlyWatching',
-      ...operationOptions
-    });
-};
 
 /**
  * __useMyCurrentlyWatchingQuery__
@@ -1471,10 +1401,12 @@ export function withMyCurrentlyWatching<TProps, TChildProps = {}, TDataName exte
  * });
  */
 export function useMyCurrentlyWatchingQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MyCurrentlyWatchingQuery, MyCurrentlyWatchingQueryVariables>) {
-        return ApolloReactHooks.useQuery<MyCurrentlyWatchingQuery, MyCurrentlyWatchingQueryVariables>(MyCurrentlyWatchingDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<MyCurrentlyWatchingQuery, MyCurrentlyWatchingQueryVariables>(MyCurrentlyWatchingDocument, options);
       }
 export function useMyCurrentlyWatchingLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MyCurrentlyWatchingQuery, MyCurrentlyWatchingQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<MyCurrentlyWatchingQuery, MyCurrentlyWatchingQueryVariables>(MyCurrentlyWatchingDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<MyCurrentlyWatchingQuery, MyCurrentlyWatchingQueryVariables>(MyCurrentlyWatchingDocument, options);
         }
 export type MyCurrentlyWatchingQueryHookResult = ReturnType<typeof useMyCurrentlyWatchingQuery>;
 export type MyCurrentlyWatchingLazyQueryHookResult = ReturnType<typeof useMyCurrentlyWatchingLazyQuery>;
@@ -1495,25 +1427,6 @@ export const CatalogStatisticsDocument = gql`
   }
 }
     `;
-export type CatalogStatisticsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<CatalogStatisticsQuery, CatalogStatisticsQueryVariables>, 'query'>;
-
-    export const CatalogStatisticsComponent = (props: CatalogStatisticsComponentProps) => (
-      <ApolloReactComponents.Query<CatalogStatisticsQuery, CatalogStatisticsQueryVariables> query={CatalogStatisticsDocument} {...props} />
-    );
-    
-export type CatalogStatisticsProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<CatalogStatisticsQuery, CatalogStatisticsQueryVariables>
-    } & TChildProps;
-export function withCatalogStatistics<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  CatalogStatisticsQuery,
-  CatalogStatisticsQueryVariables,
-  CatalogStatisticsProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, CatalogStatisticsQuery, CatalogStatisticsQueryVariables, CatalogStatisticsProps<TChildProps, TDataName>>(CatalogStatisticsDocument, {
-      alias: 'catalogStatistics',
-      ...operationOptions
-    });
-};
 
 /**
  * __useCatalogStatisticsQuery__
@@ -1531,10 +1444,12 @@ export function withCatalogStatistics<TProps, TChildProps = {}, TDataName extend
  * });
  */
 export function useCatalogStatisticsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<CatalogStatisticsQuery, CatalogStatisticsQueryVariables>) {
-        return ApolloReactHooks.useQuery<CatalogStatisticsQuery, CatalogStatisticsQueryVariables>(CatalogStatisticsDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<CatalogStatisticsQuery, CatalogStatisticsQueryVariables>(CatalogStatisticsDocument, options);
       }
 export function useCatalogStatisticsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CatalogStatisticsQuery, CatalogStatisticsQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<CatalogStatisticsQuery, CatalogStatisticsQueryVariables>(CatalogStatisticsDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<CatalogStatisticsQuery, CatalogStatisticsQueryVariables>(CatalogStatisticsDocument, options);
         }
 export type CatalogStatisticsQueryHookResult = ReturnType<typeof useCatalogStatisticsQuery>;
 export type CatalogStatisticsLazyQueryHookResult = ReturnType<typeof useCatalogStatisticsLazyQuery>;
@@ -1597,25 +1512,6 @@ export const ExportDataDocument = gql`
   }
 }
     `;
-export type ExportDataComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<ExportDataQuery, ExportDataQueryVariables>, 'query'>;
-
-    export const ExportDataComponent = (props: ExportDataComponentProps) => (
-      <ApolloReactComponents.Query<ExportDataQuery, ExportDataQueryVariables> query={ExportDataDocument} {...props} />
-    );
-    
-export type ExportDataProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<ExportDataQuery, ExportDataQueryVariables>
-    } & TChildProps;
-export function withExportData<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  ExportDataQuery,
-  ExportDataQueryVariables,
-  ExportDataProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, ExportDataQuery, ExportDataQueryVariables, ExportDataProps<TChildProps, TDataName>>(ExportDataDocument, {
-      alias: 'exportData',
-      ...operationOptions
-    });
-};
 
 /**
  * __useExportDataQuery__
@@ -1633,10 +1529,12 @@ export function withExportData<TProps, TChildProps = {}, TDataName extends strin
  * });
  */
 export function useExportDataQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ExportDataQuery, ExportDataQueryVariables>) {
-        return ApolloReactHooks.useQuery<ExportDataQuery, ExportDataQueryVariables>(ExportDataDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<ExportDataQuery, ExportDataQueryVariables>(ExportDataDocument, options);
       }
 export function useExportDataLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ExportDataQuery, ExportDataQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<ExportDataQuery, ExportDataQueryVariables>(ExportDataDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<ExportDataQuery, ExportDataQueryVariables>(ExportDataDocument, options);
         }
 export type ExportDataQueryHookResult = ReturnType<typeof useExportDataQuery>;
 export type ExportDataLazyQueryHookResult = ReturnType<typeof useExportDataLazyQuery>;
@@ -1658,28 +1556,11 @@ export const EpisodeDocument = gql`
     remarks
     createdAt
     updatedAt
+    previous
+    next
   }
 }
     `;
-export type EpisodeComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<EpisodeQuery, EpisodeQueryVariables>, 'query'> & ({ variables: EpisodeQueryVariables; skip?: boolean; } | { skip: boolean; });
-
-    export const EpisodeComponent = (props: EpisodeComponentProps) => (
-      <ApolloReactComponents.Query<EpisodeQuery, EpisodeQueryVariables> query={EpisodeDocument} {...props} />
-    );
-    
-export type EpisodeProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<EpisodeQuery, EpisodeQueryVariables>
-    } & TChildProps;
-export function withEpisode<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  EpisodeQuery,
-  EpisodeQueryVariables,
-  EpisodeProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, EpisodeQuery, EpisodeQueryVariables, EpisodeProps<TChildProps, TDataName>>(EpisodeDocument, {
-      alias: 'episode',
-      ...operationOptions
-    });
-};
 
 /**
  * __useEpisodeQuery__
@@ -1697,11 +1578,13 @@ export function withEpisode<TProps, TChildProps = {}, TDataName extends string =
  *   },
  * });
  */
-export function useEpisodeQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<EpisodeQuery, EpisodeQueryVariables>) {
-        return ApolloReactHooks.useQuery<EpisodeQuery, EpisodeQueryVariables>(EpisodeDocument, baseOptions);
+export function useEpisodeQuery(baseOptions: ApolloReactHooks.QueryHookOptions<EpisodeQuery, EpisodeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<EpisodeQuery, EpisodeQueryVariables>(EpisodeDocument, options);
       }
 export function useEpisodeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<EpisodeQuery, EpisodeQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<EpisodeQuery, EpisodeQueryVariables>(EpisodeDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<EpisodeQuery, EpisodeQueryVariables>(EpisodeDocument, options);
         }
 export type EpisodeQueryHookResult = ReturnType<typeof useEpisodeQuery>;
 export type EpisodeLazyQueryHookResult = ReturnType<typeof useEpisodeLazyQuery>;
@@ -1716,25 +1599,6 @@ export const EpisodesInSeriesDocument = gql`
   }
 }
     `;
-export type EpisodesInSeriesComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<EpisodesInSeriesQuery, EpisodesInSeriesQueryVariables>, 'query'> & ({ variables: EpisodesInSeriesQueryVariables; skip?: boolean; } | { skip: boolean; });
-
-    export const EpisodesInSeriesComponent = (props: EpisodesInSeriesComponentProps) => (
-      <ApolloReactComponents.Query<EpisodesInSeriesQuery, EpisodesInSeriesQueryVariables> query={EpisodesInSeriesDocument} {...props} />
-    );
-    
-export type EpisodesInSeriesProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<EpisodesInSeriesQuery, EpisodesInSeriesQueryVariables>
-    } & TChildProps;
-export function withEpisodesInSeries<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  EpisodesInSeriesQuery,
-  EpisodesInSeriesQueryVariables,
-  EpisodesInSeriesProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, EpisodesInSeriesQuery, EpisodesInSeriesQueryVariables, EpisodesInSeriesProps<TChildProps, TDataName>>(EpisodesInSeriesDocument, {
-      alias: 'episodesInSeries',
-      ...operationOptions
-    });
-};
 
 /**
  * __useEpisodesInSeriesQuery__
@@ -1752,11 +1616,13 @@ export function withEpisodesInSeries<TProps, TChildProps = {}, TDataName extends
  *   },
  * });
  */
-export function useEpisodesInSeriesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<EpisodesInSeriesQuery, EpisodesInSeriesQueryVariables>) {
-        return ApolloReactHooks.useQuery<EpisodesInSeriesQuery, EpisodesInSeriesQueryVariables>(EpisodesInSeriesDocument, baseOptions);
+export function useEpisodesInSeriesQuery(baseOptions: ApolloReactHooks.QueryHookOptions<EpisodesInSeriesQuery, EpisodesInSeriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<EpisodesInSeriesQuery, EpisodesInSeriesQueryVariables>(EpisodesInSeriesDocument, options);
       }
 export function useEpisodesInSeriesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<EpisodesInSeriesQuery, EpisodesInSeriesQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<EpisodesInSeriesQuery, EpisodesInSeriesQueryVariables>(EpisodesInSeriesDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<EpisodesInSeriesQuery, EpisodesInSeriesQueryVariables>(EpisodesInSeriesDocument, options);
         }
 export type EpisodesInSeriesQueryHookResult = ReturnType<typeof useEpisodesInSeriesQuery>;
 export type EpisodesInSeriesLazyQueryHookResult = ReturnType<typeof useEpisodesInSeriesLazyQuery>;
@@ -1769,25 +1635,6 @@ export const CreateEpisodeDocument = gql`
 }
     `;
 export type CreateEpisodeMutationFn = ApolloReactCommon.MutationFunction<CreateEpisodeMutation, CreateEpisodeMutationVariables>;
-export type CreateEpisodeComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<CreateEpisodeMutation, CreateEpisodeMutationVariables>, 'mutation'>;
-
-    export const CreateEpisodeComponent = (props: CreateEpisodeComponentProps) => (
-      <ApolloReactComponents.Mutation<CreateEpisodeMutation, CreateEpisodeMutationVariables> mutation={CreateEpisodeDocument} {...props} />
-    );
-    
-export type CreateEpisodeProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-      [key in TDataName]: ApolloReactCommon.MutationFunction<CreateEpisodeMutation, CreateEpisodeMutationVariables>
-    } & TChildProps;
-export function withCreateEpisode<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  CreateEpisodeMutation,
-  CreateEpisodeMutationVariables,
-  CreateEpisodeProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withMutation<TProps, CreateEpisodeMutation, CreateEpisodeMutationVariables, CreateEpisodeProps<TChildProps, TDataName>>(CreateEpisodeDocument, {
-      alias: 'createEpisode',
-      ...operationOptions
-    });
-};
 
 /**
  * __useCreateEpisodeMutation__
@@ -1807,7 +1654,8 @@ export function withCreateEpisode<TProps, TChildProps = {}, TDataName extends st
  * });
  */
 export function useCreateEpisodeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateEpisodeMutation, CreateEpisodeMutationVariables>) {
-        return ApolloReactHooks.useMutation<CreateEpisodeMutation, CreateEpisodeMutationVariables>(CreateEpisodeDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateEpisodeMutation, CreateEpisodeMutationVariables>(CreateEpisodeDocument, options);
       }
 export type CreateEpisodeMutationHookResult = ReturnType<typeof useCreateEpisodeMutation>;
 export type CreateEpisodeMutationResult = ApolloReactCommon.MutationResult<CreateEpisodeMutation>;
@@ -1820,25 +1668,6 @@ export const BatchCreateEpisodeDocument = gql`
 }
     `;
 export type BatchCreateEpisodeMutationFn = ApolloReactCommon.MutationFunction<BatchCreateEpisodeMutation, BatchCreateEpisodeMutationVariables>;
-export type BatchCreateEpisodeComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<BatchCreateEpisodeMutation, BatchCreateEpisodeMutationVariables>, 'mutation'>;
-
-    export const BatchCreateEpisodeComponent = (props: BatchCreateEpisodeComponentProps) => (
-      <ApolloReactComponents.Mutation<BatchCreateEpisodeMutation, BatchCreateEpisodeMutationVariables> mutation={BatchCreateEpisodeDocument} {...props} />
-    );
-    
-export type BatchCreateEpisodeProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-      [key in TDataName]: ApolloReactCommon.MutationFunction<BatchCreateEpisodeMutation, BatchCreateEpisodeMutationVariables>
-    } & TChildProps;
-export function withBatchCreateEpisode<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  BatchCreateEpisodeMutation,
-  BatchCreateEpisodeMutationVariables,
-  BatchCreateEpisodeProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withMutation<TProps, BatchCreateEpisodeMutation, BatchCreateEpisodeMutationVariables, BatchCreateEpisodeProps<TChildProps, TDataName>>(BatchCreateEpisodeDocument, {
-      alias: 'batchCreateEpisode',
-      ...operationOptions
-    });
-};
 
 /**
  * __useBatchCreateEpisodeMutation__
@@ -1858,7 +1687,8 @@ export function withBatchCreateEpisode<TProps, TChildProps = {}, TDataName exten
  * });
  */
 export function useBatchCreateEpisodeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<BatchCreateEpisodeMutation, BatchCreateEpisodeMutationVariables>) {
-        return ApolloReactHooks.useMutation<BatchCreateEpisodeMutation, BatchCreateEpisodeMutationVariables>(BatchCreateEpisodeDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<BatchCreateEpisodeMutation, BatchCreateEpisodeMutationVariables>(BatchCreateEpisodeDocument, options);
       }
 export type BatchCreateEpisodeMutationHookResult = ReturnType<typeof useBatchCreateEpisodeMutation>;
 export type BatchCreateEpisodeMutationResult = ApolloReactCommon.MutationResult<BatchCreateEpisodeMutation>;
@@ -1871,25 +1701,6 @@ export const UpdateEpisodeDocument = gql`
 }
     `;
 export type UpdateEpisodeMutationFn = ApolloReactCommon.MutationFunction<UpdateEpisodeMutation, UpdateEpisodeMutationVariables>;
-export type UpdateEpisodeComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateEpisodeMutation, UpdateEpisodeMutationVariables>, 'mutation'>;
-
-    export const UpdateEpisodeComponent = (props: UpdateEpisodeComponentProps) => (
-      <ApolloReactComponents.Mutation<UpdateEpisodeMutation, UpdateEpisodeMutationVariables> mutation={UpdateEpisodeDocument} {...props} />
-    );
-    
-export type UpdateEpisodeProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-      [key in TDataName]: ApolloReactCommon.MutationFunction<UpdateEpisodeMutation, UpdateEpisodeMutationVariables>
-    } & TChildProps;
-export function withUpdateEpisode<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  UpdateEpisodeMutation,
-  UpdateEpisodeMutationVariables,
-  UpdateEpisodeProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withMutation<TProps, UpdateEpisodeMutation, UpdateEpisodeMutationVariables, UpdateEpisodeProps<TChildProps, TDataName>>(UpdateEpisodeDocument, {
-      alias: 'updateEpisode',
-      ...operationOptions
-    });
-};
 
 /**
  * __useUpdateEpisodeMutation__
@@ -1910,7 +1721,8 @@ export function withUpdateEpisode<TProps, TChildProps = {}, TDataName extends st
  * });
  */
 export function useUpdateEpisodeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateEpisodeMutation, UpdateEpisodeMutationVariables>) {
-        return ApolloReactHooks.useMutation<UpdateEpisodeMutation, UpdateEpisodeMutationVariables>(UpdateEpisodeDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateEpisodeMutation, UpdateEpisodeMutationVariables>(UpdateEpisodeDocument, options);
       }
 export type UpdateEpisodeMutationHookResult = ReturnType<typeof useUpdateEpisodeMutation>;
 export type UpdateEpisodeMutationResult = ApolloReactCommon.MutationResult<UpdateEpisodeMutation>;
@@ -1923,25 +1735,6 @@ export const DeleteEpisodeDocument = gql`
 }
     `;
 export type DeleteEpisodeMutationFn = ApolloReactCommon.MutationFunction<DeleteEpisodeMutation, DeleteEpisodeMutationVariables>;
-export type DeleteEpisodeComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<DeleteEpisodeMutation, DeleteEpisodeMutationVariables>, 'mutation'>;
-
-    export const DeleteEpisodeComponent = (props: DeleteEpisodeComponentProps) => (
-      <ApolloReactComponents.Mutation<DeleteEpisodeMutation, DeleteEpisodeMutationVariables> mutation={DeleteEpisodeDocument} {...props} />
-    );
-    
-export type DeleteEpisodeProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-      [key in TDataName]: ApolloReactCommon.MutationFunction<DeleteEpisodeMutation, DeleteEpisodeMutationVariables>
-    } & TChildProps;
-export function withDeleteEpisode<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  DeleteEpisodeMutation,
-  DeleteEpisodeMutationVariables,
-  DeleteEpisodeProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withMutation<TProps, DeleteEpisodeMutation, DeleteEpisodeMutationVariables, DeleteEpisodeProps<TChildProps, TDataName>>(DeleteEpisodeDocument, {
-      alias: 'deleteEpisode',
-      ...operationOptions
-    });
-};
 
 /**
  * __useDeleteEpisodeMutation__
@@ -1961,7 +1754,8 @@ export function withDeleteEpisode<TProps, TChildProps = {}, TDataName extends st
  * });
  */
 export function useDeleteEpisodeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteEpisodeMutation, DeleteEpisodeMutationVariables>) {
-        return ApolloReactHooks.useMutation<DeleteEpisodeMutation, DeleteEpisodeMutationVariables>(DeleteEpisodeDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteEpisodeMutation, DeleteEpisodeMutationVariables>(DeleteEpisodeDocument, options);
       }
 export type DeleteEpisodeMutationHookResult = ReturnType<typeof useDeleteEpisodeMutation>;
 export type DeleteEpisodeMutationResult = ApolloReactCommon.MutationResult<DeleteEpisodeMutation>;
@@ -1984,25 +1778,6 @@ export const FilesForEpisodeDocument = gql`
   }
 }
     `;
-export type FilesForEpisodeComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<FilesForEpisodeQuery, FilesForEpisodeQueryVariables>, 'query'> & ({ variables: FilesForEpisodeQueryVariables; skip?: boolean; } | { skip: boolean; });
-
-    export const FilesForEpisodeComponent = (props: FilesForEpisodeComponentProps) => (
-      <ApolloReactComponents.Query<FilesForEpisodeQuery, FilesForEpisodeQueryVariables> query={FilesForEpisodeDocument} {...props} />
-    );
-    
-export type FilesForEpisodeProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<FilesForEpisodeQuery, FilesForEpisodeQueryVariables>
-    } & TChildProps;
-export function withFilesForEpisode<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  FilesForEpisodeQuery,
-  FilesForEpisodeQueryVariables,
-  FilesForEpisodeProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, FilesForEpisodeQuery, FilesForEpisodeQueryVariables, FilesForEpisodeProps<TChildProps, TDataName>>(FilesForEpisodeDocument, {
-      alias: 'filesForEpisode',
-      ...operationOptions
-    });
-};
 
 /**
  * __useFilesForEpisodeQuery__
@@ -2020,11 +1795,13 @@ export function withFilesForEpisode<TProps, TChildProps = {}, TDataName extends 
  *   },
  * });
  */
-export function useFilesForEpisodeQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FilesForEpisodeQuery, FilesForEpisodeQueryVariables>) {
-        return ApolloReactHooks.useQuery<FilesForEpisodeQuery, FilesForEpisodeQueryVariables>(FilesForEpisodeDocument, baseOptions);
+export function useFilesForEpisodeQuery(baseOptions: ApolloReactHooks.QueryHookOptions<FilesForEpisodeQuery, FilesForEpisodeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<FilesForEpisodeQuery, FilesForEpisodeQueryVariables>(FilesForEpisodeDocument, options);
       }
 export function useFilesForEpisodeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FilesForEpisodeQuery, FilesForEpisodeQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<FilesForEpisodeQuery, FilesForEpisodeQueryVariables>(FilesForEpisodeDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<FilesForEpisodeQuery, FilesForEpisodeQueryVariables>(FilesForEpisodeDocument, options);
         }
 export type FilesForEpisodeQueryHookResult = ReturnType<typeof useFilesForEpisodeQuery>;
 export type FilesForEpisodeLazyQueryHookResult = ReturnType<typeof useFilesForEpisodeLazyQuery>;
@@ -2047,25 +1824,6 @@ export const FileDocument = gql`
   }
 }
     `;
-export type FileComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<FileQuery, FileQueryVariables>, 'query'> & ({ variables: FileQueryVariables; skip?: boolean; } | { skip: boolean; });
-
-    export const FileComponent = (props: FileComponentProps) => (
-      <ApolloReactComponents.Query<FileQuery, FileQueryVariables> query={FileDocument} {...props} />
-    );
-    
-export type FileProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<FileQuery, FileQueryVariables>
-    } & TChildProps;
-export function withFile<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  FileQuery,
-  FileQueryVariables,
-  FileProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, FileQuery, FileQueryVariables, FileProps<TChildProps, TDataName>>(FileDocument, {
-      alias: 'file',
-      ...operationOptions
-    });
-};
 
 /**
  * __useFileQuery__
@@ -2083,11 +1841,13 @@ export function withFile<TProps, TChildProps = {}, TDataName extends string = 'd
  *   },
  * });
  */
-export function useFileQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FileQuery, FileQueryVariables>) {
-        return ApolloReactHooks.useQuery<FileQuery, FileQueryVariables>(FileDocument, baseOptions);
+export function useFileQuery(baseOptions: ApolloReactHooks.QueryHookOptions<FileQuery, FileQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<FileQuery, FileQueryVariables>(FileDocument, options);
       }
 export function useFileLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FileQuery, FileQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<FileQuery, FileQueryVariables>(FileDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<FileQuery, FileQueryVariables>(FileDocument, options);
         }
 export type FileQueryHookResult = ReturnType<typeof useFileQuery>;
 export type FileLazyQueryHookResult = ReturnType<typeof useFileLazyQuery>;
@@ -2110,25 +1870,6 @@ export const FilesDocument = gql`
   }
 }
     `;
-export type FilesComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<FilesQuery, FilesQueryVariables>, 'query'>;
-
-    export const FilesComponent = (props: FilesComponentProps) => (
-      <ApolloReactComponents.Query<FilesQuery, FilesQueryVariables> query={FilesDocument} {...props} />
-    );
-    
-export type FilesProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<FilesQuery, FilesQueryVariables>
-    } & TChildProps;
-export function withFiles<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  FilesQuery,
-  FilesQueryVariables,
-  FilesProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, FilesQuery, FilesQueryVariables, FilesProps<TChildProps, TDataName>>(FilesDocument, {
-      alias: 'files',
-      ...operationOptions
-    });
-};
 
 /**
  * __useFilesQuery__
@@ -2146,10 +1887,12 @@ export function withFiles<TProps, TChildProps = {}, TDataName extends string = '
  * });
  */
 export function useFilesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FilesQuery, FilesQueryVariables>) {
-        return ApolloReactHooks.useQuery<FilesQuery, FilesQueryVariables>(FilesDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<FilesQuery, FilesQueryVariables>(FilesDocument, options);
       }
 export function useFilesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FilesQuery, FilesQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<FilesQuery, FilesQueryVariables>(FilesDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<FilesQuery, FilesQueryVariables>(FilesDocument, options);
         }
 export type FilesQueryHookResult = ReturnType<typeof useFilesQuery>;
 export type FilesLazyQueryHookResult = ReturnType<typeof useFilesLazyQuery>;
@@ -2161,25 +1904,6 @@ export const SuggestedCodecsDocument = gql`
   }
 }
     `;
-export type SuggestedCodecsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<SuggestedCodecsQuery, SuggestedCodecsQueryVariables>, 'query'>;
-
-    export const SuggestedCodecsComponent = (props: SuggestedCodecsComponentProps) => (
-      <ApolloReactComponents.Query<SuggestedCodecsQuery, SuggestedCodecsQueryVariables> query={SuggestedCodecsDocument} {...props} />
-    );
-    
-export type SuggestedCodecsProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<SuggestedCodecsQuery, SuggestedCodecsQueryVariables>
-    } & TChildProps;
-export function withSuggestedCodecs<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  SuggestedCodecsQuery,
-  SuggestedCodecsQueryVariables,
-  SuggestedCodecsProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, SuggestedCodecsQuery, SuggestedCodecsQueryVariables, SuggestedCodecsProps<TChildProps, TDataName>>(SuggestedCodecsDocument, {
-      alias: 'suggestedCodecs',
-      ...operationOptions
-    });
-};
 
 /**
  * __useSuggestedCodecsQuery__
@@ -2197,10 +1921,12 @@ export function withSuggestedCodecs<TProps, TChildProps = {}, TDataName extends 
  * });
  */
 export function useSuggestedCodecsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SuggestedCodecsQuery, SuggestedCodecsQueryVariables>) {
-        return ApolloReactHooks.useQuery<SuggestedCodecsQuery, SuggestedCodecsQueryVariables>(SuggestedCodecsDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<SuggestedCodecsQuery, SuggestedCodecsQueryVariables>(SuggestedCodecsDocument, options);
       }
 export function useSuggestedCodecsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SuggestedCodecsQuery, SuggestedCodecsQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<SuggestedCodecsQuery, SuggestedCodecsQueryVariables>(SuggestedCodecsDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<SuggestedCodecsQuery, SuggestedCodecsQueryVariables>(SuggestedCodecsDocument, options);
         }
 export type SuggestedCodecsQueryHookResult = ReturnType<typeof useSuggestedCodecsQuery>;
 export type SuggestedCodecsLazyQueryHookResult = ReturnType<typeof useSuggestedCodecsLazyQuery>;
@@ -2212,25 +1938,6 @@ export const FileExportDocument = gql`
   }
 }
     `;
-export type FileExportComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<FileExportQuery, FileExportQueryVariables>, 'query'>;
-
-    export const FileExportComponent = (props: FileExportComponentProps) => (
-      <ApolloReactComponents.Query<FileExportQuery, FileExportQueryVariables> query={FileExportDocument} {...props} />
-    );
-    
-export type FileExportProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<FileExportQuery, FileExportQueryVariables>
-    } & TChildProps;
-export function withFileExport<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  FileExportQuery,
-  FileExportQueryVariables,
-  FileExportProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, FileExportQuery, FileExportQueryVariables, FileExportProps<TChildProps, TDataName>>(FileExportDocument, {
-      alias: 'fileExport',
-      ...operationOptions
-    });
-};
 
 /**
  * __useFileExportQuery__
@@ -2248,10 +1955,12 @@ export function withFileExport<TProps, TChildProps = {}, TDataName extends strin
  * });
  */
 export function useFileExportQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FileExportQuery, FileExportQueryVariables>) {
-        return ApolloReactHooks.useQuery<FileExportQuery, FileExportQueryVariables>(FileExportDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<FileExportQuery, FileExportQueryVariables>(FileExportDocument, options);
       }
 export function useFileExportLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FileExportQuery, FileExportQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<FileExportQuery, FileExportQueryVariables>(FileExportDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<FileExportQuery, FileExportQueryVariables>(FileExportDocument, options);
         }
 export type FileExportQueryHookResult = ReturnType<typeof useFileExportQuery>;
 export type FileExportLazyQueryHookResult = ReturnType<typeof useFileExportLazyQuery>;
@@ -2264,25 +1973,6 @@ export const CreateFileDocument = gql`
 }
     `;
 export type CreateFileMutationFn = ApolloReactCommon.MutationFunction<CreateFileMutation, CreateFileMutationVariables>;
-export type CreateFileComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<CreateFileMutation, CreateFileMutationVariables>, 'mutation'>;
-
-    export const CreateFileComponent = (props: CreateFileComponentProps) => (
-      <ApolloReactComponents.Mutation<CreateFileMutation, CreateFileMutationVariables> mutation={CreateFileDocument} {...props} />
-    );
-    
-export type CreateFileProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-      [key in TDataName]: ApolloReactCommon.MutationFunction<CreateFileMutation, CreateFileMutationVariables>
-    } & TChildProps;
-export function withCreateFile<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  CreateFileMutation,
-  CreateFileMutationVariables,
-  CreateFileProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withMutation<TProps, CreateFileMutation, CreateFileMutationVariables, CreateFileProps<TChildProps, TDataName>>(CreateFileDocument, {
-      alias: 'createFile',
-      ...operationOptions
-    });
-};
 
 /**
  * __useCreateFileMutation__
@@ -2302,7 +1992,8 @@ export function withCreateFile<TProps, TChildProps = {}, TDataName extends strin
  * });
  */
 export function useCreateFileMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateFileMutation, CreateFileMutationVariables>) {
-        return ApolloReactHooks.useMutation<CreateFileMutation, CreateFileMutationVariables>(CreateFileDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateFileMutation, CreateFileMutationVariables>(CreateFileDocument, options);
       }
 export type CreateFileMutationHookResult = ReturnType<typeof useCreateFileMutation>;
 export type CreateFileMutationResult = ApolloReactCommon.MutationResult<CreateFileMutation>;
@@ -2315,25 +2006,6 @@ export const UpdateFileDocument = gql`
 }
     `;
 export type UpdateFileMutationFn = ApolloReactCommon.MutationFunction<UpdateFileMutation, UpdateFileMutationVariables>;
-export type UpdateFileComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateFileMutation, UpdateFileMutationVariables>, 'mutation'>;
-
-    export const UpdateFileComponent = (props: UpdateFileComponentProps) => (
-      <ApolloReactComponents.Mutation<UpdateFileMutation, UpdateFileMutationVariables> mutation={UpdateFileDocument} {...props} />
-    );
-    
-export type UpdateFileProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-      [key in TDataName]: ApolloReactCommon.MutationFunction<UpdateFileMutation, UpdateFileMutationVariables>
-    } & TChildProps;
-export function withUpdateFile<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  UpdateFileMutation,
-  UpdateFileMutationVariables,
-  UpdateFileProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withMutation<TProps, UpdateFileMutation, UpdateFileMutationVariables, UpdateFileProps<TChildProps, TDataName>>(UpdateFileDocument, {
-      alias: 'updateFile',
-      ...operationOptions
-    });
-};
 
 /**
  * __useUpdateFileMutation__
@@ -2354,7 +2026,8 @@ export function withUpdateFile<TProps, TChildProps = {}, TDataName extends strin
  * });
  */
 export function useUpdateFileMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateFileMutation, UpdateFileMutationVariables>) {
-        return ApolloReactHooks.useMutation<UpdateFileMutation, UpdateFileMutationVariables>(UpdateFileDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateFileMutation, UpdateFileMutationVariables>(UpdateFileDocument, options);
       }
 export type UpdateFileMutationHookResult = ReturnType<typeof useUpdateFileMutation>;
 export type UpdateFileMutationResult = ApolloReactCommon.MutationResult<UpdateFileMutation>;
@@ -2367,25 +2040,6 @@ export const DeleteFileDocument = gql`
 }
     `;
 export type DeleteFileMutationFn = ApolloReactCommon.MutationFunction<DeleteFileMutation, DeleteFileMutationVariables>;
-export type DeleteFileComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<DeleteFileMutation, DeleteFileMutationVariables>, 'mutation'>;
-
-    export const DeleteFileComponent = (props: DeleteFileComponentProps) => (
-      <ApolloReactComponents.Mutation<DeleteFileMutation, DeleteFileMutationVariables> mutation={DeleteFileDocument} {...props} />
-    );
-    
-export type DeleteFileProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-      [key in TDataName]: ApolloReactCommon.MutationFunction<DeleteFileMutation, DeleteFileMutationVariables>
-    } & TChildProps;
-export function withDeleteFile<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  DeleteFileMutation,
-  DeleteFileMutationVariables,
-  DeleteFileProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withMutation<TProps, DeleteFileMutation, DeleteFileMutationVariables, DeleteFileProps<TChildProps, TDataName>>(DeleteFileDocument, {
-      alias: 'deleteFile',
-      ...operationOptions
-    });
-};
 
 /**
  * __useDeleteFileMutation__
@@ -2405,7 +2059,8 @@ export function withDeleteFile<TProps, TChildProps = {}, TDataName extends strin
  * });
  */
 export function useDeleteFileMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteFileMutation, DeleteFileMutationVariables>) {
-        return ApolloReactHooks.useMutation<DeleteFileMutation, DeleteFileMutationVariables>(DeleteFileDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteFileMutation, DeleteFileMutationVariables>(DeleteFileDocument, options);
       }
 export type DeleteFileMutationHookResult = ReturnType<typeof useDeleteFileMutation>;
 export type DeleteFileMutationResult = ApolloReactCommon.MutationResult<DeleteFileMutation>;
@@ -2417,25 +2072,6 @@ export const SuggestedSourcesDocument = gql`
   }
 }
     `;
-export type SuggestedSourcesComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<SuggestedSourcesQuery, SuggestedSourcesQueryVariables>, 'query'>;
-
-    export const SuggestedSourcesComponent = (props: SuggestedSourcesComponentProps) => (
-      <ApolloReactComponents.Query<SuggestedSourcesQuery, SuggestedSourcesQueryVariables> query={SuggestedSourcesDocument} {...props} />
-    );
-    
-export type SuggestedSourcesProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<SuggestedSourcesQuery, SuggestedSourcesQueryVariables>
-    } & TChildProps;
-export function withSuggestedSources<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  SuggestedSourcesQuery,
-  SuggestedSourcesQueryVariables,
-  SuggestedSourcesProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, SuggestedSourcesQuery, SuggestedSourcesQueryVariables, SuggestedSourcesProps<TChildProps, TDataName>>(SuggestedSourcesDocument, {
-      alias: 'suggestedSources',
-      ...operationOptions
-    });
-};
 
 /**
  * __useSuggestedSourcesQuery__
@@ -2453,10 +2089,12 @@ export function withSuggestedSources<TProps, TChildProps = {}, TDataName extends
  * });
  */
 export function useSuggestedSourcesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SuggestedSourcesQuery, SuggestedSourcesQueryVariables>) {
-        return ApolloReactHooks.useQuery<SuggestedSourcesQuery, SuggestedSourcesQueryVariables>(SuggestedSourcesDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<SuggestedSourcesQuery, SuggestedSourcesQueryVariables>(SuggestedSourcesDocument, options);
       }
 export function useSuggestedSourcesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SuggestedSourcesQuery, SuggestedSourcesQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<SuggestedSourcesQuery, SuggestedSourcesQueryVariables>(SuggestedSourcesDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<SuggestedSourcesQuery, SuggestedSourcesQueryVariables>(SuggestedSourcesDocument, options);
         }
 export type SuggestedSourcesQueryHookResult = ReturnType<typeof useSuggestedSourcesQuery>;
 export type SuggestedSourcesLazyQueryHookResult = ReturnType<typeof useSuggestedSourcesLazyQuery>;
@@ -2475,25 +2113,6 @@ export const QuickSearchDocument = gql`
   }
 }
     `;
-export type QuickSearchComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<QuickSearchQuery, QuickSearchQueryVariables>, 'query'> & ({ variables: QuickSearchQueryVariables; skip?: boolean; } | { skip: boolean; });
-
-    export const QuickSearchComponent = (props: QuickSearchComponentProps) => (
-      <ApolloReactComponents.Query<QuickSearchQuery, QuickSearchQueryVariables> query={QuickSearchDocument} {...props} />
-    );
-    
-export type QuickSearchProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<QuickSearchQuery, QuickSearchQueryVariables>
-    } & TChildProps;
-export function withQuickSearch<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  QuickSearchQuery,
-  QuickSearchQueryVariables,
-  QuickSearchProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, QuickSearchQuery, QuickSearchQueryVariables, QuickSearchProps<TChildProps, TDataName>>(QuickSearchDocument, {
-      alias: 'quickSearch',
-      ...operationOptions
-    });
-};
 
 /**
  * __useQuickSearchQuery__
@@ -2511,11 +2130,13 @@ export function withQuickSearch<TProps, TChildProps = {}, TDataName extends stri
  *   },
  * });
  */
-export function useQuickSearchQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<QuickSearchQuery, QuickSearchQueryVariables>) {
-        return ApolloReactHooks.useQuery<QuickSearchQuery, QuickSearchQueryVariables>(QuickSearchDocument, baseOptions);
+export function useQuickSearchQuery(baseOptions: ApolloReactHooks.QueryHookOptions<QuickSearchQuery, QuickSearchQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<QuickSearchQuery, QuickSearchQueryVariables>(QuickSearchDocument, options);
       }
 export function useQuickSearchLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<QuickSearchQuery, QuickSearchQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<QuickSearchQuery, QuickSearchQueryVariables>(QuickSearchDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<QuickSearchQuery, QuickSearchQueryVariables>(QuickSearchDocument, options);
         }
 export type QuickSearchQueryHookResult = ReturnType<typeof useQuickSearchQuery>;
 export type QuickSearchLazyQueryHookResult = ReturnType<typeof useQuickSearchLazyQuery>;
@@ -2552,25 +2173,6 @@ export const SeriesDocument = gql`
   }
 }
     ${RelatedSeriesInfoFragmentDoc}`;
-export type SeriesComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<SeriesQuery, SeriesQueryVariables>, 'query'> & ({ variables: SeriesQueryVariables; skip?: boolean; } | { skip: boolean; });
-
-    export const SeriesComponent = (props: SeriesComponentProps) => (
-      <ApolloReactComponents.Query<SeriesQuery, SeriesQueryVariables> query={SeriesDocument} {...props} />
-    );
-    
-export type SeriesProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<SeriesQuery, SeriesQueryVariables>
-    } & TChildProps;
-export function withSeries<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  SeriesQuery,
-  SeriesQueryVariables,
-  SeriesProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, SeriesQuery, SeriesQueryVariables, SeriesProps<TChildProps, TDataName>>(SeriesDocument, {
-      alias: 'series',
-      ...operationOptions
-    });
-};
 
 /**
  * __useSeriesQuery__
@@ -2588,11 +2190,13 @@ export function withSeries<TProps, TChildProps = {}, TDataName extends string = 
  *   },
  * });
  */
-export function useSeriesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SeriesQuery, SeriesQueryVariables>) {
-        return ApolloReactHooks.useQuery<SeriesQuery, SeriesQueryVariables>(SeriesDocument, baseOptions);
+export function useSeriesQuery(baseOptions: ApolloReactHooks.QueryHookOptions<SeriesQuery, SeriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<SeriesQuery, SeriesQueryVariables>(SeriesDocument, options);
       }
 export function useSeriesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SeriesQuery, SeriesQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<SeriesQuery, SeriesQueryVariables>(SeriesDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<SeriesQuery, SeriesQueryVariables>(SeriesDocument, options);
         }
 export type SeriesQueryHookResult = ReturnType<typeof useSeriesQuery>;
 export type SeriesLazyQueryHookResult = ReturnType<typeof useSeriesLazyQuery>;
@@ -2612,25 +2216,6 @@ export const AllSeriesDocument = gql`
   }
 }
     `;
-export type AllSeriesComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<AllSeriesQuery, AllSeriesQueryVariables>, 'query'>;
-
-    export const AllSeriesComponent = (props: AllSeriesComponentProps) => (
-      <ApolloReactComponents.Query<AllSeriesQuery, AllSeriesQueryVariables> query={AllSeriesDocument} {...props} />
-    );
-    
-export type AllSeriesProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<AllSeriesQuery, AllSeriesQueryVariables>
-    } & TChildProps;
-export function withAllSeries<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  AllSeriesQuery,
-  AllSeriesQueryVariables,
-  AllSeriesProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, AllSeriesQuery, AllSeriesQueryVariables, AllSeriesProps<TChildProps, TDataName>>(AllSeriesDocument, {
-      alias: 'allSeries',
-      ...operationOptions
-    });
-};
 
 /**
  * __useAllSeriesQuery__
@@ -2648,10 +2233,12 @@ export function withAllSeries<TProps, TChildProps = {}, TDataName extends string
  * });
  */
 export function useAllSeriesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<AllSeriesQuery, AllSeriesQueryVariables>) {
-        return ApolloReactHooks.useQuery<AllSeriesQuery, AllSeriesQueryVariables>(AllSeriesDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<AllSeriesQuery, AllSeriesQueryVariables>(AllSeriesDocument, options);
       }
 export function useAllSeriesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<AllSeriesQuery, AllSeriesQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<AllSeriesQuery, AllSeriesQueryVariables>(AllSeriesDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<AllSeriesQuery, AllSeriesQueryVariables>(AllSeriesDocument, options);
         }
 export type AllSeriesQueryHookResult = ReturnType<typeof useAllSeriesQuery>;
 export type AllSeriesLazyQueryHookResult = ReturnType<typeof useAllSeriesLazyQuery>;
@@ -2661,25 +2248,6 @@ export const TotalSeriesCountDocument = gql`
   totalSeriesCount
 }
     `;
-export type TotalSeriesCountComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<TotalSeriesCountQuery, TotalSeriesCountQueryVariables>, 'query'>;
-
-    export const TotalSeriesCountComponent = (props: TotalSeriesCountComponentProps) => (
-      <ApolloReactComponents.Query<TotalSeriesCountQuery, TotalSeriesCountQueryVariables> query={TotalSeriesCountDocument} {...props} />
-    );
-    
-export type TotalSeriesCountProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<TotalSeriesCountQuery, TotalSeriesCountQueryVariables>
-    } & TChildProps;
-export function withTotalSeriesCount<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  TotalSeriesCountQuery,
-  TotalSeriesCountQueryVariables,
-  TotalSeriesCountProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, TotalSeriesCountQuery, TotalSeriesCountQueryVariables, TotalSeriesCountProps<TChildProps, TDataName>>(TotalSeriesCountDocument, {
-      alias: 'totalSeriesCount',
-      ...operationOptions
-    });
-};
 
 /**
  * __useTotalSeriesCountQuery__
@@ -2697,10 +2265,12 @@ export function withTotalSeriesCount<TProps, TChildProps = {}, TDataName extends
  * });
  */
 export function useTotalSeriesCountQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<TotalSeriesCountQuery, TotalSeriesCountQueryVariables>) {
-        return ApolloReactHooks.useQuery<TotalSeriesCountQuery, TotalSeriesCountQueryVariables>(TotalSeriesCountDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<TotalSeriesCountQuery, TotalSeriesCountQueryVariables>(TotalSeriesCountDocument, options);
       }
 export function useTotalSeriesCountLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TotalSeriesCountQuery, TotalSeriesCountQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<TotalSeriesCountQuery, TotalSeriesCountQueryVariables>(TotalSeriesCountDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<TotalSeriesCountQuery, TotalSeriesCountQueryVariables>(TotalSeriesCountDocument, options);
         }
 export type TotalSeriesCountQueryHookResult = ReturnType<typeof useTotalSeriesCountQuery>;
 export type TotalSeriesCountLazyQueryHookResult = ReturnType<typeof useTotalSeriesCountLazyQuery>;
@@ -2713,25 +2283,6 @@ export const CreateSeriesDocument = gql`
 }
     `;
 export type CreateSeriesMutationFn = ApolloReactCommon.MutationFunction<CreateSeriesMutation, CreateSeriesMutationVariables>;
-export type CreateSeriesComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<CreateSeriesMutation, CreateSeriesMutationVariables>, 'mutation'>;
-
-    export const CreateSeriesComponent = (props: CreateSeriesComponentProps) => (
-      <ApolloReactComponents.Mutation<CreateSeriesMutation, CreateSeriesMutationVariables> mutation={CreateSeriesDocument} {...props} />
-    );
-    
-export type CreateSeriesProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-      [key in TDataName]: ApolloReactCommon.MutationFunction<CreateSeriesMutation, CreateSeriesMutationVariables>
-    } & TChildProps;
-export function withCreateSeries<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  CreateSeriesMutation,
-  CreateSeriesMutationVariables,
-  CreateSeriesProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withMutation<TProps, CreateSeriesMutation, CreateSeriesMutationVariables, CreateSeriesProps<TChildProps, TDataName>>(CreateSeriesDocument, {
-      alias: 'createSeries',
-      ...operationOptions
-    });
-};
 
 /**
  * __useCreateSeriesMutation__
@@ -2751,7 +2302,8 @@ export function withCreateSeries<TProps, TChildProps = {}, TDataName extends str
  * });
  */
 export function useCreateSeriesMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateSeriesMutation, CreateSeriesMutationVariables>) {
-        return ApolloReactHooks.useMutation<CreateSeriesMutation, CreateSeriesMutationVariables>(CreateSeriesDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateSeriesMutation, CreateSeriesMutationVariables>(CreateSeriesDocument, options);
       }
 export type CreateSeriesMutationHookResult = ReturnType<typeof useCreateSeriesMutation>;
 export type CreateSeriesMutationResult = ApolloReactCommon.MutationResult<CreateSeriesMutation>;
@@ -2764,25 +2316,6 @@ export const UpdateSeriesDocument = gql`
 }
     `;
 export type UpdateSeriesMutationFn = ApolloReactCommon.MutationFunction<UpdateSeriesMutation, UpdateSeriesMutationVariables>;
-export type UpdateSeriesComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateSeriesMutation, UpdateSeriesMutationVariables>, 'mutation'>;
-
-    export const UpdateSeriesComponent = (props: UpdateSeriesComponentProps) => (
-      <ApolloReactComponents.Mutation<UpdateSeriesMutation, UpdateSeriesMutationVariables> mutation={UpdateSeriesDocument} {...props} />
-    );
-    
-export type UpdateSeriesProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-      [key in TDataName]: ApolloReactCommon.MutationFunction<UpdateSeriesMutation, UpdateSeriesMutationVariables>
-    } & TChildProps;
-export function withUpdateSeries<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  UpdateSeriesMutation,
-  UpdateSeriesMutationVariables,
-  UpdateSeriesProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withMutation<TProps, UpdateSeriesMutation, UpdateSeriesMutationVariables, UpdateSeriesProps<TChildProps, TDataName>>(UpdateSeriesDocument, {
-      alias: 'updateSeries',
-      ...operationOptions
-    });
-};
 
 /**
  * __useUpdateSeriesMutation__
@@ -2803,7 +2336,8 @@ export function withUpdateSeries<TProps, TChildProps = {}, TDataName extends str
  * });
  */
 export function useUpdateSeriesMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateSeriesMutation, UpdateSeriesMutationVariables>) {
-        return ApolloReactHooks.useMutation<UpdateSeriesMutation, UpdateSeriesMutationVariables>(UpdateSeriesDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateSeriesMutation, UpdateSeriesMutationVariables>(UpdateSeriesDocument, options);
       }
 export type UpdateSeriesMutationHookResult = ReturnType<typeof useUpdateSeriesMutation>;
 export type UpdateSeriesMutationResult = ApolloReactCommon.MutationResult<UpdateSeriesMutation>;
@@ -2816,25 +2350,6 @@ export const DeleteSeriesDocument = gql`
 }
     `;
 export type DeleteSeriesMutationFn = ApolloReactCommon.MutationFunction<DeleteSeriesMutation, DeleteSeriesMutationVariables>;
-export type DeleteSeriesComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<DeleteSeriesMutation, DeleteSeriesMutationVariables>, 'mutation'>;
-
-    export const DeleteSeriesComponent = (props: DeleteSeriesComponentProps) => (
-      <ApolloReactComponents.Mutation<DeleteSeriesMutation, DeleteSeriesMutationVariables> mutation={DeleteSeriesDocument} {...props} />
-    );
-    
-export type DeleteSeriesProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-      [key in TDataName]: ApolloReactCommon.MutationFunction<DeleteSeriesMutation, DeleteSeriesMutationVariables>
-    } & TChildProps;
-export function withDeleteSeries<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  DeleteSeriesMutation,
-  DeleteSeriesMutationVariables,
-  DeleteSeriesProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withMutation<TProps, DeleteSeriesMutation, DeleteSeriesMutationVariables, DeleteSeriesProps<TChildProps, TDataName>>(DeleteSeriesDocument, {
-      alias: 'deleteSeries',
-      ...operationOptions
-    });
-};
 
 /**
  * __useDeleteSeriesMutation__
@@ -2854,7 +2369,8 @@ export function withDeleteSeries<TProps, TChildProps = {}, TDataName extends str
  * });
  */
 export function useDeleteSeriesMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteSeriesMutation, DeleteSeriesMutationVariables>) {
-        return ApolloReactHooks.useMutation<DeleteSeriesMutation, DeleteSeriesMutationVariables>(DeleteSeriesDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteSeriesMutation, DeleteSeriesMutationVariables>(DeleteSeriesDocument, options);
       }
 export type DeleteSeriesMutationHookResult = ReturnType<typeof useDeleteSeriesMutation>;
 export type DeleteSeriesMutationResult = ApolloReactCommon.MutationResult<DeleteSeriesMutation>;
@@ -2870,25 +2386,6 @@ export const UserDocument = gql`
   }
 }
     `;
-export type UserComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<UserQuery, UserQueryVariables>, 'query'> & ({ variables: UserQueryVariables; skip?: boolean; } | { skip: boolean; });
-
-    export const UserComponent = (props: UserComponentProps) => (
-      <ApolloReactComponents.Query<UserQuery, UserQueryVariables> query={UserDocument} {...props} />
-    );
-    
-export type UserProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<UserQuery, UserQueryVariables>
-    } & TChildProps;
-export function withUser<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  UserQuery,
-  UserQueryVariables,
-  UserProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, UserQuery, UserQueryVariables, UserProps<TChildProps, TDataName>>(UserDocument, {
-      alias: 'user',
-      ...operationOptions
-    });
-};
 
 /**
  * __useUserQuery__
@@ -2906,11 +2403,13 @@ export function withUser<TProps, TChildProps = {}, TDataName extends string = 'd
  *   },
  * });
  */
-export function useUserQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<UserQuery, UserQueryVariables>) {
-        return ApolloReactHooks.useQuery<UserQuery, UserQueryVariables>(UserDocument, baseOptions);
+export function useUserQuery(baseOptions: ApolloReactHooks.QueryHookOptions<UserQuery, UserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<UserQuery, UserQueryVariables>(UserDocument, options);
       }
 export function useUserLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<UserQuery, UserQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<UserQuery, UserQueryVariables>(UserDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<UserQuery, UserQueryVariables>(UserDocument, options);
         }
 export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
 export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
@@ -2926,25 +2425,6 @@ export const UsersDocument = gql`
   }
 }
     `;
-export type UsersComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<UsersQuery, UsersQueryVariables>, 'query'>;
-
-    export const UsersComponent = (props: UsersComponentProps) => (
-      <ApolloReactComponents.Query<UsersQuery, UsersQueryVariables> query={UsersDocument} {...props} />
-    );
-    
-export type UsersProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<UsersQuery, UsersQueryVariables>
-    } & TChildProps;
-export function withUsers<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  UsersQuery,
-  UsersQueryVariables,
-  UsersProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, UsersQuery, UsersQueryVariables, UsersProps<TChildProps, TDataName>>(UsersDocument, {
-      alias: 'users',
-      ...operationOptions
-    });
-};
 
 /**
  * __useUsersQuery__
@@ -2962,10 +2442,12 @@ export function withUsers<TProps, TChildProps = {}, TDataName extends string = '
  * });
  */
 export function useUsersQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<UsersQuery, UsersQueryVariables>) {
-        return ApolloReactHooks.useQuery<UsersQuery, UsersQueryVariables>(UsersDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
       }
 export function useUsersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<UsersQuery, UsersQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<UsersQuery, UsersQueryVariables>(UsersDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
         }
 export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
 export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
@@ -2975,25 +2457,6 @@ export const IsInitializedDocument = gql`
   isInitialized
 }
     `;
-export type IsInitializedComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<IsInitializedQuery, IsInitializedQueryVariables>, 'query'>;
-
-    export const IsInitializedComponent = (props: IsInitializedComponentProps) => (
-      <ApolloReactComponents.Query<IsInitializedQuery, IsInitializedQueryVariables> query={IsInitializedDocument} {...props} />
-    );
-    
-export type IsInitializedProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<IsInitializedQuery, IsInitializedQueryVariables>
-    } & TChildProps;
-export function withIsInitialized<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  IsInitializedQuery,
-  IsInitializedQueryVariables,
-  IsInitializedProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, IsInitializedQuery, IsInitializedQueryVariables, IsInitializedProps<TChildProps, TDataName>>(IsInitializedDocument, {
-      alias: 'isInitialized',
-      ...operationOptions
-    });
-};
 
 /**
  * __useIsInitializedQuery__
@@ -3011,10 +2474,12 @@ export function withIsInitialized<TProps, TChildProps = {}, TDataName extends st
  * });
  */
 export function useIsInitializedQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<IsInitializedQuery, IsInitializedQueryVariables>) {
-        return ApolloReactHooks.useQuery<IsInitializedQuery, IsInitializedQueryVariables>(IsInitializedDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<IsInitializedQuery, IsInitializedQueryVariables>(IsInitializedDocument, options);
       }
 export function useIsInitializedLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<IsInitializedQuery, IsInitializedQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<IsInitializedQuery, IsInitializedQueryVariables>(IsInitializedDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<IsInitializedQuery, IsInitializedQueryVariables>(IsInitializedDocument, options);
         }
 export type IsInitializedQueryHookResult = ReturnType<typeof useIsInitializedQuery>;
 export type IsInitializedLazyQueryHookResult = ReturnType<typeof useIsInitializedLazyQuery>;
@@ -3027,25 +2492,6 @@ export const CreateUserDocument = gql`
 }
     `;
 export type CreateUserMutationFn = ApolloReactCommon.MutationFunction<CreateUserMutation, CreateUserMutationVariables>;
-export type CreateUserComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<CreateUserMutation, CreateUserMutationVariables>, 'mutation'>;
-
-    export const CreateUserComponent = (props: CreateUserComponentProps) => (
-      <ApolloReactComponents.Mutation<CreateUserMutation, CreateUserMutationVariables> mutation={CreateUserDocument} {...props} />
-    );
-    
-export type CreateUserProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-      [key in TDataName]: ApolloReactCommon.MutationFunction<CreateUserMutation, CreateUserMutationVariables>
-    } & TChildProps;
-export function withCreateUser<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  CreateUserMutation,
-  CreateUserMutationVariables,
-  CreateUserProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withMutation<TProps, CreateUserMutation, CreateUserMutationVariables, CreateUserProps<TChildProps, TDataName>>(CreateUserDocument, {
-      alias: 'createUser',
-      ...operationOptions
-    });
-};
 
 /**
  * __useCreateUserMutation__
@@ -3065,7 +2511,8 @@ export function withCreateUser<TProps, TChildProps = {}, TDataName extends strin
  * });
  */
 export function useCreateUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateUserMutation, CreateUserMutationVariables>) {
-        return ApolloReactHooks.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument, options);
       }
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = ApolloReactCommon.MutationResult<CreateUserMutation>;
@@ -3078,25 +2525,6 @@ export const CreateInitialUserDocument = gql`
 }
     `;
 export type CreateInitialUserMutationFn = ApolloReactCommon.MutationFunction<CreateInitialUserMutation, CreateInitialUserMutationVariables>;
-export type CreateInitialUserComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<CreateInitialUserMutation, CreateInitialUserMutationVariables>, 'mutation'>;
-
-    export const CreateInitialUserComponent = (props: CreateInitialUserComponentProps) => (
-      <ApolloReactComponents.Mutation<CreateInitialUserMutation, CreateInitialUserMutationVariables> mutation={CreateInitialUserDocument} {...props} />
-    );
-    
-export type CreateInitialUserProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-      [key in TDataName]: ApolloReactCommon.MutationFunction<CreateInitialUserMutation, CreateInitialUserMutationVariables>
-    } & TChildProps;
-export function withCreateInitialUser<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  CreateInitialUserMutation,
-  CreateInitialUserMutationVariables,
-  CreateInitialUserProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withMutation<TProps, CreateInitialUserMutation, CreateInitialUserMutationVariables, CreateInitialUserProps<TChildProps, TDataName>>(CreateInitialUserDocument, {
-      alias: 'createInitialUser',
-      ...operationOptions
-    });
-};
 
 /**
  * __useCreateInitialUserMutation__
@@ -3116,7 +2544,8 @@ export function withCreateInitialUser<TProps, TChildProps = {}, TDataName extend
  * });
  */
 export function useCreateInitialUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateInitialUserMutation, CreateInitialUserMutationVariables>) {
-        return ApolloReactHooks.useMutation<CreateInitialUserMutation, CreateInitialUserMutationVariables>(CreateInitialUserDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateInitialUserMutation, CreateInitialUserMutationVariables>(CreateInitialUserDocument, options);
       }
 export type CreateInitialUserMutationHookResult = ReturnType<typeof useCreateInitialUserMutation>;
 export type CreateInitialUserMutationResult = ApolloReactCommon.MutationResult<CreateInitialUserMutation>;
@@ -3129,25 +2558,6 @@ export const UpdateMeDocument = gql`
 }
     `;
 export type UpdateMeMutationFn = ApolloReactCommon.MutationFunction<UpdateMeMutation, UpdateMeMutationVariables>;
-export type UpdateMeComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateMeMutation, UpdateMeMutationVariables>, 'mutation'>;
-
-    export const UpdateMeComponent = (props: UpdateMeComponentProps) => (
-      <ApolloReactComponents.Mutation<UpdateMeMutation, UpdateMeMutationVariables> mutation={UpdateMeDocument} {...props} />
-    );
-    
-export type UpdateMeProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-      [key in TDataName]: ApolloReactCommon.MutationFunction<UpdateMeMutation, UpdateMeMutationVariables>
-    } & TChildProps;
-export function withUpdateMe<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  UpdateMeMutation,
-  UpdateMeMutationVariables,
-  UpdateMeProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withMutation<TProps, UpdateMeMutation, UpdateMeMutationVariables, UpdateMeProps<TChildProps, TDataName>>(UpdateMeDocument, {
-      alias: 'updateMe',
-      ...operationOptions
-    });
-};
 
 /**
  * __useUpdateMeMutation__
@@ -3167,7 +2577,8 @@ export function withUpdateMe<TProps, TChildProps = {}, TDataName extends string 
  * });
  */
 export function useUpdateMeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateMeMutation, UpdateMeMutationVariables>) {
-        return ApolloReactHooks.useMutation<UpdateMeMutation, UpdateMeMutationVariables>(UpdateMeDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateMeMutation, UpdateMeMutationVariables>(UpdateMeDocument, options);
       }
 export type UpdateMeMutationHookResult = ReturnType<typeof useUpdateMeMutation>;
 export type UpdateMeMutationResult = ApolloReactCommon.MutationResult<UpdateMeMutation>;
@@ -3180,25 +2591,6 @@ export const UpdateUserDocument = gql`
 }
     `;
 export type UpdateUserMutationFn = ApolloReactCommon.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
-export type UpdateUserComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateUserMutation, UpdateUserMutationVariables>, 'mutation'>;
-
-    export const UpdateUserComponent = (props: UpdateUserComponentProps) => (
-      <ApolloReactComponents.Mutation<UpdateUserMutation, UpdateUserMutationVariables> mutation={UpdateUserDocument} {...props} />
-    );
-    
-export type UpdateUserProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-      [key in TDataName]: ApolloReactCommon.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>
-    } & TChildProps;
-export function withUpdateUser<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  UpdateUserMutation,
-  UpdateUserMutationVariables,
-  UpdateUserProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withMutation<TProps, UpdateUserMutation, UpdateUserMutationVariables, UpdateUserProps<TChildProps, TDataName>>(UpdateUserDocument, {
-      alias: 'updateUser',
-      ...operationOptions
-    });
-};
 
 /**
  * __useUpdateUserMutation__
@@ -3219,7 +2611,8 @@ export function withUpdateUser<TProps, TChildProps = {}, TDataName extends strin
  * });
  */
 export function useUpdateUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
-        return ApolloReactHooks.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
       }
 export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
 export type UpdateUserMutationResult = ApolloReactCommon.MutationResult<UpdateUserMutation>;
@@ -3232,25 +2625,6 @@ export const DeleteUserDocument = gql`
 }
     `;
 export type DeleteUserMutationFn = ApolloReactCommon.MutationFunction<DeleteUserMutation, DeleteUserMutationVariables>;
-export type DeleteUserComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<DeleteUserMutation, DeleteUserMutationVariables>, 'mutation'>;
-
-    export const DeleteUserComponent = (props: DeleteUserComponentProps) => (
-      <ApolloReactComponents.Mutation<DeleteUserMutation, DeleteUserMutationVariables> mutation={DeleteUserDocument} {...props} />
-    );
-    
-export type DeleteUserProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-      [key in TDataName]: ApolloReactCommon.MutationFunction<DeleteUserMutation, DeleteUserMutationVariables>
-    } & TChildProps;
-export function withDeleteUser<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  DeleteUserMutation,
-  DeleteUserMutationVariables,
-  DeleteUserProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withMutation<TProps, DeleteUserMutation, DeleteUserMutationVariables, DeleteUserProps<TChildProps, TDataName>>(DeleteUserDocument, {
-      alias: 'deleteUser',
-      ...operationOptions
-    });
-};
 
 /**
  * __useDeleteUserMutation__
@@ -3270,7 +2644,8 @@ export function withDeleteUser<TProps, TChildProps = {}, TDataName extends strin
  * });
  */
 export function useDeleteUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteUserMutation, DeleteUserMutationVariables>) {
-        return ApolloReactHooks.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(DeleteUserDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(DeleteUserDocument, options);
       }
 export type DeleteUserMutationHookResult = ReturnType<typeof useDeleteUserMutation>;
 export type DeleteUserMutationResult = ApolloReactCommon.MutationResult<DeleteUserMutation>;
@@ -3298,25 +2673,6 @@ export const MySeriesProgressDocument = gql`
   }
 }
     `;
-export type MySeriesProgressComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<MySeriesProgressQuery, MySeriesProgressQueryVariables>, 'query'> & ({ variables: MySeriesProgressQueryVariables; skip?: boolean; } | { skip: boolean; });
-
-    export const MySeriesProgressComponent = (props: MySeriesProgressComponentProps) => (
-      <ApolloReactComponents.Query<MySeriesProgressQuery, MySeriesProgressQueryVariables> query={MySeriesProgressDocument} {...props} />
-    );
-    
-export type MySeriesProgressProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<MySeriesProgressQuery, MySeriesProgressQueryVariables>
-    } & TChildProps;
-export function withMySeriesProgress<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  MySeriesProgressQuery,
-  MySeriesProgressQueryVariables,
-  MySeriesProgressProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, MySeriesProgressQuery, MySeriesProgressQueryVariables, MySeriesProgressProps<TChildProps, TDataName>>(MySeriesProgressDocument, {
-      alias: 'mySeriesProgress',
-      ...operationOptions
-    });
-};
 
 /**
  * __useMySeriesProgressQuery__
@@ -3334,11 +2690,13 @@ export function withMySeriesProgress<TProps, TChildProps = {}, TDataName extends
  *   },
  * });
  */
-export function useMySeriesProgressQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MySeriesProgressQuery, MySeriesProgressQueryVariables>) {
-        return ApolloReactHooks.useQuery<MySeriesProgressQuery, MySeriesProgressQueryVariables>(MySeriesProgressDocument, baseOptions);
+export function useMySeriesProgressQuery(baseOptions: ApolloReactHooks.QueryHookOptions<MySeriesProgressQuery, MySeriesProgressQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<MySeriesProgressQuery, MySeriesProgressQueryVariables>(MySeriesProgressDocument, options);
       }
 export function useMySeriesProgressLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MySeriesProgressQuery, MySeriesProgressQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<MySeriesProgressQuery, MySeriesProgressQueryVariables>(MySeriesProgressDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<MySeriesProgressQuery, MySeriesProgressQueryVariables>(MySeriesProgressDocument, options);
         }
 export type MySeriesProgressQueryHookResult = ReturnType<typeof useMySeriesProgressQuery>;
 export type MySeriesProgressLazyQueryHookResult = ReturnType<typeof useMySeriesProgressLazyQuery>;
@@ -3368,25 +2726,6 @@ export const MyProgressDocument = gql`
   }
 }
     `;
-export type MyProgressComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<MyProgressQuery, MyProgressQueryVariables>, 'query'>;
-
-    export const MyProgressComponent = (props: MyProgressComponentProps) => (
-      <ApolloReactComponents.Query<MyProgressQuery, MyProgressQueryVariables> query={MyProgressDocument} {...props} />
-    );
-    
-export type MyProgressProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<MyProgressQuery, MyProgressQueryVariables>
-    } & TChildProps;
-export function withMyProgress<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  MyProgressQuery,
-  MyProgressQueryVariables,
-  MyProgressProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, MyProgressQuery, MyProgressQueryVariables, MyProgressProps<TChildProps, TDataName>>(MyProgressDocument, {
-      alias: 'myProgress',
-      ...operationOptions
-    });
-};
 
 /**
  * __useMyProgressQuery__
@@ -3404,10 +2743,12 @@ export function withMyProgress<TProps, TChildProps = {}, TDataName extends strin
  * });
  */
 export function useMyProgressQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MyProgressQuery, MyProgressQueryVariables>) {
-        return ApolloReactHooks.useQuery<MyProgressQuery, MyProgressQueryVariables>(MyProgressDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<MyProgressQuery, MyProgressQueryVariables>(MyProgressDocument, options);
       }
 export function useMyProgressLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MyProgressQuery, MyProgressQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<MyProgressQuery, MyProgressQueryVariables>(MyProgressDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<MyProgressQuery, MyProgressQueryVariables>(MyProgressDocument, options);
         }
 export type MyProgressQueryHookResult = ReturnType<typeof useMyProgressQuery>;
 export type MyProgressLazyQueryHookResult = ReturnType<typeof useMyProgressLazyQuery>;
@@ -3420,25 +2761,6 @@ export const CreateUserProgressDocument = gql`
 }
     `;
 export type CreateUserProgressMutationFn = ApolloReactCommon.MutationFunction<CreateUserProgressMutation, CreateUserProgressMutationVariables>;
-export type CreateUserProgressComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<CreateUserProgressMutation, CreateUserProgressMutationVariables>, 'mutation'>;
-
-    export const CreateUserProgressComponent = (props: CreateUserProgressComponentProps) => (
-      <ApolloReactComponents.Mutation<CreateUserProgressMutation, CreateUserProgressMutationVariables> mutation={CreateUserProgressDocument} {...props} />
-    );
-    
-export type CreateUserProgressProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-      [key in TDataName]: ApolloReactCommon.MutationFunction<CreateUserProgressMutation, CreateUserProgressMutationVariables>
-    } & TChildProps;
-export function withCreateUserProgress<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  CreateUserProgressMutation,
-  CreateUserProgressMutationVariables,
-  CreateUserProgressProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withMutation<TProps, CreateUserProgressMutation, CreateUserProgressMutationVariables, CreateUserProgressProps<TChildProps, TDataName>>(CreateUserProgressDocument, {
-      alias: 'createUserProgress',
-      ...operationOptions
-    });
-};
 
 /**
  * __useCreateUserProgressMutation__
@@ -3458,7 +2780,8 @@ export function withCreateUserProgress<TProps, TChildProps = {}, TDataName exten
  * });
  */
 export function useCreateUserProgressMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateUserProgressMutation, CreateUserProgressMutationVariables>) {
-        return ApolloReactHooks.useMutation<CreateUserProgressMutation, CreateUserProgressMutationVariables>(CreateUserProgressDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateUserProgressMutation, CreateUserProgressMutationVariables>(CreateUserProgressDocument, options);
       }
 export type CreateUserProgressMutationHookResult = ReturnType<typeof useCreateUserProgressMutation>;
 export type CreateUserProgressMutationResult = ApolloReactCommon.MutationResult<CreateUserProgressMutation>;
@@ -3471,25 +2794,6 @@ export const UpdateUserProgressDocument = gql`
 }
     `;
 export type UpdateUserProgressMutationFn = ApolloReactCommon.MutationFunction<UpdateUserProgressMutation, UpdateUserProgressMutationVariables>;
-export type UpdateUserProgressComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateUserProgressMutation, UpdateUserProgressMutationVariables>, 'mutation'>;
-
-    export const UpdateUserProgressComponent = (props: UpdateUserProgressComponentProps) => (
-      <ApolloReactComponents.Mutation<UpdateUserProgressMutation, UpdateUserProgressMutationVariables> mutation={UpdateUserProgressDocument} {...props} />
-    );
-    
-export type UpdateUserProgressProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-      [key in TDataName]: ApolloReactCommon.MutationFunction<UpdateUserProgressMutation, UpdateUserProgressMutationVariables>
-    } & TChildProps;
-export function withUpdateUserProgress<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  UpdateUserProgressMutation,
-  UpdateUserProgressMutationVariables,
-  UpdateUserProgressProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withMutation<TProps, UpdateUserProgressMutation, UpdateUserProgressMutationVariables, UpdateUserProgressProps<TChildProps, TDataName>>(UpdateUserProgressDocument, {
-      alias: 'updateUserProgress',
-      ...operationOptions
-    });
-};
 
 /**
  * __useUpdateUserProgressMutation__
@@ -3510,7 +2814,8 @@ export function withUpdateUserProgress<TProps, TChildProps = {}, TDataName exten
  * });
  */
 export function useUpdateUserProgressMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateUserProgressMutation, UpdateUserProgressMutationVariables>) {
-        return ApolloReactHooks.useMutation<UpdateUserProgressMutation, UpdateUserProgressMutationVariables>(UpdateUserProgressDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateUserProgressMutation, UpdateUserProgressMutationVariables>(UpdateUserProgressDocument, options);
       }
 export type UpdateUserProgressMutationHookResult = ReturnType<typeof useUpdateUserProgressMutation>;
 export type UpdateUserProgressMutationResult = ApolloReactCommon.MutationResult<UpdateUserProgressMutation>;
@@ -3523,25 +2828,6 @@ export const UpdateMyProgressDocument = gql`
 }
     `;
 export type UpdateMyProgressMutationFn = ApolloReactCommon.MutationFunction<UpdateMyProgressMutation, UpdateMyProgressMutationVariables>;
-export type UpdateMyProgressComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateMyProgressMutation, UpdateMyProgressMutationVariables>, 'mutation'>;
-
-    export const UpdateMyProgressComponent = (props: UpdateMyProgressComponentProps) => (
-      <ApolloReactComponents.Mutation<UpdateMyProgressMutation, UpdateMyProgressMutationVariables> mutation={UpdateMyProgressDocument} {...props} />
-    );
-    
-export type UpdateMyProgressProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-      [key in TDataName]: ApolloReactCommon.MutationFunction<UpdateMyProgressMutation, UpdateMyProgressMutationVariables>
-    } & TChildProps;
-export function withUpdateMyProgress<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  UpdateMyProgressMutation,
-  UpdateMyProgressMutationVariables,
-  UpdateMyProgressProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withMutation<TProps, UpdateMyProgressMutation, UpdateMyProgressMutationVariables, UpdateMyProgressProps<TChildProps, TDataName>>(UpdateMyProgressDocument, {
-      alias: 'updateMyProgress',
-      ...operationOptions
-    });
-};
 
 /**
  * __useUpdateMyProgressMutation__
@@ -3562,7 +2848,8 @@ export function withUpdateMyProgress<TProps, TChildProps = {}, TDataName extends
  * });
  */
 export function useUpdateMyProgressMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateMyProgressMutation, UpdateMyProgressMutationVariables>) {
-        return ApolloReactHooks.useMutation<UpdateMyProgressMutation, UpdateMyProgressMutationVariables>(UpdateMyProgressDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateMyProgressMutation, UpdateMyProgressMutationVariables>(UpdateMyProgressDocument, options);
       }
 export type UpdateMyProgressMutationHookResult = ReturnType<typeof useUpdateMyProgressMutation>;
 export type UpdateMyProgressMutationResult = ApolloReactCommon.MutationResult<UpdateMyProgressMutation>;
@@ -3575,25 +2862,6 @@ export const DeleteUserProgressDocument = gql`
 }
     `;
 export type DeleteUserProgressMutationFn = ApolloReactCommon.MutationFunction<DeleteUserProgressMutation, DeleteUserProgressMutationVariables>;
-export type DeleteUserProgressComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<DeleteUserProgressMutation, DeleteUserProgressMutationVariables>, 'mutation'>;
-
-    export const DeleteUserProgressComponent = (props: DeleteUserProgressComponentProps) => (
-      <ApolloReactComponents.Mutation<DeleteUserProgressMutation, DeleteUserProgressMutationVariables> mutation={DeleteUserProgressDocument} {...props} />
-    );
-    
-export type DeleteUserProgressProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-      [key in TDataName]: ApolloReactCommon.MutationFunction<DeleteUserProgressMutation, DeleteUserProgressMutationVariables>
-    } & TChildProps;
-export function withDeleteUserProgress<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  DeleteUserProgressMutation,
-  DeleteUserProgressMutationVariables,
-  DeleteUserProgressProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withMutation<TProps, DeleteUserProgressMutation, DeleteUserProgressMutationVariables, DeleteUserProgressProps<TChildProps, TDataName>>(DeleteUserProgressDocument, {
-      alias: 'deleteUserProgress',
-      ...operationOptions
-    });
-};
 
 /**
  * __useDeleteUserProgressMutation__
@@ -3613,7 +2881,8 @@ export function withDeleteUserProgress<TProps, TChildProps = {}, TDataName exten
  * });
  */
 export function useDeleteUserProgressMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteUserProgressMutation, DeleteUserProgressMutationVariables>) {
-        return ApolloReactHooks.useMutation<DeleteUserProgressMutation, DeleteUserProgressMutationVariables>(DeleteUserProgressDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteUserProgressMutation, DeleteUserProgressMutationVariables>(DeleteUserProgressDocument, options);
       }
 export type DeleteUserProgressMutationHookResult = ReturnType<typeof useDeleteUserProgressMutation>;
 export type DeleteUserProgressMutationResult = ApolloReactCommon.MutationResult<DeleteUserProgressMutation>;

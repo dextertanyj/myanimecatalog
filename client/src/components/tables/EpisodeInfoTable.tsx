@@ -12,6 +12,8 @@ import {
   Typography,
 } from '@material-ui/core';
 import { blueGrey, teal } from '@material-ui/core/colors';
+import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import moment from 'moment';
@@ -283,6 +285,37 @@ export const EpisodeInfoTable = (props: Props) => {
               </Grid>
             </Grid>
           </Grid>
+
+          {(episodeData?.episode?.previous || episodeData?.episode?.next) && (
+            <Grid item container spacing={2}>
+              <Grid container item xs={6} justify="flex-start">
+                {episodeData?.episode?.previous && (
+                  <IconButton
+                    size="small"
+                    color="default"
+                    onClick={() =>
+                      history.push(`/episode/${episodeData?.episode?.previous}`)
+                    }
+                  >
+                    <ArrowLeftIcon fontSize="large" />
+                  </IconButton>
+                )}
+              </Grid>
+              <Grid container item xs={6} justify="flex-end">
+                {episodeData?.episode?.next && (
+                  <IconButton
+                    size="small"
+                    color="default"
+                    onClick={() =>
+                      history.push(`/episode/${episodeData?.episode?.next}`)
+                    }
+                  >
+                    <ArrowRightIcon fontSize="large" />
+                  </IconButton>
+                )}
+              </Grid>
+            </Grid>
+          )}
         </Paper>
       )}
       {showForm && (
