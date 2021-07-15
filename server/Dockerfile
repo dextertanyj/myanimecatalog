@@ -2,9 +2,9 @@ FROM keymetrics/pm2:latest-alpine	AS build
 
 WORKDIR /app
 
-RUN yarn global add @zeit/ncc
+RUN yarn global add @vercel/ncc
 RUN yarn global add prisma
-COPY . /app
+COPY . ./
 
 RUN yarn install --silent 
 RUN prisma generate
@@ -13,4 +13,4 @@ RUN ncc build src/index.ts && cp src/schema.graphql dist/schema.graphql && cp pr
 
 ENV PATH /app/node_modules/.bin:$PATH
 
-CMD ["pm2-runtime", "start", "ecosystem.config.js", "--node-args=\"--max_old_space_size=4096\""]
+CMD ["pm2-runtime", "start", "ecosystem.config.js"]
