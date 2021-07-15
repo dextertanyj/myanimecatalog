@@ -8,14 +8,20 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: server
+    depends_on:
+      - db
     restart: always
     env_file:
       - ./.env
     security_opt:
       - no-new-privileges
+    ports:
+      - 4000:4000
 
   db:
     image: mysql
+    container_name: db
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
