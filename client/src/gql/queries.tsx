@@ -509,10 +509,17 @@ export enum Status {
 
 export enum Type {
   Movie = 'MOVIE',
-  Series = 'SERIES',
+  Seriestv = 'SERIESTV',
+  Seriesova = 'SERIESOVA',
+  Seriesoad = 'SERIESOAD',
+  Seriesona = 'SERIESONA',
   Musicvideo = 'MUSICVIDEO',
-  Ova = 'OVA',
-  Special = 'SPECIAL'
+  Specialtv = 'SPECIALTV',
+  Specialova = 'SPECIALOVA',
+  Speciaload = 'SPECIALOAD',
+  Specialona = 'SPECIALONA',
+  Bonusextra = 'BONUSEXTRA',
+  Other = 'OTHER'
 }
 
 export type User = {

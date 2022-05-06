@@ -40,12 +40,24 @@ export const renderType = (type: Type): string => {
       return 'Movie';
     case Type.Musicvideo:
       return 'Music Video';
-    case Type.Ova:
-      return 'OVA';
-    case Type.Series:
-      return 'TV Series';
-    case Type.Special:
-      return 'Special';
+    case Type.Speciaload:
+      return 'Special - OAD';
+    case Type.Specialona:
+      return 'Special - ONA';
+    case Type.Specialova:
+      return 'Special - OVA';
+    case Type.Specialtv:
+      return 'Special - TV';
+    case Type.Seriesoad:
+      return 'Series - OAD';
+    case Type.Seriesona:
+      return 'Series - ONA';
+    case Type.Seriesova:
+      return 'Series - OVA';
+    case Type.Seriestv:
+      return 'Series - TV';
+    case Type.Bonusextra:
+      return 'Bonus/Extra';
     default:
       return '';
   }

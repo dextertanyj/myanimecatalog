@@ -1,61 +1,59 @@
 {
-    "env": {
-        "browser": true,
-        "es2020": true
+  "env": {
+    "browser": true,
+    "es2020": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier/@typescript-eslint",
+    "plugin:prettier/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
     },
-    "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended",
-        "prettier/@typescript-eslint",
-        "plugin:prettier/recommended"
+    "ecmaVersion": 11,
+    "sourceType": "module"
+  },
+  "plugins": ["react", "@typescript-eslint"],
+  "rules": {
+    "eqeqeq": ["error", "always"],
+    "no-extra-parens": "off",
+    "no-unused-vars": "off",
+    "array-bracket-newline": "warn",
+    "consistent-return": "error",
+    "array-callback-return": "warn",
+    "@typescript-eslint/typedef": [
+      "warn",
+      {
+        "arrowParameter": true,
+        "memberVariableDeclaration": true,
+        "parameter": true,
+        "propertyDeclaration": true
+      }
     ],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
-        },
-        "ecmaVersion": 11,
-        "sourceType": "module"
-    },
-    "plugins": [
-        "react",
-        "@typescript-eslint"
+    "@typescript-eslint/array-type": [
+      "error",
+      {
+        "default": "array"
+      }
     ],
-    "rules": {
-        "eqeqeq": [
-            "error",
-            "always"
-        ],
-        "no-unused-vars": "off",
-        "array-bracket-newline": "warn",
-        "consistent-return": "error",
-        "array-callback-return": "warn",
-        "@typescript-eslint/typedef": [
-            "warn",
-            {
-                "arrowParameter": true,
-                "memberVariableDeclaration": true,
-                "parameter": true,
-                "propertyDeclaration": true
-            }
-        ],
-        "@typescript-eslint/array-type": [
-            "error",
-            {
-                "default": "array"
-            }
-        ],
-        "@typescript-eslint/type-annotation-spacing": "warn",
-        "@typescript-eslint/comma-spacing": "warn",
-        "@typescript-eslint/indent": [
-            "warn",
-            2
-        ],
-        "prefer-const": "warn",
-        "@typescript-eslint/ban-ts-comment": "off",
-        "@typescript-eslint/no-extra-parens": "warn",
-        "@typescript-eslint/no-unused-expressions": "warn",
-        "@typescript-eslint/no-unused-vars": "off",
-        "@typescript-eslint/no-unused-vars-experimental": "warn"
-    }
+    "@typescript-eslint/type-annotation-spacing": "warn",
+    "@typescript-eslint/comma-spacing": "warn",
+    "@typescript-eslint/indent": ["warn", 2],
+    "prefer-const": "warn",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-extra-parens": [
+      "warn",
+      "all",
+      {
+        "ignoreJSX": "multi-line"
+      }
+    ],
+    "@typescript-eslint/no-unused-expressions": "warn",
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars-experimental": "warn"
+  }
 }

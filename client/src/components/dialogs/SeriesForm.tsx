@@ -10,7 +10,7 @@ import {
   makeStyles,
   MenuItem,
   TextField,
-  Theme,
+  Theme
 } from '@material-ui/core';
 import RemoveIcon from '@material-ui/icons/Remove';
 import { KeyboardDatePicker } from '@material-ui/pickers';
@@ -19,7 +19,7 @@ import {
   Formik,
   FormikErrors,
   FormikProps,
-  FormikValues,
+  FormikValues
 } from 'formik';
 import moment, { Moment } from 'moment';
 import { useSnackbar } from 'notistack';
@@ -32,13 +32,13 @@ import {
   useAllSeriesQuery,
   useCreateSeriesMutation,
   useSeriesLazyQuery,
-  useUpdateSeriesMutation,
+  useUpdateSeriesMutation
 } from '../../gql/queries';
 import { ActionType } from '../../utils/constants';
 import {
   renderSeasonInfo,
   renderStatus,
-  renderType,
+  renderType
 } from '../../utils/enumRender';
 import { arrayOrUndefined, seasonComparator } from '../../utils/form';
 import { GenericError, NetworkError } from '../ErrorSnackbars';
@@ -607,8 +607,8 @@ export const SeriesForm = (props: Props): ReactElement => {
     related:
       (actionType === ActionType.UPDATE &&
         ([
-          ...(seriesData?.series?.relatedSeries || []),
-          ...(seriesData?.series?.relatedAlternatives || []),
+          ...seriesData?.series?.relatedSeries || [],
+          ...seriesData?.series?.relatedAlternatives || [],
         ] as SeriesRelation[])) ||
       [],
   };
@@ -629,226 +629,226 @@ export const SeriesForm = (props: Props): ReactElement => {
         {loadingSeries ? (
           <FormLoading />
         ) : (
-          <Formik
-            enableReinitialize={true}
-            initialValues={initialFormValues}
-            onSubmit={
-              props.action === ActionType.CREATE
-                ? onSubmitCreate
-                : onSubmitUpdate
-            }
-            validationSchema={Yup.object({
-              title: Yup.string().required(`Please enter a title`),
-              releaseSeason: Yup.string(),
-              releaseYear: Yup.date()
-                .typeError(`Please enter a valid year`)
-                .nullable(),
-              seasonNumber: Yup.number().min(
-                0,
-                `Season number should be positive`
-              ),
-              episodeCount: Yup.number().min(
-                0,
-                `Number of episodes should be positive`
-              ),
-              status: Yup.string().required(`Please select a status`),
-              type: Yup.string().required(`Please select a type`),
-              alternativeTitles: Yup.array().of(
-                Yup.object().shape({
-                  title: Yup.string().required(`Please enter a title`),
-                })
-              ),
-              references: Yup.array().of(
-                Yup.object().shape({
-                  link: Yup.string()
-                    .required(`Please enter a link`)
-                    .url(`Please enter a valid link`),
-                  source: Yup.string().required(`Please enter the source name`),
-                })
-              ),
-            })}
-          >
-            {(props: FormikProps<FormValues>) => {
-              const {
-                values,
-                errors,
-                touched,
-                handleSubmit,
-                handleChange,
-                handleBlur,
-                setFieldValue,
-                setTouched,
-                handleReset,
-              } = props;
-              return (
-                <form className={classes.form} onSubmit={handleSubmit}>
-                  <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                      <TextField
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        id="title"
-                        label="Title"
-                        name="title"
-                        value={values.title || ''}
-                        error={touched.title && !!errors.title}
-                        helperText={touched.title && errors.title}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={classes.formItem}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                      <TextField
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        name="seasonNumber"
-                        label="Season Number"
-                        id="seasonNumber"
-                        type="number"
-                        value={
-                          values.seasonNumber ||
+            <Formik
+              enableReinitialize={true}
+              initialValues={initialFormValues}
+              onSubmit={
+                props.action === ActionType.CREATE
+                  ? onSubmitCreate
+                  : onSubmitUpdate
+              }
+              validationSchema={Yup.object({
+                title: Yup.string().required(`Please enter a title`),
+                releaseSeason: Yup.string(),
+                releaseYear: Yup.date()
+                  .typeError(`Please enter a valid year`)
+                  .nullable(),
+                seasonNumber: Yup.number().min(
+                  0,
+                  `Season number should be positive`
+                ),
+                episodeCount: Yup.number().min(
+                  0,
+                  `Number of episodes should be positive`
+                ),
+                status: Yup.string().required(`Please select a status`),
+                type: Yup.string().required(`Please select a type`),
+                alternativeTitles: Yup.array().of(
+                  Yup.object().shape({
+                    title: Yup.string().required(`Please enter a title`),
+                  })
+                ),
+                references: Yup.array().of(
+                  Yup.object().shape({
+                    link: Yup.string()
+                      .required(`Please enter a link`)
+                      .url(`Please enter a valid link`),
+                    source: Yup.string().required(`Please enter the source name`),
+                  })
+                ),
+              })}
+            >
+              {(props: FormikProps<FormValues>) => {
+                const {
+                  values,
+                  errors,
+                  touched,
+                  handleSubmit,
+                  handleChange,
+                  handleBlur,
+                  setFieldValue,
+                  setTouched,
+                  handleReset,
+                } = props;
+                return (
+                  <form className={classes.form} onSubmit={handleSubmit}>
+                    <Grid container spacing={3}>
+                      <Grid item xs={12}>
+                        <TextField
+                          variant="outlined"
+                          margin="normal"
+                          fullWidth
+                          id="title"
+                          label="Title"
+                          name="title"
+                          value={values.title || ''}
+                          error={touched.title && !!errors.title}
+                          helperText={touched.title && errors.title}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          className={classes.formItem}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6} md={3}>
+                        <TextField
+                          variant="outlined"
+                          margin="normal"
+                          fullWidth
+                          name="seasonNumber"
+                          label="Season Number"
+                          id="seasonNumber"
+                          type="number"
+                          value={
+                            values.seasonNumber ||
                           (values.seasonNumber === 0 ? 0 : '')
-                        }
-                        error={touched.seasonNumber && !!errors.seasonNumber}
-                        helperText={touched.seasonNumber && errors.seasonNumber}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={classes.formItem}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                      <TextField
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        name="episodeCount"
-                        label="Number of Episodes"
-                        id="episodeCount"
-                        type="number"
-                        value={values.episodeCount || ''}
-                        error={touched.episodeCount && !!errors.episodeCount}
-                        helperText={touched.episodeCount && errors.episodeCount}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={classes.formItem}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                      <TextField
-                        select
-                        fullWidth
-                        variant="outlined"
-                        margin="normal"
-                        name="releaseSeason"
-                        label="Release Season"
-                        id="releaseSeason"
-                        value={values.releaseSeason || ''}
-                        InputLabelProps={{ shrink: !!values.releaseSeason }}
-                        error={touched.releaseSeason && !!errors.releaseSeason}
-                        helperText={
-                          touched.releaseSeason && errors.releaseSeason
-                        }
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={classes.formItem}
-                      >
-                        <MenuItem key={''} value={''}>
-                          {<a>&nbsp;</a>}
-                        </MenuItem>
-                        {Object.values(Season)
-                          .sort(seasonComparator)
-                          .map((value: Season) => {
+                          }
+                          error={touched.seasonNumber && !!errors.seasonNumber}
+                          helperText={touched.seasonNumber && errors.seasonNumber}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          className={classes.formItem}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6} md={3}>
+                        <TextField
+                          variant="outlined"
+                          margin="normal"
+                          fullWidth
+                          name="episodeCount"
+                          label="Number of Episodes"
+                          id="episodeCount"
+                          type="number"
+                          value={values.episodeCount || ''}
+                          error={touched.episodeCount && !!errors.episodeCount}
+                          helperText={touched.episodeCount && errors.episodeCount}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          className={classes.formItem}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6} md={3}>
+                        <TextField
+                          select
+                          fullWidth
+                          variant="outlined"
+                          margin="normal"
+                          name="releaseSeason"
+                          label="Release Season"
+                          id="releaseSeason"
+                          value={values.releaseSeason || ''}
+                          InputLabelProps={{ shrink: !!values.releaseSeason }}
+                          error={touched.releaseSeason && !!errors.releaseSeason}
+                          helperText={
+                            touched.releaseSeason && errors.releaseSeason
+                          }
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          className={classes.formItem}
+                        >
+                          <MenuItem key={''} value={''}>
+                            {<a>&nbsp;</a>}
+                          </MenuItem>
+                          {Object.values(Season)
+                            .sort(seasonComparator)
+                            .map((value: Season) => {
+                              return (
+                                <MenuItem key={value} value={value}>
+                                  {renderSeasonInfo(value)}
+                                </MenuItem>
+                              );
+                            })}
+                        </TextField>
+                      </Grid>
+                      <Grid item xs={12} sm={6} md={3}>
+                        <KeyboardDatePicker
+                          fullWidth
+                          inputVariant="outlined"
+                          clearable
+                          views={['year']}
+                          label="Release Year"
+                          value={values?.releaseYear || null}
+                          error={touched.releaseYear && !!errors.releaseYear}
+                          helperText={touched.releaseYear && errors.releaseYear}
+                          onChange={(date: Moment | null) => {
+                            if (date === null) {
+                              setFieldValue('releaseYear', null);
+                            } else {
+                              setFieldValue(
+                                'releaseYear',
+                              date?.startOf('year') as Moment
+                              );
+                            }
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          select
+                          fullWidth
+                          variant="outlined"
+                          margin="normal"
+                          name="type"
+                          label="Type"
+                          id="type"
+                          value={values.type || ''}
+                          InputLabelProps={{ shrink: !!values.type }}
+                          error={touched.type && !!errors.type}
+                          helperText={touched.type && errors.type}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          className={classes.formItem}
+                        >
+                          {Object.values(Type).map((value: Type) => {
                             return (
                               <MenuItem key={value} value={value}>
-                                {renderSeasonInfo(value)}
+                                {renderType(value)}
                               </MenuItem>
                             );
                           })}
-                      </TextField>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                      <KeyboardDatePicker
-                        fullWidth
-                        inputVariant="outlined"
-                        clearable
-                        views={['year']}
-                        label="Release Year"
-                        value={values?.releaseYear || null}
-                        error={touched.releaseYear && !!errors.releaseYear}
-                        helperText={touched.releaseYear && errors.releaseYear}
-                        onChange={(date: Moment | null) => {
-                          if (date === null) {
-                            setFieldValue('releaseYear', null);
-                          } else {
-                            setFieldValue(
-                              'releaseYear',
-                              date?.startOf('year') as Moment
+                        </TextField>
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          select
+                          fullWidth
+                          variant="outlined"
+                          margin="normal"
+                          name="status"
+                          label="Status"
+                          id="status"
+                          value={values.status || ''}
+                          InputLabelProps={{ shrink: !!values.status }}
+                          error={touched.status && !!errors.status}
+                          helperText={touched.status && errors.status}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          className={classes.formItem}
+                        >
+                          {Object.values(Status).map((value: Status) => {
+                            return (
+                              <MenuItem key={value} value={value}>
+                                {renderStatus(value)}
+                              </MenuItem>
                             );
-                          }
-                        }}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        select
-                        fullWidth
-                        variant="outlined"
-                        margin="normal"
-                        name="type"
-                        label="Type"
-                        id="type"
-                        value={values.type || ''}
-                        InputLabelProps={{ shrink: !!values.type }}
-                        error={touched.type && !!errors.type}
-                        helperText={touched.type && errors.type}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={classes.formItem}
-                      >
-                        {Object.values(Type).map((value: Type) => {
-                          return (
-                            <MenuItem key={value} value={value}>
-                              {renderType(value)}
-                            </MenuItem>
-                          );
-                        })}
-                      </TextField>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        select
-                        fullWidth
-                        variant="outlined"
-                        margin="normal"
-                        name="status"
-                        label="Status"
-                        id="status"
-                        value={values.status || ''}
-                        InputLabelProps={{ shrink: !!values.status }}
-                        error={touched.status && !!errors.status}
-                        helperText={touched.status && errors.status}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={classes.formItem}
-                      >
-                        {Object.values(Status).map((value: Status) => {
-                          return (
-                            <MenuItem key={value} value={value}>
-                              {renderStatus(value)}
-                            </MenuItem>
-                          );
-                        })}
-                      </TextField>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <FieldArray
-                        name="alternativeTitles"
-                        render={(arrayHelpers) => (
-                          <Grid container spacing={3}>
-                            {values.alternativeTitles &&
+                          })}
+                        </TextField>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <FieldArray
+                          name="alternativeTitles"
+                          render={(arrayHelpers) => (
+                            <Grid container spacing={3}>
+                              {values.alternativeTitles &&
                               values.alternativeTitles.length > 0 && (
                                 <Grid item xs={12}>
                                   {values.alternativeTitles.map(
@@ -930,38 +930,37 @@ export const SeriesForm = (props: Props): ReactElement => {
                                                 <RemoveIcon />
                                               </IconButton>
                                             </Grid>
-                                          </Grid>
-                                        </React.Fragment>
+                                          </React.Fragment>
                                       );
                                     }
                                   )}
                                 </Grid>
                               )}
-                            <Grid item xs={12}>
-                              <Button
-                                fullWidth
-                                variant="outlined"
-                                color="primary"
-                                onClick={() =>
-                                  arrayHelpers.push({
-                                    id: undefined,
-                                    title: '',
-                                  })
-                                }
-                              >
+                              <Grid item xs={12}>
+                                <Button
+                                  fullWidth
+                                  variant="outlined"
+                                  color="primary"
+                                  onClick={() =>
+                                    arrayHelpers.push({
+                                      id: undefined,
+                                      title: '',
+                                    })
+                                  }
+                                >
                                 Add an alternative title
-                              </Button>
+                                </Button>
+                              </Grid>
                             </Grid>
-                          </Grid>
-                        )}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <FieldArray
-                        name="references"
-                        render={(arrayHelpers) => (
-                          <Grid container spacing={3}>
-                            {values.references &&
+                          )}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <FieldArray
+                          name="references"
+                          render={(arrayHelpers) => (
+                            <Grid container spacing={3}>
+                              {values.references &&
                               values.references.length > 0 &&
                               values.references.map(
                                 (
@@ -1076,115 +1075,115 @@ export const SeriesForm = (props: Props): ReactElement => {
                                   );
                                 }
                               )}
-                            <Grid item xs={12}>
-                              <Button
-                                fullWidth
-                                variant="outlined"
-                                color="primary"
-                                onClick={() =>
-                                  arrayHelpers.push({
-                                    id: undefined,
-                                    link: '',
-                                    source: '',
-                                  })
-                                }
-                              >
+                              <Grid item xs={12}>
+                                <Button
+                                  fullWidth
+                                  variant="outlined"
+                                  color="primary"
+                                  onClick={() =>
+                                    arrayHelpers.push({
+                                      id: undefined,
+                                      link: '',
+                                      source: '',
+                                    })
+                                  }
+                                >
                                 Add a reference
-                              </Button>
+                                </Button>
+                              </Grid>
                             </Grid>
-                          </Grid>
-                        )}
-                      />
+                          )}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          multiline
+                          variant="outlined"
+                          margin="normal"
+                          fullWidth
+                          id="remarks"
+                          label="Remarks"
+                          name="remarks"
+                          value={values.remarks || ''}
+                          error={touched.remarks && !!errors.remarks}
+                          helperText={touched.remarks && errors.remarks}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          className={classes.formItem}
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <SeriesAutocomplete
+                          fieldName={'prequels'}
+                          label={'Prequels'}
+                          errors={errors}
+                          values={values.prequels || []}
+                          setFieldValue={setFieldValue}
+                          setTouched={setTouched}
+                          loading={loadingOptions}
+                          options={autoCompleteOptions}
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <SeriesAutocomplete
+                          fieldName={'sequels'}
+                          label={'Sequels'}
+                          errors={errors}
+                          values={values.sequels || []}
+                          setFieldValue={setFieldValue}
+                          setTouched={setTouched}
+                          loading={loadingOptions}
+                          options={autoCompleteOptions}
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <SeriesAutocomplete
+                          fieldName={'mainStories'}
+                          label={'Main Story'}
+                          errors={errors}
+                          values={values.mainStories || []}
+                          setFieldValue={setFieldValue}
+                          setTouched={setTouched}
+                          loading={loadingOptions}
+                          options={autoCompleteOptions}
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <SeriesAutocomplete
+                          fieldName={'sideStories'}
+                          label={'Side Stories'}
+                          errors={errors}
+                          values={values.sideStories || []}
+                          setFieldValue={setFieldValue}
+                          setTouched={setTouched}
+                          loading={loadingOptions}
+                          options={autoCompleteOptions}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <SeriesAutocomplete
+                          fieldName={'related'}
+                          label={'Related'}
+                          errors={errors}
+                          values={values.related || []}
+                          setFieldValue={setFieldValue}
+                          setTouched={setTouched}
+                          loading={loadingOptions}
+                          options={autoCompleteOptions}
+                        />
+                      </Grid>
                     </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        multiline
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        id="remarks"
-                        label="Remarks"
-                        name="remarks"
-                        value={values.remarks || ''}
-                        error={touched.remarks && !!errors.remarks}
-                        helperText={touched.remarks && errors.remarks}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={classes.formItem}
-                      />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <SeriesAutocomplete
-                        fieldName={'prequels'}
-                        label={'Prequels'}
-                        errors={errors}
-                        values={values.prequels || []}
-                        setFieldValue={setFieldValue}
-                        setTouched={setTouched}
-                        loading={loadingOptions}
-                        options={autoCompleteOptions}
-                      />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <SeriesAutocomplete
-                        fieldName={'sequels'}
-                        label={'Sequels'}
-                        errors={errors}
-                        values={values.sequels || []}
-                        setFieldValue={setFieldValue}
-                        setTouched={setTouched}
-                        loading={loadingOptions}
-                        options={autoCompleteOptions}
-                      />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <SeriesAutocomplete
-                        fieldName={'mainStories'}
-                        label={'Main Story'}
-                        errors={errors}
-                        values={values.mainStories || []}
-                        setFieldValue={setFieldValue}
-                        setTouched={setTouched}
-                        loading={loadingOptions}
-                        options={autoCompleteOptions}
-                      />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <SeriesAutocomplete
-                        fieldName={'sideStories'}
-                        label={'Side Stories'}
-                        errors={errors}
-                        values={values.sideStories || []}
-                        setFieldValue={setFieldValue}
-                        setTouched={setTouched}
-                        loading={loadingOptions}
-                        options={autoCompleteOptions}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <SeriesAutocomplete
-                        fieldName={'related'}
-                        label={'Related'}
-                        errors={errors}
-                        values={values.related || []}
-                        setFieldValue={setFieldValue}
-                        setTouched={setTouched}
-                        loading={loadingOptions}
-                        options={autoCompleteOptions}
-                      />
-                    </Grid>
-                  </Grid>
-                  <DialogActions className={classes.dialogButtons}>
-                    <Button onClick={handleReset}>Reset</Button>
-                    <Button type="submit" color="primary">
-                      {actionType === ActionType.CREATE ? 'Create' : 'Update'}
-                    </Button>
-                  </DialogActions>
-                </form>
-              );
-            }}
-          </Formik>
-        )}
+                    <DialogActions className={classes.dialogButtons}>
+                      <Button onClick={handleReset}>Reset</Button>
+                      <Button type="submit" color="primary">
+                        {actionType === ActionType.CREATE ? 'Create' : 'Update'}
+                      </Button>
+                    </DialogActions>
+                  </form>
+                );
+              }}
+            </Formik>
+          )}
       </DialogContent>
     </Dialog>
   );

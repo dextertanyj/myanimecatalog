@@ -4,4 +4,4 @@ RUN mkdir -p /home/node/app
 
 WORKDIR /home/node/app/server
 
-CMD yarn && yarn deploy && yarn prisma generate && yarn start
+CMD yarn && yarn dev:deploy && yarn prisma generate && yarn dev:start
