@@ -29,8 +29,8 @@ Contains the GraphQL schema definitions and resolvers.
 
 ## Database Migration
 
-- Generating the files required for a migration: `yarn gen:migrate`
-- Applying all migrations to the connected database: `yarn migrate`
+- Generating the files required for a migration: `yarn migration:gen`
+- Applying all migrations to the connected database: `yarn migration:run`
 - Regenerating `@prisma/client` definitions: `yarn prisma generate`
 
 ## Deployment Guide
@@ -44,7 +44,8 @@ Contains the GraphQL schema definitions and resolvers.
 
 ### Prisma Migrate Upgrade Guide
 
-If upgrading from v1.0.0, follow the steps listed below: 
+If upgrading from v1.0.0, follow the steps listed below:
+
 1. Pull the updated repository.
 1. Remove the `RUN yarn deploy` line in the Dockerfile.
 1. With the database docker container running, SSH into the docker container using `yarn server:sh`.
@@ -53,5 +54,5 @@ If upgrading from v1.0.0, follow the steps listed below:
    - `npx prisma migrate resolve --applied 20210707040816_init`
    - `npx prisma migrate resolve --applied 20210707063345_update_mappings`
    - `npx prisma migrate resolve --applied 20210708064711_convert_resolution`
-1. Continue with the regular databse migration steps using `yarn deploy`.
-1. Add back the `RUN yarn deploy` line in the Dockerfile.
+1. Continue with the regular databse migration steps using `yarn migration:deploy`.
+1. Add back the `RUN yarn migration:deploy` line in the Dockerfile.

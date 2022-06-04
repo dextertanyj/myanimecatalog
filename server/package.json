@@ -8,9 +8,9 @@
   "scripts": {
     "start": "nodemon -e ts,graphql -x \"eslint --ext .ts . && ts-node --files src/index.ts\"",
     "manualStart": "nodemon -r dotenv/config ./src/index.ts",
-    "gen:migrate": "prisma migrate dev --create-only",
-    "migrate": "prisma migrate dev",
-    "deploy": "docker exec server prisma migrate deploy",
+    "migration:gen": "prisma migrate dev --create-only",
+    "migration:run": "prisma migrate dev",
+    "migration:deploy": "docker exec server prisma migrate deploy",
     "server:sh": "docker exec -it $(docker-compose ps -q server) sh",
     "lint": "eslint --fix \"src/**/*.ts\""
   },
