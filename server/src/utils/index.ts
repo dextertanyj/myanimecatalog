@@ -8,7 +8,7 @@ export interface Context extends BaseContext {
   userId?: string;
 }
 
-export function getContextUserId(req?: express.Request) {
+export function getContextUserId(req?: express.Request): string | null {
   const Authorization = req?.headers.authorization;
   if (Authorization) {
     const token = Authorization.replace('Token ', '');

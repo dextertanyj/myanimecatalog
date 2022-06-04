@@ -3,17 +3,20 @@ import { loadSchemaSync } from '@graphql-tools/load';
 import { addResolversToSchema } from '@graphql-tools/schema';
 import { PrismaClient } from '@prisma/client';
 import { ApolloServer } from 'apollo-server';
+import {
+  ApolloServerPluginLandingPageDisabled,
+  ApolloServerPluginLandingPageGraphQLPlayground,
+} from 'apollo-server-core';
 import express from 'express';
 import { applyMiddleware } from 'graphql-middleware';
-import path from 'path';
+import { join } from 'path';
 import resolvers from './resolvers';
 import { permissions } from './shield';
 import { getContextUserId } from './utils';
 
 const prisma = new PrismaClient();
-// use `prisma` in your application to read and write data in your DB
 
-const schema = loadSchemaSync(path.join(__dirname, 'schema.graphql'), {
+const schema = loadSchemaSync(join(__dirname, 'schema.graphql'), {
   loaders: [new GraphQLFileLoader()],
 });
 
@@ -31,7 +34,6 @@ export const server = new ApolloServer({
     prisma,
     userId: getContextUserId(req),
   }),
-  playground: process.env.NODE_ENV === 'development',
   debug: process.env.NODE_ENV === 'development',
   cors: {
     origin:
@@ -39,6 +41,11 @@ export const server = new ApolloServer({
     allowedHeaders:
       'Origin, X-Requested-With, Content-Type, Accept, apollographql-client-version, batch, apollographql-client-name, authorization',
   },
+  plugins: [
+    process.env.NODE_ENV === 'development'
+      ? ApolloServerPluginLandingPageGraphQLPlayground()
+      : ApolloServerPluginLandingPageDisabled(),
+  ],
 });
 
 server
