@@ -39,8 +39,11 @@ export const File = {
     _args: unknown,
     ctx: Context
   ): Promise<Codec[]> {
-    const SQL = `SELECT DISTINCT codec FROM \`File\``;
-    const codecs = await ctx.prisma.$queryRaw<Codec[]>(SQL);
-    return codecs;
+    return await ctx.prisma.file.findMany({
+      distinct: ['codec'],
+      select: {
+        codec: true,
+      },
+    });
   },
 };

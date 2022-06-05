@@ -67,7 +67,7 @@ model Episode {
   id                String             @id @default(cuid())
   title             String             @db.Text
   alternativeTitles AlternativeTitle[]
-  series            Series             @relation(fields: seriesId, references: id)
+  series            Series             @relation(fields: seriesId, references: id, onDelete: Cascade)
   seriesId          String
   episodeNumber     Int
   files             File[]
@@ -103,9 +103,9 @@ model Series {
 model AlternativeTitle {
   id        String   @id @default(cuid())
   title     String   @db.Text
-  episode   Episode? @relation(fields: [episodeId], references: [id])
+  episode   Episode? @relation(fields: [episodeId], references: [id], onDelete: Cascade)
   episodeId String?
-  series    Series?  @relation(fields: [seriesId], references: [id])
+  series    Series?  @relation(fields: [seriesId], references: [id], onDelete: Cascade)
   seriesId  String?
 }
 
@@ -122,15 +122,15 @@ model File {
   remarks          String?  @db.Text
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
-  episode          Episode  @relation(fields: [episodeId], references: [id])
+  episode          Episode  @relation(fields: [episodeId], references: [id], onDelete: Restrict)
   episodeId        String
 }
 
 model UserProgress {
   id        String      @id @default(cuid())
-  series    Series      @relation(fields: [seriesId], references: [id])
+  series    Series      @relation(fields: [seriesId], references: [id], onDelete: Restrict)
   seriesId  String
-  user      User        @relation(fields: [userId], references: [id])
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   status    WatchStatus
   completed Int?
@@ -152,6 +152,6 @@ model Reference {
   id       String @id @default(cuid())
   link     String @db.Text
   source   String
-  series   Series @relation(fields: [seriesId], references: [id])
+  series   Series @relation(fields: [seriesId], references: [id], onDelete: Cascade)
   seriesId String
 }

@@ -150,27 +150,6 @@ export const User = {
     ctx: Context,
     _info: unknown
   ): Promise<UserType> {
-    try {
-      const user = await ctx.prisma.user.delete(args);
-      return user;
-    } catch (error: unknown) {
-      if (error instanceof PrismaClientKnownRequestError) {
-        const message: string = error.message;
-        if (message.includes(`UserProgress`)) {
-          if (args.where.id) {
-            const user = await ctx.prisma.$queryRaw<UserType>(
-              `SELECT * FROM \`User\` WHERE id = '${args.where.id}'`
-            );
-            await ctx.prisma.$executeRaw(
-              `DELETE FROM \`User\` WHERE id = '${args.where.id}'`
-            );
-            return user;
-          } else {
-            throw error;
-          }
-        }
-      }
-      throw error;
-    }
+    return await ctx.prisma.user.delete(args);
   },
 };

@@ -13,7 +13,7 @@ export const Series = {
       const currentUserId = ctx.userId;
       const { progress, ...rest } = data;
       if (currentUserId && progress.create && !Array.isArray(progress.create)) {
-        const { ...others } = progress.create;
+        const { userId, ...others } = progress.create;
         const formatProgress = {
           create: {
             user: { connect: { id: currentUserId } },
@@ -55,7 +55,7 @@ export const Series = {
         !Array.isArray(progress.create) &&
         !progress.update
       ) {
-        const { ...others } = progress.create;
+        const { userId, ...others } = progress.create;
         const formatProgress = {
           create: {
             user: { connect: { id: currentUserId } },
@@ -124,27 +124,10 @@ export const Series = {
     } catch (error: unknown) {
       if (error instanceof PrismaClientKnownRequestError) {
         const message: string = error.message;
-        if (message.includes('`Episode`')) {
-          throw new Error(
-            `Please remove all associated episodes before deleting the series.`
-          );
-        }
         if (message.includes('`UserProgress`')) {
           throw new Error(
             `Unable to delete series as there are existing watch progress records.`
           );
-        }
-        if (message.includes(`Reference`)) {
-          // Workaround while awaiting ON DELETE CASCADE fix from Prisma
-          if (args.where.id) {
-            const series = await ctx.prisma.$queryRaw<SeriesType>(
-              `SELECT * FROM \`Series\` WHERE id = '${args.where.id}'`
-            );
-            await ctx.prisma.$executeRaw(
-              `DELETE FROM \`Series\` WHERE id = '${args.where.id}'`
-            );
-            return series;
-          }
         }
       }
       throw error;

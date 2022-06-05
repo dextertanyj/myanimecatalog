@@ -10,7 +10,11 @@ export const Reference = {
     _args: unknown,
     ctx: Context
   ): Promise<Source[]> {
-    const SQL = `SELECT DISTINCT source FROM \`Reference\``;
-    return await ctx.prisma.$queryRaw<Source[]>(SQL);
+    return await ctx.prisma.reference.findMany({
+      distinct: ['source'],
+      select: {
+        source: true,
+      },
+    });
   },
 };
