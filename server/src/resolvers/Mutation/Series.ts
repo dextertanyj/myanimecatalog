@@ -1,4 +1,5 @@
 import { Prisma, Series as SeriesType } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { Context } from '../../utils';
 
 export const Series = {
@@ -120,28 +121,30 @@ export const Series = {
   ): Promise<SeriesType> {
     try {
       return await ctx.prisma.series.delete(args);
-    } catch (error) {
-      const message: string = error.message;
-      if (message.includes('`Episode`')) {
-        throw new Error(
-          `Please remove all associated episodes before deleting the series.`
-        );
-      } else if (message.includes('`UserProgress`')) {
-        throw new Error(
-          `Unable to delete series as there are existing watch progress records.`
-        );
-      } else if (message.includes(`Reference`)) {
-        // Workaround while awaiting ON DELETE CASCADE fix from Prisma
-        if (args.where.id) {
-          const series = await ctx.prisma.$queryRaw<SeriesType>(
-            `SELECT * FROM \`Series\` WHERE id = '${args.where.id}'`
+    } catch (error: unknown) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        const message: string = error.message;
+        if (message.includes('`Episode`')) {
+          throw new Error(
+            `Please remove all associated episodes before deleting the series.`
           );
-          await ctx.prisma.$executeRaw(
-            `DELETE FROM \`Series\` WHERE id = '${args.where.id}'`
+        }
+        if (message.includes('`UserProgress`')) {
+          throw new Error(
+            `Unable to delete series as there are existing watch progress records.`
           );
-          return series;
-        } else {
-          throw error;
+        }
+        if (message.includes(`Reference`)) {
+          // Workaround while awaiting ON DELETE CASCADE fix from Prisma
+          if (args.where.id) {
+            const series = await ctx.prisma.$queryRaw<SeriesType>(
+              `SELECT * FROM \`Series\` WHERE id = '${args.where.id}'`
+            );
+            await ctx.prisma.$executeRaw(
+              `DELETE FROM \`Series\` WHERE id = '${args.where.id}'`
+            );
+            return series;
+          }
         }
       }
       throw error;

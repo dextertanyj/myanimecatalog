@@ -1,4 +1,5 @@
 import { Prisma, Role, User as UserType } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import bcrypt from 'bcryptjs';
 import { Context } from '../../utils';
 
@@ -40,15 +41,16 @@ export const User = {
         },
       });
       return user;
-    } catch (error) {
-      const message: string = error.message;
-      if (message.includes(`Unique`)) {
-        throw new Error(
-          `That username has been taken. Please choose another one.`
-        );
-      } else {
-        throw error;
+    } catch (error: unknown) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        const message: string = error.message;
+        if (message.includes(`Unique`)) {
+          throw new Error(
+            `That username has been taken. Please choose another one.`
+          );
+        }
       }
+      throw error;
     }
   },
 
@@ -87,15 +89,16 @@ export const User = {
         },
       });
       return user;
-    } catch (error) {
-      const message: string = error.message;
-      if (message.includes(`Unique`)) {
-        throw new Error(
-          `That username has been taken. Please choose another one.`
-        );
-      } else {
-        throw error;
+    } catch (error: unknown) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        const message: string = error.message;
+        if (message.includes(`Unique`)) {
+          throw new Error(
+            `That username has been taken. Please choose another one.`
+          );
+        }
       }
+      throw error;
     }
   },
 
@@ -128,15 +131,16 @@ export const User = {
         },
       });
       return user;
-    } catch (error) {
-      const message: string = error.message;
-      if (message.includes(`Unique`)) {
-        throw new Error(
-          `That username has been taken. Please choose another one.`
-        );
-      } else {
-        throw error;
+    } catch (error: unknown) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        const message: string = error.message;
+        if (message.includes(`Unique`)) {
+          throw new Error(
+            `That username has been taken. Please choose another one.`
+          );
+        }
       }
+      throw error;
     }
   },
 
@@ -149,19 +153,21 @@ export const User = {
     try {
       const user = await ctx.prisma.user.delete(args);
       return user;
-    } catch (error) {
-      const message: string = error.message;
-      if (message.includes(`UserProgress`)) {
-        if (args.where.id) {
-          const user = await ctx.prisma.$queryRaw<UserType>(
-            `SELECT * FROM \`User\` WHERE id = '${args.where.id}'`
-          );
-          await ctx.prisma.$executeRaw(
-            `DELETE FROM \`User\` WHERE id = '${args.where.id}'`
-          );
-          return user;
-        } else {
-          throw error;
+    } catch (error: unknown) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        const message: string = error.message;
+        if (message.includes(`UserProgress`)) {
+          if (args.where.id) {
+            const user = await ctx.prisma.$queryRaw<UserType>(
+              `SELECT * FROM \`User\` WHERE id = '${args.where.id}'`
+            );
+            await ctx.prisma.$executeRaw(
+              `DELETE FROM \`User\` WHERE id = '${args.where.id}'`
+            );
+            return user;
+          } else {
+            throw error;
+          }
         }
       }
       throw error;

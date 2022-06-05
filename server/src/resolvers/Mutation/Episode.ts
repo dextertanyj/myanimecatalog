@@ -1,4 +1,5 @@
 import { Episode as EpisodeType, Prisma } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { Context } from '../../utils';
 
 type BatchCreateEpisodeArgs = {
@@ -51,12 +52,14 @@ export const Episode = {
   ): Promise<EpisodeType> {
     try {
       return await ctx.prisma.episode.delete(args);
-    } catch (error) {
-      const message: string = error.message;
-      if (message.includes('`File`')) {
-        throw new Error(
-          `Please remove all associated files before deleting the episode.`
-        );
+    } catch (error: unknown) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        const message: string = error.message;
+        if (message.includes('`File`')) {
+          throw new Error(
+            `Please remove all associated files before deleting the episode.`
+          );
+        }
       }
       throw error;
     }
